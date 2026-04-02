@@ -1,7 +1,8 @@
-import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata, ResolvingMetadata } from "next";
+import { siteConfig } from "@/config/site";
+import { getArticleBySlug } from "@/services/article.service";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -14,25 +15,24 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const { slug } = await params;
-  const article = await prisma.article.findUnique({
-    where: { slug },
-  });
+  const article = await getArticleBySlug(slug);
 
   if (!article) {
     return {
-      title: "Artículo no encontrado - EmeDotEme",
+      title: `Artículo no encontrado - ${siteConfig.name}`,
     };
   }
 
   return {
-    title: `${article.title} | EmeDotEme`,
-    description: article.summary || "Lee las últimas noticias sobre criptomonedas en EmeDotEme.",
+    title: `${article.title} | ${siteConfig.name}`,
+    description: article.summary || siteConfig.description,
     openGraph: {
       title: article.title,
       description: article.summary || "",
       type: "article",
       publishedTime: article.createdAt.toISOString(),
       authors: [article.author],
+      siteName: siteConfig.name,
     },
     twitter: {
       card: "summary_large_image",
@@ -45,10 +45,7 @@ export async function generateMetadata(
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
 
-  const article = await prisma.article.findUnique({
-    where: { slug },
-    include: { category: true },
-  });
+  const article = await getArticleBySlug(slug);
 
   if (!article) {
     notFound();

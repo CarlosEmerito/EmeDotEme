@@ -1,13 +1,8 @@
-import { prisma } from "@/lib/prisma";
+import { getPublishedArticles } from "@/services/article.service";
 import Link from "next/link";
 
 export default async function Home() {
-  const articles = await prisma.article.findMany({
-    where: { published: true },
-    orderBy: { createdAt: "desc" },
-    include: { category: true },
-    take: 5,
-  });
+  const articles = await getPublishedArticles(5);
 
   const mainArticle = articles[0];
   const sideArticles = articles.slice(1);

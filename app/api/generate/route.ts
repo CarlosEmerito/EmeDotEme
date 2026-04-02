@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { siteConfig } from "@/config/site";
+import { generateArticleContent } from "@/services/ai.service";
 
 export async function POST(req: Request) {
   try {
@@ -20,29 +22,20 @@ export async function POST(req: Request) {
     const allCategories = await prisma.category.findMany();
     const randomCategory = allCategories[Math.floor(Math.random() * allCategories.length)];
 
-    // 2. Aquí iría la llamada real al LLM (OpenAI, Anthropic, Gemini)
-    // Para esta fase, simularemos la respuesta de la IA para poblar la DB.
+    // 2. Llamada al servicio de IA
+    const aiResponse = await generateArticleContent();
     
-    const titles = [
-      "Bitcoin rompe la barrera de los $100K: Análisis del mercado",
-      "Ethereum lanza una nueva propuesta de mejora (EIP)",
-      "Solana procesa un millón de transacciones por segundo en pruebas",
-      "Nuevo marco regulatorio en la Unión Europea para criptoactivos",
-      "La adopción institucional de DeFi alcanza máximos históricos"
-    ];
-    
-    const randomTitle = titles[Math.floor(Math.random() * titles.length)];
-    const slug = randomTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const slug = aiResponse.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
-    // 3. Guardar el artículo "generado" en la base de datos
+    // 3. Guardar el artículo generado en la base de datos
     const newArticle = await prisma.article.create({
       data: {
-        title: randomTitle,
+        title: aiResponse.title,
         slug: slug + '-' + Date.now(), // Para evitar duplicados en la demo
-        summary: "La inteligencia artificial de EmeDotEme ha analizado los últimos movimientos del mercado y reporta hallazgos significativos en este sector.",
-        content: "<p>Este es el contenido completo del artículo generado automáticamente. En un entorno de producción, este texto extenso sería redactado por un LLM tras analizar fuentes de datos en tiempo real.</p><p>Analizamos las tendencias, el volumen de operaciones y el sentimiento general del mercado para brindarte esta información de vanguardia.</p>",
+        summary: aiResponse.summary,
+        content: aiResponse.content,
         categoryId: randomCategory.id,
-        author: "EmeDotEme AI",
+        author: siteConfig.author,
         published: true,
       },
       include: {

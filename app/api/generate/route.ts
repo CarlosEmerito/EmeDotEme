@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { siteConfig } from "@/config/site";
 import { generateArticleContent } from "@/services/ai.service";
 
+export const maxDuration = 300; // Allow up to 5 minutes for AI generation
+
 export async function GET(req: Request) {
   const authHeader = req.headers.get('authorization');
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {

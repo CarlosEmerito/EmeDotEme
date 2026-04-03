@@ -80,7 +80,7 @@ export async function generateArticleContent(topic?: string): Promise<GeneratedA
     ollamaBaseUrl = `${cleanUrl}/v1`;
   }
 
-  const modelName = process.env.OLLAMA_MODEL || "llama3.1"; // Usaremos llama3.1 (excelente para tu hardware)
+  const modelName = process.env.OLLAMA_MODEL || "qwen2.5:14b"; // Usaremos qwen2.5:14b por su superioridad en JSON y redacción
 
   try {
     const openai = new OpenAI({
@@ -128,12 +128,13 @@ Tu tarea es escribir un artículo atractivo, analítico y PROFUNDAMENTE DETALLAD
 
 REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
 1. Devuelve ÚNICAMENTE un objeto JSON válido con las siguientes 4 propiedades exactas: "title", "summary", "content", "imageCaption".
-2. "title": Un titular original, periodístico, llamativo y que capte las tendencias recientes.
-3. "summary": Un breve resumen (sin etiquetas HTML) explicando la noticia.
+2. "title": Un titular de ÚLTIMA HORA, urgente, explosivo y muy llamativo (estilo 'Breaking News' o gran exclusiva), pero manteniendo la credibilidad. Usa dos puntos o preguntas para generar gran impacto.
+3. "summary": Un breve resumen (sin etiquetas HTML) explicando la urgencia de la noticia.
 4. "content": Un artículo MUY EXTENSO y profesional en formato HTML. 
    - ES OBLIGATORIO que el artículo tenga al menos 600 palabras y entre 6 y 8 párrafos bien desarrollados.
-   - DEBES incluir múltiples secciones utilizando etiquetas <h2> para los subtítulos. Estructura recomendada: Introducción, Análisis de la Noticia Principal, Contexto del Mercado (usando los precios proporcionados), Implicaciones a Futuro y Conclusión.
+   - DEBES incluir múltiples secciones utilizando etiquetas <h2> para los subtítulos. Estructura recomendada: La Noticia de Última Hora, Análisis Profundo del Suceso, Contexto del Mercado (usando los precios proporcionados), y El Veredicto del Experto.
    - Usa etiquetas como <p>, <h2> y <strong>. NO uses etiquetas <html>, <body> o <h1>.
+   - DEBES ESCRIBIR EL ARTÍCULO COMPLETAMENTE EN ESPAÑOL.
 5. "imageCaption": Escribe un pie de foto (máximo 1 o 2 oraciones) periodístico que sirva como acompañamiento temático al artículo. IMPORTANTE: Como no puedes ver la imagen real que acompañará al artículo, NUNCA describas elementos visuales (no digas "En la foto se ve...", "Gráfico de...", "Representación de...", etc.). Simplemente escribe una frase de contexto reflexiva o un dato clave relacionado con el titular.
 6. El tono debe ser formal, humano y experto, similar a Bloomberg o CoinDesk. NUNCA menciones que eres una IA, un bot o un asistente virtual. Escribe como si fueras un analista de carne y hueso.
 7. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES (para evitar ser repetitivo): ${recentTitles || "Ninguno"}.
@@ -150,7 +151,7 @@ ${newsContext}
 
 ${specificFocus ? specificFocus : `Elige el titular más interesante sobre CRIPTOMONEDAS y escribe un artículo.`}
 
-RECUERDA: Tu artículo debe ser LARGO, DETALLADO y 100% ENFOCADO EN EL ECOSISTEMA CRIPTO. No escribas solo un par de párrafos. Analiza las causas, incluye los precios de CoinGecko, y da una opinión analítica profunda como un verdadero experto humano del mercado criptográfico.`;
+RECUERDA: Tu artículo debe ser LARGO, DETALLADO y 100% ENFOCADO EN EL ECOSISTEMA CRIPTO. Escribe como si estuvieras reportando una enorme EXCLUSIVA de última hora, pero inyectando el rigor analítico de un experto de Wall Street o CoinDesk. Analiza las causas profundas del suceso, incluye los precios actuales para dar contexto inmediato, y remata con tu veredicto profesional. ESCRIBE COMPLETAMENTE EN ESPAÑOL.`;
 
     console.log(`🧠 Solicitando generación a Ollama (${modelName})...`);
 
@@ -189,8 +190,8 @@ RECUERDA: Tu artículo debe ser LARGO, DETALLADO y 100% ENFOCADO EN EL ECOSISTEM
     console.log(`✅ Artículo generado con éxito por Ollama: ${parsedArticle.title}`);
     return parsedArticle;
 
-  } catch (error) {
-    console.error("❌ Error generando contenido con Ollama:", error);
+  } catch (error: any) {
+    console.error("❌ Error generando contenido con Ollama:", error.message || error);
     return await getFallbackArticle(topic); // Fallback dinámico si la IA local falla
   }
 }

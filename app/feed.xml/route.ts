@@ -34,6 +34,10 @@ export async function GET() {
       categories: [article.category.name],
       author: article.author,
       date: article.createdAt,
+      enclosure: article.imageUrl ? { url: article.imageUrl, type: 'image/jpeg', size: 0 } : undefined,
+      custom_elements: [
+        { 'content:encoded': `<![CDATA[${article.content}]]>` }
+      ]
     });
   });
 

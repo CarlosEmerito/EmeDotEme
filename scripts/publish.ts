@@ -1,5 +1,7 @@
 import { generateArticleContent } from "../services/ai.service";
 import { PrismaClient } from "@prisma/client";
+import * as fs from "fs";
+import path from "path";
 
 const prisma = new PrismaClient();
 
@@ -76,6 +78,22 @@ async function main() {
     console.log(`- Categoría: ${newArticle.category.name}`);
     console.log(`- URL Imagen: ${newArticle.imageUrl}`);
     console.log(`- Resumen: ${newArticle.summary}`);
+    
+    // Guardar un archivo temporal para Binance Square
+    const tmpDir = path.join(process.cwd(), 'tmp');
+    if (!fs.existsSync(tmpDir)) {
+      fs.mkdirSync(tmpDir);
+    }
+    
+    const articleData = {
+      title: newArticle.title,
+      link: `https://www.emedoteme.es/articulo/${newArticle.slug}`,
+      description: newArticle.content || newArticle.summary
+    };
+    
+    const jsonPath = path.join(tmpDir, 'latest_article.json');
+    fs.writeFileSync(jsonPath, JSON.stringify(articleData, null, 2));
+    console.log(`\n💾 Datos guardados en ${jsonPath} para Binance Square.`);
     
   } catch (error) {
     console.error("\n❌ ERROR DURANTE EL PROCESO:", error);

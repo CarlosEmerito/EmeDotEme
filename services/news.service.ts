@@ -23,9 +23,8 @@ export async function getLatestNews(): Promise<NewsItem[]> {
     // Fuentes Cripto (A fondo en el ecosistema)
     { url: "https://cointelegraph.com/rss", name: "Cointelegraph" },
     { url: "https://www.coindesk.com/arc/outboundfeeds/rss/", name: "CoinDesk" },
-    // Fuente de Economía / Regulación Global
-    { url: "https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml", name: "Wall Street Journal (Business)" },
-    { url: "https://www.cnbc.com/id/10000664/device/rss/rss.html", name: "CNBC Finance" }
+    { url: "https://cryptopotato.com/feed/", name: "CryptoPotato" },
+    { url: "https://www.newsbtc.com/feed/", name: "NewsBTC" }
   ];
 
   let allNews: NewsItem[] = [];

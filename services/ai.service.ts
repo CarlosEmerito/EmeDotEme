@@ -110,7 +110,8 @@ REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
 5. "imageCaption": Escribe un pie de foto (máximo 1 o 2 oraciones) periodístico y profesional que describa la temática general de la imagen que acompañará este artículo.
 6. El tono debe ser formal, humano y experto, similar a Bloomberg o CoinDesk. NUNCA menciones que eres una IA, un bot o un asistente virtual. Escribe como si fueras un analista de carne y hueso.
 7. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES (para evitar ser repetitivo): ${recentTitles || "Ninguno"}.
-8. Genera el JSON en formato crudo sin formato markdown como \`\`\`json.`;
+8. TEMA EXCLUSIVO: Tu artículo DEBE ser estricta y exclusivamente sobre criptomonedas, blockchain, Bitcoin, Ethereum, Web3, DeFi o el mercado de criptoactivos. NUNCA escribas sobre temas ajenos como farmacéuticas, entretenimiento o acciones tradicionales a menos que estén directamente vinculadas con blockchain o cripto. Si la noticia principal asignada no es sobre cripto, IGNÓRALA y escribe un análisis sobre los precios de CoinGecko o sobre el estado actual de Bitcoin y Ethereum.
+9. Genera el JSON en formato crudo sin formato markdown como \`\`\`json.`;
 
     const userPrompt = `Aquí tienes los datos actuales y reales del mercado en este mismo instante:
 
@@ -120,9 +121,9 @@ ${marketContext}
 TITULARES DE NOTICIAS DE ÚLTIMA HORA:
 ${newsContext}
 
-${specificFocus ? specificFocus : `Elige el titular más interesante y escribe un artículo.`}
+${specificFocus ? specificFocus : `Elige el titular más interesante sobre CRIPTOMONEDAS y escribe un artículo.`}
 
-RECUERDA: Tu artículo debe ser LARGO y DETALLADO. No escribas solo un par de párrafos. Analiza las causas, los efectos en los precios de CoinGecko proporcionados y da una opinión analítica profunda como un verdadero experto.`;
+RECUERDA: Tu artículo debe ser LARGO, DETALLADO y 100% ENFOCADO EN EL ECOSISTEMA CRIPTO. No escribas solo un par de párrafos. Analiza las causas, incluye los precios de CoinGecko, y da una opinión analítica profunda como un verdadero experto humano del mercado criptográfico.`;
 
     console.log(`🧠 Solicitando generación a Ollama (${modelName})...`);
 

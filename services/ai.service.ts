@@ -7,6 +7,7 @@ export interface GeneratedArticle {
   title: string;
   summary: string;
   content: string;
+  sourceImageUrl?: string;
 }
 
 /**
@@ -29,6 +30,7 @@ function getMockArticle(topic?: string): GeneratedArticle {
     title: topic ? `Especial: ${topic} en el radar` : randomTitle,
     summary: "Nuestro equipo de analistas de EmeDotEme ha evaluado los últimos movimientos del mercado y reporta hallazgos significativos en este sector.",
     content: "<p>Este es el contenido completo del artículo generado para reportar la situación actual. En este texto extenso analizamos las tendencias recientes y su impacto en el ecosistema financiero.</p><p>Analizamos las tendencias, el volumen de operaciones y el sentimiento general del mercado para brindarte esta información de vanguardia y una cobertura completa del panorama cripto actual.</p>",
+    sourceImageUrl: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=1200&auto=format&fit=crop", // Placeholder image
   };
 }
 
@@ -83,10 +85,13 @@ export async function generateArticleContent(topic?: string): Promise<GeneratedA
 
     // Estrategia de Variedad: Si no hay un tema específico, escogemos una o dos noticias al azar para enfocar el artículo
     let specificFocus = topic;
+    let selectedImageUrl: string | undefined = undefined;
+
     if (!specificFocus && latestNews.length > 0) {
       // Cogemos 1 noticia principal al azar de los RSS para no repetir siempre el mismo resumen
       const randomNews = latestNews[Math.floor(Math.random() * latestNews.length)];
       specificFocus = `Enfócate detalladamente en esta noticia específica: "${randomNews.title}" (Fuente: ${randomNews.source}). Úsala como núcleo central de tu artículo, y usa los precios de CoinGecko o el resto de titulares como contexto secundario.`;
+      selectedImageUrl = randomNews.imageUrl;
     }
 
     const systemPrompt = `Eres Carlos "Emérito" López Lovera, un prestigioso periodista humano y experto en criptomonedas, economía global y tecnología Web3 para el portal de noticias 'EmeDotEme'.
@@ -140,6 +145,10 @@ ${specificFocus ? specificFocus : `Elige el titular más interesante y escribe u
     // Validación básica de la estructura del JSON
     if (!parsedArticle.title || !parsedArticle.summary || !parsedArticle.content) {
       throw new Error("El JSON devuelto por Ollama no tiene la estructura correcta.");
+    }
+
+    if (selectedImageUrl) {
+      parsedArticle.sourceImageUrl = selectedImageUrl;
     }
 
     console.log(`✅ Artículo generado con éxito por Ollama: ${parsedArticle.title}`);

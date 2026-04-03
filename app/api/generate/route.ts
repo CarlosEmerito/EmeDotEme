@@ -32,6 +32,31 @@ export async function GET(req: Request) {
     
     const slug = aiResponse.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
+    // Fallback images if no image was extracted from the RSS feed
+    const fallbackImages: Record<string, string[]> = {
+      "Mercados": [
+        "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1605792657660-596af9009e82?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1641337424160-5a3d7d745fcd?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "Tecnología": [
+        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "Web3": [
+        "https://images.unsplash.com/photo-1639762681485-074b7f4f039a?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?q=80&w=1200&auto=format&fit=crop"
+      ]
+    };
+
+    let imageUrl = aiResponse.sourceImageUrl;
+    if (!imageUrl) {
+      const options = fallbackImages[randomCategory.name] || fallbackImages["Tecnología"];
+      imageUrl = options[Math.floor(Math.random() * options.length)];
+    }
+
     // 3. Guardar el artículo generado en la base de datos
     const newArticle = await prisma.article.create({
       data: {
@@ -39,6 +64,7 @@ export async function GET(req: Request) {
         slug: slug + '-' + Date.now(), // Para evitar duplicados en la demo
         summary: aiResponse.summary,
         content: aiResponse.content,
+        imageUrl: imageUrl,
         categoryId: randomCategory.id,
         author: siteConfig.author,
         published: true,

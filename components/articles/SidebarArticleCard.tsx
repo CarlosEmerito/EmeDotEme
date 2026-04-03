@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { formatRelativeDate } from "@/lib/utils";
 
 interface SidebarArticleCardProps {
@@ -8,6 +9,7 @@ interface SidebarArticleCardProps {
     title: string;
     summary: string | null;
     createdAt: Date;
+    imageUrl?: string | null;
     category: {
       name: string;
     };
@@ -16,23 +18,32 @@ interface SidebarArticleCardProps {
 
 export function SidebarArticleCard({ article }: SidebarArticleCardProps) {
   return (
-    <Link href={`/articulo/${article.slug}`} className="group block border-b border-zinc-200 dark:border-zinc-800 pb-5 mb-5 last:border-0 last:pb-0 last:mb-0">
-      <div className="mb-2">
-        <span className="text-[color:var(--color-accent)] text-[10px] font-bold uppercase tracking-widest">
-          {article.category.name}
-        </span>
+    <Link href={`/articulo/${article.slug}`} className="group flex flex-col sm:flex-row gap-4 border-b border-zinc-200 dark:border-zinc-800 pb-5 mb-5 last:border-0 last:pb-0 last:mb-0">
+      <div className="flex-1 flex flex-col justify-center order-2 sm:order-1">
+        <div className="mb-2">
+          <span className="text-[color:var(--color-accent)] text-[10px] font-bold uppercase tracking-widest">
+            {article.category.name}
+          </span>
+        </div>
+        <h3 className="text-xl font-serif font-bold mb-2 text-black dark:text-white group-hover:text-[color:var(--color-brand)] transition-colors line-clamp-3 leading-snug">
+          {article.title}
+        </h3>
+        <div className="text-xs text-zinc-500 uppercase tracking-wide mt-auto pt-2">
+          {formatRelativeDate(article.createdAt)}
+        </div>
       </div>
-      <h3 className="text-xl font-serif font-bold mb-2 text-black dark:text-white group-hover:text-[color:var(--color-brand)] transition-colors line-clamp-3 leading-snug">
-        {article.title}
-      </h3>
-      {article.summary && (
-        <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3 line-clamp-2">
-          {article.summary}
-        </p>
+      
+      {article.imageUrl && (
+        <div className="w-full sm:w-28 h-40 sm:h-28 relative flex-shrink-0 order-1 sm:order-2 overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+          <Image 
+            src={article.imageUrl} 
+            alt={article.title}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, 112px"
+          />
+        </div>
       )}
-      <div className="text-xs text-zinc-500 uppercase tracking-wide">
-        {formatRelativeDate(article.createdAt)}
-      </div>
     </Link>
   );
 }

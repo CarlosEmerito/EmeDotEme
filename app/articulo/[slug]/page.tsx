@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { Metadata, ResolvingMetadata } from "next";
 import { siteConfig } from "@/config/site";
 import { getArticleBySlug, getRelatedArticles } from "@/services/article.service";
@@ -36,11 +37,13 @@ export async function generateMetadata(
       publishedTime: article.createdAt.toISOString(),
       authors: [article.author],
       siteName: siteConfig.name,
+      images: article.imageUrl ? [{ url: article.imageUrl }] : undefined,
     },
     twitter: {
       card: "summary_large_image",
       title: article.title,
       description: article.summary || "",
+      images: article.imageUrl ? [article.imageUrl] : undefined,
     },
   };
 }
@@ -68,25 +71,38 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
         {/* Header */}
         <header className="mb-10">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-black dark:text-white leading-tight">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-black dark:text-white leading-tight font-serif">
             {article.title}
           </h1>
-          <p className="text-xl text-zinc-600 dark:text-zinc-400 mb-6 leading-relaxed">
+          <p className="text-xl text-zinc-600 dark:text-zinc-400 mb-8 leading-relaxed">
             {article.summary}
           </p>
-          <div className="flex items-center justify-between border-t border-b border-zinc-200 dark:border-zinc-800 py-4">
-            <div className="flex items-center text-sm text-zinc-700 dark:text-zinc-300">
+          
+          <div className="flex items-center justify-between border-t border-b border-zinc-200 dark:border-zinc-800 py-4 mb-8">
+            <div className="flex items-center text-sm text-zinc-700 dark:text-zinc-300 flex-wrap gap-y-2">
               <span className="font-semibold text-[color:var(--color-brand)] mr-4">Por {article.author}</span>
               <span>{formatRelativeDate(article.createdAt)}</span>
-              <span className="mx-3 text-zinc-300 dark:text-zinc-700">•</span>
+              <span className="mx-3 text-zinc-300 dark:text-zinc-700 hidden sm:inline">•</span>
               <span>{calculateReadingTime(article.content)} min de lectura</span>
             </div>
             
-            {/* Share buttons will go here later */}
-            <div className="hidden sm:flex gap-2">
+            <div className="flex gap-2">
               <ShareButtons title={article.title} slug={article.slug} />
             </div>
           </div>
+
+          {article.imageUrl && (
+            <div className="w-full aspect-video relative mb-10 overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+              <Image 
+                src={article.imageUrl} 
+                alt={article.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 896px"
+                priority
+              />
+            </div>
+          )}
         </header>
 
         {/* Content */}

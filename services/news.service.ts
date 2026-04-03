@@ -1,12 +1,17 @@
 import Parser from "rss-parser";
 
-const parser = new Parser();
+const parser = new Parser({
+  customFields: {
+    item: ['media:content', 'enclosure'],
+  }
+});
 
 export interface NewsItem {
   title: string;
   source: string;
   pubDate: string;
   link: string;
+  imageUrl?: string;
 }
 
 /**
@@ -31,12 +36,24 @@ export async function getLatestNews(): Promise<NewsItem[]> {
       const parsed = await parser.parseURL(feed.url);
       
       // Tomamos solo las 10 noticias más recientes de cada fuente
-      const items = parsed.items.slice(0, 10).map(item => ({
-        title: item.title || "Noticia sin título",
-        source: feed.name,
-        pubDate: item.isoDate || item.pubDate || new Date().toISOString(),
-        link: item.link || ""
-      }));
+      const items = parsed.items.slice(0, 10).map(item => {
+        // Intentar extraer la URL de la imagen (distintos formatos según el feed)
+        let imageUrl: string | undefined = undefined;
+        
+        if (item.enclosure && item.enclosure.url) {
+          imageUrl = item.enclosure.url;
+        } else if (item['media:content'] && item['media:content']['$'] && item['media:content']['$'].url) {
+          imageUrl = item['media:content']['$'].url;
+        }
+        
+        return {
+          title: item.title || "Noticia sin título",
+          source: feed.name,
+          pubDate: item.isoDate || item.pubDate || new Date().toISOString(),
+          link: item.link || "",
+          imageUrl
+        };
+      });
       
       return items;
     } catch (error) {

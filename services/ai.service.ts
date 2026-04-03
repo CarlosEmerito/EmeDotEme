@@ -7,6 +7,7 @@ export interface GeneratedArticle {
   title: string;
   summary: string;
   content: string;
+  tags?: string[];
   sourceImageUrl?: string;
   imageCaption?: string;
 }
@@ -53,6 +54,7 @@ async function getFallbackArticle(topic?: string): Promise<GeneratedArticle> {
   return {
     title: topic ? `Especial: Análisis sobre ${topic.substring(0, 50)}...` : randomTitle,
     summary: `Nuestro equipo analiza la situación actual donde vemos a ${marketContext.split(',')[0]} liderando las métricas, proporcionando un contexto crucial para inversores.`,
+    tags: ["Mercados", "Bitcoin", "Análisis"],
     content: `<p>En las últimas horas, el mercado de criptomonedas ha mostrado movimientos significativos que merecen un análisis profundo. Actualmente, observamos una dinámica donde destacan activos como ${marketContext}.</p>
 <h2>Impacto de la Volatilidad</h2>
 <p>La naturaleza del ecosistema Web3 implica fluctuaciones constantes. Sin embargo, los niveles actuales de soporte y resistencia sugieren que los inversores institucionales están recalibrando sus estrategias a corto y mediano plazo. Las métricas *on-chain* revelan acumulación en carteras significativas, lo que históricamente ha precedido a movimientos direccionales importantes.</p>
@@ -134,7 +136,7 @@ REGLAS ESTRICTAS DE TONO Y ESTILO (¡MUY IMPORTANTE PARA PARECER HUMANO!):
 5. NO cometas errores matemáticos. Si citas un porcentaje de cambio (ej. 2%), no digas "subió un 2% que es más del mil por ciento". Sé preciso con los números.
 
 REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
-1. Devuelve ÚNICAMENTE un objeto JSON válido con las siguientes 4 propiedades exactas: "title", "summary", "content", "imageCaption".
+1. Devuelve ÚNICAMENTE un objeto JSON válido con las siguientes 5 propiedades exactas: "title", "summary", "content", "tags", "imageCaption".
 2. "title": Un titular directo y periodístico, enfocado en datos y hechos (ej. "Bitcoin supera los $66K impulsado por la acumulación institucional").
 3. "summary": Un breve lead (sin HTML) directo al punto, explicando el "qué" y el "por qué" de la noticia.
 4. "content": Un artículo extenso en formato HTML. 
@@ -142,11 +144,12 @@ REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
    - Usa etiquetas <h2> para subtítulos descriptivos (evita títulos robóticos como "La Noticia de Última Hora").
    - Usa etiquetas como <p> y <strong>. NO uses <html>, <body> o <h1>.
    - DEBES ESCRIBIR EL ARTÍCULO COMPLETAMENTE EN ESPAÑOL.
-5. "imageCaption": Un pie de foto sobrio (1 oración) con un dato clave relacionado con el titular.
-6. NUNCA menciones que eres una IA. Escribe como un analista de carne y hueso.
-7. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES: ${recentTitles || "Ninguno"}.
-8. TEMA EXCLUSIVO: Tu artículo DEBE ser sobre criptomonedas, blockchain, Web3 o mercados macroeconómicos.
-9. MUY IMPORTANTE: Empieza con { y termina con }. NO uses markdown de bloques de código como \`\`\`json.`;
+5. "tags": Un array de 3 a 5 strings cortos que representen los temas clave del artículo (ej. ["Bitcoin", "Regulación", "DeFi"]).
+6. "imageCaption": Un pie de foto sobrio (1 oración) con un dato clave relacionado con el titular.
+7. NUNCA menciones que eres una IA. Escribe como un analista de carne y hueso.
+8. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES: ${recentTitles || "Ninguno"}.
+9. TEMA EXCLUSIVO: Tu artículo DEBE ser sobre criptomonedas, blockchain, Web3 o mercados macroeconómicos.
+10. MUY IMPORTANTE: Empieza con { y termina con }. NO uses markdown de bloques de código como \`\`\`json.`;
 
     const userPrompt = `Aquí tienes los datos actuales y reales del mercado en este mismo instante:
 

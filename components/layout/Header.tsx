@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { SearchBar } from "@/components/layout/SearchBar";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,8 +48,9 @@ export function Header() {
           </nav>
         </div>
         
-        <div className="flex items-center flex-1 md:flex-initial justify-end">
+        <div className="flex items-center gap-4 flex-1 md:flex-initial justify-end">
           <SearchBar />
+          <ThemeToggle />
         </div>
       </div>
 

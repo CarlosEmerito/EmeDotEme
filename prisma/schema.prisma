@@ -30,6 +30,7 @@ model Article {
   imageCaption String?
   author      String   @default("EmeDotEme AI")
   published   Boolean  @default(false)
+  tags        String[] @default([])
   categoryId  String
   category    Category @relation(fields: [categoryId], references: [id])
   createdAt   DateTime @default(now())

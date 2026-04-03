@@ -150,6 +150,21 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <div dangerouslySetInnerHTML={{ __html: article.content }} />
         </article>
 
+        {/* Tags */}
+        {article.tags && article.tags.length > 0 && (
+          <div className="mt-8 flex flex-wrap gap-2">
+            {article.tags.map((tag) => (
+              <Link 
+                href={`/tag/${tag.toLowerCase()}`}
+                key={tag} 
+                className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-[color:var(--color-brand)] hover:text-white dark:hover:bg-[color:var(--color-brand)] transition-colors text-xs font-bold uppercase tracking-wider rounded-full"
+              >
+                #{tag}
+              </Link>
+            ))}
+          </div>
+        )}
+
         {/* Affiliate / Monetization Section */}
         <div className="mt-12 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 flex flex-col items-center text-center">
           <h3 className="text-lg font-bold text-black dark:text-white font-serif mb-2">

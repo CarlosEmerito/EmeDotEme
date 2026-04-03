@@ -59,6 +59,7 @@ async function main() {
         slug: slug,
         summary: aiResponse.summary,
         content: aiResponse.content,
+        tags: aiResponse.tags || [],
         imageUrl: imageUrl,
         imageCaption: aiResponse.imageCaption,
         categoryId: randomCategory.id,

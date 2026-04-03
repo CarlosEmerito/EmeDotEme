@@ -1,0 +1,41 @@
+import { generateArticleContent } from './services/ai.service';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+async function main() {
+  console.log("Generando articulo con IA...");
+  const aiResponse = await generateArticleContent();
+  console.log("Articulo generado. Insertando en BD...");
+
+  let category = await prisma.category.findFirst({ where: { name: "Web3" } });
+  if (!category) {
+    category = await prisma.category.create({ data: { name: "Web3", slug: "web3" } });
+  }
+
+  const slug = aiResponse.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now();
+
+  const newArticle = await prisma.article.create({
+    data: {
+      title: aiResponse.title,
+      slug: slug,
+      summary: aiResponse.summary,
+      content: aiResponse.content,
+      imageUrl: aiResponse.sourceImageUrl || 'https://via.placeholder.com/800',
+      imageCaption: aiResponse.imageCaption,
+      categoryId: category.id,
+      author: 'Carlos "Emérito" López Lovera',
+      published: true,
+    }
+  });
+
+  console.log("--- RESULTADO DE LA BASE DE DATOS ---");
+  console.log(JSON.stringify(newArticle, null, 2));
+}
+
+main().catch(e => {
+  console.error(e);
+  process.exit(1);
+}).finally(async () => {
+  await prisma.$disconnect();
+});

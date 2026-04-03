@@ -8,6 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
+import { Providers } from "@/components/providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -65,6 +66,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "/",
+    types: {
+      "application/rss+xml": `${siteConfig.url}/feed.xml`,
+    },
   },
   robots: {
     index: true,
@@ -87,25 +91,28 @@ export default function RootLayout({
   return (
     <html
       lang="es"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${ptSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-white dark:bg-zinc-950 text-black dark:text-white">
-        {/* Google AdSense */}
-        <Script
-          id="adsense-script"
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3054571936821093"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        /> 
-        <MarketTicker />
-        <Header />
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer />
-        <Analytics />
-        <SpeedInsights />
+        <Providers>
+          {/* Google AdSense */}
+          <Script
+            id="adsense-script"
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3054571936821093"
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          /> 
+          <MarketTicker />
+          <Header />
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
+          <Analytics />
+          <SpeedInsights />
+        </Providers>
       </body>
     </html>
   );

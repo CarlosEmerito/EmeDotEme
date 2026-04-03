@@ -14,6 +14,7 @@ interface EditArticleProps {
     content: string;
     imageUrl: string | null;
     imageCaption: string | null;
+    tags: string[];
   };
 }
 
@@ -26,6 +27,7 @@ export default function EditArticleForm({ article }: EditArticleProps) {
     summary: article.summary || "",
     imageUrl: article.imageUrl || "",
     imageCaption: article.imageCaption || "",
+    tags: article.tags ? article.tags.join(", ") : "",
     content: article.content || "",
   });
 
@@ -38,7 +40,12 @@ export default function EditArticleForm({ article }: EditArticleProps) {
     e.preventDefault();
     setIsSaving(true);
     
-    const result = await updateArticle(article.id, formData);
+    const dataToSubmit = {
+      ...formData,
+      tags: formData.tags.split(",").map(t => t.trim()).filter(t => t !== "")
+    };
+
+    const result = await updateArticle(article.id, dataToSubmit);
     
     setIsSaving(false);
     
@@ -133,6 +140,21 @@ export default function EditArticleForm({ article }: EditArticleProps) {
             <img src={formData.imageUrl} alt="Preview" className="h-48 object-cover rounded-md border border-zinc-200 dark:border-zinc-800" />
           </div>
         )}
+
+        {/* Tags */}
+        <div className="mb-4">
+          <label className="block text-sm font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">
+            Etiquetas (Tags - separadas por coma)
+          </label>
+          <input
+            type="text"
+            name="tags"
+            value={formData.tags}
+            onChange={handleChange}
+            placeholder="ej. Bitcoin, Regulación, Mercado"
+            className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
+          />
+        </div>
 
         {/* Content (HTML) */}
         <div className="mb-6">

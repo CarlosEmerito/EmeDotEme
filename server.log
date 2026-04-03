@@ -1,0 +1,8 @@
+
+> emedoteme@0.1.0 start
+> next start
+
+⨯ Failed to start server
+Error: listen EADDRINUSE: address already in use :::3018
+    at <unknown> (Error: listen EADD🧠 Solicitando generación a Ollama (qwen2.5:14b)...
+✅ Artículo generado con éxito por Ollama: Análisis Detallado: El Ecosistema Cripto en Evolución Continua

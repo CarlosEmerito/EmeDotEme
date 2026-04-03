@@ -47,6 +47,7 @@ export async function updateArticle(id: string, data: {
   content: string;
   imageUrl: string;
   imageCaption: string;
+  tags?: string[];
 }) {
   try {
     const updated = await prisma.article.update({
@@ -58,6 +59,7 @@ export async function updateArticle(id: string, data: {
         content: data.content,
         imageUrl: data.imageUrl,
         imageCaption: data.imageCaption,
+        tags: data.tags,
       }
     });
 

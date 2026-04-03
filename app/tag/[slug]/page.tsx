@@ -3,11 +3,13 @@ import { Metadata, ResolvingMetadata } from "next";
 import { siteConfig } from "@/config/site";
 import { prisma } from "@/lib/prisma";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
+import { Pagination } from "@/components/layout/Pagination";
 
 interface TagPageProps {
   params: Promise<{
     slug: string;
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata(
@@ -18,39 +20,33 @@ export async function generateMetadata(
   
   return {
     title: `Noticias sobre #${slug} | ${siteConfig.name}`,
-    description: `Las últimas noticias y análisis sobre #${slug} en ${siteConfig.name}`,
+    description: `Descubre las últimas noticias, cotizaciones y análisis a fondo sobre #${slug}. Mantente informado de los cambios clave en el ecosistema cripto.`,
   };
 }
 
-export default async function TagPage({ params }: TagPageProps) {
+export default async function TagPage({ params, searchParams }: TagPageProps) {
   const { slug } = await params;
+  const sParams = await searchParams;
 
-  // Decodificar el slug (ej. mercado-cripto -> mercado cripto)
+  const page = typeof sParams.page === "string" ? parseInt(sParams.page, 10) : 1;
+  const limit = 12;
+
   const decodedTag = decodeURIComponent(slug);
 
-  // Buscar artículos que contengan este tag (case insensitive en PostgreSQL)
-  // Usamos has para el array de strings o ILIKE si lo queremos más flexible,
-  // pero Prisma soporta buscar en arrays con `hasSome` o similar
-  
-  // Como Prisma no tiene ILIKE para arrays primitivos fácilmente sin query raw,
-  // buscaremos aquellos donde el array de tags contenga el string exacto,
-  // o podemos traer todos los publicados y filtrarlos en memoria si no son muchos.
-  // Para optimización lo mejor sería usar `has` pero respeta mayúsculas.
-  // Lo haremos trayendo los artículos y filtrando en JS por ahora para ignorar case.
-  
   const allArticles = await prisma.article.findMany({
     where: { published: true },
     include: { category: true },
     orderBy: { createdAt: 'desc' }
   });
 
-  const articles = allArticles.filter(article => 
+  const matchingArticles = allArticles.filter(article => 
     article.tags.some(t => t.toLowerCase() === decodedTag.toLowerCase())
   );
 
-  if (articles.length === 0) {
-    // No notFound, solo mostrar vacío
-  }
+  const totalCount = matchingArticles.length;
+  const totalPages = Math.ceil(totalCount / limit);
+  const skip = (page - 1) * limit;
+  const paginatedArticles = matchingArticles.slice(skip, skip + limit);
 
   return (
     <div className="flex flex-col flex-1 bg-white dark:bg-zinc-950 font-sans">
@@ -59,14 +55,14 @@ export default async function TagPage({ params }: TagPageProps) {
           <h1 className="text-4xl font-bold mb-4 text-black dark:text-white">
             Explorando <span className="text-[color:var(--color-brand)]">#{decodedTag}</span>
           </h1>
-          <p className="text-lg text-zinc-600 dark:text-zinc-400">
-            Artículos y noticias etiquetadas con {decodedTag}.
+          <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-3xl">
+            Todo lo que necesitas saber sobre <strong>{decodedTag}</strong>. Lee nuestras noticias más recientes y análisis técnicos para entender su impacto en el mercado de las criptomonedas.
           </p>
         </header>
 
-        {articles.length > 0 ? (
+        {paginatedArticles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {articles.map((article) => (
+            {paginatedArticles.map((article) => (
               <SidebarArticleCard key={article.id} article={article as any} />
             ))}
           </div>
@@ -75,6 +71,8 @@ export default async function TagPage({ params }: TagPageProps) {
             <p className="text-zinc-500 text-lg">Aún no hay noticias con esta etiqueta.</p>
           </div>
         )}
+        
+        <Pagination currentPage={page} totalPages={totalPages} basePath={`/tag/${slug}`} />
       </main>
     </div>
   );

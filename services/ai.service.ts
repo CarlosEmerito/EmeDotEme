@@ -149,7 +149,8 @@ REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
 7. NUNCA menciones que eres una IA. Escribe como un analista de carne y hueso.
 8. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES: ${recentTitles || "Ninguno"}.
 9. TEMA EXCLUSIVO: Tu artículo DEBE ser sobre criptomonedas, blockchain, Web3 o mercados macroeconómicos.
-10. MUY IMPORTANTE: Empieza con { y termina con }. NO uses markdown de bloques de código como \`\`\`json.`;
+10. MUY IMPORTANTE: Empieza con { y termina con }. NO uses markdown de bloques de código como \`\`\`json.
+11. SEO INTERLINKING: Si mencionas criptomonedas clave (como Bitcoin, Ethereum, Solana) o conceptos importantes, envuélvelos en un enlace HTML apuntando a nuestro propio tag en minúsculas. Ejemplo: <a href="/tag/bitcoin">Bitcoin</a>. Haz esto al menos 2-3 veces en el texto.`;
 
     const userPrompt = `Aquí tienes los datos actuales y reales del mercado en este mismo instante:
 

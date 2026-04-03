@@ -129,7 +129,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <div className="aspect-video relative overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
                 <Image 
                   src={article.imageUrl} 
-                  alt={article.title}
+                  alt={article.imageCaption || `Imagen ilustrativa sobre ${article.title}`}
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 896px"

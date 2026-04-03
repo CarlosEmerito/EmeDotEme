@@ -54,7 +54,7 @@ export async function getRelatedArticles(categoryId: string, currentArticleId: s
  * Recupera artículos por el slug de su categoría
  * @param slug Slug de la categoría
  */
-export async function getArticlesByCategorySlug(slug: string, limit: number = 10) {
+export async function getArticlesByCategorySlug(slug: string, limit: number = 10, skip: number = 0) {
   return await prisma.article.findMany({
     where: {
       published: true,
@@ -65,6 +65,18 @@ export async function getArticlesByCategorySlug(slug: string, limit: number = 10
     orderBy: { createdAt: "desc" },
     include: { category: true },
     take: limit,
+    skip: skip,
+  });
+}
+
+export async function getTotalArticlesByCategorySlug(slug: string) {
+  return await prisma.article.count({
+    where: {
+      published: true,
+      category: {
+        slug: slug
+      }
+    }
   });
 }
 

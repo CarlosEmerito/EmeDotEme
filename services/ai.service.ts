@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { getMarketData } from "./market.service";
+import { getLatestNews } from "./news.service";
 
 export interface GeneratedArticle {
   title: string;
@@ -60,29 +61,45 @@ export async function generateArticleContent(topic?: string): Promise<GeneratedA
       }
     });
     
-    // RAG: Obtener contexto real del mercado actual
+    // RAG Parte 1: Obtener contexto real del mercado actual (precios)
     const marketData = await getMarketData();
-    const topCoins = marketData.slice(0, 5); // Tomamos el Top 5 para darle contexto a la IA
+    const topCoins = marketData.slice(0, 5);
     
     const marketContext = topCoins.map(coin => 
       `- ${coin.name} (${coin.symbol.toUpperCase()}): $${coin.current_price.toLocaleString()} (Cambio 24h: ${coin.price_change_percentage_24h.toFixed(2)}%)`
     ).join('\n');
 
-    const systemPrompt = `Eres un periodista experto en criptomonedas, economía y tecnología Web3 para el portal 'EmeDotEme'.
-Tu tarea es escribir un artículo de noticias atractivo, profesional, imparcial y optimizado para SEO basado en el estado actual del mercado o en el tema proporcionado por el usuario.
+    // RAG Parte 2: Obtener noticias del mundo real (Cripto, Finanzas, Regulaciones)
+    const latestNews = await getLatestNews();
+    
+    const newsContext = latestNews.length > 0 
+      ? latestNews.map(n => `- [${n.source}] ${n.title}`).join('\n')
+      : "No hay noticias de última hora disponibles.";
+
+    const systemPrompt = `Eres un periodista experto en criptomonedas, economía global y tecnología Web3 para el portal de noticias 'EmeDotEme'.
+Tu tarea es escribir un artículo atractivo, analítico y profesional que relacione los precios del mercado en vivo con los eventos, noticias y regulaciones globales recientes.
 
 REGLAS ESTRICTAS:
 1. Devuelve ÚNICAMENTE un objeto JSON válido con las siguientes 3 propiedades exactas: "title", "summary", "content".
-2. "title": Un titular llamativo y periodístico (máximo 80 caracteres).
-3. "summary": Un resumen de 2 líneas para la portada (sin formato HTML).
-4. "content": El cuerpo completo del artículo en formato HTML. 
-   - Debe tener al menos 3 párrafos bien estructurados.
-   - Usa etiquetas como <p>, <h2> para subtítulos, <ul> y <li> para listas, y <strong> para resaltar datos clave.
+2. "title": Un titular original, periodístico, llamativo y que capte las tendencias recientes.
+3. "summary": Un breve resumen (sin etiquetas HTML) explicando la noticia.
+4. "content": Un artículo completo, profesional y largo en formato HTML. 
+   - Debe tener al menos 4 párrafos analizando en profundidad cómo las noticias recientes afectan a los precios.
+   - Usa etiquetas como <p>, <h2> para subtítulos clave, y <strong> para destacar números.
+   - Analiza, conecta los puntos. ¿Las regulaciones en EEUU afectan al precio? ¿Qué dicen los titulares?
    - NO uses etiquetas <html>, <body> o <h1>.
-5. Mantén un tono formal y analítico.
-6. Genera el JSON en formato crudo, sin bloques de código ni markdown extra.`;
+5. El tono debe ser formal, similar a Bloomberg o CoinDesk.
+6. Devuelve el JSON sin bloques de código extra.`;
 
-    const userPrompt = `Aquí tienes los datos actuales y reales del mercado (Top 5 criptomonedas en vivo):\n${marketContext}\n\n${topic ? `El tema principal o evento específico de este artículo debe ser: "${topic}". Relaciónalo con el estado del mercado si es posible.` : `Por favor, escribe una actualización general del mercado y análisis de tendencias basándote en estos datos en vivo.`}`;
+    const userPrompt = `Aquí tienes los datos actuales y reales del mercado en este mismo instante:
+
+PRECIOS EN VIVO (TOP 5):
+${marketContext}
+
+TITULARES DE NOTICIAS DE ÚLTIMA HORA (Cripto y Finanzas Globales):
+${newsContext}
+
+${topic ? `Escribe un artículo centrado específicamente en: "${topic}", pero utiliza los precios y noticias reales proporcionadas arriba para contextualizar la historia.` : `Por favor, elige el titular más interesante de las noticias de última hora o la tendencia de precios más destacada, y escribe un artículo de fondo sobre cómo ese evento está impactando el ecosistema cripto actual.`}`;
 
     console.log(`🧠 Solicitando generación a Ollama (${modelName})...`);
 

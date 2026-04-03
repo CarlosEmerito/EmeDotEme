@@ -38,13 +38,26 @@ function getMockArticle(topic?: string): GeneratedArticle {
  */
 export async function generateArticleContent(topic?: string): Promise<GeneratedArticle> {
   // Configuración para usar Ollama local a través del SDK de OpenAI
-  const ollamaBaseUrl = process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1";
+  let ollamaBaseUrl = process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1";
+  
+  // Asegurarnos de que la URL termine en /v1 para compatibilidad con la API de OpenAI
+  if (process.env.OLLAMA_BASE_URL && !process.env.OLLAMA_BASE_URL.endsWith('/v1')) {
+    // Limpiar posible barra final
+    const cleanUrl = process.env.OLLAMA_BASE_URL.replace(/\/$/, '');
+    ollamaBaseUrl = `${cleanUrl}/v1`;
+  }
+
   const modelName = process.env.OLLAMA_MODEL || "llama3.1"; // Usaremos llama3.1 (excelente para tu hardware)
 
   try {
     const openai = new OpenAI({
       baseURL: ollamaBaseUrl,
       apiKey: "ollama", // El SDK requiere una key, pero Ollama la ignora
+      defaultHeaders: {
+        // MUY IMPORTANTE: Ngrok bloquea las peticiones automáticas con una pantalla de advertencia en cuentas gratuitas.
+        // Este header le dice a Ngrok que deje pasar la petición directamente a nuestro Ollama.
+        "ngrok-skip-browser-warning": "true"
+      }
     });
     
     // RAG: Obtener contexto real del mercado actual

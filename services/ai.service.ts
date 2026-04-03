@@ -8,6 +8,7 @@ export interface GeneratedArticle {
   summary: string;
   content: string;
   sourceImageUrl?: string;
+  imageCaption?: string;
 }
 
 /**
@@ -31,6 +32,7 @@ function getMockArticle(topic?: string): GeneratedArticle {
     summary: "Nuestro equipo de analistas de EmeDotEme ha evaluado los últimos movimientos del mercado y reporta hallazgos significativos en este sector.",
     content: "<p>Este es el contenido completo del artículo generado para reportar la situación actual. En este texto extenso analizamos las tendencias recientes y su impacto en el ecosistema financiero.</p><p>Analizamos las tendencias, el volumen de operaciones y el sentimiento general del mercado para brindarte esta información de vanguardia y una cobertura completa del panorama cripto actual.</p>",
     sourceImageUrl: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=1200&auto=format&fit=crop", // Placeholder image
+    imageCaption: "Representación visual de la tecnología blockchain y los mercados digitales emergentes.",
   };
 }
 
@@ -98,16 +100,17 @@ export async function generateArticleContent(topic?: string): Promise<GeneratedA
 Tu tarea es escribir un artículo atractivo, analítico y PROFUNDAMENTE DETALLADO que relacione los precios del mercado en vivo con los eventos, noticias y regulaciones globales recientes.
 
 REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
-1. Devuelve ÚNICAMENTE un objeto JSON válido con las siguientes 3 propiedades exactas: "title", "summary", "content".
+1. Devuelve ÚNICAMENTE un objeto JSON válido con las siguientes 4 propiedades exactas: "title", "summary", "content", "imageCaption".
 2. "title": Un titular original, periodístico, llamativo y que capte las tendencias recientes.
 3. "summary": Un breve resumen (sin etiquetas HTML) explicando la noticia.
 4. "content": Un artículo MUY EXTENSO y profesional en formato HTML. 
    - ES OBLIGATORIO que el artículo tenga al menos 600 palabras y entre 6 y 8 párrafos bien desarrollados.
    - DEBES incluir múltiples secciones utilizando etiquetas <h2> para los subtítulos. Estructura recomendada: Introducción, Análisis de la Noticia Principal, Contexto del Mercado (usando los precios proporcionados), Implicaciones a Futuro y Conclusión.
    - Usa etiquetas como <p>, <h2> y <strong>. NO uses etiquetas <html>, <body> o <h1>.
-5. El tono debe ser formal, humano y experto, similar a Bloomberg o CoinDesk. NUNCA menciones que eres una IA, un bot o un asistente virtual. Escribe como si fueras un analista de carne y hueso.
-6. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES (para evitar ser repetitivo): ${recentTitles || "Ninguno"}.
-7. Genera el JSON en formato crudo.`;
+5. "imageCaption": Escribe un pie de foto (máximo 1 o 2 oraciones) periodístico y profesional que describa la temática general de la imagen que acompañará este artículo.
+6. El tono debe ser formal, humano y experto, similar a Bloomberg o CoinDesk. NUNCA menciones que eres una IA, un bot o un asistente virtual. Escribe como si fueras un analista de carne y hueso.
+7. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES (para evitar ser repetitivo): ${recentTitles || "Ninguno"}.
+8. Genera el JSON en formato crudo sin formato markdown como \`\`\`json.`;
 
     const userPrompt = `Aquí tienes los datos actuales y reales del mercado en este mismo instante:
 

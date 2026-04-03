@@ -27,6 +27,7 @@ model Article {
   summary     String?
   content     String
   imageUrl    String?
+  imageCaption String?
   author      String   @default("EmeDotEme AI")
   published   Boolean  @default(false)
   categoryId  String

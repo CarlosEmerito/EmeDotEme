@@ -65,6 +65,7 @@ export async function GET(req: Request) {
         summary: aiResponse.summary,
         content: aiResponse.content,
         imageUrl: imageUrl,
+        imageCaption: aiResponse.imageCaption,
         categoryId: randomCategory.id,
         author: siteConfig.author,
         published: true,

@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata, ResolvingMetadata } from "next";
 import { siteConfig } from "@/config/site";
-import { getArticleBySlug } from "@/services/article.service";
+import { getArticleBySlug, getRelatedArticles } from "@/services/article.service";
+import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -51,6 +52,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
+  const relatedArticles = await getRelatedArticles(article.categoryId, article.id, 3);
+
   return (
     <div className="flex flex-col flex-1 bg-white dark:bg-zinc-950 font-sans">
       <main className="flex flex-col max-w-4xl mx-auto w-full px-4 py-12">
@@ -81,6 +84,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <article className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
           <div dangerouslySetInnerHTML={{ __html: article.content }} />
         </article>
+
+        {/* Related Articles */}
+        {relatedArticles.length > 0 && (
+          <section className="mt-16 pt-10 border-t border-zinc-200 dark:border-zinc-800">
+            <h2 className="text-2xl font-bold mb-6 text-black dark:text-white">Artículos relacionados</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedArticles.map((related) => (
+                <SidebarArticleCard key={related.id} article={related} />
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );

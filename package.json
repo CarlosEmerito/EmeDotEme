@@ -12,6 +12,7 @@
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "@tailwindcss/typography": "^0.5.19",
+    "@vercel/analytics": "^2.0.1",
     "next": "16.2.2",
     "openai": "^6.33.0",
     "pg": "^8.20.0",

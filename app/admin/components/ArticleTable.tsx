@@ -11,6 +11,7 @@ type ArticleWithCategory = {
   slug: string;
   published: boolean;
   createdAt: Date;
+  imageUrl: string | null;
   category: { name: string };
 };
 
@@ -58,6 +59,7 @@ export default function ArticleTable({ initialArticles }: { initialArticles: Art
         <table className="w-full text-left text-sm text-zinc-600 dark:text-zinc-400">
           <thead className="bg-zinc-50 dark:bg-zinc-800/50 border-b border-zinc-200 dark:border-zinc-800 uppercase text-xs tracking-wider font-bold">
             <tr>
+              <th className="px-6 py-4 w-16">Imagen</th>
               <th className="px-6 py-4">Noticia</th>
               <th className="px-6 py-4">Categoría</th>
               <th className="px-6 py-4">Fecha</th>
@@ -68,11 +70,20 @@ export default function ArticleTable({ initialArticles }: { initialArticles: Art
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
             {articles.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-zinc-500 italic">No hay noticias generadas todavía.</td>
+                <td colSpan={6} className="px-6 py-8 text-center text-zinc-500 italic">No hay noticias generadas todavía.</td>
               </tr>
             ) : (
               articles.map((article) => (
                 <tr key={article.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/20 transition-colors">
+                  <td className="px-6 py-4">
+                    {article.imageUrl ? (
+                      <img src={article.imageUrl} alt={article.title} className="w-12 h-12 object-cover rounded-md border border-zinc-200 dark:border-zinc-800" />
+                    ) : (
+                      <div className="w-12 h-12 bg-zinc-100 dark:bg-zinc-800 rounded-md border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-400 text-xs">
+                        N/A
+                      </div>
+                    )}
+                  </td>
                   <td className="px-6 py-4 font-medium text-black dark:text-white max-w-xs">
                     <div className="truncate" title={article.title}>
                       <Link href={`/articulo/${article.slug}`} target="_blank" className="hover:text-[color:var(--color-brand)]">

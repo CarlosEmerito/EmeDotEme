@@ -17,5 +17,7 @@ echo "✅ PROCESO TERMINADO ✅"
 echo "Revisa https://eme-dot-eme.vercel.app para ver la noticia."
 echo "====================================================="
 
-# Esto pausa la consola para que no se cierre sola si le haces doble clic
-read -p "Presiona Enter para salir..."
+# Esto pausa la consola solo si se abrió haciendo doble clic (interactiva)
+if [ -t 0 ]; then
+  read -p "Presiona Enter para salir..."
+fi

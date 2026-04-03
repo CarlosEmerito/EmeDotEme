@@ -30,8 +30,8 @@ export async function getLatestNews(): Promise<NewsItem[]> {
     try {
       const parsed = await parser.parseURL(feed.url);
       
-      // Tomamos solo las 5 noticias más recientes de cada fuente para no sobrecargar el prompt
-      const items = parsed.items.slice(0, 5).map(item => ({
+      // Tomamos solo las 10 noticias más recientes de cada fuente
+      const items = parsed.items.slice(0, 10).map(item => ({
         title: item.title || "Noticia sin título",
         source: feed.name,
         pubDate: item.isoDate || item.pubDate || new Date().toISOString(),
@@ -55,6 +55,6 @@ export async function getLatestNews(): Promise<NewsItem[]> {
   // Ordenamos todas las noticias de más nuevas a más antiguas
   allNews.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
 
-  // Devolvemos el top 12 de noticias más recientes de todo el mundo (Cripto + Economía tradicional)
-  return allNews.slice(0, 12);
+  // Devolvemos el top 40 de noticias más recientes de todo el mundo
+  return allNews.slice(0, 40);
 }

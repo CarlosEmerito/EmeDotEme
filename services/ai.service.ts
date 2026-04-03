@@ -78,7 +78,7 @@ export async function generateArticleContent(topic?: string): Promise<GeneratedA
       : "No hay noticias de última hora disponibles.";
 
     // RAG Parte 3: Evitar repetición (obtenemos últimos artículos publicados)
-    const recentArticles = await getPublishedArticles(5);
+    const recentArticles = await getPublishedArticles(15);
     const recentTitles = recentArticles.map(a => a.title).join(' | ');
 
     // Estrategia de Variedad: Si no hay un tema específico, escogemos una o dos noticias al azar para enfocar el artículo

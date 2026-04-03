@@ -3,7 +3,12 @@ import { prisma } from "@/lib/prisma";
 import { siteConfig } from "@/config/site";
 import { generateArticleContent } from "@/services/ai.service";
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
+  const authHeader = req.headers.get('authorization');
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
   try {
     // 1. Asegurar que existan categorías base
     const categories = ["Mercados", "Tecnología", "Web3"];

@@ -12,27 +12,54 @@ export interface GeneratedArticle {
 }
 
 /**
- * Genera un artículo de noticias falso si no hay conexión con la IA,
- * asegurando que el sitio nunca se rompa.
+ * Intenta extraer y reparar un JSON que pueda venir con texto extra antes o después
  */
-function getMockArticle(topic?: string): GeneratedArticle {
+function extractJsonFromText(text: string): string {
+  try {
+    // Buscar el primer { y el último }
+    const start = text.indexOf('{');
+    const end = text.lastIndexOf('}');
+    
+    if (start !== -1 && end !== -1 && end > start) {
+      return text.substring(start, end + 1);
+    }
+    return text;
+  } catch (e) {
+    return text;
+  }
+}
+
+/**
+ * Genera un artículo de noticias de fallback usando datos reales si es posible.
+ */
+async function getFallbackArticle(topic?: string): Promise<GeneratedArticle> {
+  let marketContext = "";
+  try {
+    const marketData = await getMarketData();
+    const topCoins = marketData.slice(0, 3);
+    marketContext = topCoins.map(c => `${c.name} cotizando a $${c.current_price.toLocaleString()} (${c.price_change_percentage_24h.toFixed(2)}% en 24h)`).join(', ');
+  } catch (e) {
+    marketContext = "Bitcoin, Ethereum y otros activos digitales clave experimentando alta volatilidad";
+  }
+
   const titles = [
-    "Bitcoin rompe la barrera de los $100K: Análisis del mercado",
-    "Ethereum lanza una nueva propuesta de mejora (EIP)",
-    "Solana procesa un millón de transacciones por segundo en pruebas",
-    "Nuevo marco regulatorio en la Unión Europea para criptoactivos",
-    "La adopción institucional de DeFi alcanza máximos históricos",
-    "Web3 y Finanzas Tradicionales: La nueva frontera",
+    "Análisis Urgente: El estado actual del mercado cripto",
+    "Perspectiva de los mercados: ¿Qué está pasando con Bitcoin y las altcoins?",
+    "Volatilidad en Web3: Entendiendo los movimientos recientes del mercado",
   ];
   
   const randomTitle = titles[Math.floor(Math.random() * titles.length)];
 
   return {
-    title: topic ? `Especial: ${topic} en el radar` : randomTitle,
-    summary: "Nuestro equipo de analistas de EmeDotEme ha evaluado los últimos movimientos del mercado y reporta hallazgos significativos en este sector.",
-    content: "<p>Este es el contenido completo del artículo generado para reportar la situación actual. En este texto extenso analizamos las tendencias recientes y su impacto en el ecosistema financiero.</p><p>Analizamos las tendencias, el volumen de operaciones y el sentimiento general del mercado para brindarte esta información de vanguardia y una cobertura completa del panorama cripto actual.</p>",
-    sourceImageUrl: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=1200&auto=format&fit=crop", // Placeholder image
-    imageCaption: "Representación visual de la tecnología blockchain y los mercados digitales emergentes.",
+    title: topic ? `Especial: Análisis sobre ${topic.substring(0, 50)}...` : randomTitle,
+    summary: `Nuestro equipo analiza la situación actual donde vemos a ${marketContext.split(',')[0]} liderando las métricas, proporcionando un contexto crucial para inversores.`,
+    content: `<p>En las últimas horas, el mercado de criptomonedas ha mostrado movimientos significativos que merecen un análisis profundo. Actualmente, observamos una dinámica donde destacan activos como ${marketContext}.</p>
+<h2>Impacto de la Volatilidad</h2>
+<p>La naturaleza del ecosistema Web3 implica fluctuaciones constantes. Sin embargo, los niveles actuales de soporte y resistencia sugieren que los inversores institucionales están recalibrando sus estrategias a corto y mediano plazo. Las métricas *on-chain* revelan acumulación en carteras significativas, lo que históricamente ha precedido a movimientos direccionales importantes.</p>
+<h2>Perspectiva a Futuro</h2>
+<p>Como analista, considero que la atención debe mantenerse no solo en la acción del precio de Bitcoin, sino en el desarrollo fundamental de redes secundarias. La verdadera adopción sigue construyéndose independientemente del ruido diario del mercado bursátil tradicional.</p>`,
+    sourceImageUrl: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=1200&auto=format&fit=crop",
+    imageCaption: "Gráficos de mercado y representación visual de la economía descentralizada.",
   };
 }
 
@@ -110,8 +137,8 @@ REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
 5. "imageCaption": Escribe un pie de foto (máximo 1 o 2 oraciones) periodístico y profesional que describa la temática general de la imagen que acompañará este artículo.
 6. El tono debe ser formal, humano y experto, similar a Bloomberg o CoinDesk. NUNCA menciones que eres una IA, un bot o un asistente virtual. Escribe como si fueras un analista de carne y hueso.
 7. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES (para evitar ser repetitivo): ${recentTitles || "Ninguno"}.
-8. TEMA EXCLUSIVO: Tu artículo DEBE ser estricta y exclusivamente sobre criptomonedas, blockchain, Bitcoin, Ethereum, Web3, DeFi o el mercado de criptoactivos. NUNCA escribas sobre temas ajenos como farmacéuticas, entretenimiento o acciones tradicionales a menos que estén directamente vinculadas con blockchain o cripto. Si la noticia principal asignada no es sobre cripto, IGNÓRALA y escribe un análisis sobre los precios de CoinGecko o sobre el estado actual de Bitcoin y Ethereum.
-9. Genera el JSON en formato crudo sin formato markdown como \`\`\`json.`;
+8. TEMA EXCLUSIVO: Tu artículo DEBE ser estricta y exclusivamente sobre criptomonedas, blockchain, Bitcoin, Ethereum, Web3, DeFi o el mercado de criptoactivos.
+9. MUY IMPORTANTE: NO devuelvas texto conversacional antes o después del JSON. Empieza con { y termina con }. NO uses markdown de bloques de código como \`\`\`json. Tu salida debe ser analizable directamente por JSON.parse().`;
 
     const userPrompt = `Aquí tienes los datos actuales y reales del mercado en este mismo instante:
 
@@ -144,8 +171,9 @@ RECUERDA: Tu artículo debe ser LARGO, DETALLADO y 100% ENFOCADO EN EL ECOSISTEM
       throw new Error("Ollama devolvió una respuesta vacía.");
     }
 
-    // Limpieza de formato en caso de que el LLM local devuelva bloques markdown ```json
+    // Limpieza y extracción robusta del JSON
     content = content.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+    content = extractJsonFromText(content);
 
     const parsedArticle = JSON.parse(content) as GeneratedArticle;
     
@@ -163,6 +191,6 @@ RECUERDA: Tu artículo debe ser LARGO, DETALLADO y 100% ENFOCADO EN EL ECOSISTEM
 
   } catch (error) {
     console.error("❌ Error generando contenido con Ollama:", error);
-    return getMockArticle(topic); // Fallback en caso de que Ollama esté apagado
+    return await getFallbackArticle(topic); // Fallback dinámico si la IA local falla
   }
 }

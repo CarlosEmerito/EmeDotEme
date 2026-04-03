@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatRelativeDate } from "@/lib/utils";
 
 interface SidebarArticleCardProps {
   article: {
@@ -30,11 +31,7 @@ export function SidebarArticleCard({ article }: SidebarArticleCardProps) {
         </p>
       )}
       <div className="text-xs text-zinc-500 uppercase tracking-wide">
-        {new Date(article.createdAt).toLocaleDateString("es-ES", {
-          month: "short",
-          day: "numeric",
-          year: "numeric"
-        })}
+        {formatRelativeDate(article.createdAt)}
       </div>
     </Link>
   );

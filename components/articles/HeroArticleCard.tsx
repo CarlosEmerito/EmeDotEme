@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatRelativeDate } from "@/lib/utils";
 
 interface HeroArticleCardProps {
   article: {
@@ -31,11 +32,7 @@ export function HeroArticleCard({ article }: HeroArticleCardProps) {
         <span>Por <span className="text-zinc-800 dark:text-zinc-300 font-semibold">{article.author}</span></span>
         <span className="mx-2">•</span>
         <span>
-          {new Date(article.createdAt).toLocaleDateString("es-ES", {
-            month: "short",
-            day: "numeric",
-            year: "numeric"
-          })}
+          {formatRelativeDate(article.createdAt)}
         </span>
       </div>
     </Link>

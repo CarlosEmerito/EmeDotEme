@@ -4,6 +4,7 @@ import { Metadata, ResolvingMetadata } from "next";
 import { siteConfig } from "@/config/site";
 import { getArticleBySlug, getRelatedArticles } from "@/services/article.service";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
+import { formatRelativeDate } from "@/lib/utils";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -75,7 +76,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <div className="flex items-center justify-between border-t border-b border-zinc-200 dark:border-zinc-800 py-4">
             <div className="flex items-center text-sm text-zinc-700 dark:text-zinc-300">
               <span className="font-semibold text-blue-600 dark:text-blue-400 mr-4">Por {article.author}</span>
-              <span>{new Date(article.createdAt).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span>{formatRelativeDate(article.createdAt)}</span>
             </div>
           </div>
         </header>

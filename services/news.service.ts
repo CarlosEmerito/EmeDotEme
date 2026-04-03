@@ -48,7 +48,9 @@ export async function getLatestNews(): Promise<NewsItem[]> {
         // Filtrar imágenes basura o patrocinadas para que se usen las de Unsplash por defecto
         if (imageUrl) {
           const lowerUrl = imageUrl.toLowerCase();
-          if (lowerUrl.includes('sponsored') || lowerUrl.includes('banner') || lowerUrl.includes('ad-') || lowerUrl.includes('logo')) {
+          // Ignoramos imágenes que puedan ser genéricas de feeds generales (como barcos o cosas no cripto)
+          // Forzando mejor un fallback image temático si no estamos seguros.
+          if (lowerUrl.includes('sponsored') || lowerUrl.includes('banner') || lowerUrl.includes('ad-') || lowerUrl.includes('logo') || lowerUrl.includes('placeholder')) {
             imageUrl = undefined;
           }
         }

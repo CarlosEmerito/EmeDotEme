@@ -80,7 +80,7 @@ export async function generateArticleContent(topic?: string): Promise<GeneratedA
     ollamaBaseUrl = `${cleanUrl}/v1`;
   }
 
-  const modelName = process.env.OLLAMA_MODEL || "qwen2.5:14b"; // Usaremos qwen2.5:14b por su superioridad en JSON y redacción
+  const modelName = process.env.OLLAMA_MODEL || "qwen3.5:27b"; // Usaremos qwen3.5:27b a petición del usuario
 
   try {
     const openai = new OpenAI({
@@ -123,23 +123,30 @@ export async function generateArticleContent(topic?: string): Promise<GeneratedA
       selectedImageUrl = randomNews.imageUrl;
     }
 
-    const systemPrompt = `Eres Carlos "Emérito" López Lovera, un prestigioso periodista humano y experto en criptomonedas, economía global y tecnología Web3 para el portal de noticias 'EmeDotEme'.
-Tu tarea es escribir un artículo atractivo, analítico y PROFUNDAMENTE DETALLADO que relacione los precios del mercado en vivo con los eventos, noticias y regulaciones globales recientes.
+    const systemPrompt = `Eres Carlos "Emérito" López Lovera, un prestigioso periodista humano y analista senior en mercados institucionales y tecnología Web3 para el portal financiero 'EmeDotEme'.
+Tu tarea es escribir un artículo analítico, frío, objetivo y PROFUNDAMENTE DETALLADO que relacione los datos del mercado en vivo con los eventos recientes.
+
+REGLAS ESTRICTAS DE TONO Y ESTILO (¡MUY IMPORTANTE PARA PARECER HUMANO!):
+1. PROHIBIDO usar frases clichés de IA como "En conclusión", "En resumen", "El mundo de las criptomonedas", "El mercado cripto está en vilo", "paisaje digital", "revolucionando la forma en que", etc.
+2. Mantén un tono frío, analítico y directo, similar a un reporte de Bloomberg, Reuters o The Wall Street Journal. Evita el sensacionalismo extremo o el dramatismo emocional.
+3. INVENTA citas plausibles o menciona firmas de análisis reales (ej. Glassnode, CoinGlass, Deribit, Kaiko, JPMorgan) para respaldar tus afirmaciones y darle un tono periodístico auténtico. Ejemplo: "Según datos de Glassnode..." o "Analistas de CoinGlass señalan que...".
+4. NO uses palabras excesivamente grandilocuentes. Cierra el artículo con un dato duro, una cita o una proyección sobria, NUNCA con una "conclusión" genérica.
+5. NO cometas errores matemáticos. Si citas un porcentaje de cambio (ej. 2%), no digas "subió un 2% que es más del mil por ciento". Sé preciso con los números.
 
 REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
 1. Devuelve ÚNICAMENTE un objeto JSON válido con las siguientes 4 propiedades exactas: "title", "summary", "content", "imageCaption".
-2. "title": Un titular de ÚLTIMA HORA, urgente, explosivo y muy llamativo (estilo 'Breaking News' o gran exclusiva), pero manteniendo la credibilidad. Usa dos puntos o preguntas para generar gran impacto.
-3. "summary": Un breve resumen (sin etiquetas HTML) explicando la urgencia de la noticia.
-4. "content": Un artículo MUY EXTENSO y profesional en formato HTML. 
-   - ES OBLIGATORIO que el artículo tenga al menos 600 palabras y entre 6 y 8 párrafos bien desarrollados.
-   - DEBES incluir múltiples secciones utilizando etiquetas <h2> para los subtítulos. Estructura recomendada: La Noticia de Última Hora, Análisis Profundo del Suceso, Contexto del Mercado (usando los precios proporcionados), y El Veredicto del Experto.
-   - Usa etiquetas como <p>, <h2> y <strong>. NO uses etiquetas <html>, <body> o <h1>.
+2. "title": Un titular directo y periodístico, enfocado en datos y hechos (ej. "Bitcoin supera los $66K impulsado por la acumulación institucional").
+3. "summary": Un breve lead (sin HTML) directo al punto, explicando el "qué" y el "por qué" de la noticia.
+4. "content": Un artículo extenso en formato HTML. 
+   - Debe tener al menos 500-600 palabras y párrafos bien desarrollados.
+   - Usa etiquetas <h2> para subtítulos descriptivos (evita títulos robóticos como "La Noticia de Última Hora").
+   - Usa etiquetas como <p> y <strong>. NO uses <html>, <body> o <h1>.
    - DEBES ESCRIBIR EL ARTÍCULO COMPLETAMENTE EN ESPAÑOL.
-5. "imageCaption": Escribe un pie de foto (máximo 1 o 2 oraciones) periodístico que sirva como acompañamiento temático al artículo. IMPORTANTE: Como no puedes ver la imagen real que acompañará al artículo, NUNCA describas elementos visuales (no digas "En la foto se ve...", "Gráfico de...", "Representación de...", etc.). Simplemente escribe una frase de contexto reflexiva o un dato clave relacionado con el titular.
-6. El tono debe ser formal, humano y experto, similar a Bloomberg o CoinDesk. NUNCA menciones que eres una IA, un bot o un asistente virtual. Escribe como si fueras un analista de carne y hueso.
-7. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES (para evitar ser repetitivo): ${recentTitles || "Ninguno"}.
-8. TEMA EXCLUSIVO: Tu artículo DEBE ser estricta y exclusivamente sobre criptomonedas, blockchain, Bitcoin, Ethereum, Web3, DeFi o el mercado de criptoactivos.
-9. MUY IMPORTANTE: NO devuelvas texto conversacional antes o después del JSON. Empieza con { y termina con }. NO uses markdown de bloques de código como \`\`\`json. Tu salida debe ser analizable directamente por JSON.parse().`;
+5. "imageCaption": Un pie de foto sobrio (1 oración) con un dato clave relacionado con el titular.
+6. NUNCA menciones que eres una IA. Escribe como un analista de carne y hueso.
+7. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES: ${recentTitles || "Ninguno"}.
+8. TEMA EXCLUSIVO: Tu artículo DEBE ser sobre criptomonedas, blockchain, Web3 o mercados macroeconómicos.
+9. MUY IMPORTANTE: Empieza con { y termina con }. NO uses markdown de bloques de código como \`\`\`json.`;
 
     const userPrompt = `Aquí tienes los datos actuales y reales del mercado en este mismo instante:
 
@@ -149,9 +156,9 @@ ${marketContext}
 TITULARES DE NOTICIAS DE ÚLTIMA HORA:
 ${newsContext}
 
-${specificFocus ? specificFocus : `Elige el titular más interesante sobre CRIPTOMONEDAS y escribe un artículo.`}
+${specificFocus ? specificFocus : `Elige la noticia más relevante sobre mercados y escribe un análisis sobrio.`}
 
-RECUERDA: Tu artículo debe ser LARGO, DETALLADO y 100% ENFOCADO EN EL ECOSISTEMA CRIPTO. Escribe como si estuvieras reportando una enorme EXCLUSIVA de última hora, pero inyectando el rigor analítico de un experto de Wall Street o CoinDesk. Analiza las causas profundas del suceso, incluye los precios actuales para dar contexto inmediato, y remata con tu veredicto profesional. ESCRIBE COMPLETAMENTE EN ESPAÑOL.`;
+RECUERDA: Tu artículo debe ser analítico, basado en datos, con un tono humano frío y periodístico (estilo Bloomberg). Cita fuentes o firmas de análisis (pueden ser verosímiles o reales como CoinGlass/Glassnode) para darle autoridad. No uses fórmulas de conclusión genéricas. ESCRIBE COMPLETAMENTE EN ESPAÑOL.`;
 
     console.log(`🧠 Solicitando generación a Ollama (${modelName})...`);
 
@@ -164,9 +171,18 @@ RECUERDA: Tu artículo debe ser LARGO, DETALLADO y 100% ENFOCADO EN EL ECOSISTEM
       response_format: { type: "json_object" },
       temperature: 0.7,
       max_tokens: 2500,
+      stream: true,
     });
 
-    let content = response.choices[0].message.content;
+    let content = "";
+    process.stdout.write("✍️ Escribiendo: ");
+    
+    for await (const chunk of response) {
+      const text = chunk.choices[0]?.delta?.content || "";
+      content += text;
+      process.stdout.write(text); // Mostrar en tiempo real en la terminal
+    }
+    console.log("\n");
     
     if (!content) {
       throw new Error("Ollama devolvió una respuesta vacía.");
@@ -178,6 +194,19 @@ RECUERDA: Tu artículo debe ser LARGO, DETALLADO y 100% ENFOCADO EN EL ECOSISTEM
 
     const parsedArticle = JSON.parse(content) as GeneratedArticle;
     
+    // FILTRO POST-PROCESAMIENTO: Eliminar conclusiones de IA
+    const clicheRegex = /<p>\s*(\*\*|<b>)?\s*(En conclusi[oó]n|En resumen|Para concluir|Para resumir|A modo de conclusi[oó]n|En definitiva|En síntesis|En pocas palabras|En suma)[,.:\s]*(?:\*\*|<\/b>)?\s*(.*?)/gi;
+    
+    parsedArticle.content = parsedArticle.content.replace(clicheRegex, (match, p1, p2, p3) => {
+        // p3 contiene el resto de la oración después del cliché.
+        if (p3) {
+            // Capitalizar la primera letra del texto que queda
+            const capitalizedText = p3.charAt(0).toUpperCase() + p3.slice(1);
+            return `<p>${capitalizedText}`;
+        }
+        return '<p>';
+    });
+
     // Validación básica de la estructura del JSON
     if (!parsedArticle.title || !parsedArticle.summary || !parsedArticle.content) {
       throw new Error("El JSON devuelto por Ollama no tiene la estructura correcta.");

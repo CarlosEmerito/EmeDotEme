@@ -59,8 +59,35 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   const relatedArticles = await getRelatedArticles(article.categoryId, article.id, 3);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "headline": article.title,
+    "image": [article.imageUrl],
+    "datePublished": article.createdAt.toISOString(),
+    "dateModified": article.updatedAt.toISOString(),
+    "author": [{
+        "@type": "Person",
+        "name": article.author,
+        "url": `${siteConfig.url}/sobre-mi`
+      }],
+    "publisher": {
+      "@type": "Organization",
+      "name": siteConfig.name,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${siteConfig.url}/logo.png`
+      }
+    },
+    "description": article.summary
+  };
+
   return (
     <div className="flex flex-col flex-1 bg-white dark:bg-zinc-950 font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <main className="flex flex-col max-w-4xl mx-auto w-full px-4 py-12">
         {/* Breadcrumb */}
         <nav className="flex text-sm text-zinc-500 mb-8">

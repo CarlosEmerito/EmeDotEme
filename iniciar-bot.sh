@@ -3,6 +3,7 @@
 # Archivo donde guardaremos el identificador del proceso para poder detenerlo luego
 PID_FILE="/home/emerito/emedoteme/bot.pid"
 LOG_FILE="/home/emerito/emedoteme/bot.log"
+DIR="/home/emerito/emedoteme"
 
 if [ -f "$PID_FILE" ]; then
     echo "⚠️ El bot automático ya está en ejecución."
@@ -14,35 +15,38 @@ echo "================================================="
 echo "🤖 INICIANDO BOT AUTOMÁTICO DE EMEDOTEME 🤖"
 echo "================================================="
 echo "El bot se ha iniciado en segundo plano."
-echo "Publicará noticias en tu web cada 2-5 horas de forma aleatoria."
+echo "Generará y publicará noticias localmente usando Ollama."
+echo "Se ejecutará cada 3-5 horas de forma aleatoria."
 echo "Puedes cerrar esta terminal y seguirá funcionando."
 echo ""
 echo "Para detenerlo usa: ./detener-bot.sh"
 echo "Para ver la actividad usa: tail -f bot.log"
 echo "================================================="
 
-# El bloque de abajo es el "Bucle Infinito" que corre en background
-nohup bash -c '
+# Bucle Infinito que corre en background
+nohup bash -c "
+cd '$DIR' || exit 1
 while true; do
-    echo "----------------------------------------" >> "'$LOG_FILE'"
-    echo "[$(date "+%Y-%m-%d %H:%M:%S")] Lanzando publicación a Vercel..." >> "'$LOG_FILE'"
+    echo \"----------------------------------------\" >> '$LOG_FILE'
+    echo \"[\$(date '+%Y-%m-%d %H:%M:%S')] 🤖 Iniciando generación de nueva noticia local...\" >> '$LOG_FILE'
     
-    # Llamamos al script que ya teníamos
-    /home/emerito/emedoteme/publicar.sh >> "'$LOG_FILE'" 2>&1
+    # Llamamos al script local (publish.ts)
+    ./publicar.sh >> '$LOG_FILE' 2>&1
     
-    echo "[$(date "+%Y-%m-%d %H:%M:%S")] Publicación completada." >> "'$LOG_FILE'"
+    echo \"[\$(date '+%Y-%m-%d %H:%M:%S')] ✅ Publicación completada.\" >> '$LOG_FILE'
     
-    # Generar espera aleatoria entre 7200 segundos (2h) y 18000 segundos (5h)
-    ESPERA=$(( (RANDOM % 10801) + 7200 ))
+    # Generar espera aleatoria entre 10800 segundos (3h) y 18000 segundos (5h)
+    ESPERA=\$(( (RANDOM % 7201) + 10800 ))
     
-    # Para loggear la cantidad de horas en el archivo
-    HORAS=$(echo "scale=2; $ESPERA/3600" | bc)
-    echo "[$(date "+%Y-%m-%d %H:%M:%S")] Bot durmiendo... Próxima publicación en $HORAS horas." >> "'$LOG_FILE'"
+    # Calcular horas y minutos para el log (sin depender de bc)
+    HORAS=\$(( ESPERA / 3600 ))
+    MINUTOS=\$(( (ESPERA % 3600) / 60 ))
     
-    # El sistema se pausa durante esas horas
-    sleep $ESPERA
+    echo \"[\$(date '+%Y-%m-%d %H:%M:%S')] 💤 Bot durmiendo... Próxima publicación en \$HORAS horas y \$MINUTOS minutos.\" >> '$LOG_FILE'
+    
+    sleep \$ESPERA
 done
-' > /dev/null 2>&1 &
+" > /dev/null 2>&1 &
 
 # Guardamos el ID del proceso (PID) del comando nohup en segundo plano
 echo $! > "$PID_FILE"

@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -8,13 +10,11 @@
   --color-accent: #eab308; /* Yellow */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f0a1a; /* Very dark purple tint for background */
-    --foreground: #ededed;
-    --color-brand: #a78bfa; /* Lighter purple for dark mode */
-    --color-accent: #fde047; /* Brighter yellow for dark mode */
-  }
+.dark {
+  --background: #0f0a1a; /* Very dark purple tint for background */
+  --foreground: #ededed;
+  --color-brand: #a78bfa; /* Lighter purple for dark mode */
+  --color-accent: #fde047; /* Brighter yellow for dark mode */
 }
 
 @theme inline {

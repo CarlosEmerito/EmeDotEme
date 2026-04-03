@@ -5,6 +5,7 @@ import { siteConfig } from "@/config/site";
 import { getArticleBySlug, getRelatedArticles } from "@/services/article.service";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
 import { formatRelativeDate, calculateReadingTime } from "@/lib/utils";
+import { ShareButtons } from "@/components/articles/ShareButtons";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -83,6 +84,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             
             {/* Share buttons will go here later */}
             <div className="hidden sm:flex gap-2">
+              <ShareButtons title={article.title} slug={article.slug} />
             </div>
           </div>
         </header>

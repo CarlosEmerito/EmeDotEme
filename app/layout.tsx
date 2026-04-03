@@ -90,16 +90,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${ptSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-white dark:bg-zinc-950 text-black dark:text-white">
-        {/* Placeholder AdSense (Descomentar cuando aprueben el dominio) */}
-        {/* 
+        {/* Google AdSense */}
         <Script
           id="adsense-script"
           async
-          src="https://pagead2.googlesolution.com/pagead/js/adsbygoogle.js?client=ca-pub-AQUI_TU_ID"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3054571936821093"
           crossOrigin="anonymous"
           strategy="afterInteractive"
         /> 
-        */}
         <MarketTicker />
         <Header />
         <main className="flex-1">

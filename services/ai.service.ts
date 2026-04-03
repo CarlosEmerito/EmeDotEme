@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { getMarketData } from "./market.service";
 import { getLatestNews } from "./news.service";
+import { getPublishedArticles } from "./article.service";
 
 export interface GeneratedArticle {
   title: string;
@@ -76,6 +77,18 @@ export async function generateArticleContent(topic?: string): Promise<GeneratedA
       ? latestNews.map(n => `- [${n.source}] ${n.title}`).join('\n')
       : "No hay noticias de última hora disponibles.";
 
+    // RAG Parte 3: Evitar repetición (obtenemos últimos artículos publicados)
+    const recentArticles = await getPublishedArticles(5);
+    const recentTitles = recentArticles.map(a => a.title).join(' | ');
+
+    // Estrategia de Variedad: Si no hay un tema específico, escogemos una o dos noticias al azar para enfocar el artículo
+    let specificFocus = topic;
+    if (!specificFocus && latestNews.length > 0) {
+      // Cogemos 1 noticia principal al azar de los RSS para no repetir siempre el mismo resumen
+      const randomNews = latestNews[Math.floor(Math.random() * latestNews.length)];
+      specificFocus = `Enfócate detalladamente en esta noticia específica: "${randomNews.title}" (Fuente: ${randomNews.source}). Úsala como núcleo central de tu artículo, y usa los precios de CoinGecko o el resto de titulares como contexto secundario.`;
+    }
+
     const systemPrompt = `Eres un periodista experto en criptomonedas, economía global y tecnología Web3 para el portal de noticias 'EmeDotEme'.
 Tu tarea es escribir un artículo atractivo, analítico y profesional que relacione los precios del mercado en vivo con los eventos, noticias y regulaciones globales recientes.
 
@@ -84,22 +97,22 @@ REGLAS ESTRICTAS:
 2. "title": Un titular original, periodístico, llamativo y que capte las tendencias recientes.
 3. "summary": Un breve resumen (sin etiquetas HTML) explicando la noticia.
 4. "content": Un artículo completo, profesional y largo en formato HTML. 
-   - Debe tener al menos 4 párrafos analizando en profundidad cómo las noticias recientes afectan a los precios.
+   - Debe tener al menos 4 párrafos analizando en profundidad.
    - Usa etiquetas como <p>, <h2> para subtítulos clave, y <strong> para destacar números.
-   - Analiza, conecta los puntos. ¿Las regulaciones en EEUU afectan al precio? ¿Qué dicen los titulares?
    - NO uses etiquetas <html>, <body> o <h1>.
 5. El tono debe ser formal, similar a Bloomberg o CoinDesk.
-6. Devuelve el JSON sin bloques de código extra.`;
+6. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES (para evitar ser repetitivo): ${recentTitles || "Ninguno"}.
+7. Genera el JSON en formato crudo.`;
 
     const userPrompt = `Aquí tienes los datos actuales y reales del mercado en este mismo instante:
 
 PRECIOS EN VIVO (TOP 5):
 ${marketContext}
 
-TITULARES DE NOTICIAS DE ÚLTIMA HORA (Cripto y Finanzas Globales):
+TITULARES DE NOTICIAS DE ÚLTIMA HORA:
 ${newsContext}
 
-${topic ? `Escribe un artículo centrado específicamente en: "${topic}", pero utiliza los precios y noticias reales proporcionadas arriba para contextualizar la historia.` : `Por favor, elige el titular más interesante de las noticias de última hora o la tendencia de precios más destacada, y escribe un artículo de fondo sobre cómo ese evento está impactando el ecosistema cripto actual.`}`;
+${specificFocus ? specificFocus : `Elige el titular más interesante y escribe un artículo.`}`;
 
     console.log(`🧠 Solicitando generación a Ollama (${modelName})...`);
 

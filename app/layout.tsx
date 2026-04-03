@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, PT_Serif } from "next/font/google";
 import "./globals.css";
 import MarketTicker from "@/app/components/MarketTicker";
 import { siteConfig } from "@/config/site";
@@ -14,6 +14,12 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const ptSerif = PT_Serif({
+  variable: "--font-pt-serif",
+  weight: ["400", "700"],
   subsets: ["latin"],
 });
 
@@ -44,7 +50,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${ptSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-white dark:bg-zinc-950 text-black dark:text-white">
         <MarketTicker />

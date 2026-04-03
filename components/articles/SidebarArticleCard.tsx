@@ -15,25 +15,26 @@ interface SidebarArticleCardProps {
 
 export function SidebarArticleCard({ article }: SidebarArticleCardProps) {
   return (
-    <Link href={`/articulo/${article.slug}`} className="group">
-      <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 bg-zinc-50 dark:bg-zinc-900 transition-shadow group-hover:shadow-md dark:group-hover:border-zinc-700">
-        <h3 className="text-lg font-bold mb-2 text-black dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
-          {article.title}
-        </h3>
+    <Link href={`/articulo/${article.slug}`} className="group block border-b border-zinc-200 dark:border-zinc-800 pb-5 mb-5 last:border-0 last:pb-0 last:mb-0">
+      <div className="mb-2">
+        <span className="text-[color:var(--color-brand)] text-[10px] font-bold uppercase tracking-widest">
+          {article.category.name}
+        </span>
+      </div>
+      <h3 className="text-xl font-serif font-bold mb-2 text-black dark:text-white group-hover:text-[color:var(--color-brand)] transition-colors line-clamp-3 leading-snug">
+        {article.title}
+      </h3>
+      {article.summary && (
         <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3 line-clamp-2">
           {article.summary}
         </p>
-        <div className="flex justify-between items-center mt-2 border-t border-zinc-200 dark:border-zinc-800 pt-3">
-          <span className="text-xs text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-wider">
-            {article.category.name}
-          </span>
-          <span className="text-xs text-zinc-500">
-            {new Date(article.createdAt).toLocaleDateString("es-ES", {
-              month: "short",
-              day: "numeric",
-            })}
-          </span>
-        </div>
+      )}
+      <div className="text-xs text-zinc-500 uppercase tracking-wide">
+        {new Date(article.createdAt).toLocaleDateString("es-ES", {
+          month: "short",
+          day: "numeric",
+          year: "numeric"
+        })}
       </div>
     </Link>
   );

@@ -88,7 +88,8 @@ async function main() {
     const articleData = {
       title: newArticle.title,
       link: `https://www.emedoteme.es/articulo/${newArticle.slug}`,
-      description: newArticle.content || newArticle.summary
+      description: newArticle.content || newArticle.summary,
+      imageUrl: newArticle.imageUrl
     };
     
     const jsonPath = path.join(tmpDir, 'latest_article.json');

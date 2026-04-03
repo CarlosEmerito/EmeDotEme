@@ -134,7 +134,7 @@ REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
    - ES OBLIGATORIO que el artículo tenga al menos 600 palabras y entre 6 y 8 párrafos bien desarrollados.
    - DEBES incluir múltiples secciones utilizando etiquetas <h2> para los subtítulos. Estructura recomendada: Introducción, Análisis de la Noticia Principal, Contexto del Mercado (usando los precios proporcionados), Implicaciones a Futuro y Conclusión.
    - Usa etiquetas como <p>, <h2> y <strong>. NO uses etiquetas <html>, <body> o <h1>.
-5. "imageCaption": Escribe un pie de foto (máximo 1 o 2 oraciones) periodístico y profesional que describa la temática general de la imagen que acompañará este artículo.
+5. "imageCaption": Escribe un pie de foto (máximo 1 o 2 oraciones) periodístico que sirva como acompañamiento temático al artículo. IMPORTANTE: Como no puedes ver la imagen real que acompañará al artículo, NUNCA describas elementos visuales (no digas "En la foto se ve...", "Gráfico de...", "Representación de...", etc.). Simplemente escribe una frase de contexto reflexiva o un dato clave relacionado con el titular.
 6. El tono debe ser formal, humano y experto, similar a Bloomberg o CoinDesk. NUNCA menciones que eres una IA, un bot o un asistente virtual. Escribe como si fueras un analista de carne y hueso.
 7. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES (para evitar ser repetitivo): ${recentTitles || "Ninguno"}.
 8. TEMA EXCLUSIVO: Tu artículo DEBE ser estricta y exclusivamente sobre criptomonedas, blockchain, Bitcoin, Ethereum, Web3, DeFi o el mercado de criptoactivos.

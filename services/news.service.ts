@@ -44,6 +44,14 @@ export async function getLatestNews(): Promise<NewsItem[]> {
         } else if (item['media:content'] && item['media:content']['$'] && item['media:content']['$'].url) {
           imageUrl = item['media:content']['$'].url;
         }
+
+        // Filtrar imágenes basura o patrocinadas para que se usen las de Unsplash por defecto
+        if (imageUrl) {
+          const lowerUrl = imageUrl.toLowerCase();
+          if (lowerUrl.includes('sponsored') || lowerUrl.includes('banner') || lowerUrl.includes('ad-') || lowerUrl.includes('logo')) {
+            imageUrl = undefined;
+          }
+        }
         
         return {
           title: item.title || "Noticia sin título",

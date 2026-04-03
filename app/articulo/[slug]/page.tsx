@@ -29,13 +29,18 @@ export async function generateMetadata(
   }
 
   return {
-    title: `${article.title} | ${siteConfig.name}`,
+    title: `${article.title}`, // Ya usará el template global de layout.tsx
     description: article.summary || siteConfig.description,
+    authors: [{ name: article.author }],
+    alternates: {
+      canonical: `/articulo/${article.slug}`,
+    },
     openGraph: {
       title: article.title,
       description: article.summary || "",
       type: "article",
       publishedTime: article.createdAt.toISOString(),
+      modifiedTime: article.updatedAt.toISOString(),
       authors: [article.author],
       siteName: siteConfig.name,
       images: article.imageUrl ? [{ url: article.imageUrl }] : undefined,
@@ -144,6 +149,45 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <article className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
           <div dangerouslySetInnerHTML={{ __html: article.content }} />
         </article>
+
+        {/* Affiliate / Monetization Section */}
+        <div className="mt-12 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 flex flex-col items-center text-center">
+          <h3 className="text-lg font-bold text-black dark:text-white font-serif mb-2">
+            Apoya nuestro periodismo independiente 💸
+          </h3>
+          <p className="text-zinc-600 dark:text-zinc-400 text-sm mb-6 max-w-md mx-auto">
+            El ecosistema cripto es volátil. Si decides invertir, hazlo de manera segura usando nuestros enlaces de afiliados en los exchanges más confiables. Tú recibes un bono de bienvenida y nosotros una pequeña comisión.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 w-full">
+            <a 
+              href="https://accounts.binance.com/register?ref=TU_CODIGO_BINANCE" 
+              target="_blank" 
+              rel="noopener noreferrer nofollow"
+              className="flex-1 min-w-[140px] px-4 py-3 bg-[#FCD535] hover:bg-[#FCD535]/90 text-black font-bold text-sm rounded-lg transition-colors flex items-center justify-center shadow-sm"
+            >
+              Registrarse en Binance
+            </a>
+            <a 
+              href="https://www.coinbase.com/join/TU_CODIGO_COINBASE" 
+              target="_blank" 
+              rel="noopener noreferrer nofollow"
+              className="flex-1 min-w-[140px] px-4 py-3 bg-[#0052FF] hover:bg-[#0052FF]/90 text-white font-bold text-sm rounded-lg transition-colors flex items-center justify-center shadow-sm"
+            >
+              Registrarse en Coinbase
+            </a>
+            <a 
+              href="https://www.kraken.com/sign-up?ref=TU_CODIGO_KRAKEN" 
+              target="_blank" 
+              rel="noopener noreferrer nofollow"
+              className="flex-1 min-w-[140px] px-4 py-3 bg-[#5841D8] hover:bg-[#5841D8]/90 text-white font-bold text-sm rounded-lg transition-colors flex items-center justify-center shadow-sm"
+            >
+              Registrarse en Kraken
+            </a>
+          </div>
+          <p className="text-xs text-zinc-400 mt-4 italic">
+            Aviso: Este contenido no es consejo financiero. Haz tu propia investigación antes de invertir.
+          </p>
+        </div>
 
         {/* Related Articles */}
         {relatedArticles.length > 0 && (

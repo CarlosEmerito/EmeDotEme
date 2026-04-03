@@ -20,15 +20,15 @@ function getMockArticle(topic?: string): GeneratedArticle {
     "Solana procesa un millón de transacciones por segundo en pruebas",
     "Nuevo marco regulatorio en la Unión Europea para criptoactivos",
     "La adopción institucional de DeFi alcanza máximos históricos",
-    "Inteligencia Artificial y Blockchain: La nueva frontera",
+    "Web3 y Finanzas Tradicionales: La nueva frontera",
   ];
   
   const randomTitle = titles[Math.floor(Math.random() * titles.length)];
 
   return {
     title: topic ? `Especial: ${topic} en el radar` : randomTitle,
-    summary: "La inteligencia artificial de EmeDotEme ha analizado los últimos movimientos del mercado y reporta hallazgos significativos en este sector.",
-    content: "<p>Este es el contenido completo del artículo generado automáticamente. En un entorno de producción, este texto extenso sería redactado por un LLM tras analizar fuentes de datos en tiempo real.</p><p>Analizamos las tendencias, el volumen de operaciones y el sentimiento general del mercado para brindarte esta información de vanguardia. La integración de IA permite una cobertura 24/7 sin precedentes.</p>",
+    summary: "Nuestro equipo de analistas de EmeDotEme ha evaluado los últimos movimientos del mercado y reporta hallazgos significativos en este sector.",
+    content: "<p>Este es el contenido completo del artículo generado para reportar la situación actual. En este texto extenso analizamos las tendencias recientes y su impacto en el ecosistema financiero.</p><p>Analizamos las tendencias, el volumen de operaciones y el sentimiento general del mercado para brindarte esta información de vanguardia y una cobertura completa del panorama cripto actual.</p>",
   };
 }
 
@@ -89,7 +89,7 @@ export async function generateArticleContent(topic?: string): Promise<GeneratedA
       specificFocus = `Enfócate detalladamente en esta noticia específica: "${randomNews.title}" (Fuente: ${randomNews.source}). Úsala como núcleo central de tu artículo, y usa los precios de CoinGecko o el resto de titulares como contexto secundario.`;
     }
 
-    const systemPrompt = `Eres un periodista experto en criptomonedas, economía global y tecnología Web3 para el portal de noticias 'EmeDotEme'.
+    const systemPrompt = `Eres Carlos "Emérito" López Lovera, un prestigioso periodista humano y experto en criptomonedas, economía global y tecnología Web3 para el portal de noticias 'EmeDotEme'.
 Tu tarea es escribir un artículo atractivo, analítico y profesional que relacione los precios del mercado en vivo con los eventos, noticias y regulaciones globales recientes.
 
 REGLAS ESTRICTAS:
@@ -100,7 +100,7 @@ REGLAS ESTRICTAS:
    - Debe tener al menos 4 párrafos analizando en profundidad.
    - Usa etiquetas como <p>, <h2> para subtítulos clave, y <strong> para destacar números.
    - NO uses etiquetas <html>, <body> o <h1>.
-5. El tono debe ser formal, similar a Bloomberg o CoinDesk.
+5. El tono debe ser formal, humano y experto, similar a Bloomberg o CoinDesk. NUNCA menciones que eres una IA, un bot o un asistente virtual. Escribe como si fueras un analista de carne y hueso.
 6. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES (para evitar ser repetitivo): ${recentTitles || "Ninguno"}.
 7. Genera el JSON en formato crudo.`;
 

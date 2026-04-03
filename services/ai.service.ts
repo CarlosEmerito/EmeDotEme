@@ -8,7 +8,7 @@ export interface GeneratedArticle {
 }
 
 /**
- * Genera un artículo de noticias falso si no hay clave de API configurada,
+ * Genera un artículo de noticias falso si no hay conexión con la IA,
  * asegurando que el sitio nunca se rompa.
  */
 function getMockArticle(topic?: string): GeneratedArticle {
@@ -31,22 +31,21 @@ function getMockArticle(topic?: string): GeneratedArticle {
 }
 
 /**
- * Servicio de Inteligencia Artificial con RAG (Retrieval-Augmented Generation).
+ * Servicio de Inteligencia Artificial con RAG conectado a OLLAMA local.
  * 1. Obtiene datos reales del mercado (CoinGecko).
- * 2. Se los inyecta al LLM (OpenAI) como contexto.
+ * 2. Se los inyecta al modelo local como contexto.
  * 3. Devuelve un artículo periodístico estructurado en JSON.
  */
 export async function generateArticleContent(topic?: string): Promise<GeneratedArticle> {
-  const apiKey = process.env.OPENAI_API_KEY;
-
-  // Fallback si el usuario aún no ha configurado su clave de OpenAI en Vercel
-  if (!apiKey) {
-    console.warn("⚠️ No se encontró OPENAI_API_KEY. Devolviendo artículo de prueba (Mock).");
-    return getMockArticle(topic);
-  }
+  // Configuración para usar Ollama local a través del SDK de OpenAI
+  const ollamaBaseUrl = process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1";
+  const modelName = process.env.OLLAMA_MODEL || "llama3.1"; // Usaremos llama3.1 (excelente para tu hardware)
 
   try {
-    const openai = new OpenAI({ apiKey });
+    const openai = new OpenAI({
+      baseURL: ollamaBaseUrl,
+      apiKey: "ollama", // El SDK requiere una key, pero Ollama la ignora
+    });
     
     // RAG: Obtener contexto real del mercado actual
     const marketData = await getMarketData();
@@ -66,13 +65,16 @@ REGLAS ESTRICTAS:
 4. "content": El cuerpo completo del artículo en formato HTML. 
    - Debe tener al menos 3 párrafos bien estructurados.
    - Usa etiquetas como <p>, <h2> para subtítulos, <ul> y <li> para listas, y <strong> para resaltar datos clave.
-   - NO uses etiquetas <html>, <body> o <h1> (ya que el frontend ya las pone por ti).
-5. Mantén un tono formal y analítico.`;
+   - NO uses etiquetas <html>, <body> o <h1>.
+5. Mantén un tono formal y analítico.
+6. Genera el JSON en formato crudo, sin bloques de código ni markdown extra.`;
 
     const userPrompt = `Aquí tienes los datos actuales y reales del mercado (Top 5 criptomonedas en vivo):\n${marketContext}\n\n${topic ? `El tema principal o evento específico de este artículo debe ser: "${topic}". Relaciónalo con el estado del mercado si es posible.` : `Por favor, escribe una actualización general del mercado y análisis de tendencias basándote en estos datos en vivo.`}`;
 
+    console.log(`🧠 Solicitando generación a Ollama (${modelName})...`);
+
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Usamos el modelo más rápido y económico para redacción de textos
+      model: modelName,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt }
@@ -81,23 +83,27 @@ REGLAS ESTRICTAS:
       temperature: 0.7,
     });
 
-    const content = response.choices[0].message.content;
+    let content = response.choices[0].message.content;
     
     if (!content) {
-      throw new Error("OpenAI devolvió una respuesta vacía.");
+      throw new Error("Ollama devolvió una respuesta vacía.");
     }
+
+    // Limpieza de formato en caso de que el LLM local devuelva bloques markdown ```json
+    content = content.replace(/```json\n?/g, '').replace(/```/g, '').trim();
 
     const parsedArticle = JSON.parse(content) as GeneratedArticle;
     
     // Validación básica de la estructura del JSON
     if (!parsedArticle.title || !parsedArticle.summary || !parsedArticle.content) {
-      throw new Error("El JSON devuelto por OpenAI no tiene la estructura correcta.");
+      throw new Error("El JSON devuelto por Ollama no tiene la estructura correcta.");
     }
 
+    console.log(`✅ Artículo generado con éxito por Ollama: ${parsedArticle.title}`);
     return parsedArticle;
 
   } catch (error) {
-    console.error("❌ Error generando contenido con OpenAI:", error);
-    return getMockArticle(topic); // Fallback en caso de error de red o timeout
+    console.error("❌ Error generando contenido con Ollama:", error);
+    return getMockArticle(topic); // Fallback en caso de que Ollama esté apagado
   }
 }

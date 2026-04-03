@@ -7,6 +7,7 @@ import { getArticleBySlug, getRelatedArticles } from "@/services/article.service
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
 import { formatRelativeDate, calculateReadingTime } from "@/lib/utils";
 import { ShareButtons } from "@/components/articles/ShareButtons";
+import { Comments } from "@/components/articles/Comments";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -147,7 +148,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         {/* Related Articles */}
         {relatedArticles.length > 0 && (
           <section className="mt-16 pt-10 border-t border-zinc-200 dark:border-zinc-800">
-            <h2 className="text-2xl font-bold mb-6 text-black dark:text-white">Artículos relacionados</h2>
+            <h2 className="text-2xl font-bold mb-6 text-black dark:text-white font-serif">Artículos relacionados</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedArticles.map((related) => (
                 <SidebarArticleCard key={related.id} article={related} />
@@ -155,6 +156,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </div>
           </section>
         )}
+
+        {/* Comments System */}
+        <Comments />
       </main>
     </div>
   );

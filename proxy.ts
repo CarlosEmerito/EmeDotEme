@@ -33,13 +33,13 @@ export function proxy(req: NextRequest) {
       <body>
         <h1>🔒 Acceso Restringido</h1>
         <p>Se requiere inicio de sesión para acceder al panel de administración.</p>
-        <button class="btn" onclick="window.location.reload()">Haz clic aquí para Iniciar Sesión</button>
+        <button class="btn" onclick="window.location.href = window.location.pathname + '?login=1'">Haz clic aquí para Iniciar Sesión</button>
       </body>
     </html>
   `, {
     status: 401,
     headers: {
-      'WWW-Authenticate': 'Basic realm="Secure Area"',
+      'WWW-Authenticate': 'Basic realm="Admin EmeDotEme"',
       'Content-Type': 'text/html; charset=utf-8'
     },
   })

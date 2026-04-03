@@ -102,6 +102,12 @@ export default function ArticleTable({ initialArticles }: { initialArticles: Art
                     </button>
                   </td>
                   <td className="px-6 py-4 text-right whitespace-nowrap">
+                    <Link
+                      href={`/admin/edit/${article.id}`}
+                      className="text-blue-500 hover:text-blue-700 font-semibold text-xs uppercase tracking-wider mr-4"
+                    >
+                      Editar
+                    </Link>
                     <button
                       onClick={() => handleDelete(article.id, article.title)}
                       disabled={loadingIds[article.id]}

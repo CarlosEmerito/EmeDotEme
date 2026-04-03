@@ -39,3 +39,36 @@ export async function deleteArticle(id: string) {
     return { success: false, error: "No se pudo borrar el artículo." };
   }
 }
+
+export async function updateArticle(id: string, data: {
+  title: string;
+  slug: string;
+  summary: string;
+  content: string;
+  imageUrl: string;
+  imageCaption: string;
+}) {
+  try {
+    const updated = await prisma.article.update({
+      where: { id },
+      data: {
+        title: data.title,
+        slug: data.slug,
+        summary: data.summary,
+        content: data.content,
+        imageUrl: data.imageUrl,
+        imageCaption: data.imageCaption,
+      }
+    });
+
+    revalidatePath('/');
+    revalidatePath('/noticias');
+    revalidatePath('/admin');
+    revalidatePath(`/articulo/${updated.slug}`);
+
+    return { success: true, article: updated };
+  } catch (error) {
+    console.error("Error actualizando artículo:", error);
+    return { success: false, error: "Error al guardar los cambios del artículo." };
+  }
+}

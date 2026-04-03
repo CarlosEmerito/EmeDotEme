@@ -24,13 +24,16 @@ export function proxy(req: NextRequest) {
         <meta charset="utf-8" />
         <style>
           body { font-family: system-ui, sans-serif; text-align: center; padding: 50px; background: #111; color: #fff; }
-          h1 { font-size: 2em; }
-          p { color: #888; }
+          h1 { font-size: 2em; margin-bottom: 10px; }
+          p { color: #888; margin-bottom: 30px; }
+          .btn { background: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; border: none; }
+          .btn:hover { background: #2563eb; }
         </style>
       </head>
       <body>
         <h1>🔒 Acceso Restringido</h1>
         <p>Se requiere inicio de sesión para acceder al panel de administración.</p>
+        <button class="btn" onclick="window.location.reload()">Haz clic aquí para Iniciar Sesión</button>
       </body>
     </html>
   `, {

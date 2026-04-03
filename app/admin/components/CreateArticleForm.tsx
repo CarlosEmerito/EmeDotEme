@@ -2,43 +2,57 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { updateArticle } from "../actions";
+import { createArticle } from "../actions";
 import Link from "next/link";
 import { RichTextEditor } from "./RichTextEditor";
 
-interface EditArticleProps {
-  article: {
-    id: string;
-    title: string;
-    slug: string;
-    summary: string | null;
-    content: string;
-    imageUrl: string | null;
-    imageCaption: string | null;
-    tags: string[];
-  };
+interface CreateArticleFormProps {
+  categories: { id: string; name: string }[];
 }
 
-export default function EditArticleForm({ article }: EditArticleProps) {
+export default function CreateArticleForm({ categories }: CreateArticleFormProps) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
-    title: article.title || "",
-    slug: article.slug || "",
-    summary: article.summary || "",
-    imageUrl: article.imageUrl || "",
-    imageCaption: article.imageCaption || "",
-    tags: article.tags ? article.tags.join(", ") : "",
-    content: article.content || "",
+    title: "",
+    slug: "",
+    summary: "",
+    imageUrl: "",
+    imageCaption: "",
+    tags: "",
+    content: "",
+    categoryId: categories[0]?.id || "",
+    published: true,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData(prev => ({ ...prev, [name]: checked }));
+  };
+
+  const autoGenerateSlug = () => {
+    if (!formData.title) return;
+    const generated = formData.title
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove accents
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)+/g, '');
+    setFormData(prev => ({ ...prev, slug: generated }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.categoryId) {
+      alert("Por favor selecciona una categoría.");
+      return;
+    }
+    
     setIsSaving(true);
     
     const dataToSubmit = {
@@ -46,12 +60,12 @@ export default function EditArticleForm({ article }: EditArticleProps) {
       tags: formData.tags.split(",").map(t => t.trim()).filter(t => t !== "")
     };
 
-    const result = await updateArticle(article.id, dataToSubmit);
+    const result = await createArticle(dataToSubmit);
     
     setIsSaving(false);
     
     if (result.success) {
-      alert("✅ Artículo actualizado correctamente.");
+      alert("✅ Artículo creado correctamente.");
       router.push("/admin");
     } else {
       alert(result.error || "Ocurrió un error al guardar.");
@@ -72,6 +86,7 @@ export default function EditArticleForm({ article }: EditArticleProps) {
             name="title"
             value={formData.title}
             onChange={handleChange}
+            onBlur={autoGenerateSlug}
             required
             className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
           />
@@ -82,14 +97,52 @@ export default function EditArticleForm({ article }: EditArticleProps) {
           <label className="block text-sm font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">
             URL (Slug)
           </label>
-          <input
-            type="text"
-            name="slug"
-            value={formData.slug}
-            onChange={handleChange}
-            required
-            className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
-          />
+          <div className="flex items-center gap-2">
+            <span className="text-zinc-500">emedoteme.es/articulo/</span>
+            <input
+              type="text"
+              name="slug"
+              value={formData.slug}
+              onChange={handleChange}
+              required
+              className="flex-1 bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
+            />
+          </div>
+        </div>
+
+        {/* Category & Status */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block text-sm font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">
+              Categoría
+            </label>
+            <select
+              name="categoryId"
+              value={formData.categoryId}
+              onChange={handleChange}
+              required
+              className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
+            >
+              {categories.map(c => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col justify-center">
+            <label className="block text-sm font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">
+              Estado
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                name="published"
+                checked={formData.published}
+                onChange={handleCheckboxChange}
+                className="w-5 h-5 accent-[color:var(--color-brand)]"
+              />
+              <span className="text-sm font-medium">{formData.published ? "Público (Visible)" : "Oculto (Borrador)"}</span>
+            </label>
+          </div>
         </div>
 
         {/* Summary */}
@@ -134,14 +187,6 @@ export default function EditArticleForm({ article }: EditArticleProps) {
           </div>
         </div>
 
-        {/* Image Preview (if URL exists) */}
-        {formData.imageUrl && (
-          <div className="mb-6">
-            <p className="text-sm text-zinc-500 mb-2 italic">Vista previa de imagen:</p>
-            <img src={formData.imageUrl} alt="Preview" className="h-48 object-cover rounded-md border border-zinc-200 dark:border-zinc-800" />
-          </div>
-        )}
-
         {/* Tags */}
         <div className="mb-4">
           <label className="block text-sm font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">
@@ -183,7 +228,7 @@ export default function EditArticleForm({ article }: EditArticleProps) {
           disabled={isSaving}
           className="px-6 py-2.5 bg-[color:var(--color-brand)] hover:opacity-90 text-white font-bold uppercase tracking-wider text-sm rounded transition-opacity disabled:opacity-50"
         >
-          {isSaving ? "Guardando..." : "Guardar Cambios"}
+          {isSaving ? "Publicando..." : "Publicar Noticia"}
         </button>
       </div>
     </form>

@@ -74,3 +74,42 @@ export async function updateArticle(id: string, data: {
     return { success: false, error: "Error al guardar los cambios del artículo." };
   }
 }
+
+export async function createArticle(data: {
+  title: string;
+  slug: string;
+  summary: string;
+  content: string;
+  imageUrl: string;
+  imageCaption: string;
+  tags?: string[];
+  categoryId: string;
+  published: boolean;
+}) {
+  try {
+    const newArticle = await prisma.article.create({
+      data: {
+        title: data.title,
+        slug: data.slug,
+        summary: data.summary,
+        content: data.content,
+        imageUrl: data.imageUrl,
+        imageCaption: data.imageCaption,
+        tags: data.tags || [],
+        categoryId: data.categoryId,
+        published: data.published,
+        author: 'Carlos "Emérito" López Lovera' // Autor humano por defecto para los artículos manuales
+      }
+    });
+
+    revalidatePath('/');
+    revalidatePath('/noticias');
+    revalidatePath('/admin');
+    revalidatePath(`/articulo/${newArticle.slug}`);
+
+    return { success: true, article: newArticle };
+  } catch (error) {
+    console.error("Error creando artículo:", error);
+    return { success: false, error: "Error al publicar la noticia. Asegúrate de que el Slug sea único." };
+  }
+}

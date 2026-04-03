@@ -24,3 +24,10 @@ export function formatRelativeDate(date: Date | string | number): string {
     });
   }
 }
+
+export function calculateReadingTime(content: string): number {
+  const WORDS_PER_MINUTE = 200;
+  const words = content.replace(/<[^>]*>?/gm, '').split(/\s+/).filter(word => word.length > 0).length;
+  const minutes = Math.ceil(words / WORDS_PER_MINUTE);
+  return minutes || 1;
+}

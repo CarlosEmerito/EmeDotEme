@@ -4,7 +4,7 @@ import { Metadata, ResolvingMetadata } from "next";
 import { siteConfig } from "@/config/site";
 import { getArticleBySlug, getRelatedArticles } from "@/services/article.service";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
-import { formatRelativeDate } from "@/lib/utils";
+import { formatRelativeDate, calculateReadingTime } from "@/lib/utils";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -75,8 +75,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </p>
           <div className="flex items-center justify-between border-t border-b border-zinc-200 dark:border-zinc-800 py-4">
             <div className="flex items-center text-sm text-zinc-700 dark:text-zinc-300">
-              <span className="font-semibold text-blue-600 dark:text-blue-400 mr-4">Por {article.author}</span>
+              <span className="font-semibold text-[color:var(--color-brand)] mr-4">Por {article.author}</span>
               <span>{formatRelativeDate(article.createdAt)}</span>
+              <span className="mx-3 text-zinc-300 dark:text-zinc-700">•</span>
+              <span>{calculateReadingTime(article.content)} min de lectura</span>
+            </div>
+            
+            {/* Share buttons will go here later */}
+            <div className="hidden sm:flex gap-2">
             </div>
           </div>
         </header>

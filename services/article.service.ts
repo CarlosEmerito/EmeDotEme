@@ -4,12 +4,19 @@ import { prisma } from "@/lib/prisma";
  * Recupera los artículos publicados ordenados por fecha de creación (más recientes primero).
  * @param limit Número máximo de artículos a recuperar.
  */
-export async function getPublishedArticles(limit: number = 5) {
+export async function getPublishedArticles(limit: number = 5, skip: number = 0) {
   return await prisma.article.findMany({
     where: { published: true },
     orderBy: { createdAt: "desc" },
     include: { category: true },
     take: limit,
+    skip: skip,
+  });
+}
+
+export async function getTotalPublishedArticlesCount() {
+  return await prisma.article.count({
+    where: { published: true },
   });
 }
 

@@ -29,9 +29,20 @@ export default async function Home() {
 
           {/* Sidebar / Secondary Articles */}
           <div className="flex flex-col md:border-l md:border-zinc-200 dark:border-zinc-800 md:pl-8">
-            {sideArticles.map((article) => (
-              <SidebarArticleCard key={article.id} article={article} />
-            ))}
+            <div className="flex flex-col flex-1">
+              {sideArticles.map((article) => (
+                <SidebarArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+            
+            <div className="mt-8 pt-6 border-t border-zinc-200 dark:border-zinc-800 text-center">
+              <a 
+                href="/noticias" 
+                className="inline-block px-6 py-2.5 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-zinc-100 font-bold uppercase tracking-wider text-xs rounded transition-colors"
+              >
+                Ver más noticias
+              </a>
+            </div>
           </div>
         </div>
       </main>

@@ -158,30 +158,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <p className="text-zinc-600 dark:text-zinc-400 text-sm mb-6 max-w-md mx-auto">
             El ecosistema cripto es volátil. Si decides invertir, hazlo de manera segura usando nuestros enlaces de afiliados en los exchanges más confiables. Tú recibes un bono de bienvenida y nosotros una pequeña comisión.
           </p>
-          <div className="flex flex-wrap justify-center gap-4 w-full">
+          <div className="flex flex-wrap justify-center gap-4 w-full max-w-sm mx-auto">
             <a 
-              href="https://accounts.binance.com/register?ref=TU_CODIGO_BINANCE" 
+              href="https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA" 
               target="_blank" 
               rel="noopener noreferrer nofollow"
-              className="flex-1 min-w-[140px] px-4 py-3 bg-[#FCD535] hover:bg-[#FCD535]/90 text-black font-bold text-sm rounded-lg transition-colors flex items-center justify-center shadow-sm"
+              className="w-full px-4 py-3 bg-[#FCD535] hover:bg-[#FCD535]/90 text-black font-bold text-sm rounded-lg transition-colors flex items-center justify-center shadow-sm"
             >
               Registrarse en Binance
-            </a>
-            <a 
-              href="https://www.coinbase.com/join/TU_CODIGO_COINBASE" 
-              target="_blank" 
-              rel="noopener noreferrer nofollow"
-              className="flex-1 min-w-[140px] px-4 py-3 bg-[#0052FF] hover:bg-[#0052FF]/90 text-white font-bold text-sm rounded-lg transition-colors flex items-center justify-center shadow-sm"
-            >
-              Registrarse en Coinbase
-            </a>
-            <a 
-              href="https://www.kraken.com/sign-up?ref=TU_CODIGO_KRAKEN" 
-              target="_blank" 
-              rel="noopener noreferrer nofollow"
-              className="flex-1 min-w-[140px] px-4 py-3 bg-[#5841D8] hover:bg-[#5841D8]/90 text-white font-bold text-sm rounded-lg transition-colors flex items-center justify-center shadow-sm"
-            >
-              Registrarse en Kraken
             </a>
           </div>
           <p className="text-xs text-zinc-400 mt-4 italic">

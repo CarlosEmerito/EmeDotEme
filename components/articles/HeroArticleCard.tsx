@@ -17,7 +17,7 @@ export function HeroArticleCard({ article }: HeroArticleCardProps) {
   return (
     <Link href={`/articulo/${article.slug}`} className="md:col-span-2 group flex flex-col justify-center h-full pb-8 md:pb-0 border-b border-zinc-200 dark:border-zinc-800 md:border-b-0">
       <div className="mb-3">
-        <span className="text-brand text-xs font-bold uppercase tracking-widest text-[color:var(--color-brand)]">
+        <span className="text-[color:var(--color-accent)] text-xs font-bold uppercase tracking-widest">
           {article.category.name}
         </span>
       </div>

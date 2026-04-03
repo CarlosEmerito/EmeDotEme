@@ -17,7 +17,7 @@ export function SidebarArticleCard({ article }: SidebarArticleCardProps) {
   return (
     <Link href={`/articulo/${article.slug}`} className="group block border-b border-zinc-200 dark:border-zinc-800 pb-5 mb-5 last:border-0 last:pb-0 last:mb-0">
       <div className="mb-2">
-        <span className="text-[color:var(--color-brand)] text-[10px] font-bold uppercase tracking-widest">
+        <span className="text-[color:var(--color-accent)] text-[10px] font-bold uppercase tracking-widest">
           {article.category.name}
         </span>
       </div>

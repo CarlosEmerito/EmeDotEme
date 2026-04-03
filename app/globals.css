@@ -4,14 +4,16 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --color-brand: #0f9376; /* CoinDesk-like deep teal */
+  --color-brand: #7c3aed; /* Purple */
+  --color-accent: #eab308; /* Yellow */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #0f0a1a; /* Very dark purple tint for background */
     --foreground: #ededed;
-    --color-brand: #1bb790; /* Brighter teal for dark mode */
+    --color-brand: #a78bfa; /* Lighter purple for dark mode */
+    --color-accent: #fde047; /* Brighter yellow for dark mode */
   }
 }
 
@@ -19,6 +21,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-brand: var(--color-brand);
+  --color-accent: var(--color-accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-pt-serif);

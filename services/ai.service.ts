@@ -77,6 +77,94 @@ async function getFallbackArticle(topic?: string): Promise<GeneratedArticle> {
  * 2. Se los inyecta al modelo local como contexto.
  * 3. Devuelve un artículo periodístico estructurado en JSON.
  */
+export async function generateWeeklyNewsletter(articles: any[]): Promise<{ subject: string, htmlContent: string }> {
+  let ollamaBaseUrl = process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1";
+  
+  if (process.env.OLLAMA_BASE_URL && !process.env.OLLAMA_BASE_URL.endsWith('/v1')) {
+    const cleanUrl = process.env.OLLAMA_BASE_URL.replace(/\/$/, '');
+    ollamaBaseUrl = `${cleanUrl}/v1`;
+  }
+
+  const modelName = process.env.OLLAMA_MODEL || "qwen3.5:27b";
+
+  try {
+    const openai = new OpenAI({
+      baseURL: ollamaBaseUrl,
+      apiKey: "ollama",
+      defaultHeaders: {
+        "ngrok-skip-browser-warning": "true"
+      }
+    });
+
+    const articlesSummary = articles.map(a => `- ${a.title}: ${a.summary}`).join('\n\n');
+
+    const systemPrompt = `Eres Carlos "Emérito" López Lovera, el editor jefe de EmeDotEme. 
+Tu tarea es redactar la newsletter semanal oficial enviada por correo electrónico a tus suscriptores.
+Tienes que resumir las noticias más importantes de la semana de una forma muy atractiva, conversacional, amigable pero profesional.
+
+REGLAS ESTRICTAS:
+1. El tono debe ser de "Hola inversor, aquí tienes lo más importante de la semana".
+2. No uses fórmulas robóticas como "En resumen" o "En conclusión".
+3. Escribe ÚNICAMENTE un objeto JSON con dos propiedades:
+   - "subject": Un asunto de correo (Subject Line) muy llamativo (con 1 emoji).
+   - "htmlContent": El contenido completo del correo en formato HTML, listo para enviar. 
+     * Usa etiquetas <p>, <h2>, <ul>, <li>, <strong>, <br>.
+     * Saluda al principio.
+     * Despídete amablemente al final firmando como "El equipo de EmeDotEme".
+     * NO uses las etiquetas <html> o <body>.
+4. Escribe en Español de España.`;
+
+    const userPrompt = `Aquí tienes los resúmenes de los artículos que hemos publicado esta semana:
+
+${articlesSummary}
+
+Redacta la newsletter semanal basándote en estos eventos. Trata de agruparlos lógicamente si puedes (ej. Regulación, Precios, Adopción).`;
+
+    console.log(`🧠 Solicitando newsletter a Ollama (${modelName})...`);
+
+    const response = await openai.chat.completions.create({
+      model: modelName,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.7,
+      max_tokens: 2500,
+      stream: true,
+    });
+
+    let content = "";
+    process.stdout.write("✍️ Escribiendo Newsletter: ");
+    
+    for await (const chunk of response) {
+      const text = chunk.choices[0]?.delta?.content || "";
+      content += text;
+      process.stdout.write(text);
+    }
+    console.log("\n");
+    
+    if (!content) {
+      throw new Error("Ollama devolvió una respuesta vacía al generar la newsletter.");
+    }
+
+    content = content.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+    content = extractJsonFromText(content);
+
+    const parsedNewsletter = JSON.parse(content);
+    
+    if (!parsedNewsletter.subject || !parsedNewsletter.htmlContent) {
+      throw new Error("Estructura JSON incorrecta de la newsletter.");
+    }
+
+    return parsedNewsletter;
+
+  } catch (error: any) {
+    console.error("❌ Error generando newsletter con Ollama:", error.message || error);
+    throw error;
+  }
+}
+
 export async function translateArticleContent(article: GeneratedArticle): Promise<GeneratedArticle> {
   let ollamaBaseUrl = process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1";
   

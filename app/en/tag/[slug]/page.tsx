@@ -1,0 +1,79 @@
+import { notFound } from "next/navigation";
+import { Metadata, ResolvingMetadata } from "next";
+import { siteConfig } from "@/config/site";
+import { prisma } from "@/lib/prisma";
+import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
+import { Pagination } from "@/components/layout/Pagination";
+
+interface TagPageProps {
+  params: Promise<{
+    slug: string;
+  }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export async function generateMetadata(
+  { params }: TagPageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { slug } = await params;
+  
+  return {
+    title: `News about #${slug} | ${siteConfig.name}`,
+    description: `Discover the latest news and in-depth analysis about #${slug}. Stay informed about key changes in the crypto ecosystem.`,
+  };
+}
+
+export default async function TagPageEn({ params, searchParams }: TagPageProps) {
+  const { slug } = await params;
+  const sParams = await searchParams;
+
+  const page = typeof sParams.page === "string" ? parseInt(sParams.page, 10) : 1;
+  const limit = 12;
+
+  const decodedTag = decodeURIComponent(slug);
+
+  const allArticles = await prisma.article.findMany({
+    where: { published: true },
+    include: { category: true },
+    orderBy: { createdAt: 'desc' }
+  });
+
+  const matchingArticles = allArticles.filter(article => 
+    article.tags.some(t => t.toLowerCase() === decodedTag.toLowerCase())
+  );
+
+  const totalCount = matchingArticles.length;
+  const totalPages = Math.ceil(totalCount / limit);
+  const skip = (page - 1) * limit;
+  const paginatedArticles = matchingArticles.slice(skip, skip + limit);
+
+  return (
+    <div className="flex flex-col flex-1 bg-white dark:bg-zinc-950 font-sans">
+      <main className="flex flex-col max-w-7xl mx-auto w-full px-4 py-8">
+        <header className="mb-10 pb-6 border-b border-zinc-200 dark:border-zinc-800">
+          <h1 className="text-4xl font-bold mb-4 text-black dark:text-white">
+            Exploring <span className="text-[color:var(--color-brand)]">#{decodedTag}</span>
+          </h1>
+          <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-3xl">
+            Everything you need to know about <strong>{decodedTag}</strong>. Read our latest news and technical analysis to understand its market impact.
+          </p>
+        </header>
+
+        {paginatedArticles.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {paginatedArticles.map((article) => (
+              <SidebarArticleCard key={article.id} article={article as any} lang="en" />
+            ))}
+          </div>
+        ) : (
+          <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-12 bg-zinc-50 dark:bg-zinc-900 text-center">
+            <p className="text-zinc-500 text-lg">No news with this tag yet.</p>
+          </div>
+        )}
+        
+        <Pagination currentPage={page} totalPages={totalPages} basePath={`/en/tag/${slug}`} />
+      </main>
+    </div>
+  );
+}

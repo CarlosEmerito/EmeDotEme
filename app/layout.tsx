@@ -71,6 +71,10 @@ export const metadata: Metadata = {
       "application/rss+xml": `${siteConfig.url}/feed.xml`,
     },
   },
+  manifest: "/manifest.json",
+  icons: {
+    apple: "/android-chrome-192x192.svg",
+  },
   robots: {
     index: true,
     follow: true,

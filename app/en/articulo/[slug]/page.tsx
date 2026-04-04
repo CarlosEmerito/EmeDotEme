@@ -8,6 +8,7 @@ import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
 import { formatRelativeDate, calculateReadingTime } from "@/lib/utils";
 import { ShareButtons } from "@/components/articles/ShareButtons";
 import { Comments } from "@/components/articles/Comments";
+import { TextToSpeech } from "@/components/articles/TextToSpeech";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -127,7 +128,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <span>{calculateReadingTime(article.contentEn || article.content)} min read</span>
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center flex-wrap">
+              <TextToSpeech text={article.contentEn || article.content} title={article.titleEn || article.title} lang="en" />
               <ShareButtons title={article.titleEn || article.title} slug={article.slug} />
             </div>
           </div>

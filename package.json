@@ -12,6 +12,7 @@
   "dependencies": {
     "@giscus/react": "^3.1.0",
     "@prisma/client": "^5.22.0",
+    "@supabase/supabase-js": "^2.101.1",
     "@tailwindcss/typography": "^0.5.19",
     "@tiptap/extension-link": "^3.22.1",
     "@tiptap/pm": "^3.22.1",

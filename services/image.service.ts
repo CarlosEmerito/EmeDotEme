@@ -1,5 +1,9 @@
-import fs from 'fs';
-import path from 'path';
+import { createClient } from '@supabase/supabase-js';
+
+// Inicializar cliente de Supabase (usamos Service Role Key para poder subir archivos al bucket sin RLS auth)
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 /**
  * Unloads the active model from Ollama to free up VRAM for Stable Diffusion
@@ -76,24 +80,31 @@ export async function generateImageLocal(prompt: string, slug: string): Promise<
 
     const base64Image = data.images[0];
     const imageBuffer = Buffer.from(base64Image, 'base64');
-    
-    const publicDir = path.join(process.cwd(), 'public');
-    const imagesDir = path.join(publicDir, 'images', 'articles');
-    
-    if (!fs.existsSync(path.join(publicDir, 'images'))) {
-      fs.mkdirSync(path.join(publicDir, 'images'));
-    }
-    if (!fs.existsSync(imagesDir)) {
-      fs.mkdirSync(imagesDir);
+    const fileName = `${slug}.png`;
+
+    console.log(`- Subiendo imagen a Supabase Storage (Bucket: articles)...`);
+    const { data: uploadData, error: uploadError } = await supabase
+      .storage
+      .from('articles')
+      .upload(fileName, imageBuffer, {
+        contentType: 'image/png',
+        upsert: true
+      });
+
+    if (uploadError) {
+      console.error(`❌ Error subiendo a Supabase:`, uploadError);
+      return null;
     }
 
-    const fileName = `${slug}.jpg`;
-    const filePath = path.join(imagesDir, fileName);
-    
-    fs.writeFileSync(filePath, imageBuffer);
-    console.log(`✅ Imagen guardada correctamente en: ${filePath}`);
+    const { data: publicUrlData } = supabase
+      .storage
+      .from('articles')
+      .getPublicUrl(fileName);
 
-    return `/images/articles/${fileName}`;
+    const publicUrl = publicUrlData.publicUrl;
+    console.log(`✅ Imagen subida y disponible en: ${publicUrl}`);
+
+    return publicUrl;
 
   } catch (error) {
     console.error("❌ Error conectando con Stable Diffusion local:", error);

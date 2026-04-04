@@ -527,3 +527,76 @@ Revisa tu web para ver la noticia y tus redes sociales.
 =====================================================
 [2026-04-04 13:09:45] ✅ Publicación completada.
 [2026-04-04 13:09:45] 💤 Bot durmiendo... Próxima publicación en 4 horas y 45 minutos.
+----------------------------------------
+[2026-04-04 17:54:47] 🤖 Iniciando generación de nueva noticia local...
+=====================================================
+1️⃣ GENERANDO ARTÍCULO PARA EMEDOTEME...
+=====================================================
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+🧠 Solicitando generación a Ollama (qwen2.5:14b)...
+✍️ Escribiendo: {
+  "title": "XRP Se Eleva a $1,33 pero Falla en Superar la Resistencia",
+  "summary": "El precio del XRP alcanzó los $1,33 después de una recuperación impulsada por compras institucionales, aunque se enfrenta a barreras técnicas que impiden un avance más fuerte.",
+  "content": "<p>Según datos recientes de CoinGlass y Glassnode, el precio del <a href=\"/tag/xrp\">XRP</a> ha experimentado una recuperación en los últimos días, alcanzando cotizaciones cercanas a los $1,33. Sin embargo, la moneda digital ha encontrado resistencia técnica que limita su potencial de alza.</p>\n<h2>Análisis del Mercado: XRP Enfrenta Barreras Técnicas</h2>\n<p>El analista principal de CoinDesk señala que aunque el impulso alcista ha llevado a XRP a niveles cercanos a $1,33, la moneda digital se encuentra en una encrucijada técnica. Las barreras inmediatas son evidentes con resistencias clave alrededor del nivel psicológico de $1,40.</p>\n<p>\"El XRP ha mostrado señales de fortaleza durante los últimos días, pero la falta de volatilidad y el movimiento lateral sugieren que el mercado está en una fase de consolidación\", afirma el analista. \"A menos que se rompa claramente esta resistencia, las perspectivas alcistas a corto plazo podrían estar limitadas\".</p>\n<h2>Comportamiento del Mercado Institucional</h2>\n<p>Datos recopilados por Glassnode indican una ligera tendencia hacia la acumulación por parte de los grandes inversores, conocidos como 'whales'. A pesar de esta actividad, el volumen total sigue siendo moderado, lo que sugiere cautela en las compras institucionales.</p>\n<p>\"Vemos un repunte en la acumulación por parte de whales, pero el interés del mercado aún no está al nivel requerido para impulsar una fuerte subida\", señala el analista. \"Es importante observar cómo responden estos grandes jugadores a los niveles actuales\".</p>\n<h2>Contexto Macro y Perspectivas Futuras</h2>\n<p>Dentro de un contexto macroeconómico global incierto, las fluctuaciones en el precio del XRP siguen siendo volátiles. Factores como la evolución de los regímenes regulatorios y la aceptación institucional continuarán jugando un papel crucial en la determinación futura del valor.</p>\n<p>\"A corto plazo, el escenario técnico es cauteloso para XRP\", opina el analista. \"Sin embargo, a medio plazo, se pueden esperar mejoras si las barreras técnicas son superadas y el entorno macro mejora\".</p>",
+  "tags": ["XRP", "Mercado de Criptomonedas", "Análisis Técnico"],
+  "imageCaption": "El precio del XRP alcanza los $1,33 pero enfrenta resistencia técnica.",
+  "sentiment": "Neutral ➡️",
+  "imagePrompt": "A photorealistic scene showing a digital cryptocurrency token with the logo of XRP hovering over a chart that illustrates price resistance at $1.40, with green and red lines indicating support and resistance levels."
+}
+
+✅ Artículo generado con éxito por Ollama: XRP Se Eleva a $1,33 pero Falla en Superar la Resistencia
+🧠 Solicitando traducción a Ollama (qwen2.5:14b)...
+✍️ Traduciendo al Inglés: {
+  "titleEn": "XRP Rises to $1.33 but Fails to Overcome Resistance",
+  "summaryEn": "The price of XRP reached $1.33 following a recovery driven by institutional buying, although it faces technical barriers that prevent further strong advances.",
+  "contentEn": "<p>According to recent data from CoinGlass and Glassnode, the price of <a href=\"/tag/xrp\">XRP</a> has experienced a recovery in recent days, reaching quotations near $1.33. However, the digital currency has encountered technical resistance that limits its upward potential.</p>\n<h2>Market Analysis: XRP Faces Technical Barriers</h2>\n<p>The main analyst at CoinDesk notes that although the bullish momentum has pushed XRP to levels close to $1.33, the digital currency is in a technical crossroads. Immediate barriers are evident with key resistances around the psychological level of $1.40.</p>\n<p>\"XRP has shown signs of strength over the past few days, but the lack of volatility and sideways movement suggest that the market is in a consolidation phase,\" says the analyst. \"Unless this resistance is clearly broken, short-term bullish prospects could be limited.\"</p>\n<h2>Institutional Market Behavior</h2>\n<p>Data compiled by Glassnode indicates a slight trend towards accumulation by large investors, known as 'whales'. Despite this activity, total volume remains moderate, suggesting caution in institutional buying.</p>\n<p>\"We see an uptick in whale accumulation, but market interest has not reached the level required to drive a strong rise,\" notes the analyst. \"It's important to observe how these major players respond at current levels.\"</p>\n<h2>Macro Context and Future Outlook</h2>\n<p>Within a globally uncertain macroeconomic context, fluctuations in XRP prices remain volatile. Factors such as the evolution of regulatory regimes and institutional acceptance will continue to play a crucial role in determining future value.</p>\n<p>\"In the short term, the technical scenario is cautious for XRP,\" says the analyst. \"However, medium-term improvements can be expected if technical barriers are overcome and the macro environment improves.\"</p>"
+}
+
+
+⏱️ Tiempo de generación: 283.60 segundos
+🧹 Liberando VRAM de Ollama...
+- Descargando modelo: qwen2.5:14b
+✅ VRAM liberada.
+
+🎨 Generando imagen con Stable Diffusion Local...
+- Prompt: A photorealistic scene showing a digital cryptocurrency token with the logo of XRP hovering over a c...
+- Subiendo imagen a Supabase Storage (Bucket: articles)...
+✅ Imagen subida y disponible en: https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/articles/xrp-se-eleva-a-1-33-pero-falla-en-superar-la-resistencia-1775325573487.png
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: XRP Se Eleva a $1,33 pero Falla en Superar la Resistencia
+- Sentimiento: Neutral ➡️
+- Categoría: Web3
+- URL Imagen: https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/articles/xrp-se-eleva-a-1-33-pero-falla-en-superar-la-resistencia-1775325573487.png
+- Resumen: El precio del XRP alcanzó los $1,33 después de una recuperación impulsada por compras institucionales, aunque se enfrenta a barreras técnicas que impiden un avance más fuerte.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+=====================================================
+2️⃣ ENVIANDO A BINANCE SQUARE...
+=====================================================
+[info] Procesando para Binance Square: XRP Se Eleva a $1,33 pero Falla en Superar la Resistencia
+[ok] Publicado: https://www.binance.com/square/post/308950038150657
+
+=====================================================
+3️⃣ ENVIANDO A TELEGRAM...
+=====================================================
+[info] Procesando para Telegram: XRP Se Eleva a $1,33 pero Falla en Superar la Resistencia
+[ok] Publicado en Telegram exitosamente.
+=====================================================
+4️⃣ ENVIANDO A BLUESKY...
+=====================================================
+[info] Procesando para Bluesky: XRP Se Eleva a $1,33 pero Falla en Superar la Resistencia
+[ok] Post publicado con éxito en Bluesky!
+
+=====================================================
+✅ PROCESO COMPLETADO ✅
+Revisa tu web para ver la noticia y tus redes sociales.
+=====================================================
+[2026-04-04 18:00:40] ✅ Publicación completada.
+[2026-04-04 18:00:40] 💤 Bot durmiendo... Próxima publicación en 4 horas y 2 minutos.

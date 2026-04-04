@@ -8,6 +8,10 @@ export const siteConfig = {
   links: {
     github: "https://github.com/CarlosEmerito/EmeDotEme",
     twitter: "https://twitter.com/EmeDotEme",
+    bluesky: "https://bsky.app/profile/emedoteme.bsky.social",
+    binanceSquare: "https://www.binance.com/es/square/profile/emedoteme",
+    linkedin: "https://www.linkedin.com/in/carlos-lopez-lovera-3115182a6/",
+    email: "mailto:carlosemerito13@gmail.com",
   },
 };
 

@@ -54,16 +54,43 @@ export default async function AboutPage() {
 
         <div className="not-prose mt-8 p-6 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg">
           <h3 className="text-xl font-bold font-serif mb-4 text-black dark:text-white">Conecta conmigo</h3>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
+            <a 
+              href={siteConfig.links.bluesky}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[color:var(--color-brand)] hover:underline font-medium"
+            >
+              Bluesky
+            </a>
+            <span className="text-zinc-400 hidden sm:inline">•</span>
+            <a 
+              href={siteConfig.links.binanceSquare}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[color:var(--color-brand)] hover:underline font-medium"
+            >
+              Binance Square
+            </a>
+            <span className="text-zinc-400 hidden sm:inline">•</span>
+            <a 
+              href={siteConfig.links.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[color:var(--color-brand)] hover:underline font-medium"
+            >
+              LinkedIn
+            </a>
+            <span className="text-zinc-400 hidden sm:inline">•</span>
             <a 
               href={siteConfig.links.twitter}
               target="_blank"
               rel="noreferrer"
               className="text-[color:var(--color-brand)] hover:underline font-medium"
             >
-              Twitter / X
+              X / Twitter
             </a>
-            <span className="text-zinc-400">•</span>
+            <span className="text-zinc-400 hidden sm:inline">•</span>
             <a 
               href={siteConfig.links.github}
               target="_blank"
@@ -71,6 +98,13 @@ export default async function AboutPage() {
               className="text-[color:var(--color-brand)] hover:underline font-medium"
             >
               GitHub
+            </a>
+            <span className="text-zinc-400 hidden sm:inline">•</span>
+            <a 
+              href={siteConfig.links.email}
+              className="text-[color:var(--color-brand)] hover:underline font-medium"
+            >
+              Email
             </a>
           </div>
         </div>

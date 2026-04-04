@@ -15,6 +15,7 @@ export interface GeneratedArticle {
   titleEn?: string;
   summaryEn?: string;
   contentEn?: string;
+  imagePrompt?: string;
 }
 
 /**
@@ -330,7 +331,7 @@ REGLAS ESTRICTAS DE TONO Y ESTILO (¡MUY IMPORTANTE PARA PARECER HUMANO!):
 5. NO cometas errores matemáticos. Si citas un porcentaje de cambio (ej. 2%), no digas "subió un 2% que es más del mil por ciento". Sé preciso con los números.
 
 REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
-1. Devuelve ÚNICAMENTE un objeto JSON válido con las siguientes 6 propiedades exactas: "title", "summary", "content", "tags", "imageCaption", "sentiment".
+1. Devuelve ÚNICAMENTE un objeto JSON válido con las siguientes 7 propiedades exactas: "title", "summary", "content", "tags", "imageCaption", "sentiment", "imagePrompt".
 2. "title": Un titular directo y periodístico, enfocado en datos y hechos (ej. "Bitcoin supera los $66K impulsado por la acumulación institucional").
 3. "summary": Un breve lead (sin HTML) directo al punto, explicando el "qué" y el "por qué" de la noticia.
 4. "content": Un artículo extenso en formato HTML. 
@@ -341,11 +342,12 @@ REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
 5. "tags": Un array de 3 a 5 strings cortos que representen los temas clave del artículo (ej. ["Bitcoin", "Regulación", "DeFi"]).
 6. "imageCaption": Un pie de foto sobrio (1 oración) con un dato clave relacionado con el titular.
 7. "sentiment": Evalúa el sentimiento general de esta noticia para el mercado. DEBE ser EXACTAMENTE UNO de estos 3 valores, incluyendo el emoji de flecha económica: "Alcista ⬆️", "Bajista ⬇️" o "Neutral ➡️".
-8. NUNCA menciones que eres una IA. Escribe como un analista de carne y hueso.
-9. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES: ${recentTitles || "Ninguno"}.
-10. TEMA EXCLUSIVO: Tu artículo DEBE ser sobre criptomonedas, blockchain, Web3 o mercados macroeconómicos.
-11. MUY IMPORTANTE: Empieza con { y termina con }. NO uses markdown de bloques de código como \`\`\`json.
-12. SEO INTERLINKING: Si mencionas criptomonedas clave (como Bitcoin, Ethereum, Solana) o conceptos importantes, envuélvelos en un enlace HTML apuntando a nuestro propio tag en minúsculas. Ejemplo: <a href="/tag/bitcoin">Bitcoin</a>. Haz esto al menos 2-3 veces en el texto.`;
+8. "imagePrompt": A vivid, highly detailed visual description IN ENGLISH for Stable Diffusion to generate the article's header image. Describe a photorealistic scene related to the article's core topic (e.g. "a glowing bitcoin coin resting on a digital circuit board with neon blue and green lights, dramatic lighting"). Do not include words like "photo of" or camera settings.
+9. NUNCA menciones que eres una IA. Escribe como un analista de carne y hueso.
+10. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES: ${recentTitles || "Ninguno"}.
+11. TEMA EXCLUSIVO: Tu artículo DEBE ser sobre criptomonedas, blockchain, Web3 o mercados macroeconómicos.
+12. MUY IMPORTANTE: Empieza con { y termina con }. NO uses markdown de bloques de código como \`\`\`json.
+13. SEO INTERLINKING: Si mencionas criptomonedas clave (como Bitcoin, Ethereum, Solana) o conceptos importantes, envuélvelos en un enlace HTML apuntando a nuestro propio tag en minúsculas. Ejemplo: <a href="/tag/bitcoin">Bitcoin</a>. Haz esto al menos 2-3 veces en el texto.`;
 
     const userPrompt = `Aquí tienes los datos actuales y reales del mercado en este mismo instante:
 

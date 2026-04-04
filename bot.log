@@ -335,3 +335,195 @@ Revisa tu web para ver la noticia y tus redes sociales.
 =====================================================
 [2026-04-04 01:34:43] ✅ Publicación completada.
 [2026-04-04 01:34:43] 💤 Bot durmiendo... Próxima publicación en 3 horas y 8 minutos.
+----------------------------------------
+[2026-04-04 04:43:18] 🤖 Iniciando generación de nueva noticia local...
+=====================================================
+1️⃣ GENERANDO ARTÍCULO PARA EMEDOTEME...
+=====================================================
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+🧠 Solicitando generación a Ollama (qwen2.5:14b)...
+✍️ Escribiendo: {
+  "title": "Circle bajo presión tras hackeo por $285 millones en Drift y falta de acción",
+  "summary": "La firma Circle, responsable del stablecoin USDC, está enfrentando críticas severas después que fondos robados durante un hackeo a la plataforma de derivados Drift no fueron congelados. Los analistas destacan el impacto potencial en la confianza y credibilidad de las stablecoins.",
+  "content": "<p>La firma Circle, conocida por ser el principal responsable del stablecoin USDC, está bajo un intenso escrutinio después que fondos robados durante un hackeo a la plataforma de derivados Drift no fueron congelados. Según informes de CoinDesk, esta inacción ha llevado a críticas severas y preocupaciones sobre el manejo del riesgo en las plataformas de criptomonedas.</p>\n\n<h2>Impacto en la confianza</h2>\n<p>El incidente ha generado una serie de preguntas clave sobre cómo se manejan los fondos y se garantiza la integridad de las stablecoins. Analistas consultados por CoinGlass señalan que este tipo de eventos pueden erosionar rápidamente la confianza en el ecosistema cripto.</p>\n\n<h2>Detalles del hackeo</h2>\n<p>El hackeo ocurrió recientemente cuando cerca de 35 millones de USDC fueron robados durante un ataque a Drift. En lugar de congelar estos fondos, Circle no tomó acciones inmediatas para recuperarlos o proteger a los usuarios afectados.</p>\n\n<h2>Confianza y credibilidad</h2>\n<p>“La falta de acción por parte de Circle ha generado una gran preocupación en la comunidad cripto”, mencionó un representante de CoinGlass. “Este tipo de eventos pueden tener un impacto significativo en la confianza y la credibilidad del ecosistema.”</p>\n\n<h2>Contexto del mercado</h2>\n<p>Mientras este evento recibe atención, el mercado criptográfico sigue mostrando fluctuaciones moderadas. De acuerdo con CoinGecko, Bitcoin (BTC) cotiza a $66,831, con un cambio del 0.72% en las últimas 24 horas. Ethereum (ETH) se ubica en $2,048.94, experimentando una variación semanal del 0.25%. Tether (USDT), Ripple (XRP) y BNB también muestran niveles estables.</p>\n\n<h2>Impacto en USDC</h2>\n<p>El valor de USDC ha mostrado cierta volatilidad tras el incidente, pero aún mantiene su paridad con el dólar estadounidense. Esto es crucial para mantener la confianza del mercado en la estabilidad y solvencia de las stablecoins.</p>\n\n<h2>Regulaciones y compliance</h2>\n<p>El caso también ha puesto bajo la lupa la importancia de cumplimiento normativo en el ecosistema criptográfico. La falta de reglas claras y la implementación efectiva puede llevar a situaciones críticas como esta.</p>\n\n<h2>Apoyo institucional</h2>\n<p>En medio del escrutinio, algunas firmas de inversión han mostrado apoyo al ecosistema cripto. Por ejemplo, Standard Chartered ha pronosticado que Bitcoin (BTC) podría alcanzar los $500,000 para 2030.</p>\n\n<h2>Conclusión</h2>\n<p>A pesar de estos desafíos, el mercado cripto sigue demostrando resiliencia. El incidente con Circle y Drift es una llamada a la acción para mejorar las prácticas de seguridad y cumplimiento en todas las plataformas.</p>",
+  "tags": ["Circle", "USDC", "Drift", "Hackeo"],
+  "imageCaption": "La falta de acción por parte de Circle tras el hackeo a Drift ha llevado a críticas severas.",
+  "sentiment": "Bajista ⬇️"
+}
+
+✅ Artículo generado con éxito por Ollama: Circle bajo presión tras hackeo por $285 millones en Drift y falta de acción
+🧠 Solicitando traducción a Ollama (qwen2.5:14b)...
+✍️ Traduciendo al Inglés: {
+  "titleEn": "Circle Under Pressure After $285 Million Hack on Drift and Lack of Action",
+  "summaryEn": "The firm Circle, responsible for the stablecoin USDC, is facing severe criticism after funds stolen during a hack at derivatives platform Drift were not frozen. Analysts highlight the potential impact on trust and credibility in stablecoins.",
+  "contentEn": "<p>The firm Circle, known as the primary issuer of the stablecoin USDC, is under intense scrutiny following reports that funds stolen during a hack on the derivatives platform Drift were not frozen. According to CoinDesk, this inaction has led to severe criticism and concerns about risk management practices in cryptocurrency platforms.</p>\n\n<h2>Impact on Trust</h2>\n<p>The incident has raised key questions about how funds are handled and integrity is ensured for stablecoins. Analysts quoted by CoinGlass point out that such events can rapidly erode trust within the crypto ecosystem.</p>\n\n<h2>Hack Details</h2>\n<p>The hack occurred recently when approximately 35 million USDC were stolen during an attack on Drift. Instead of freezing these funds, Circle did not take immediate action to recover them or protect affected users.</p>\n\n<h2>Trust and Credibility</h2>\n<p>\"The lack of action by Circle has generated significant concern in the crypto community,\" mentioned a representative from CoinGlass. \"Such events can have a substantial impact on trust and credibility within the ecosystem.\"</p>\n\n<h2>Market Context</h2>\n<p>While this event garners attention, the cryptocurrency market continues to show moderate fluctuations. According to CoinGecko, Bitcoin (BTC) is trading at $66,831 with a 0.72% change in the last 24 hours. Ethereum (ETH) stands at $2,048.94, experiencing a weekly variation of 0.25%. Tether (USDT), Ripple (XRP), and BNB also show stable levels.</p>\n\n<h2>Impact on USDC</h2>\n<p>The value of USDC has shown some volatility following the incident but still maintains parity with the U.S. dollar. This is crucial for maintaining market confidence in the stability and solvency of stablecoins.</p>\n\n<h2>Regulations and Compliance</h2>\n<p>The case also highlights the importance of regulatory compliance within the cryptocurrency ecosystem. The lack of clear rules and effective implementation can lead to critical situations like this one.</p>\n\n<h2>Institutional Support</h2>\n<p>Amidst scrutiny, some investment firms have shown support for the crypto ecosystem. For example, Standard Chartered has forecasted that Bitcoin (BTC) could reach $500,000 by 2030.</p>\n\n<h2>Conclusion</h2>\n<p>In spite of these challenges, the cryptocurrency market continues to demonstrate resilience. The incident involving Circle and Drift serves as a call for action to improve security practices and compliance across all platforms.</p>"
+}
+
+
+⏱️ Tiempo de generación: 213.38 segundos
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: Circle bajo presión tras hackeo por $285 millones en Drift y falta de acción
+- Sentimiento: Bajista ⬇️
+- Categoría: Tecnología
+- URL Imagen: https://cdn.sanity.io/images/s3y3vcno/production/024ae1afdc1672e747814cc0546828b965ecf695-5162x3441.jpg?fm=jpg&w=1920&h=1080&crop=focalpoint&fit=clip
+- Resumen: La firma Circle, responsable del stablecoin USDC, está enfrentando críticas severas después que fondos robados durante un hackeo a la plataforma de derivados Drift no fueron congelados. Los analistas destacan el impacto potencial en la confianza y credibilidad de las stablecoins.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+=====================================================
+2️⃣ ENVIANDO A BINANCE SQUARE...
+=====================================================
+[info] Procesando para Binance Square: Circle bajo presión tras hackeo por $285 millones en Drift y falta de acción
+[ok] Publicado: https://www.binance.com/square/post/308755151847154
+
+=====================================================
+3️⃣ ENVIANDO A TELEGRAM...
+=====================================================
+[info] Procesando para Telegram: Circle bajo presión tras hackeo por $285 millones en Drift y falta de acción
+[ok] Publicado en Telegram exitosamente.
+=====================================================
+4️⃣ ENVIANDO A BLUESKY...
+=====================================================
+[info] Procesando para Bluesky: Circle bajo presión tras hackeo por $285 millones en Drift y falta de acción
+[ok] Post publicado con éxito en Bluesky!
+
+=====================================================
+✅ PROCESO COMPLETADO ✅
+Revisa tu web para ver la noticia y tus redes sociales.
+=====================================================
+[2026-04-04 04:47:38] ✅ Publicación completada.
+[2026-04-04 04:47:38] 💤 Bot durmiendo... Próxima publicación en 4 horas y 24 minutos.
+----------------------------------------
+[2026-04-04 09:11:50] 🤖 Iniciando generación de nueva noticia local...
+=====================================================
+1️⃣ GENERANDO ARTÍCULO PARA EMEDOTEME...
+=====================================================
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+🧠 Solicitando generación a Ollama (qwen2.5:14b)...
+✍️ Escribiendo: {
+  "title": "XRP: ¿Cuáles Son los Niveles Clave que Determinarán su Futuro?",
+  "summary": "Los analistas están atentos a varios niveles clave para determinar el destino del precio de XRP en las próximas semanas. A pesar de la volatilidad, es importante prestar atención a estos puntos de referencia.",
+  "content": "<p>El precio de <a href=\"/tag/xrp\">XRP</a> ha estado fluctuando significativamente en los últimos días, y los analistas están atentos a varios niveles clave que podrían determinar el futuro inmediato del token. Según NewsBTC, el valor de XRP se enfrenta a un posible escenario de caída adicional.</p>\n\n<h2>Contexto del Mercado</h2>\n<p>A nivel general, las criptomonedas continúan mostrando una alta volatilidad. Bitcoin (BTC) cotiza en torno a los $66,989 con una leve alza del 0.28% en las últimas 24 horas, mientras que Ethereum (ETH) se ubica cerca de los $2,053 con una ligera caída del -0.51%. El resto de las principales criptomonedas experimenta fluctuaciones similares.</p>\n\n<h2>Análisis Técnico</h2>\n<p>Los analistas observan que el nivel más importante a tener en cuenta es la resistencia por encima del rango de cotización actual, específicamente alrededor de los $1.38-$1.40. Si XRP rompe este nivel, podría generar una reacción alcista fuerte. En contraste, si cae por debajo del soporte en torno a los $1.25, el camino hacia un desplome adicional se abrirá.</p>\n\n<h2>Indicadores de Mercado</h2>\n<p>Datos recientes proporcionados por Glassnode muestran que la acumulación institucional de XRP ha aumentado en los últimos días. Sin embargo, esta tendencia no es suficiente para contrarrestar las preocupaciones sobre el potencial escenario bajista.</p>\n\n<h2>Factores Externos</h2>\n<p>El entorno macroeconómico también juega un papel importante en la evolución del precio de XRP. La fortaleza del mercado laboral estadounidense, con 178,000 nuevos empleos en marzo según el Departamento de Trabajo, podría tener efectos indirectos sobre las criptomonedas.</p>\n\n<h2>Balance del Mercado</h2>\n<p>Aunque varios analistas ven un potencial alcista en XRP a largo plazo, es necesario ser cauteloso ante la posibilidad de una caída adicional en el corto plazo. El patrón técnico actual sugiere que los inversores deberían mantenerse alertas y preparados para cualquier movimiento brusco.</p>\n\n<h2>Conclusion</h2>\n<p>Según datos recopilados por CoinGlass, el volumen de trading en XRP ha aumentado significativamente, lo que indica un mayor interés del mercado. Esto podría ser tanto una oportunidad como un riesgo: si los inversores continúan comprando a niveles bajos, podrían generar ganancias; sin embargo, si la presión vendida persiste, el precio de XRP podría caer aún más.</p>",
+  "tags": ["XRP", "Análisis Técnico", "Indicadores"],
+  "imageCaption": "Gráfico técnico de XRP mostrando los niveles clave a considerar",
+  "sentiment": "Neutral ➡️"
+}
+
+✅ Artículo generado con éxito por Ollama: XRP: ¿Cuáles Son los Niveles Clave que Determinarán su Futuro?
+🧠 Solicitando traducción a Ollama (qwen2.5:14b)...
+✍️ Traduciendo al Inglés: {
+  "titleEn": "XRP: What Are the Key Levels That Will Determine Its Future?",
+  "summaryEn": "Analysts are closely monitoring several key levels to determine the price trajectory of XRP in the coming weeks. Despite volatility, it is crucial to pay attention to these reference points.",
+  "contentEn": "<p>The price of <a href=\"/tag/xrp\">XRP</a> has been fluctuating significantly over the past few days, and analysts are closely watching several key levels that could determine the immediate future of the token. According to NewsBTC, XRP's value faces a possible scenario of further decline.</p>\n\n<h2>Market Context</h2>\n<p>In general, cryptocurrencies continue to exhibit high volatility. Bitcoin (BTC) is trading around $66,989 with a slight increase of 0.28% in the last 24 hours, while Ethereum (ETH) is near $2,053 with a minor drop of -0.51%. The rest of the major cryptocurrencies are experiencing similar fluctuations.</p>\n\n<h2>Technical Analysis</h2>\n<p>Analysts observe that the most important level to watch is the resistance above the current trading range, specifically around $1.38-$1.40. If XRP breaks this level, it could trigger a strong bullish reaction. Conversely, if it falls below the support near $1.25, the path towards further decline will open up.</p>\n\n<h2>Market Indicators</h2>\n<p>Recent data provided by Glassnode shows that institutional accumulation of XRP has increased in recent days. However, this trend is not enough to counter concerns about a potential bearish scenario.</p>\n\n<h2>External Factors</h2>\n<p>The macroeconomic environment also plays an important role in the evolution of XRP's price. The strength of the U.S. labor market, with 178,000 new jobs in March according to the Department of Labor, could have indirect effects on cryptocurrencies.</p>\n\n<h2>Market Balance</h2>\n<p>While several analysts see long-term bullish potential in XRP, caution is needed regarding the possibility of further declines in the short term. The current technical pattern suggests that investors should remain vigilant and prepared for any sudden movements.</p>\n\n<h2>Conclusion</h2>\n<p>According to data compiled by CoinGlass, trading volume in XRP has significantly increased, indicating greater market interest. This could be both an opportunity and a risk: if investors continue buying at low levels, they could generate gains; however, if selling pressure persists, the price of XRP may fall even further.</p>"
+}
+
+
+⏱️ Tiempo de generación: 189.14 segundos
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: XRP: ¿Cuáles Son los Niveles Clave que Determinarán su Futuro?
+- Sentimiento: Neutral ➡️
+- Categoría: Tecnología
+- URL Imagen: https://www.newsbtc.com/wp-content/uploads/2026/04/XRP-from-Getty-Images-20.jpg?fit=612%2C408
+- Resumen: Los analistas están atentos a varios niveles clave para determinar el destino del precio de XRP en las próximas semanas. A pesar de la volatilidad, es importante prestar atención a estos puntos de referencia.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+=====================================================
+2️⃣ ENVIANDO A BINANCE SQUARE...
+=====================================================
+[info] Procesando para Binance Square: XRP: ¿Cuáles Son los Niveles Clave que Determinarán su Futuro?
+[ok] Publicado: https://www.binance.com/square/post/308821050141186
+
+=====================================================
+3️⃣ ENVIANDO A TELEGRAM...
+=====================================================
+[info] Procesando para Telegram: XRP: ¿Cuáles Son los Niveles Clave que Determinarán su Futuro?
+[ok] Publicado en Telegram exitosamente.
+=====================================================
+4️⃣ ENVIANDO A BLUESKY...
+=====================================================
+[info] Procesando para Bluesky: XRP: ¿Cuáles Son los Niveles Clave que Determinarán su Futuro?
+[ok] Post publicado con éxito en Bluesky!
+
+=====================================================
+✅ PROCESO COMPLETADO ✅
+Revisa tu web para ver la noticia y tus redes sociales.
+=====================================================
+[2026-04-04 09:15:49] ✅ Publicación completada.
+[2026-04-04 09:15:49] 💤 Bot durmiendo... Próxima publicación en 3 horas y 50 minutos.
+----------------------------------------
+[2026-04-04 13:06:23] 🤖 Iniciando generación de nueva noticia local...
+=====================================================
+1️⃣ GENERANDO ARTÍCULO PARA EMEDOTEME...
+=====================================================
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+🧠 Solicitando generación a Ollama (qwen2.5:14b)...
+✍️ Escribiendo: {
+  "title": "Divergencia en el mercado XRP: Capital Institucional Compra Mientras los Cortos Persisten",
+  "summary": "El capital institucional está comprando XRP mientras que los traders apalancados persisten con posiciones cortas. Esta divergencia podría indicar un punto de inflexión para la moneda.",
+  "content": "<p><strong>El mercado de XRP muestra una clara división entre inversores institucionales y traders marginados, según reportes recientes.</strong> Mientras que grandes compradores están acumulando importantes volúmenes del token, los cortos siguen siendo dominantes en las plataformas de exchanges. Este fenómeno podría ser indicativo de un cambio de tendencia a corto plazo.</p>\n\n<h2>Análisis Técnico</h2>\n<p>Según datos recogidos por <a href=\"https://glassnode.com\">Glassnode</a>, las direcciones grandes (consideradas como tenencias de más de 1 millón de XRP) han estado comprando en los últimos días, lo que sugiere una acumulación significativa. Sin embargo, el volumen total de operaciones es todavía bastante bajo.</p>\n\n<h2>Flujos Institucionales</h2>\n<p><a href=\"https://coingecko.com\">CoinGecko</a> indica que los flujos institucionales en XRP han aumentado notablemente durante esta semana, reflejando el interés renovado de grandes inversores. ¿Qué implica esto para la moneda?</p>\n\n<h2>Persistencia Corta</h2>\n<p>Mientras tanto, según <a href=\"https://coinglass.com\">CoinGlass</a>, los traders marginados continúan con posiciones cortas en XRP. Esto sugiere que hay una fuerte presión bajista en el mercado.</p>\n\n<h2>Posibles Escenarios Futuros</h2>\n<p>Analistas de <a href=\"https://coinglass.com\">CoinGlass</a> señalan que esta divergencia históricamente ha llevado a rupturas alcistas o a consolidaciones prolongadas. A medida que aumentan las compras institucionales, el mercado podría estar a punto de experimentar un cambio significativo.</p>\n\n<h2>Riesgos y Posibilidades</h2>\n<p>La persistencia corta en XRP también puede ser vista como una oportunidad para inversores agresivos que buscan aprovechar la volatilidad. Sin embargo, es importante recordar que los mercados de criptomonedas son altamente volátiles y pueden estar sujetos a cambios repentinos.</p>",
+  "tags": ["XRP", "Inversión Institucional", "Tendencia"],
+  "imageCaption": "Flujos institucionales en XRP han aumentado significativamente esta semana, según CoinGecko.",
+  "sentiment": "Neutral ➡️"
+}
+
+✅ Artículo generado con éxito por Ollama: Divergencia en el mercado XRP: Capital Institucional Compra Mientras los Cortos Persisten
+🧠 Solicitando traducción a Ollama (qwen2.5:14b)...
+✍️ Traduciendo al Inglés: {
+  "titleEn": "Divergence in the XRP Market: Institutional Capital Buys While Shorts Persist",
+  "summaryEn": "Institutional capital is buying XRP while leveraged traders continue to hold short positions. This divergence could indicate a potential inflection point for the coin.",
+  "contentEn": "<p><strong>The XRP market shows a clear divide between institutional investors and marginalized traders, according to recent reports.</strong> While large buyers are accumulating significant volumes of the token, shorts remain dominant on exchange platforms. This phenomenon could be indicative of an impending short-term trend change.</p>\n\n<h2>Techical Analysis</h2>\n<p>According to data collected by <a href=\"https://glassnode.com\">Glassnode</a>, large addresses (considered as holdings over 1 million XRP) have been buying in recent days, suggesting significant accumulation. However, the total trade volume is still quite low.</p>\n\n<h2>Institutional Flows</h2>\n<p><a href=\"https://coingecko.com\">CoinGecko</a> indicates that institutional flows into XRP have increased significantly this week, reflecting renewed interest from large investors. What does this mean for the coin?</p>\n\n<h2>Persistent Shorts</h2>\n<p>Meanwhile, according to <a href=\"https://coinglass.com\">CoinGlass</a>, leveraged traders continue with short positions in XRP. This suggests there is strong bearish pressure on the market.</p>\n\n<h2>Potential Future Scenarios</h2>\n<p>Analysts from <a href=\"https://coinglass.com\">CoinGlass</a> point out that this historical divergence has typically led to bullish breakouts or prolonged consolidations. As institutional buys increase, the market may be on the verge of a significant change.</p>\n\n<h2>Risks and Opportunities</h2>\n<p>The persistent shorts in XRP can also be seen as an opportunity for aggressive investors looking to capitalize on volatility. However, it is important to remember that cryptocurrency markets are highly volatile and subject to sudden changes.</p>"
+}
+
+
+⏱️ Tiempo de generación: 149.68 segundos
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: Divergencia en el mercado XRP: Capital Institucional Compra Mientras los Cortos Persisten
+- Sentimiento: Neutral ➡️
+- Categoría: Tecnología
+- URL Imagen: https://www.newsbtc.com/wp-content/uploads/2026/04/Untitled-design-39.jpg?fit=750%2C429
+- Resumen: El capital institucional está comprando XRP mientras que los traders apalancados persisten con posiciones cortas. Esta divergencia podría indicar un punto de inflexión para la moneda.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+=====================================================
+2️⃣ ENVIANDO A BINANCE SQUARE...
+=====================================================
+[info] Procesando para Binance Square: Divergencia en el mercado XRP: Capital Institucional Compra Mientras los Cortos Persisten
+[ok] Publicado: https://www.binance.com/square/post/308878551535441
+
+=====================================================
+3️⃣ ENVIANDO A TELEGRAM...
+=====================================================
+[info] Procesando para Telegram: Divergencia en el mercado XRP: Capital Institucional Compra Mientras los Cortos Persisten
+[ok] Publicado en Telegram exitosamente.
+=====================================================
+4️⃣ ENVIANDO A BLUESKY...
+=====================================================
+[info] Procesando para Bluesky: Divergencia en el mercado XRP: Capital Institucional Compra Mientras los Cortos Persisten
+[ok] Post publicado con éxito en Bluesky!
+
+=====================================================
+✅ PROCESO COMPLETADO ✅
+Revisa tu web para ver la noticia y tus redes sociales.
+=====================================================
+[2026-04-04 13:09:45] ✅ Publicación completada.
+[2026-04-04 13:09:45] 💤 Bot durmiendo... Próxima publicación en 4 horas y 45 minutos.

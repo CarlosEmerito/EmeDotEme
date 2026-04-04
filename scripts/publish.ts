@@ -1,4 +1,5 @@
 import { generateArticleContent, translateArticleContent } from "../services/ai.service";
+import { generateImageLocal } from "../services/image.service";
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
 import path from "path";
@@ -50,6 +51,15 @@ async function main() {
     };
 
     let imageUrl = aiResponse.sourceImageUrl;
+    
+    // Si tenemos un prompt de imagen, intentamos generarla localmente con Stable Diffusion
+    if (aiResponse.imagePrompt) {
+      const generatedImageUrl = await generateImageLocal(aiResponse.imagePrompt, slug);
+      if (generatedImageUrl) {
+        imageUrl = generatedImageUrl;
+      }
+    }
+
     if (!imageUrl) {
       const options = fallbackImages[randomCategory.name] || fallbackImages["Tecnología"];
       imageUrl = options[Math.floor(Math.random() * options.length)];

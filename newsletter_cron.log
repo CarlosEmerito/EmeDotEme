@@ -1,0 +1,29 @@
+=====================================================
+📅 EJECUTANDO NEWSLETTER SEMANAL - sáb 04 abr 2026 10:30:01 UTC
+=====================================================
+=====================================================
+✉️  INICIANDO GENERACIÓN DE NEWSLETTER SEMANAL ✉️
+=====================================================
+
+👥 Suscriptores activos encontrados: 2
+📰 Noticias publicadas esta semana: 15
+
+⚙️ Generando la newsletter semanal...
+🧠 Solicitando newsletter a Ollama (qwen2.5:14b)...
+✍️ Escribiendo Newsletter: {
+  "subject": "La Semana en Criptomonedas: ¿Estabilidad o Cambio Radical? 🚀",
+  "htmlContent": "<p>Hola inversor,<br><br>¡Bienvenido a la newsletter semanal de EmeDotEme! Aquí tienes un resumen del tráfico de noticias más destacado de esta semana en el mundo criptográfico.</p>\n\n<h2>Regulación y Seguridad</h2>\n<p><strong>Circle bajo presión tras hackeo por $285 millones en Drift y falta de acción:</strong> La confianza en las stablecoins está siendo cuestionada después del hackeo a la plataforma de derivados Drift. Los fondos robados no fueron congelados, lo que ha llevado a cuestionamientos sobre la responsabilidad y compromiso de Circle.</p>\n<p><strong>Parlamentarios camboyanos proponen penas severas para estafadores cripto:</strong> En Camboya, los legisladores están buscando endurecer las leyes contra las estafas en el ecosistema criptográfico. Esto podría resultar en hasta cinco años de prisión para aquellos involucrados.</p>\n<p><strong>X anuncia nuevas reglas que podrían llevar a la prohibición de usuarios:</strong> Las políticas más restrictivas en X pueden resultar en el banneamiento de algunos usuarios, lo cual podría tener implicaciones adicionales sobre la adopción de criptomonedas.</p>\n\n<h2>Precios y Tendencias</h2>\n<p><strong>XRP: ¿Cuáles Son los Niveles Clave que Determinarán su Futuro?</strong>: Los analistas están atentos a varios niveles clave para determinar el destino del precio de XRP en las próximas semanas.</p>\n<p><strong>Bitcoin Treasuries Abandon Posiciones al Bajarse de los $70K:</strong> Los fondos fiduciarios han liquidado posiciones después de que la criptomoneda retrocedió por debajo del nivel psicológico de $70,000.</p>\n<p><strong>Schwab anuncia lanzamiento de trading spot para Bitcoin y Ether en primer semestre de 2026:</strong> Charles Schwab planea introducir el trading spot de Bitcoin (BTC) y Ethereum (ETH) durante la primera mitad del próximo año, reflejando una mayor integración de criptomonedas.</p>\n\n<h2>Tecnología e Innovación</h2>\n<p><strong>Investigadores trabajan en soluciones para proteger Bitcoin frente a amenazas cuánticas:</strong> Los expertos están explorando estrategias para garantizar la seguridad de Bitcoin ante el avance tecnológico.</p>\n<p><strong>Las soluciones de capa 2 de Ethereum necesitan precios flexibles para escalar, según Offchain Labs:</strong> Este enfoque podría mejorar significativamente la escalabilidad y competitividad del ecosistema Ethereum.</p>\n\n<h2>Aptitud Institucional</h2>\n<p><strong>Suministro de Stablecoins Supera los $315 mil millones Confluencia de Flujos Institucionales y USDC:</strong> El suministro total de stablecoins ha alcanzado un récord histórico, liderado por la adopción institucional de USDC.</p>\n\n<h2>Vistas del Mercado</h2>\n<p><strong>Ethereum: ¿Puede caer hasta los $10,000?</strong>: Un pronóstico sugiere una posible caída significativa en el precio de Ethereum, llegando a niveles mínimos cercanos a los $10,000.</p>\n\n<h2>Riesgos y Oportunidades</h2>\n<p><strong>El riesgo de ejecución en criptomonedas se convierte en el nuevo riesgo de custodia:</strong> Los expertos advierten sobre el riesgo operativo dentro del ecosistema criptográfico, destacando posibles errores humanos y fallas técnicas.</p>\n<p><strong>El Mercado Cripto Se Mantiene Dormido en Víspera del Viernes Santo:</strong> En víspera del viernes santo, el mercado de criptomonedas ha mostrado una notable falta de actividad y volatilidad.</p>\n\n<h2>Conflicto Geopolítico</h2>\n<p><strong>Bitcoin: ¿Subestimado en una posible guerra prolongada con Irán?</strong>: Un ex gestor de fondos hedge sostiene que el precio del Bitcoin podría estar subestimando los riesgos geopolíticos, especialmente ante un conflicto armado entre Estados Unidos e Irán.</p>\n\n<p>¡Esperamos que esta información te sea útil y te ayude a tomar las mejores decisiones en tu cartera de criptomonedas! Para recibir más noticias y análisis, no olvides seguirnos en nuestras redes sociales.<br><br>\nEl equipo de EmeDotEme</p>"
+}
+
+
+⏱️ Newsletter generada en: 146.87 segundos
+
+📧 Preparando envío de correos. Asunto: "La Semana en Criptomonedas: ¿Estabilidad o Cambio Radical? 🚀"
+
+❌ Error enviando correo vía Resend: {
+  statusCode: 403,
+  message: 'The emedoteme.es domain is not verified. Please, add and verify your domain on https://resend.com/domains',
+  name: 'validation_error'
+}
+✅ Proceso de newsletter finalizado correctamente.
+

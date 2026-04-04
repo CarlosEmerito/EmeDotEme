@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: Request) {
   try {
     const { name, email, message } = await req.json();
 
+    // Validaciones básicas
     if (!name || !email || !message) {
       return NextResponse.json({ error: "Todos los campos son obligatorios" }, { status: 400 });
     }
@@ -14,6 +13,27 @@ export async function POST(req: Request) {
     if (!/^\S+@\S+\.\S+$/.test(email)) {
       return NextResponse.json({ error: "Email inválido" }, { status: 400 });
     }
+
+    // Verificar si Resend está configurado
+    const resendApiKey = process.env.RESEND_API_KEY;
+    
+    if (!resendApiKey || resendApiKey.trim() === '') {
+      console.error("Resend no está configurado. API key faltante o vacía.");
+      
+      // En desarrollo, simular éxito para permitir testing
+      if (process.env.NODE_ENV === "development") {
+        console.log("Email simulado (desarrollo):", { name, email, message });
+        return NextResponse.json({ 
+          success: true, 
+          message: "Mensaje simulado (RESEND_API_KEY no configurada en desarrollo)" 
+        });
+      }
+      
+      return NextResponse.json({ error: "Servicio de email no configurado" }, { status: 503 });
+    }
+
+    // Inicializar Resend solo cuando sea necesario
+    const resend = new Resend(resendApiKey);
 
     // Enviar email al administrador (Carlos)
     const { data: _, error } = await resend.emails.send({

@@ -10,6 +10,11 @@ export interface GeneratedArticle {
   tags?: string[];
   sourceImageUrl?: string;
   imageCaption?: string;
+  sourceUrl?: string;
+  sentiment?: string;
+  titleEn?: string;
+  summaryEn?: string;
+  contentEn?: string;
 }
 
 /**
@@ -62,6 +67,7 @@ async function getFallbackArticle(topic?: string): Promise<GeneratedArticle> {
 <p>Como analista, considero que la atención debe mantenerse no solo en la acción del precio de Bitcoin, sino en el desarrollo fundamental de redes secundarias. La verdadera adopción sigue construyéndose independientemente del ruido diario del mercado bursátil tradicional.</p>`,
     sourceImageUrl: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=1200&auto=format&fit=crop",
     imageCaption: "Gráficos de mercado y representación visual de la economía descentralizada.",
+    sentiment: "Neutral ➡️",
   };
 }
 
@@ -71,6 +77,91 @@ async function getFallbackArticle(topic?: string): Promise<GeneratedArticle> {
  * 2. Se los inyecta al modelo local como contexto.
  * 3. Devuelve un artículo periodístico estructurado en JSON.
  */
+export async function translateArticleContent(article: GeneratedArticle): Promise<GeneratedArticle> {
+  let ollamaBaseUrl = process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1";
+  
+  if (process.env.OLLAMA_BASE_URL && !process.env.OLLAMA_BASE_URL.endsWith('/v1')) {
+    const cleanUrl = process.env.OLLAMA_BASE_URL.replace(/\/$/, '');
+    ollamaBaseUrl = `${cleanUrl}/v1`;
+  }
+
+  const modelName = process.env.OLLAMA_MODEL || "qwen3.5:27b";
+
+  try {
+    const openai = new OpenAI({
+      baseURL: ollamaBaseUrl,
+      apiKey: "ollama",
+      defaultHeaders: {
+        "ngrok-skip-browser-warning": "true"
+      }
+    });
+
+    const systemPrompt = `You are an expert crypto and financial translator.
+Your task is to perfectly translate a Spanish article into English.
+Maintain the exact same tone, analytical style, and HTML formatting.
+Return ONLY a valid JSON object with the following exact properties:
+1. "titleEn": The translated title.
+2. "summaryEn": The translated summary.
+3. "contentEn": The translated HTML content. Keep all HTML tags EXACTLY as they are. Translate the text inside the tags. Maintain any SEO interlinking <a href="..."> exactly as they are.
+4. ONLY return JSON. Do not return markdown blocks like \`\`\`json.`;
+
+    const userPrompt = `Please translate the following article to English:
+
+TITLE:
+${article.title}
+
+SUMMARY:
+${article.summary}
+
+CONTENT:
+${article.content}`;
+
+    console.log(`🧠 Solicitando traducción a Ollama (${modelName})...`);
+
+    const response = await openai.chat.completions.create({
+      model: modelName,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.3,
+      max_tokens: 2500,
+      stream: true,
+    });
+
+    let content = "";
+    process.stdout.write("✍️ Traduciendo al Inglés: ");
+    
+    for await (const chunk of response) {
+      const text = chunk.choices[0]?.delta?.content || "";
+      content += text;
+      process.stdout.write(text);
+    }
+    console.log("\n");
+    
+    if (!content) {
+      throw new Error("Ollama devolvió una respuesta vacía en la traducción.");
+    }
+
+    content = content.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+    content = extractJsonFromText(content);
+
+    const parsedTranslation = JSON.parse(content);
+    
+    return {
+      ...article,
+      titleEn: parsedTranslation.titleEn,
+      summaryEn: parsedTranslation.summaryEn,
+      contentEn: parsedTranslation.contentEn
+    };
+
+  } catch (error: any) {
+    console.error("❌ Error traduciendo contenido con Ollama:", error.message || error);
+    return article; // Return original without translation if it fails
+  }
+}
+
 export async function generateArticleContent(topic?: string): Promise<GeneratedArticle> {
   // Configuración para usar Ollama local a través del SDK de OpenAI
   let ollamaBaseUrl = process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1";
@@ -111,18 +202,33 @@ export async function generateArticleContent(topic?: string): Promise<GeneratedA
       : "No hay noticias de última hora disponibles.";
 
     // RAG Parte 3: Evitar repetición (obtenemos últimos artículos publicados)
-    const recentArticles = await getPublishedArticles(15);
+    const recentArticles = await getPublishedArticles(50); // Aumentado a 50 para mejor filtro histórico
     const recentTitles = recentArticles.map(a => a.title).join(' | ');
+    const usedSourceUrls = new Set(recentArticles.map(a => a.sourceUrl).filter(Boolean));
+    const usedImageUrls = new Set(recentArticles.map(a => a.imageUrl).filter(Boolean));
 
-    // Estrategia de Variedad: Si no hay un tema específico, escogemos una o dos noticias al azar para enfocar el artículo
+    // Estrategia de Variedad: Si no hay un tema específico, escogemos una noticia nueva
     let specificFocus = topic;
     let selectedImageUrl: string | undefined = undefined;
+    let selectedSourceUrl: string | undefined = undefined;
 
     if (!specificFocus && latestNews.length > 0) {
-      // Cogemos 1 noticia principal al azar de los RSS para no repetir siempre el mismo resumen
-      const randomNews = latestNews[Math.floor(Math.random() * latestNews.length)];
-      specificFocus = `Enfócate detalladamente en esta noticia específica: "${randomNews.title}" (Fuente: ${randomNews.source}). Úsala como núcleo central de tu artículo, y usa los precios de CoinGecko o el resto de titulares como contexto secundario.`;
-      selectedImageUrl = randomNews.imageUrl;
+      // Filtrar noticias que ya fueron procesadas por sourceUrl o imageUrl
+      const availableNews = latestNews.filter(n => {
+        const urlUsada = usedSourceUrls.has(n.link);
+        const imagenUsada = n.imageUrl ? usedImageUrls.has(n.imageUrl) : false;
+        return !urlUsada && !imagenUsada;
+      });
+
+      if (availableNews.length > 0) {
+        // Cogemos 1 noticia principal al azar de las DISPONIBLES
+        const randomNews = availableNews[Math.floor(Math.random() * availableNews.length)];
+        specificFocus = `Enfócate detalladamente en esta noticia específica: "${randomNews.title}" (Fuente: ${randomNews.source}). Úsala como núcleo central de tu artículo, y usa los precios de CoinGecko o el resto de titulares como contexto secundario.`;
+        selectedImageUrl = randomNews.imageUrl;
+        selectedSourceUrl = randomNews.link;
+      } else {
+        console.warn("⚠️ Advertencia: Todas las noticias recientes ya han sido procesadas. Se usará un artículo general de mercado.");
+      }
     }
 
     const systemPrompt = `Eres Carlos "Emérito" López Lovera, un prestigioso periodista humano y analista senior en mercados institucionales y tecnología Web3 para el portal financiero 'EmeDotEme'.
@@ -136,7 +242,7 @@ REGLAS ESTRICTAS DE TONO Y ESTILO (¡MUY IMPORTANTE PARA PARECER HUMANO!):
 5. NO cometas errores matemáticos. Si citas un porcentaje de cambio (ej. 2%), no digas "subió un 2% que es más del mil por ciento". Sé preciso con los números.
 
 REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
-1. Devuelve ÚNICAMENTE un objeto JSON válido con las siguientes 5 propiedades exactas: "title", "summary", "content", "tags", "imageCaption".
+1. Devuelve ÚNICAMENTE un objeto JSON válido con las siguientes 6 propiedades exactas: "title", "summary", "content", "tags", "imageCaption", "sentiment".
 2. "title": Un titular directo y periodístico, enfocado en datos y hechos (ej. "Bitcoin supera los $66K impulsado por la acumulación institucional").
 3. "summary": Un breve lead (sin HTML) directo al punto, explicando el "qué" y el "por qué" de la noticia.
 4. "content": Un artículo extenso en formato HTML. 
@@ -146,11 +252,12 @@ REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
    - DEBES ESCRIBIR EL ARTÍCULO COMPLETAMENTE EN ESPAÑOL.
 5. "tags": Un array de 3 a 5 strings cortos que representen los temas clave del artículo (ej. ["Bitcoin", "Regulación", "DeFi"]).
 6. "imageCaption": Un pie de foto sobrio (1 oración) con un dato clave relacionado con el titular.
-7. NUNCA menciones que eres una IA. Escribe como un analista de carne y hueso.
-8. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES: ${recentTitles || "Ninguno"}.
-9. TEMA EXCLUSIVO: Tu artículo DEBE ser sobre criptomonedas, blockchain, Web3 o mercados macroeconómicos.
-10. MUY IMPORTANTE: Empieza con { y termina con }. NO uses markdown de bloques de código como \`\`\`json.
-11. SEO INTERLINKING: Si mencionas criptomonedas clave (como Bitcoin, Ethereum, Solana) o conceptos importantes, envuélvelos en un enlace HTML apuntando a nuestro propio tag en minúsculas. Ejemplo: <a href="/tag/bitcoin">Bitcoin</a>. Haz esto al menos 2-3 veces en el texto.`;
+7. "sentiment": Evalúa el sentimiento general de esta noticia para el mercado. DEBE ser EXACTAMENTE UNO de estos 3 valores, incluyendo el emoji de flecha económica: "Alcista ⬆️", "Bajista ⬇️" o "Neutral ➡️".
+8. NUNCA menciones que eres una IA. Escribe como un analista de carne y hueso.
+9. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES: ${recentTitles || "Ninguno"}.
+10. TEMA EXCLUSIVO: Tu artículo DEBE ser sobre criptomonedas, blockchain, Web3 o mercados macroeconómicos.
+11. MUY IMPORTANTE: Empieza con { y termina con }. NO uses markdown de bloques de código como \`\`\`json.
+12. SEO INTERLINKING: Si mencionas criptomonedas clave (como Bitcoin, Ethereum, Solana) o conceptos importantes, envuélvelos en un enlace HTML apuntando a nuestro propio tag en minúsculas. Ejemplo: <a href="/tag/bitcoin">Bitcoin</a>. Haz esto al menos 2-3 veces en el texto.`;
 
     const userPrompt = `Aquí tienes los datos actuales y reales del mercado en este mismo instante:
 
@@ -218,6 +325,9 @@ RECUERDA: Tu artículo debe ser analítico, basado en datos, con un tono humano 
 
     if (selectedImageUrl) {
       parsedArticle.sourceImageUrl = selectedImageUrl;
+    }
+    if (selectedSourceUrl) {
+      parsedArticle.sourceUrl = selectedSourceUrl;
     }
 
     console.log(`✅ Artículo generado con éxito por Ollama: ${parsedArticle.title}`);

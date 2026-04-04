@@ -5,7 +5,7 @@ import { siteConfig } from '@/config/site';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = await prisma.article.findMany({
     where: { published: true },
-    select: { slug: true, updatedAt: true },
+    select: { slug: true, updatedAt: true, titleEn: true },
     orderBy: { createdAt: 'desc' }
   });
 
@@ -15,6 +15,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: 'never',
     priority: 0.8,
   }));
+
+  const articleEntriesEn: MetadataRoute.Sitemap = articles
+    .filter(article => article.titleEn)
+    .map((article) => ({
+      url: `${siteConfig.url}/en/articulo/${article.slug}`,
+      lastModified: article.updatedAt,
+      changeFrequency: 'never',
+      priority: 0.7,
+    }));
 
   const categories = await prisma.category.findMany({
     select: { slug: true, updatedAt: true }
@@ -48,5 +57,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  return [...staticEntries, ...categoryEntries, ...articleEntries];
+  return [...staticEntries, ...categoryEntries, ...articleEntries, ...articleEntriesEn];
 }

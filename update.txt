@@ -1,0 +1,12 @@
+1. Expansión a Redes Nativas y Tradicionales (Distribución)
+*   Integración con X (Twitter): Aunque la API gratuita tiene límites, es la red principal para cripto (Crypto Twitter). Podemos adaptar el script de Bluesky usando tweepy para publicar hilos cortos o noticias de última hora.
+*   Redes Sociales Web3 (Farcaster / Lens Protocol): La audiencia nativa cripto está migrando a redes descentralizadas como Farcaster (Warpcast). Publicar allí te da credibilidad inmediata en el sector Web3.
+*   Newsletter Automática (Email): Crear un script que, una vez a la semana, use Ollama para leer todas las noticias de la semana y redactar una Newsletter resumen atractiva (ej. "Lo que pasó esta semana en Cripto"). Se puede enviar vía Resend o Mailchimp.
+2. Enriquecimiento del Contenido con IA (Valor Añadido)
+*   Indicador de Sentimiento (Alcista/Bajista): Podemos pedirle a Ollama que clasifique cada noticia como Bullish 🐂, Bearish 🐻 o Neutral ⚖️. Esto se puede guardar en Prisma y mostrar visualmente en la web de Next.js y en los posts de Telegram/Bluesky.
+*   Traducción Multi-idioma (Expansión Internacional): Ya que tienes la IA local y es gratis, podemos hacer que Ollama traduzca automáticamente los artículos al Inglés o Portugués, guardando versiones /en/ en la base de datos para multiplicar tu tráfico SEO internacional sin coste extra.
+*   Glosario Automático: Si la noticia menciona términos técnicos (ej. "Rollups", "DeFi", "Halving"), añadir automáticamente un pequeño recuadro al final del artículo en la web explicando el término para educar a los usuarios más novatos.
+3. Retención y Tráfico Web
+*   Notificaciones Push en la Web: Implementar Service Workers en Next.js para que los usuarios de emedoteme.es puedan aceptar notificaciones web. Cuando haya una noticia "urgente", se les envía una alerta directa al móvil/PC.
+*   Bot de Telegram Interactivo: Actualmente tu canal de Telegram es de "solo lectura". Podríamos hacer un bot donde los usuarios puedan enviar comandos (ej. /precio btc o /resumen eth) y el bot les responda usando los datos que ya tienes.
+*   Auto-Indexación (SEO Activo): Un script que, cada vez que publicas un artículo nuevo, haga un ping automático a la API de Google Search Console para forzar a Google a indexar la noticia en minutos, en lugar de esperar días. Crucial para sitios de noticias.

@@ -278,3 +278,60 @@ Revisa tu web para ver la noticia.
 =====================================================
 [2026-04-03 22:12:13] ✅ Publicación completada.
 [2026-04-03 22:12:13] 💤 Bot durmiendo... Próxima publicación en 3 horas y 19 minutos.
+----------------------------------------
+[2026-04-04 01:31:43] 🤖 Iniciando generación de nueva noticia local...
+=====================================================
+1️⃣ GENERANDO ARTÍCULO PARA EMEDOTEME...
+=====================================================
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+🧠 Solicitando generación a Ollama (qwen2.5:14b)...
+✍️ Escribiendo: {
+  "title": "Bitcoin: ¿Subestimado en una posible guerra prolongada con Irán?",
+  "summary": "Un ex gestor de fondos hedge sostiene que el precio del Bitcoin podría estar subestimando los riesgos geopolíticos, especialmente ante un conflicto armado entre Estados Unidos e Irán. Analistas y datos de Glassnode indican una creciente incertidumbre macroeconómica.",
+  "content": "<p>Según Cointelegraph, un ex gestor de fondos hedge ha expresado su preocupación acerca del precio actual del <a href=\"/tag/bitcoin\">Bitcoin</a>. El experto sostiene que las implicaciones económicas y financieras en caso de un conflicto prolongado entre Estados Unidos e Irán podrían no estar completamente reflejadas en el mercado. Esto plantea preguntas sobre la potencial volatilidad adicional hacia la que podría enfrentarse la mayor criptomoneda del mundo.</p>\n<p>\"El precio actual de Bitcoin parece subestimar los riesgos geopolíticos\", declaró el analista, quien añadió: \"En caso de un conflicto prolongado con Irán, las tensiones económicas y financieras podrían afectar significativamente a la economía global y, por lo tanto, al valor del Bitcoin\".</p>\n<p>Los datos recientes muestran que el precio del Bitcoin se ha mantenido relativamente estable en los últimos días. Al cierre de esta edición, un <a href=\"/tag/bitcoin\">Bitcoin</a> cotiza a $66.869, con una caída marginal del 0,07% en las últimas 24 horas.</p>\n<p>Analizando la situación desde el punto de vista técnico y macroeconómico, datos proporcionados por Glassnode indican que el mercado se ha vuelto más cauteloso. La participación del retail en la red Bitcoin alcanzó su nivel más bajo histórico, lo que sugiere una menor actividad de inversores minoristas.</p>\n<p>\"La baja participación indica que los inversores minoristas están retirándose del mercado\", afirmó un analista senior de Glassnode. \"Esto podría ser una señal de precaución ante la incertidumbre geopolítica y económica\".</p>\n<p>En contraste, el Ethereum Foundation ha estado acercándose gradualmente a su meta de estaking 70,000 ETH, según Cointelegraph. Esto sugiere un nivel de compromiso institucional en la red Ethereum que podría compensar cierta incertidumbre.</p>\n<p>Por otro lado, el mercado cripto ha estado mostrando signos de consolidación a medida que los futuros y opciones se vuelven más bajistas. \"Los datos de Deribit muestran una tendencia hacia un mayor interés en contratos bajistas\", señaló un analista de CoinGlass.</p>\n<p>Es importante señalar que, aunque la preocupación geopolítica es significativa, el mercado cripto también está experimentando flujos institucionales sólidos. El suministro total de stablecoins ha superado los $315 mil millones, con USDC liderando estos movimientos.</p>\n<p>\"El movimiento hacia el uso de USDC en transacciones macroeconómicas y comerciales es un indicador fuerte del creciente apoyo institucional\", declaró otro analista citado por NewsBTC. \"Esto podría contrarrestar cierta incertidumbre geopolítica\".</p>\n<p>En resumen, aunque la posible subestimación de los riesgos geopolíticos es una preocupación legítima, hay señales mixtas en el mercado cripto que reflejan tanto cautela como confianza. La próxima semana podría ser crucial para determinar cómo estos factores se traducirán en movimientos de precios.</p>",
+  "tags": ["Bitcoin", "Geopolítica", "Instituciones"],
+  "imageCaption": "El precio del Bitcoin, $66.869, muestra una caída marginal del 0,07%.",
+  "sentiment": "Neutral ⚖️"
+}
+
+✅ Artículo generado con éxito por Ollama: Bitcoin: ¿Subestimado en una posible guerra prolongada con Irán?
+
+⏱️ Tiempo de generación: 124.19 segundos
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: Bitcoin: ¿Subestimado en una posible guerra prolongada con Irán?
+- Sentimiento: Neutral ⚖️
+- Categoría: Tecnología
+- URL Imagen: https://images.cointelegraph.com/images/528_aHR0cHM6Ly9zMy5jb2ludGVsZWdyYXBoLmNvbS91cGxvYWRzLzIwMjYtMDMvMDE5Y2U3MzgtYjNkNy03Y2M1LWIwMzEtOTk2YjRiYWEzNzljLmpwZw==.jpg
+- Resumen: Un ex gestor de fondos hedge sostiene que el precio del Bitcoin podría estar subestimando los riesgos geopolíticos, especialmente ante un conflicto armado entre Estados Unidos e Irán. Analistas y datos de Glassnode indican una creciente incertidumbre macroeconómica.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+=====================================================
+2️⃣ ENVIANDO A BINANCE SQUARE...
+=====================================================
+[info] Procesando para Binance Square: Bitcoin: ¿Subestimado en una posible guerra prolongada con Irán?
+[ok] Publicado: https://www.binance.com/square/post/308707752955745
+
+=====================================================
+3️⃣ ENVIANDO A TELEGRAM...
+=====================================================
+[info] Procesando para Telegram: Bitcoin: ¿Subestimado en una posible guerra prolongada con Irán?
+[ok] Publicado en Telegram exitosamente.
+=====================================================
+4️⃣ ENVIANDO A BLUESKY...
+=====================================================
+[info] Procesando para Bluesky: Bitcoin: ¿Subestimado en una posible guerra prolongada con Irán?
+[ok] Post publicado con éxito en Bluesky!
+
+=====================================================
+✅ PROCESO COMPLETADO ✅
+Revisa tu web para ver la noticia y tus redes sociales.
+=====================================================
+[2026-04-04 01:34:43] ✅ Publicación completada.
+[2026-04-04 01:34:43] 💤 Bot durmiendo... Próxima publicación en 3 horas y 8 minutos.

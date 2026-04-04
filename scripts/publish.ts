@@ -1,4 +1,4 @@
-import { generateArticleContent } from "../services/ai.service";
+import { generateArticleContent, translateArticleContent } from "../services/ai.service";
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
 import path from "path";
@@ -27,7 +27,8 @@ async function main() {
 
   try {
     const t0 = Date.now();
-    const aiResponse = await generateArticleContent();
+    let aiResponse = await generateArticleContent();
+    aiResponse = await translateArticleContent(aiResponse);
     const t1 = Date.now();
     console.log(`\n⏱️ Tiempo de generación: ${((t1 - t0) / 1000).toFixed(2)} segundos`);
 
@@ -58,12 +59,17 @@ async function main() {
     const newArticle = await prisma.article.create({
       data: {
         title: aiResponse.title,
+        titleEn: aiResponse.titleEn,
         slug: slug,
         summary: aiResponse.summary,
+        summaryEn: aiResponse.summaryEn,
         content: aiResponse.content,
+        contentEn: aiResponse.contentEn,
         tags: aiResponse.tags || [],
         imageUrl: imageUrl,
         imageCaption: aiResponse.imageCaption,
+        sourceUrl: aiResponse.sourceUrl,
+        sentiment: aiResponse.sentiment || "Neutral ➡️",
         categoryId: randomCategory.id,
         author: 'Carlos "Emérito" López Lovera',
         published: true,
@@ -75,6 +81,7 @@ async function main() {
 
     console.log("\n✅ ARTÍCULO PUBLICADO CON ÉXITO:");
     console.log(`- Título: ${newArticle.title}`);
+    console.log(`- Sentimiento: ${newArticle.sentiment}`);
     console.log(`- Categoría: ${newArticle.category.name}`);
     console.log(`- URL Imagen: ${newArticle.imageUrl}`);
     console.log(`- Resumen: ${newArticle.summary}`);
@@ -89,7 +96,8 @@ async function main() {
       title: newArticle.title,
       link: `https://www.emedoteme.es/articulo/${newArticle.slug}`,
       description: newArticle.content || newArticle.summary,
-      imageUrl: newArticle.imageUrl
+      imageUrl: newArticle.imageUrl,
+      sentiment: newArticle.sentiment
     };
     
     const jsonPath = path.join(tmpDir, 'latest_article.json');

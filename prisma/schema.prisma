@@ -23,14 +23,19 @@ model Category {
 model Article {
   id          String   @id @default(uuid())
   title       String
+  titleEn     String?
   slug        String   @unique
   summary     String?
+  summaryEn   String?
   content     String
+  contentEn   String?
   imageUrl    String?
   imageCaption String?
+  sourceUrl   String?
   author      String   @default("EmeDotEme AI")
   published   Boolean  @default(false)
   tags        String[] @default([])
+  sentiment   String   @default("Neutral ⚖️")
   categoryId  String
   category    Category @relation(fields: [categoryId], references: [id])
   createdAt   DateTime @default(now())

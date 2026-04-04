@@ -98,39 +98,37 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         {/* Breadcrumb */}
         <nav className="flex items-center justify-between text-sm text-zinc-500 mb-8">
           <div className="flex items-center">
-            <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400">Inicio</Link>
+            <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400">Home</Link>
             <span className="mx-2">/</span>
             <span className="font-medium text-zinc-900 dark:text-zinc-100">{article.category.name}</span>
           </div>
           
           <div className="flex items-center gap-4">
-            {article.titleEn && (
-              <Link href={`/en/articulo/${article.slug}`} className="flex items-center gap-1 text-xs font-semibold px-2 py-1 border border-zinc-200 dark:border-zinc-700 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                🇺🇸 Read in English
-              </Link>
-            )}
+            <Link href={`/articulo/${article.slug}`} className="flex items-center gap-1 text-xs font-semibold px-2 py-1 border border-zinc-200 dark:border-zinc-700 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+              🇪🇸 Leer en Español
+            </Link>
           </div>
         </nav>
 
         {/* Header */}
         <header className="mb-10">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-black dark:text-white leading-tight font-serif">
-            {article.title}
+            {article.titleEn || article.title}
           </h1>
           <p className="text-xl text-zinc-600 dark:text-zinc-400 mb-8 leading-relaxed">
-            {article.summary}
+            {article.summaryEn || article.summary}
           </p>
           
           <div className="flex items-center justify-between border-t border-b border-zinc-200 dark:border-zinc-800 py-4 mb-8">
             <div className="flex items-center text-sm text-zinc-700 dark:text-zinc-300 flex-wrap gap-y-2">
-              <span className="font-semibold text-[color:var(--color-brand)] mr-4">Por {article.author}</span>
+              <span className="font-semibold text-[color:var(--color-brand)] mr-4">By {article.author}</span>
               <span>{formatRelativeDate(article.createdAt)}</span>
               <span className="mx-3 text-zinc-300 dark:text-zinc-700 hidden sm:inline">•</span>
-              <span>{calculateReadingTime(article.content)} min de lectura</span>
+              <span>{calculateReadingTime(article.contentEn || article.content)} min read</span>
             </div>
             
             <div className="flex gap-2">
-              <ShareButtons title={article.title} slug={article.slug} />
+              <ShareButtons title={article.titleEn || article.title} slug={article.slug} />
             </div>
           </div>
 
@@ -157,7 +155,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
         {/* Content */}
         <article className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
-          <div dangerouslySetInnerHTML={{ __html: article.content }} />
+          <div dangerouslySetInnerHTML={{ __html: article.contentEn || article.content }} />
         </article>
 
         {/* Footer info (Tags & Sentiment) */}
@@ -180,7 +178,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           {/* Sentiment */}
           {article.sentiment && (
             <div className="flex items-center px-4 py-2 bg-zinc-50 dark:bg-zinc-900 rounded-lg text-sm font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 shadow-sm">
-               Sentimiento del mercado: <span className="ml-2 font-bold">{article.sentiment}</span>
+               Market Sentiment: <span className="ml-2 font-bold">{article.sentiment}</span>
             </div>
           )}
         </div>
@@ -188,10 +186,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         {/* Affiliate / Monetization Section */}
         <div className="mt-12 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 flex flex-col items-center text-center">
           <h3 className="text-lg font-bold text-black dark:text-white font-serif mb-2">
-            Apoya nuestro periodismo independiente 💸
+            Support independent journalism 💸
           </h3>
           <p className="text-zinc-600 dark:text-zinc-400 text-sm mb-6 max-w-md mx-auto">
-            El ecosistema cripto es volátil. Si decides invertir, hazlo de manera segura usando nuestros enlaces de afiliados en los exchanges más confiables. Tú recibes un bono de bienvenida y nosotros una pequeña comisión.
+            The crypto ecosystem is volatile. If you decide to invest, do it safely using our affiliate links in the most trusted exchanges. You get a welcome bonus and we get a small commission.
           </p>
           <div className="flex flex-wrap justify-center gap-4 w-full max-w-sm mx-auto">
             <a 
@@ -200,18 +198,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               rel="noopener noreferrer nofollow"
               className="w-full px-4 py-3 bg-[#FCD535] hover:bg-[#FCD535]/90 text-black font-bold text-sm rounded-lg transition-colors flex items-center justify-center shadow-sm"
             >
-              Registrarse en Binance
+              Sign up on Binance
             </a>
           </div>
           <p className="text-xs text-zinc-400 mt-4 italic">
-            Aviso: Este contenido no es consejo financiero. Haz tu propia investigación antes de invertir.
+            Disclaimer: This content is not financial advice. Do your own research before investing.
           </p>
         </div>
 
         {/* Related Articles */}
         {relatedArticles.length > 0 && (
           <section className="mt-16 pt-10 border-t border-zinc-200 dark:border-zinc-800">
-            <h2 className="text-2xl font-bold mb-6 text-black dark:text-white font-serif">Artículos relacionados</h2>
+            <h2 className="text-2xl font-bold mb-6 text-black dark:text-white font-serif">Related articles</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedArticles.map((related) => (
                 <SidebarArticleCard key={related.id} article={related} />

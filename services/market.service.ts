@@ -7,8 +7,7 @@ export type Coin = {
 };
 
 /**
- * Obtiene los datos del mercado en vivo desde CoinGecko (Top 15 monedas).
- * Se utiliza caché automático de Next.js para evitar abusar del rate limit.
+ * Obtiene los datos del mercado en vivo desde CoinGecko o CoinCap como respaldo.
  */
 export async function getMarketData(): Promise<Coin[]> {
   try {
@@ -17,13 +16,33 @@ export async function getMarketData(): Promise<Coin[]> {
       { next: { revalidate: 60 } } // Refresh every 60 seconds
     );
     
-    if (!res.ok) {
-      throw new Error('Failed to fetch market data');
+    if (res.ok) {
+      return await res.json();
     }
-    
-    return res.json();
   } catch (error) {
-    console.error("Error fetching market data:", error);
-    return [];
+    // Ignoramos el error de CoinGecko silenciosamente para intentar el respaldo
   }
+
+  // Respaldo usando CoinCap (suele tener menos problemas de rate limit)
+  try {
+    const fallbackRes = await fetch('https://api.coincap.io/v2/assets?limit=15', {
+      next: { revalidate: 60 }
+    });
+    
+    if (fallbackRes.ok) {
+      const data = await fallbackRes.json();
+      return data.data.map((coin: any) => ({
+        id: coin.id,
+        symbol: coin.symbol,
+        name: coin.name,
+        current_price: parseFloat(coin.priceUsd),
+        price_change_percentage_24h: parseFloat(coin.changePercent24Hr)
+      }));
+    }
+  } catch (error) {
+    // Falla también el respaldo
+  }
+
+  console.warn("⚠️ [Advertencia] No se pudieron obtener los precios en vivo (Rate limit). El bot generará la noticia sin el contexto de precios exactos.");
+  return [];
 }

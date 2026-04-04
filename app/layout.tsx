@@ -9,6 +9,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import { Providers } from "@/components/providers";
+import { TelegramBanner } from "@/components/TelegramBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -110,6 +111,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <TelegramBanner />
           <Analytics />
           <SpeedInsights />
         </Providers>

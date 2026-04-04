@@ -2,7 +2,7 @@ import Parser from "rss-parser";
 
 const parser = new Parser({
   customFields: {
-    item: ['media:content', 'enclosure'],
+    item: ['media:content', 'enclosure', 'content:encoded', 'content'],
   }
 });
 
@@ -35,7 +35,7 @@ export async function getLatestNews(): Promise<NewsItem[]> {
       const parsed = await parser.parseURL(feed.url);
       
       // Tomamos solo las 10 noticias más recientes de cada fuente
-      const items = parsed.items.slice(0, 10).map(item => {
+      const items = parsed.items.slice(0, 10).map((item: any) => {
         // Intentar extraer la URL de la imagen (distintos formatos según el feed)
         let imageUrl: string | undefined = undefined;
         
@@ -43,6 +43,15 @@ export async function getLatestNews(): Promise<NewsItem[]> {
           imageUrl = item.enclosure.url;
         } else if (item['media:content'] && item['media:content']['$'] && item['media:content']['$'].url) {
           imageUrl = item['media:content']['$'].url;
+        }
+
+        // Si no se encontró, extraemos del HTML
+        if (!imageUrl && (item['content:encoded'] || item.content)) {
+          const contentStr = item['content:encoded'] || item.content || '';
+          const match = contentStr.match(/<img[^>]+src="([^">]+)"/i);
+          if (match && match[1]) {
+            imageUrl = match[1];
+          }
         }
 
         // Filtrar imágenes basura o patrocinadas para que se usen las de Unsplash por defecto

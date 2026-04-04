@@ -27,6 +27,13 @@ if [ $? -eq 0 ]; then
     export $(grep -v '^#' .env | xargs)
     python3 publish_telegram.py /home/emerito/emedoteme/tmp/latest_article.json
 
+    echo "====================================================="
+    echo "4️⃣ ENVIANDO A BLUESKY..."
+    echo "====================================================="
+    cd /home/emerito/BlueskyNews || exit
+    export $(grep -v '^#' .env | xargs)
+    python3 publish_bluesky.py /home/emerito/emedoteme/tmp/latest_article.json
+
 else
     echo "❌ Error al generar el artículo. Abortando publicación en redes."
     exit 1

@@ -12,15 +12,37 @@ async function getMarketData() {
       { next: { revalidate: 60 } } // Revalidate every 60 seconds
     );
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch market data");
+    if (res.ok) {
+      return await res.json();
     }
-
-    return res.json();
   } catch (error) {
-    console.error("Error fetching market data:", error);
-    return [];
+    // Ignoramos el error de CoinGecko silenciosamente
   }
+
+  // Intento de fallback a CoinCap
+  try {
+    const fallbackRes = await fetch("https://api.coincap.io/v2/assets?limit=100", {
+      next: { revalidate: 60 }
+    });
+    
+    if (fallbackRes.ok) {
+      const data = await fallbackRes.json();
+      return data.data.map((coin: any) => ({
+        id: coin.id,
+        symbol: coin.symbol,
+        name: coin.name,
+        image: `https://assets.coincap.io/assets/icons/${coin.symbol.toLowerCase()}@2x.png`,
+        current_price: parseFloat(coin.priceUsd),
+        price_change_percentage_24h: parseFloat(coin.changePercent24Hr),
+        market_cap: parseFloat(coin.marketCapUsd),
+        total_volume: parseFloat(coin.volumeUsd24Hr)
+      }));
+    }
+  } catch (error) {
+    // Silencioso también
+  }
+
+  return [];
 }
 
 export default async function MercadosPage() {

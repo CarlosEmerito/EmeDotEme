@@ -81,3 +81,6 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     </div>
   );
 }
+
+// ISR: Revalidate cada 30 minutos (1800 segundos)
+export const revalidate = 1800;

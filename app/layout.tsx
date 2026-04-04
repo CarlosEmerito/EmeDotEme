@@ -10,6 +10,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import { Providers } from "@/components/providers";
 import { TelegramBanner } from "@/components/TelegramBanner";
+import { WebSiteSchema } from "@/components/seo/WebSiteSchema";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -101,6 +102,13 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-white dark:bg-zinc-950 text-black dark:text-white">
         <Providers>
+          {/* Schema.org Structured Data */}
+          <WebSiteSchema 
+            siteUrl={siteConfig.url}
+            siteName={siteConfig.name}
+            siteDescription={siteConfig.description}
+          />
+          
           {/* Google AdSense */}
           <Script
             id="adsense-script"

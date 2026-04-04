@@ -49,3 +49,6 @@ export default async function Home() {
     </div>
   );
 }
+
+// ISR: Revalidate cada 30 minutos (1800 segundos)
+export const revalidate = 1800;

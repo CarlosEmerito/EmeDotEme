@@ -9,6 +9,7 @@ import { formatRelativeDate, calculateReadingTime } from "@/lib/utils";
 import { ShareButtons } from "@/components/articles/ShareButtons";
 import { Comments } from "@/components/articles/Comments";
 import { TextToSpeech } from "@/components/articles/TextToSpeech";
+import { ArticleSchema } from "@/components/seo/ArticleSchema";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -187,6 +188,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           )}
         </div>
 
+        {/* Schema.org JSON-LD */}
+        <ArticleSchema article={article} siteUrl={siteConfig.url} />
+
         {/* Related Articles */}
         {relatedArticles.length > 0 && (
           <section className="mt-16 pt-10 border-t border-zinc-200 dark:border-zinc-800">
@@ -225,3 +229,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     </div>
   );
 }
+
+// ISR: Revalidate cada 1 hora (3600 segundos)
+export const revalidate = 3600;

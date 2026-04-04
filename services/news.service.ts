@@ -1,5 +1,17 @@
 import Parser from "rss-parser";
 
+interface RssItem {
+  title?: string;
+  link?: string;
+  pubDate?: string;
+  isoDate?: string;
+  enclosure?: { url?: string };
+  "media:content"?: { $?: { url?: string } };
+  content?: string;
+  "content:encoded"?: string;
+  contentEncoded?: string;
+}
+
 const parser = new Parser({
   customFields: {
     item: ['media:content', 'enclosure', 'content:encoded', 'content'],
@@ -35,7 +47,7 @@ export async function getLatestNews(): Promise<NewsItem[]> {
       const parsed = await parser.parseURL(feed.url);
       
       // Tomamos solo las 10 noticias más recientes de cada fuente
-      const items = parsed.items.slice(0, 10).map((item: any) => {
+      const items = parsed.items.slice(0, 10).map((item: RssItem) => {
         // Intentar extraer la URL de la imagen (distintos formatos según el feed)
         let imageUrl: string | undefined = undefined;
         

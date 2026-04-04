@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { Prisma } from "@prisma/client";
 import { getMarketData } from "./market.service";
 import { getLatestNews } from "./news.service";
 import { getPublishedArticles } from "./article.service";
@@ -78,7 +79,12 @@ async function getFallbackArticle(topic?: string): Promise<GeneratedArticle> {
  * 2. Se los inyecta al modelo local como contexto.
  * 3. Devuelve un artículo periodístico estructurado en JSON.
  */
-export async function generateWeeklyNewsletter(articles: any[]): Promise<{ subject: string, htmlContent: string }> {
+interface ArticleSummary {
+  title: string;
+  summary: string | null;
+}
+
+export async function generateWeeklyNewsletter(articles: ArticleSummary[]): Promise<{ subject: string, htmlContent: string }> {
   let ollamaBaseUrl = process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1";
   
   if (process.env.OLLAMA_BASE_URL && !process.env.OLLAMA_BASE_URL.endsWith('/v1')) {
@@ -160,8 +166,8 @@ Redacta la newsletter semanal basándote en estos eventos. Trata de agruparlos l
 
     return parsedNewsletter;
 
-  } catch (error: any) {
-    console.error("❌ Error generando newsletter con Ollama:", error.message || error);
+  } catch (error) {
+    console.error("❌ Error generando newsletter con Ollama:", error instanceof Error ? error.message : error);
     throw error;
   }
 }
@@ -245,9 +251,9 @@ ${article.content}`;
       contentEn: parsedTranslation.contentEn
     };
 
-  } catch (error: any) {
-    console.error("❌ Error traduciendo contenido con Ollama:", error.message || error);
-    return article; // Return original without translation if it fails
+  } catch (error) {
+    console.error("❌ Error traduciendo contenido con Ollama:", error instanceof Error ? error.message : error);
+    return article;
   }
 }
 
@@ -423,8 +429,8 @@ RECUERDA: Tu artículo debe ser analítico, basado en datos, con un tono humano 
     console.log(`✅ Artículo generado con éxito por Ollama: ${parsedArticle.title}`);
     return parsedArticle;
 
-  } catch (error: any) {
-    console.error("❌ Error generando contenido con Ollama:", error.message || error);
-    return await getFallbackArticle(topic); // Fallback dinámico si la IA local falla
+  } catch (error) {
+    console.error("❌ Error generando contenido con Ollama:", error instanceof Error ? error.message : error);
+    return await getFallbackArticle(topic);
   }
 }

@@ -126,7 +126,7 @@ export default function ContactPage() {
               <ul className="space-y-4">
                 <li>
                   <h4 className="text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1">Email</h4>
-                  <a href={siteConfig.links.email} className="text-[color:var(--color-brand)] hover:underline">
+                  <a href="mailto:carlosemerito13@gmail.com" className="text-[color:var(--color-brand)] hover:underline break-all">
                     carlosemerito13@gmail.com
                   </a>
                 </li>

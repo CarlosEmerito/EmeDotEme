@@ -70,7 +70,7 @@ export function Footer() {
             <h3 className="text-sm font-bold uppercase tracking-wider text-black dark:text-white mb-4">Empresa</h3>
             <ul className="space-y-3 text-sm text-zinc-600 dark:text-zinc-400">
               <li><a href="/sobre-mi" className="hover:text-[color:var(--color-brand)] transition-colors">Sobre el Autor</a></li>
-              <li><a href="#" className="hover:text-[color:var(--color-brand)] transition-colors">Contacto</a></li>
+               <li><a href="/contacto" className="hover:text-[color:var(--color-brand)] transition-colors">Contacto</a></li>
             </ul>
           </div>
 

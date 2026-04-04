@@ -40,6 +40,9 @@ model Article {
   category    Category @relation(fields: [categoryId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([published, createdAt(sort: Desc)])
+  @@index([categoryId])
 }
 
 model Subscriber {

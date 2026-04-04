@@ -48,3 +48,10 @@ model Subscriber {
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
 }
+
+model Setting {
+  id        String   @id @default("global") // We only need one record, or we can use keys
+  key       String   @unique
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}

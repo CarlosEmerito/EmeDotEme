@@ -36,7 +36,7 @@ export function SidebarArticleCard({ article, lang = "es" }: SidebarArticleCardP
           {displayTitle}
         </h3>
         <div className="text-xs text-zinc-500 uppercase tracking-wide mt-auto pt-2">
-          {formatRelativeDate(article.createdAt, isEn ? "en-US" : "es-ES")}
+          {formatRelativeDate(article.createdAt)}
         </div>
       </div>
       

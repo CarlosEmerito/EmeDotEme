@@ -55,7 +55,7 @@ export function HeroArticleCard({ article, lang = "es" }: HeroArticleCardProps) 
           <span>{isEn ? "By" : "Por"} <span className="text-zinc-800 dark:text-zinc-300 font-semibold">{article.author}</span></span>
           <span className="mx-2">•</span>
           <span>
-            {formatRelativeDate(article.createdAt, isEn ? "en-US" : "es-ES")}
+            {formatRelativeDate(article.createdAt)}
           </span>
         </div>
       </div>

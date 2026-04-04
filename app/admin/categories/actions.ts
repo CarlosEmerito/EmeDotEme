@@ -26,6 +26,7 @@ export async function createCategory(formData: FormData) {
     revalidatePath("/admin/categories");
     return { success: true };
   } catch (error) {
+    console.error("Create category error:", error);
     return { success: false, error: "El slug o el nombre ya existen." };
   }
 }
@@ -48,6 +49,7 @@ export async function updateCategory(id: string, formData: FormData) {
     revalidatePath("/admin/categories");
     return { success: true };
   } catch (error) {
+    console.error("Update category error:", error);
     return { success: false, error: "El slug o el nombre ya existen." };
   }
 }
@@ -69,6 +71,7 @@ export async function deleteCategory(id: string) {
     revalidatePath("/admin/categories");
     return { success: true };
   } catch (error) {
+    console.error("Delete category error:", error);
     return { success: false, error: "Error al eliminar la categoría." };
   }
 }
@@ -92,6 +95,7 @@ export async function renameTag(oldTag: string, newTag: string) {
     revalidatePath("/admin/categories");
     return { success: true };
   } catch (error) {
+    console.error("Rename tag error:", error);
     return { success: false, error: "Error al actualizar la etiqueta" };
   }
 }
@@ -113,6 +117,7 @@ export async function deleteTag(tag: string) {
     revalidatePath("/admin/categories");
     return { success: true };
   } catch (error) {
+    console.error("Delete tag error:", error);
     return { success: false, error: "Error al eliminar la etiqueta" };
   }
 }

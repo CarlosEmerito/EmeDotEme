@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateArticle } from "../actions";
 import Link from "next/link";
+import Image from "next/image";
 import { RichTextEditor } from "./RichTextEditor";
 
 interface EditArticleProps {
@@ -138,7 +139,15 @@ export default function EditArticleForm({ article }: EditArticleProps) {
         {formData.imageUrl && (
           <div className="mb-6">
             <p className="text-sm text-zinc-500 mb-2 italic">Vista previa de imagen:</p>
-            <img src={formData.imageUrl} alt="Preview" className="h-48 object-cover rounded-md border border-zinc-200 dark:border-zinc-800" />
+            <div className="relative h-48 w-full">
+              <Image 
+                src={formData.imageUrl} 
+                alt="Preview" 
+                fill
+                sizes="(max-width: 768px) 100vw, 768px"
+                className="object-cover rounded-md border border-zinc-200 dark:border-zinc-800"
+              />
+            </div>
           </div>
         )}
 

@@ -18,7 +18,7 @@ interface ArticlePageProps {
 
 export async function generateMetadata(
   { params }: ArticlePageProps,
-  _parent: ResolvingMetadata
+  _: ResolvingMetadata
 ): Promise<Metadata> {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
@@ -187,29 +187,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           )}
         </div>
 
-        {/* Affiliate / Monetization Section */}
-        <div className="mt-12 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 flex flex-col items-center text-center">
-          <h3 className="text-lg font-bold text-black dark:text-white font-serif mb-2">
-            Apoya nuestro periodismo independiente 💸
-          </h3>
-          <p className="text-zinc-600 dark:text-zinc-400 text-sm mb-6 max-w-md mx-auto">
-            El ecosistema cripto es volátil. Si decides invertir, hazlo de manera segura usando nuestros enlaces de afiliados en los exchanges más confiables. Tú recibes un bono de bienvenida y nosotros una pequeña comisión.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 w-full max-w-sm mx-auto">
-            <a 
-              href="https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA" 
-              target="_blank" 
-              rel="noopener noreferrer nofollow"
-              className="w-full px-4 py-3 bg-[#FCD535] hover:bg-[#FCD535]/90 text-black font-bold text-sm rounded-lg transition-colors flex items-center justify-center shadow-sm"
-            >
-              Registrarse en Binance
-            </a>
-          </div>
-          <p className="text-xs text-zinc-400 mt-4 italic">
-            Aviso: Este contenido no es consejo financiero. Haz tu propia investigación antes de invertir.
-          </p>
-        </div>
-
         {/* Related Articles */}
         {relatedArticles.length > 0 && (
           <section className="mt-16 pt-10 border-t border-zinc-200 dark:border-zinc-800">
@@ -221,6 +198,26 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </div>
           </section>
         )}
+
+        {/* Affiliate / Monetization Section - Less prominent */}
+        <div className="mt-12 mb-8 p-4 border-t border-zinc-200 dark:border-zinc-800 pt-8 text-center">
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
+            <strong className="font-semibold text-zinc-800 dark:text-zinc-300">Apoya nuestro periodismo independiente:</strong> Si decides invertir en criptomonedas, considera usar nuestro enlace de afiliado de Binance. Tú recibes un bono de bienvenida y nosotros una pequeña comisión.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <a 
+              href="https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA" 
+              target="_blank" 
+              rel="noopener noreferrer nofollow"
+              className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-zinc-100 font-medium text-sm rounded-md transition-colors"
+            >
+              Registrarse en Binance
+            </a>
+          </div>
+          <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-3 italic">
+            Aviso: Este contenido no es consejo financiero. Haz tu propia investigación antes de invertir.
+          </p>
+        </div>
 
         {/* Comments System */}
         <Comments />

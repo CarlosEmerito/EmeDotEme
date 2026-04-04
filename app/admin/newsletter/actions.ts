@@ -16,6 +16,7 @@ export async function addSubscriber(formData: FormData) {
     revalidatePath("/admin/newsletter");
     return { success: true };
   } catch (error) {
+    console.error("Add subscriber error:", error);
     return { success: false, error: "El email ya está suscrito" };
   }
 }
@@ -29,6 +30,7 @@ export async function toggleSubscriberStatus(id: string, active: boolean) {
     revalidatePath("/admin/newsletter");
     return { success: true };
   } catch (error) {
+    console.error("Toggle subscriber status error:", error);
     return { success: false, error: "Error al actualizar el estado" };
   }
 }
@@ -39,6 +41,7 @@ export async function deleteSubscriber(id: string) {
     revalidatePath("/admin/newsletter");
     return { success: true };
   } catch (error) {
+    console.error("Delete subscriber error:", error);
     return { success: false, error: "Error al eliminar suscriptor" };
   }
 }

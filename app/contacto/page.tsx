@@ -37,6 +37,7 @@ export default function ContactPage() {
         setMessage(data.error || "Hubo un error al enviar el mensaje.");
       }
     } catch (error) {
+      console.error("Contact form submission error:", error);
       setStatus("error");
       setMessage("Error de conexión. Intenta de nuevo.");
     }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { formatRelativeDate } from "@/lib/utils";
 import { togglePublishStatus, deleteArticle } from "../actions";
 import Link from "next/link";
+import Image from "next/image";
 
 type ArticleWithCategory = {
   id: string;
@@ -75,15 +76,23 @@ export default function ArticleTable({ initialArticles }: { initialArticles: Art
             ) : (
               articles.map((article) => (
                 <tr key={article.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/20 transition-colors">
-                  <td className="px-6 py-4">
-                    {article.imageUrl ? (
-                      <img src={article.imageUrl} alt={article.title} className="w-12 h-12 object-cover rounded-md border border-zinc-200 dark:border-zinc-800" />
-                    ) : (
-                      <div className="w-12 h-12 bg-zinc-100 dark:bg-zinc-800 rounded-md border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-400 text-xs">
-                        N/A
-                      </div>
-                    )}
-                  </td>
+                   <td className="px-6 py-4">
+                     {article.imageUrl ? (
+                       <div className="relative w-12 h-12">
+                         <Image 
+                           src={article.imageUrl} 
+                           alt={article.title} 
+                           fill
+                           sizes="48px"
+                           className="object-cover rounded-md border border-zinc-200 dark:border-zinc-800"
+                         />
+                       </div>
+                     ) : (
+                       <div className="w-12 h-12 bg-zinc-100 dark:bg-zinc-800 rounded-md border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-400 text-xs">
+                         N/A
+                       </div>
+                     )}
+                   </td>
                   <td className="px-6 py-4 font-medium text-black dark:text-white max-w-xs">
                     <div className="truncate" title={article.title}>
                       <Link href={`/articulo/${article.slug}`} target="_blank" className="hover:text-[color:var(--color-brand)]">

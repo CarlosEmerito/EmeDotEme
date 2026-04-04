@@ -15,7 +15,7 @@ export async function addSubscriber(formData: FormData) {
     });
     revalidatePath("/admin/newsletter");
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
     return { success: false, error: "El email ya está suscrito" };
   }
 }

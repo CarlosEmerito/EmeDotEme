@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: `Sobre el Autor | ${siteConfig.name}`,
-  description: `Conoce a Carlos "Emérito" López Lovera, analista principal de EmeDotEme.`,
+  description: `Conoce a Carlos &quot;Emérito&quot; López Lovera, analista principal de EmeDotEme.`,
 };
 
 export default async function AboutPage() {
@@ -38,7 +38,7 @@ export default async function AboutPage() {
             </div>
             <div>
               <h1 className="text-3xl sm:text-5xl font-extrabold text-black dark:text-white font-serif mb-2">
-                Carlos "Emérito" López Lovera
+                Carlos &quot;Emérito&quot; López Lovera
               </h1>
               <p className="text-lg text-[color:var(--color-brand)] font-medium">
                 Analista Principal & Fundador

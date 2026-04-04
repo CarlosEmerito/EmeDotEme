@@ -2,6 +2,7 @@
 
 import { siteConfig } from "@/config/site";
 import { useState } from "react";
+import Link from "next/link";
 
 export function Footer() {
   const [email, setEmail] = useState("");
@@ -59,9 +60,9 @@ export function Footer() {
           <div className="md:col-span-2">
             <h3 className="text-sm font-bold uppercase tracking-wider text-black dark:text-white mb-4">Secciones</h3>
             <ul className="space-y-3 text-sm text-zinc-600 dark:text-zinc-400">
-              <li><a href="/categoria/mercados" className="hover:text-[color:var(--color-brand)] transition-colors">Mercados</a></li>
-              <li><a href="/categoria/tecnologia" className="hover:text-[color:var(--color-brand)] transition-colors">Tecnología</a></li>
-              <li><a href="/categoria/web3" className="hover:text-[color:var(--color-brand)] transition-colors">Web3</a></li>
+              <li><Link href="/categoria/mercados" className="hover:text-[color:var(--color-brand)] transition-colors">Mercados</Link></li>
+              <li><Link href="/categoria/tecnologia" className="hover:text-[color:var(--color-brand)] transition-colors">Tecnología</Link></li>
+              <li><Link href="/categoria/web3" className="hover:text-[color:var(--color-brand)] transition-colors">Web3</Link></li>
             </ul>
           </div>
           

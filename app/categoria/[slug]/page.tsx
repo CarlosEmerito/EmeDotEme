@@ -14,7 +14,7 @@ interface CategoryPageProps {
 
 export async function generateMetadata(
   { params }: CategoryPageProps,
-  parent: ResolvingMetadata
+  _parent: ResolvingMetadata
 ): Promise<Metadata> {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);

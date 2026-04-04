@@ -11,11 +11,13 @@ interface SearchPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+type ArticleWithCategory = Awaited<ReturnType<typeof searchArticles>>;
+
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const q = typeof params.q === "string" ? params.q : "";
   
-  let articles: any[] = [];
+  let articles: ArticleWithCategory = [];
   if (q.trim()) {
     articles = await searchArticles(q.trim());
   }
@@ -29,7 +31,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           </h1>
           <p className="text-lg text-zinc-600 dark:text-zinc-400">
             {q ? (
-              <>Mostrando resultados para: <span className="font-semibold text-black dark:text-white">"{q}"</span></>
+              <>Mostrando resultados para: <span className="font-semibold text-black dark:text-white">&quot;{q}&quot;</span></>
             ) : (
               "Introduce un término en la barra de búsqueda superior."
             )}
@@ -45,7 +47,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             </div>
           ) : (
             <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-12 bg-zinc-50 dark:bg-zinc-900 text-center">
-              <p className="text-zinc-500 text-lg mb-2">No se encontraron resultados para "{q}".</p>
+              <p className="text-zinc-500 text-lg mb-2">No se encontraron resultados para &quot;{q}&quot;.</p>
               <p className="text-sm text-zinc-400">Intenta buscar con otros términos o palabras clave.</p>
             </div>
           )

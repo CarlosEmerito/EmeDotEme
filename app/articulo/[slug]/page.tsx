@@ -18,7 +18,7 @@ interface ArticlePageProps {
 
 export async function generateMetadata(
   { params }: ArticlePageProps,
-  parent: ResolvingMetadata
+  _parent: ResolvingMetadata
 ): Promise<Metadata> {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);

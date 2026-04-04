@@ -1,46 +1,48 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Play, Square } from "lucide-react";
 
 export function TextToSpeech({ text, title, lang = "es" }: { text: string; title: string; lang?: "es" | "en" }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isSupported, setIsSupported] = useState(false);
-  const [utterance, setUtterance] = useState<SpeechSynthesisUtterance | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const isSupported = typeof window !== "undefined" && "speechSynthesis" in window;
 
   useEffect(() => {
-    if ("speechSynthesis" in window) {
-      setIsSupported(true);
-      // Clean HTML tags to read only text
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = text;
-      const cleanText = tempDiv.textContent || tempDiv.innerText || "";
-      
-      const newUtterance = new SpeechSynthesisUtterance(`${title}. ${cleanText}`);
-      newUtterance.lang = lang === "en" ? "en-US" : "es-ES";
-      newUtterance.rate = 1.0;
-      
-      newUtterance.onend = () => setIsPlaying(false);
-      setUtterance(newUtterance);
-    }
-
     return () => {
       if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
       }
     };
-  }, [text, title, lang]);
+  }, []);
+
+  useEffect(() => {
+    if (!isSupported) return;
+    
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = text;
+    const cleanText = tempDiv.textContent || tempDiv.innerText || "";
+    
+    const newUtterance = new SpeechSynthesisUtterance(`${title}. ${cleanText}`);
+    newUtterance.lang = lang === "en" ? "en-US" : "es-ES";
+    newUtterance.rate = 1.0;
+    newUtterance.onend = () => setIsPlaying(false);
+    
+    utteranceRef.current = newUtterance;
+  }, [text, title, lang, isSupported]);
 
   const togglePlay = () => {
-    if (!utterance) return;
+    if (!utteranceRef.current || !isSupported) return;
 
     if (isPlaying) {
       window.speechSynthesis.cancel();
       setIsPlaying(false);
     } else {
-      window.speechSynthesis.cancel(); // Reset any previous
-      window.speechSynthesis.speak(utterance);
-      setIsPlaying(true);
+      window.speechSynthesis.cancel();
+      if (utteranceRef.current) {
+        window.speechSynthesis.speak(utteranceRef.current);
+        setIsPlaying(true);
+      }
     }
   };
 

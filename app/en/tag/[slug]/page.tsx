@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import { Metadata, ResolvingMetadata } from "next";
 import { siteConfig } from "@/config/site";
 import { prisma } from "@/lib/prisma";
@@ -14,7 +13,7 @@ interface TagPageProps {
 
 export async function generateMetadata(
   { params }: TagPageProps,
-  parent: ResolvingMetadata
+  _parent: ResolvingMetadata
 ): Promise<Metadata> {
   const { slug } = await params;
   
@@ -63,7 +62,7 @@ export default async function TagPageEn({ params, searchParams }: TagPageProps) 
         {paginatedArticles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {paginatedArticles.map((article) => (
-              <SidebarArticleCard key={article.id} article={article as any} lang="en" />
+              <SidebarArticleCard key={article.id} article={article} lang="en" />
             ))}
           </div>
         ) : (

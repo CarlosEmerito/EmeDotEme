@@ -5,7 +5,16 @@ export const metadata: Metadata = {
   description: "Precios y datos del mercado de criptomonedas en tiempo real.",
 };
 
-async function getMarketData() {
+async function getMarketData(): Promise<Array<{
+  id: string;
+  symbol: string;
+  name: string;
+  image: string;
+  current_price: number;
+  price_change_percentage_24h: number;
+  market_cap: number;
+  total_volume: number;
+}>> {
   try {
     const res = await fetch(
       "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false",
@@ -15,7 +24,7 @@ async function getMarketData() {
     if (res.ok) {
       return await res.json();
     }
-  } catch (error) {
+  } catch {
     // Ignoramos el error de CoinGecko silenciosamente
   }
 
@@ -27,7 +36,7 @@ async function getMarketData() {
     
     if (fallbackRes.ok) {
       const data = await fallbackRes.json();
-      return data.data.map((coin: any) => ({
+      return data.data.map((coin: { id: string; symbol: string; name: string; priceUsd: string; changePercent24Hr: string; marketCapUsd: string; volumeUsd24Hr: string }) => ({
         id: coin.id,
         symbol: coin.symbol,
         name: coin.name,
@@ -38,7 +47,7 @@ async function getMarketData() {
         total_volume: parseFloat(coin.volumeUsd24Hr)
       }));
     }
-  } catch (error) {
+  } catch {
     // Silencioso también
   }
 
@@ -74,7 +83,7 @@ export default async function MercadosPage() {
             </thead>
             <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
               {coins.length > 0 ? (
-                coins.map((coin: any, index: number) => (
+                coins.map((coin, index: number) => (
                   <tr key={coin.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
                     <td className="px-6 py-4 text-zinc-500 dark:text-zinc-400">
                       {index + 1}

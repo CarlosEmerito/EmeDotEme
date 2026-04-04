@@ -27,8 +27,8 @@ export default async function SobreMiPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-black dark:text-white font-serif uppercase tracking-wider">
-          Página "Sobre Mí"
+          <h1 className="text-3xl font-extrabold text-black dark:text-white font-serif uppercase tracking-wider">
+          Página &quot;Sobre Mí&quot;
         </h1>
         <p className="text-zinc-500 mt-2">
           Edita el contenido que aparece en tu biografía pública.

@@ -25,7 +25,7 @@ export async function createCategory(formData: FormData) {
     });
     revalidatePath("/admin/categories");
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
     return { success: false, error: "El slug o el nombre ya existen." };
   }
 }
@@ -47,7 +47,7 @@ export async function updateCategory(id: string, formData: FormData) {
     });
     revalidatePath("/admin/categories");
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
     return { success: false, error: "El slug o el nombre ya existen." };
   }
 }
@@ -68,7 +68,7 @@ export async function deleteCategory(id: string) {
     });
     revalidatePath("/admin/categories");
     return { success: true };
-  } catch (error: any) {
+  } catch (error) {
     return { success: false, error: "Error al eliminar la categoría." };
   }
 }

@@ -31,7 +31,7 @@ export async function getMarketData(): Promise<Coin[]> {
     
     if (fallbackRes.ok) {
       const data = await fallbackRes.json();
-      return data.data.map((coin: any) => ({
+      return data.data.map((coin: { id: string; symbol: string; name: string; priceUsd: string; changePercent24Hr: string }) => ({
         id: coin.id,
         symbol: coin.symbol,
         name: coin.name,

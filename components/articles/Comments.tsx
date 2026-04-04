@@ -1,13 +1,12 @@
 "use client";
 
 import Giscus from "@giscus/react";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 export function Comments() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
+  const mounted = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    return true;
   }, []);
 
   if (!mounted) return null;

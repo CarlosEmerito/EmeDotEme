@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import { Metadata, ResolvingMetadata } from "next";
 import { siteConfig } from "@/config/site";
 import { prisma } from "@/lib/prisma";
@@ -14,13 +13,12 @@ interface TagPageProps {
 
 export async function generateMetadata(
   { params }: TagPageProps,
-  parent: ResolvingMetadata
+  _parent: ResolvingMetadata
 ): Promise<Metadata> {
   const { slug } = await params;
-  
   return {
     title: `Noticias sobre #${slug} | ${siteConfig.name}`,
-    description: `Descubre las últimas noticias, cotizaciones y análisis a fondo sobre #${slug}. Mantente informado de los cambios clave en el ecosistema cripto.`,
+    description: `Descubre las últimas noticias y análisis en profundidad sobre #${slug}. Mantente informado sobre los cambios clave en el ecosistema cripto.`,
   };
 }
 
@@ -63,7 +61,7 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
         {paginatedArticles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {paginatedArticles.map((article) => (
-              <SidebarArticleCard key={article.id} article={article as any} />
+              <SidebarArticleCard key={article.id} article={article} />
             ))}
           </div>
         ) : (

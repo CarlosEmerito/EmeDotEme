@@ -1,4 +1,4 @@
-import { generateArticleContent } from './services/ai.service';
+import { generateArticleContent } from './modules/ai/ai.service.js';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();

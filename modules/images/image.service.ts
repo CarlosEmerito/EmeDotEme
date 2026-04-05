@@ -20,11 +20,12 @@ export interface ArticleImageData {
 }
 
 function generateProfessionalCaption(
-  title: string, 
-  topic: string, 
+  title: string,
+  topic: string,
   prompt?: string
 ): string {
-  // ...existing code from generateProfessionalCaption...
+  // Implementación mínima temporal para evitar error de compilación
+  return `Imagen para: ${title} (${topic})`;
 }
 
 async function saveImageToSupabase(imageUrl: string, slug: string): Promise<string | null> {

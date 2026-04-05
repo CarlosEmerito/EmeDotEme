@@ -29,7 +29,8 @@ function generateProfessionalCaption(
 }
 
 async function saveImageToSupabase(imageUrl: string, slug: string): Promise<string | null> {
-  // ...existing code from saveImageToSupabase...
+  // Implementación mínima temporal para evitar error de compilación
+  return null;
 }
 
 function getFallbackImageByTopic(topic: string): { url: string; caption: string } {

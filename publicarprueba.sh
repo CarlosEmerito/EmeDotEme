@@ -1,54 +1,43 @@
 #!/bin/bash
-set -x  # Muestra cada comando ejecutado
-set -o pipefail  # Fallar si algún comando en pipe falla
+#
+# Script de prueba centralizado EMEDOTEME
+# Simula todo el workflow y deja logs bajo logs/emedoteme.log.
+# Nada se sube a producción; todo es MODO PRUEBA.
 
-# Script de PRUEBA: Genera todo por pantalla pero no sube nada a producción ni BD
-# Manda la portada generada a tu Telegram Privado y muestra los logs completos
+set -euo pipefail
+cd /home/emerito/emedoteme || exit 1
 
-cd /home/emerito/emedoteme || exit
+# === Cargar .env de forma robusta ===
+if [ -f .env ]; then
+  set -a
+  . ./.env
+  set +a
+fi
+export DRY_RUN=true
+LOGFILE="logs/emedoteme.log"
+TIMESTAMP="$(date '+%Y-%m-%d %H:%M:%S')"
 
-echo "====================================================="
-echo "🧪 1️⃣ GENERANDO ARTÍCULO DE PRUEBA (NO DATABASE) ..."
-echo "====================================================="
-# Ejecutamos la versión de test del publicador
-npx tsx scripts/publish_test.ts
+echo -e "\n================= 🧪 PUBLICARPRUEBA.sh ($TIMESTAMP) ==================" | tee -a "$LOGFILE"
 
-if [ $? -eq 0 ]; then
-    echo ""
-    echo "====================================================="
-    echo "🧪 2️⃣ MOSTRANDO QUÉ SE PUBLICARÍA EN REDES SOCIALES..."
-    echo "====================================================="
-    
-    echo -e "\n🔸 BINANCE SQUARE (Modo Prueba):"
-    export $(grep -v '^#' .env | xargs)
-    export DRY_RUN=true
-    python3 publish_direct.py /home/emerito/emedoteme/tmp/test_article.json
+# === Paso 1: Generar el artículo de prueba (NO BD) ===
+echo "[1️⃣] Generando artículo de prueba..." | tee -a "$LOGFILE"
+if npx tsx scripts/publish_test.ts 2>&1 | tee -a "$LOGFILE"; then
+  echo -e "\n[2️⃣] Mostrando qué se publicaría en redes sociales (modo prueba)..." | tee -a "$LOGFILE"
+  echo -e "\n🔸 Binance Square (Modo Prueba):" | tee -a "$LOGFILE"
+  python3 publish_direct.py tmp/test_article.json 2>&1 | tee -a "$LOGFILE"
 
-    echo -e "\n🔸 TELEGRAM CANAL (Modo Prueba):"
-    export $(grep -v '^#' .env | xargs)
-    export DRY_RUN=true
-    python3 publish_telegram.py /home/emerito/emedoteme/tmp/test_article.json
+  echo -e "\n🔸 Telegram Canal (Modo Prueba):" | tee -a "$LOGFILE"
+  python3 publish_telegram.py tmp/test_article.json 2>&1 | tee -a "$LOGFILE"
 
-    echo -e "\n🔸 BLUESKY (Modo Prueba):"
-    export $(grep -v '^#' .env | xargs)
-    export DRY_RUN=true
-    python3 publish_bluesky.py /home/emerito/emedoteme/tmp/test_article.json
+  echo -e "\n🔸 Bluesky (Modo Prueba):" | tee -a "$LOGFILE"
+  python3 publish_bluesky.py tmp/test_article.json 2>&1 | tee -a "$LOGFILE"
 
-    echo ""
-    echo "====================================================="
-    echo "📲 3️⃣ ENVIANDO IMAGEN A TU TELEGRAM PRIVADO..."
-    echo "====================================================="
-    export $(grep -v '^#' .env | xargs)
-    # Ejecutamos el script de envío privado (usará el archivo de test)
-    python3 send_private_test.py /home/emerito/emedoteme/tmp/test_article.json
-
+  echo -e "\n[3️⃣] Enviando imagen generada a tu Telegram privado..." | tee -a "$LOGFILE"
+  python3 send_private_test.py tmp/test_article.json 2>&1 | tee -a "$LOGFILE"
 else
-    echo "❌ Error al generar el artículo de prueba. Abortando."
-    exit 1
+  echo "❌ Error al generar el artículo de prueba. Abortando." | tee -a "$LOGFILE"
+  exit 1
 fi
 
-echo ""
-echo "====================================================="
-echo "✅ PRUEBA COMPLETADA ✅"
-echo "Revisa tu Telegram personal para ver la imagen generada."
-echo "====================================================="
+echo -e "\n✅ PRUEBA COMPLETADA. Revisa tu Telegram personal para ver la imagen. ($TIMESTAMP)\n" | tee -a "$LOGFILE"
+echo "===============================================================" | tee -a "$LOGFILE"

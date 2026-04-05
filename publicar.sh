@@ -1,4 +1,6 @@
 #!/bin/bash
+set -x  # Muestra cada comando ejecutado
+set -o pipefail  # Fallar si algún comando en pipe falla
 
 # Hacemos la petición localmente pero guardando directo en la DB de producción
 # Esto evita por completo el límite de tiempo de espera (Timeout) de Vercel y muestra todos los logs!

@@ -1,4 +1,6 @@
 #!/bin/bash
+set -x  # Muestra cada comando ejecutado
+set -o pipefail  # Fallar si algún comando en pipe falla
 
 # Script de PRUEBA: Genera todo por pantalla pero no sube nada a producción ni BD
 # Manda la portada generada a tu Telegram Privado y muestra los logs completos

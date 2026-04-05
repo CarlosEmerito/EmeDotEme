@@ -1,6 +1,6 @@
 import 'dotenv/config';
-import { generateArticleContent, translateArticleContent } from "../services/ai.service";
-import { generateArticleImage } from "../services/image.service";
+import { generateArticleContent, translateArticleContent } from "../modules/ai/ai.service";
+import { generateArticleImage } from "../modules/images/image.service";
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
 import path from "path";

@@ -81,9 +81,6 @@ export async function getTotalArticlesByCategorySlug(slug: string) {
   });
 }
 
-/**
- * Advanced article search with filters, pagination, and multilingual support
- */
 export interface SearchOptions {
   query?: string;
   language?: 'es' | 'en';
@@ -116,36 +113,28 @@ export async function searchArticles(options: SearchOptions = {}) {
   } = options;
 
   const skip = (page - 1) * limit;
-  
-  // Build where clause
   const where: Prisma.ArticleWhereInput = {};
-  
-  // Published filter
+
   if (publishedOnly) {
     where.published = true;
   }
-  
-  // Text search (multilingual)
+
   if (query.trim()) {
     const searchConditions = [];
     const searchQuery = query.trim();
-    
     if (language === 'es') {
-      // Search in Spanish fields
       searchConditions.push(
         { title: { contains: searchQuery, mode: Prisma.QueryMode.insensitive } },
         { content: { contains: searchQuery, mode: Prisma.QueryMode.insensitive } },
         { summary: { contains: searchQuery, mode: Prisma.QueryMode.insensitive } }
       );
     } else if (language === 'en') {
-      // Search in English fields
       searchConditions.push(
         { titleEn: { contains: searchQuery, mode: Prisma.QueryMode.insensitive } },
         { contentEn: { contains: searchQuery, mode: Prisma.QueryMode.insensitive } },
         { summaryEn: { contains: searchQuery, mode: Prisma.QueryMode.insensitive } }
       );
     } else {
-      // Search in both languages
       searchConditions.push(
         { title: { contains: searchQuery, mode: Prisma.QueryMode.insensitive } },
         { content: { contains: searchQuery, mode: Prisma.QueryMode.insensitive } },
@@ -155,34 +144,29 @@ export async function searchArticles(options: SearchOptions = {}) {
         { summaryEn: { contains: searchQuery, mode: Prisma.QueryMode.insensitive } }
       );
     }
-    
     where.OR = searchConditions;
   }
-  
-  // Category filter
+
   if (categoryId) {
     where.categoryId = categoryId;
   }
-  
+
   if (categorySlug) {
     where.category = {
       slug: categorySlug
     };
   }
-  
-  // Tags filter
+
   if (tags.length > 0) {
     where.tags = {
       hasSome: tags
     };
   }
-  
-  // Sentiment filter
+
   if (sentiment) {
     where.sentiment = sentiment;
   }
-  
-  // Date range filter
+
   if (dateFrom || dateTo) {
     where.createdAt = {};
     if (dateFrom) {
@@ -192,13 +176,10 @@ export async function searchArticles(options: SearchOptions = {}) {
       where.createdAt.lte = dateTo;
     }
   }
-  
-  // Build orderBy clause
+
   let orderBy: Prisma.ArticleOrderByWithRelationInput = {};
   switch (sortBy) {
     case 'relevance':
-      // For relevance, we could implement more sophisticated ranking
-      // For now, sort by newest when there's a query
       orderBy = { createdAt: 'desc' };
       break;
     case 'oldest':
@@ -209,8 +190,7 @@ export async function searchArticles(options: SearchOptions = {}) {
       orderBy = { createdAt: 'desc' };
       break;
   }
-  
-  // Execute query with pagination
+
   const [articles, total] = await Promise.all([
     prisma.article.findMany({
       where,
@@ -221,7 +201,7 @@ export async function searchArticles(options: SearchOptions = {}) {
     }),
     prisma.article.count({ where }),
   ]);
-  
+
   return {
     articles,
     total,
@@ -232,23 +212,17 @@ export async function searchArticles(options: SearchOptions = {}) {
   };
 }
 
-/**
- * Legacy function for backward compatibility
- */
 export async function simpleSearchArticles(query: string, limit: number = 10) {
   const result = await searchArticles({ query, limit });
   return result.articles;
 }
+
 export async function getAllCategories() {
   return await prisma.category.findMany({
     orderBy: { name: "asc" }
   });
 }
 
-/**
- * Recupera una categoría por su slug
- * @param slug Slug de la categoría
- */
 export async function getCategoryBySlug(slug: string) {
   return await prisma.category.findUnique({
     where: { slug }

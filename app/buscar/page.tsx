@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { searchArticles, type SearchOptions } from "@/services/article.service";
+import { searchArticles, type SearchOptions } from "@/modules/articles/article.service";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
 import { SearchFilters } from "@/components/search/SearchFilters";
 import { prisma } from "@/lib/prisma";

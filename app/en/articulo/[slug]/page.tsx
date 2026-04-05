@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Metadata, ResolvingMetadata } from "next";
 import { siteConfig } from "@/config/site";
-import { getArticleBySlug, getRelatedArticles } from "@/services/article.service";
+import { getArticleBySlug, getRelatedArticles } from "@/modules/articles/article.service";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
 import { formatRelativeDate, calculateReadingTime } from "@/lib/utils";
 import { ShareButtons } from "@/components/articles/ShareButtons";

@@ -1,8 +1,10 @@
-import { generateArticleContent, translateArticleContent } from "../services/ai.service";
-import { generateImageLocal } from "../services/image.service";
+import 'dotenv/config';
+import { generateArticleContent, translateArticleContent } from "../modules/ai/ai.service";
+import { generateImageLocal } from "../modules/images/image.service";
+import { generateImageWithAIHorde } from "../modules/ai/aihorde-image.service";
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
-import path from "path";
+import * as path from "path";
 
 const prisma = new PrismaClient();
 
@@ -51,19 +53,48 @@ async function main() {
     };
 
     let imageUrl = aiResponse.sourceImageUrl;
+    let imageSource = "sourceImageUrl original";
     
-    // Si tenemos un prompt de imagen, intentamos generarla localmente con Stable Diffusion
+    // INTENTAR GENERAR IMAGEN CON AI HORDE (gratuito, comunitario)
     if (aiResponse.imagePrompt) {
-      const generatedImageUrl = await generateImageLocal(aiResponse.imagePrompt, slug);
-      if (generatedImageUrl) {
-        imageUrl = generatedImageUrl;
+      console.log("\n🎨 INTENTANDO GENERAR IMAGEN CON AI HORDE...");
+      console.log(`📝 Prompt: ${aiResponse.imagePrompt}`);
+      
+      const aiHordeImageUrl = await generateImageWithAIHorde(
+        aiResponse.imagePrompt,
+        slug,
+        {}  // Use DEFAULT_PARAMS from service (max quality)
+      );
+      
+      if (aiHordeImageUrl) {
+        imageUrl = aiHordeImageUrl;
+        imageSource = "AI Horde (comunitario)";
+        console.log(`✅ IMAGEN GENERADA CON AI HORDE: ${imageUrl}`);
+      } else {
+        console.log("❌ AI Horde falló, intentando con Stable Diffusion local...");
+        
+        // Fallback a Stable Diffusion local
+        const generatedImageUrl = await generateImageLocal(aiResponse.imagePrompt, slug);
+        if (generatedImageUrl) {
+          imageUrl = generatedImageUrl;
+          imageSource = "Stable Diffusion local";
+          console.log(`✅ IMAGEN GENERADA CON STABLE DIFFUSION: ${imageUrl}`);
+        } else {
+          console.log("❌ Stable Diffusion también falló.");
+        }
       }
     }
 
+    // Fallback final a Unsplash
     if (!imageUrl) {
+      console.log("⚠️ Usando imagen fallback de Unsplash...");
       const options = fallbackImages[randomCategory.name] || fallbackImages["Tecnología"];
       imageUrl = options[Math.floor(Math.random() * options.length)];
+      imageSource = "Unsplash fallback";
     }
+    
+    console.log(`📊 RESUMEN IMAGEN: ${imageUrl}`);
+    console.log(`📊 FUENTE IMAGEN: ${imageSource}`);
 
     console.log("\n💾 Saltando guardado en Base de Datos (MODO PRUEBA)...");
     
@@ -90,7 +121,7 @@ async function main() {
     console.log(`- Título: ${newArticle.title}`);
     console.log(`- Sentimiento: ${newArticle.sentiment}`);
     console.log(`- Categoría: ${newArticle.category.name}`);
-    console.log(`- URL Imagen: ${newArticle.imageUrl}`);
+    console.log(`- URL Imagen (${imageSource}): ${newArticle.imageUrl}`);
     console.log(`- Resumen: ${newArticle.summary}`);
     
     // Guardar un archivo temporal para Binance Square

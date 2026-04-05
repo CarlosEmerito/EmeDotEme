@@ -1,4 +1,4 @@
-import { generateWeeklyNewsletter } from "../services/ai.service";
+import { generateWeeklyNewsletter } from "../modules/ai/ai.service";
 import { PrismaClient } from "@prisma/client";
 import { Resend } from "resend";
 

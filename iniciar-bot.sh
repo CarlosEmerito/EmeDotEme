@@ -6,9 +6,16 @@ LOG_FILE="/home/emerito/emedoteme/bot.log"
 DIR="/home/emerito/emedoteme"
 
 if [ -f "$PID_FILE" ]; then
-    echo "⚠️ El bot automático ya está en ejecución."
-    echo "Si deseas reiniciarlo, ejecuta ./detener-bot.sh primero."
-    exit 1
+    PID=$(cat "$PID_FILE")
+    if kill -0 "$PID" 2>/dev/null; then
+        echo "⚠️ El bot automático ya está en ejecución (PID: $PID)."
+        echo "Si deseas reiniciarlo, ejecuta ./detener-bot.sh primero."
+        echo "Para ver la actividad actual usa: tail -f bot.log"
+        exit 1
+    else
+        echo "⚠️ Archivo PID encontrado pero proceso no está activo. Limpiando..."
+        rm -f "$PID_FILE"
+    fi
 fi
 
 echo "================================================="

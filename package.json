@@ -13,6 +13,7 @@
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
     "@giscus/react": "^3.1.0",
+    "@google/generative-ai": "^0.24.1",
     "@prisma/client": "^5.22.0",
     "@supabase/supabase-js": "^2.101.1",
     "@tailwindcss/typography": "^0.5.19",
@@ -35,6 +36,7 @@
     "resend": "^6.10.0",
     "rss": "^1.2.2",
     "rss-parser": "^3.13.0",
+    "sharp": "^0.34.5",
     "zod": "^4.3.6"
   },
   "devDependencies": {

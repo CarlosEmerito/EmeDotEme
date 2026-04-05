@@ -1,5 +1,5 @@
 import React from 'react';
-import { getMarketData } from '@/services/market.service';
+import { getMarketData } from '@/modules/market/market.service';
 
 export default async function MarketTicker() {
   const coins = await getMarketData();

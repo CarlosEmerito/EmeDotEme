@@ -1,9 +1,0 @@
-▲ Next.js 16.2.2 (Turbopack)
-- Local:         http://localhost:3014
-- Network:       http://10.212.170.170:3014
-- Environments: .env
-✓ Ready in 226ms
-
-🧠 Solicitando generación a Ollama (qwen2.5:14b)...
- GET /api/generate 200 in 115s (next.js: 394ms, application-code: 115s)
-[?25h

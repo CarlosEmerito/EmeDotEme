@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { siteConfig } from "@/config/site";
-import { generateArticleContent } from "@/services/ai.service";
+import { generateArticleContent } from "@/modules/ai/ai.service";
 
 export const maxDuration = 300; // Allow up to 5 minutes for AI generation
 

@@ -1,4 +1,4 @@
-import { getPublishedArticles } from "@/services/article.service";
+import { getPublishedArticles } from "@/modules/articles/article.service";
 import { HeroArticleCard } from "@/components/articles/HeroArticleCard";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
 

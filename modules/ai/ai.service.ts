@@ -1,3 +1,13 @@
+/**
+ * Placeholder para generación de newsletter semanal
+ */
+export async function generateWeeklyNewsletter() {
+	return {
+		subject: 'Newsletter semanal (placeholder)',
+		html: '<p>Contenido de ejemplo generado por IA.</p>',
+		articles: []
+	};
+}
 
 import { generateTextWithGemini } from './gemini-text.service';
 

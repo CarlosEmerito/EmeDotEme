@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { generateArticleContent } from './services/ai.service.js';
+import { generateArticleContent } from './modules/ai/ai.service.js';
 import { siteConfig } from './config/site.js';
 
 const prisma = new PrismaClient();

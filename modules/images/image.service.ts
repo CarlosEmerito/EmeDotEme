@@ -36,10 +36,8 @@ function getFallbackImageByTopic(topic: string): { url: string; caption: string 
   return { url: '', caption: `Imagen de fallback para ${topic}` };
 }
 
-async function unloadOllamaModel() {
-  // ...existing code from unloadOllamaModel...
-}
 
+export async function generateImageLocal(prompt: string, slug: string): Promise<string | null> {
   // Implementación mínima temporal para evitar error de compilación
   return null;
 }

@@ -5,6 +5,7 @@ export async function generateWeeklyNewsletter() {
 	return {
 		subject: 'Newsletter semanal (placeholder)',
 		html: '<p>Contenido de ejemplo generado por IA.</p>',
+		htmlContent: '<p>Contenido de ejemplo generado por IA.</p>',
 		articles: []
 	};
 }

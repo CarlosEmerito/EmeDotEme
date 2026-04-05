@@ -25,5 +25,6 @@ export async function generateImageWithAIHorde(
   articleSlug: string,
   options: AIHordeImageOptions = {}
 ): Promise<string | null> {
-  // ...
+  // Implementación mínima temporal para evitar error de compilación
+  return null;
 }

@@ -28,8 +28,11 @@ function generateProfessionalCaption(
   return `Imagen para: ${title} (${topic})`;
 }
 
-async function saveImageToSupabase(imageUrl: string, slug: string): Promise<string | null> {
 
+export async function saveImageToSupabase(imageUrl: string, slug: string): Promise<string | null> {
+  // Implementación mínima temporal para evitar error de compilación
+  return null;
+}
 
 function getFallbackImageByTopic(topic: string): { url: string; caption: string } {
   // Implementación mínima temporal para evitar error de compilación

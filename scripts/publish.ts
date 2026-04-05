@@ -1,10 +1,160 @@
+import 'dotenv/config';
 import { generateArticleContent, translateArticleContent } from "../services/ai.service";
-import { generateImageLocal } from "../services/image.service";
+import { generateArticleImage } from "../services/image.service";
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
 import path from "path";
 
 const prisma = new PrismaClient();
+
+/**
+ * Convierte un título a sentence case (solo primera letra mayúscula).
+ * Preserva nombres propios, siglas y símbolos como $, %.
+ */
+function toSentenceCase(title: string): string {
+  console.log(`🔧 toSentenceCase input: "${title}"`);
+  if (!title || title.length === 0) return title;
+  
+  // Lista de palabras que deben mantenerse en mayúsculas (siglas/acrónimos)
+  const keepUpperCase = [
+    'BTC', 'ETH', 'XRP', 'SOL', 'ADA', 'DOT', 'AVAX', 'MATIC', 'DOGE', 'SHIB', 'TON', 'BNB',
+    'USD', 'EUR', 'GBP', 'JPY', 'CNY', 'KRW',
+    'ETF', 'SEC', 'CFTC', 'FED', 'ECB', 'IMF', 'WTO', 'FINMA', 'ESMA',
+    'AI', 'API', 'NFT', 'DAO', 'DEFI', 'CEFI', 'WEB3', 'KYC', 'AML',
+    'USA', 'EEUU', 'UK', 'EU', 'ONU',
+    'BTC-USD', 'ETH-USD', 'XRP-USD',
+    'S&P', 'S&P 500', 'NASDAQ', 'NYSE', 'FTSE', 'DAX', 'CAC'
+    // NOTA: Nombres de empresas como Coinbase, Binance, etc. van en properNouns, no aquí
+  ];
+  
+  // Nombres propios que deben estar capitalizados (no todo uppercase)
+  const properNouns: Record<string, string> = {
+    'bitcoin': 'Bitcoin',
+    'ethereum': 'Ethereum',
+    'solana': 'Solana',
+    'cardano': 'Cardano',
+    'polkadot': 'Polkadot',
+    'polygon': 'Polygon',
+    'avalanche': 'Avalanche',
+    'ripple': 'Ripple',
+    'binance': 'Binance',
+    'coinbase': 'Coinbase',
+    'kraken': 'Kraken',
+    'telegram': 'Telegram',
+    'whatsapp': 'WhatsApp',
+    'instagram': 'Instagram',
+    'twitter': 'Twitter',
+    'facebook': 'Facebook',
+    'youtube': 'YouTube',
+    'glassnode': 'Glassnode',
+    'coingecko': 'CoinGecko',
+    'coinmetrics': 'CoinMetrics',
+    'deribit': 'Deribit',
+    'kaiko': 'Kaiko',
+    'jpmorgan': 'JP Morgan',
+    'goldman sachs': 'Goldman Sachs',
+    'blackrock': 'BlackRock',
+    'fidelity': 'Fidelity',
+    'vanguard': 'Vanguard'
+  };
+  
+  // Convertir todo a minúsculas primero
+  let lowercased = title.toLowerCase();
+  
+  // Capitalizar primera letra de la frase
+  let sentenceCased = lowercased.charAt(0).toUpperCase() + lowercased.slice(1);
+  
+  // Primero: Capitalizar nombres propios (Bitcoin, Ethereum, etc.)
+  for (const [lower, proper] of Object.entries(properNouns)) {
+    const regex = new RegExp(`\\b${lower}\\b`, 'gi');
+    sentenceCased = sentenceCased.replace(regex, proper);
+  }
+  
+  // Segundo: Mantener siglas en mayúsculas (ETF, SEC, BTC, etc.)
+  let result = sentenceCased;
+  keepUpperCase.forEach(word => {
+    const regex = new RegExp(`\\b${word.toLowerCase()}\\b`, 'gi');
+    result = result.replace(regex, word.toUpperCase());
+  });
+  
+  console.log(`🔧 toSentenceCase output: "${result}"`);
+  return result;
+}
+
+/**
+ * Normaliza el contenido del artículo asegurando mayúsculas correctas
+ * para nombres de criptomonedas, siglas, y nombres propios
+ */
+function normalizeArticleContent(article: any): any {
+  const normalized = { ...article };
+  
+  const termsToCapitalize: Record<string, string> = {
+    'bitcoin': 'Bitcoin',
+    'ethereum': 'Ethereum', 
+    'solana': 'Solana',
+    'cardano': 'Cardano',
+    'polkadot': 'Polkadot',
+    'polygon': 'Polygon',
+    'avalanche': 'Avalanche',
+    'ripple': 'Ripple',
+    'binance': 'Binance',
+    'coinbase': 'Coinbase',
+    'kraken': 'Kraken',
+    'telegram': 'Telegram',
+    'whatsapp': 'WhatsApp',
+    'instagram': 'Instagram',
+    'twitter': 'Twitter',
+    'facebook': 'Facebook',
+    'youtube': 'YouTube',
+    'glassnode': 'Glassnode',
+    'coingecko': 'CoinGecko',
+    'coinmetrics': 'CoinMetrics',
+    'deribit': 'Deribit',
+    'kaiko': 'Kaiko',
+    'jpmorgan': 'JP Morgan',
+    'goldman sachs': 'Goldman Sachs',
+    'blackrock': 'BlackRock',
+    'fidelity': 'Fidelity',
+    'vanguard': 'Vanguard',
+    'etf': 'ETF',
+    'defi': 'DeFi',
+    'nft': 'NFT',
+    'web3': 'Web3',
+    'dao': 'DAO',
+    'sec': 'SEC',
+    'cftc': 'CFTC',
+    'fed': 'FED',
+    'ecb': 'ECB',
+    'imf': 'IMF',
+    'usd': 'USD',
+    'eur': 'EUR',
+    'gbp': 'GBP',
+    'jpy': 'JPY',
+    'cny': 'CNY',
+  };
+  
+  const fieldsToNormalize = ['title', 'summary', 'content', 'titleEn', 'summaryEn', 'contentEn'];
+  
+  for (const field of fieldsToNormalize) {
+    if (normalized[field]) {
+      let text = normalized[field];
+      
+      // Sanitizar escapes dobles (ej. \\n -> espacio)
+      text = text.replace(/\\\\n/g, ' ').replace(/\\\\r/g, ' ').replace(/\\\\t/g, ' ');
+      // También eliminar cualquier backslash solitario que pueda romper HTML
+      text = text.replace(/\\\\(.)/g, '$1');
+      
+      for (const [lower, proper] of Object.entries(termsToCapitalize)) {
+        const regex = new RegExp(`\\b${lower}\\b`, 'gi');
+        text = text.replace(regex, proper);
+      }
+      
+      normalized[field] = text;
+    }
+  }
+  
+  return normalized;
+}
 
 async function main() {
   console.log("=====================================================");
@@ -29,7 +179,21 @@ async function main() {
   try {
     const t0 = Date.now();
     let aiResponse = await generateArticleContent();
+    console.log('📝 ImagePrompt presente:', aiResponse.imagePrompt ? 'SÍ' : 'NO');
+    if (aiResponse.imagePrompt) {
+      console.log('   Prompt:', aiResponse.imagePrompt.substring(0, 100) + '...');
+    }
     aiResponse = await translateArticleContent(aiResponse);
+    
+    // Aplicar sentence case a los títulos
+    aiResponse.title = toSentenceCase(aiResponse.title);
+    if (aiResponse.titleEn) {
+      aiResponse.titleEn = toSentenceCase(aiResponse.titleEn);
+    }
+    
+    // Normalizar mayúsculas en todo el contenido (cryptos, siglas, etc.)
+    aiResponse = normalizeArticleContent(aiResponse);
+    
     const t1 = Date.now();
     console.log(`\n⏱️ Tiempo de generación: ${((t1 - t0) / 1000).toFixed(2)} segundos`);
 
@@ -50,19 +214,36 @@ async function main() {
       ]
     };
 
+    // Procesar imagen usando el nuevo flujo con Gemini API
     let imageUrl = aiResponse.sourceImageUrl;
+    let imageCaption = aiResponse.imageCaption || "";
     
-    // Si tenemos un prompt de imagen, intentamos generarla localmente con Stable Diffusion
-    if (aiResponse.imagePrompt) {
-      const generatedImageUrl = await generateImageLocal(aiResponse.imagePrompt, slug);
-      if (generatedImageUrl) {
-        imageUrl = generatedImageUrl;
+    if (aiResponse.imagePrompt || aiResponse.sourceImageUrl) {
+      const imageData = {
+        title: aiResponse.title,
+        slug: slug,
+        topic: randomCategory.name,
+        originalPrompt: aiResponse.imagePrompt,
+        summary: aiResponse.summary
+      };
+      
+      try {
+        const imageResult = await generateArticleImage(imageData, aiResponse.sourceImageUrl);
+        imageUrl = imageResult.imageUrl;
+        imageCaption = imageResult.caption;
+        console.log(`✅ Imagen procesada: ${imageUrl.substring(0, 100)}...`);
+      } catch (error) {
+        console.error("❌ Error procesando imagen:", error);
+        // Fallback a imágenes de Unsplash
+        const options = fallbackImages[randomCategory.name] || fallbackImages["Tecnología"];
+        imageUrl = options[Math.floor(Math.random() * options.length)];
+        imageCaption = aiResponse.imageCaption || `Ilustración sobre ${randomCategory.name}`;
       }
-    }
-
-    if (!imageUrl) {
+    } else {
+      // Si no hay prompt ni imagen fuente, usar fallback
       const options = fallbackImages[randomCategory.name] || fallbackImages["Tecnología"];
       imageUrl = options[Math.floor(Math.random() * options.length)];
+      imageCaption = aiResponse.imageCaption || `Imagen relacionada con ${randomCategory.name}`;
     }
 
     console.log("\n💾 Guardando en la Base de Datos...");
@@ -77,7 +258,7 @@ async function main() {
         contentEn: aiResponse.contentEn,
         tags: aiResponse.tags || [],
         imageUrl: imageUrl,
-        imageCaption: aiResponse.imageCaption,
+        imageCaption: imageCaption,
         sourceUrl: aiResponse.sourceUrl,
         sentiment: aiResponse.sentiment || "Neutral ➡️",
         categoryId: randomCategory.id,

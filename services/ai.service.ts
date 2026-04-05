@@ -1,8 +1,25 @@
 import OpenAI from "openai";
-import { Prisma } from "@prisma/client";
+
 import { getMarketData } from "./market.service";
 import { getLatestNews } from "./news.service";
 import { getPublishedArticles } from "./article.service";
+import { generateTextWithGemini, isGeminiAvailable } from "./gemini-text.service";
+
+/**
+ * Debug helper to log character codes around a position
+ */
+function debugStringAtPosition(text: string, position: number, context = 20): void {
+  console.error(`🔍 Debug JSON parsing at position ${position}:`);
+  const start = Math.max(0, position - context);
+  const end = Math.min(text.length, position + context);
+  console.error(`   Surrounding text: "${text.substring(start, end)}"`);
+  console.error(`   Character codes:`);
+  for (let i = start; i < end; i++) {
+    const char = text[i];
+    const code = char.charCodeAt(0);
+    console.error(`     ${i}: '${char === '\n' ? '\\n' : char === '\r' ? '\\r' : char === '\t' ? '\\t' : char}' (${code})`);
+  }
+}
 
 export interface GeneratedArticle {
   title: string;
@@ -20,21 +37,123 @@ export interface GeneratedArticle {
 }
 
 /**
+ * Limpia caracteres de control no escapados en un texto JSON
+ */
+function cleanControlCharacters(text: string): string {
+  // Reemplaza caracteres de control (excepto tab, newline, carriage return escapados \t, \n, \r)
+  // con espacios
+  let result = '';
+  let inString = false;
+  let escapeNext = false;
+  
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    
+    if (escapeNext) {
+      result += char;
+      escapeNext = false;
+    } else if (char === '\\') {
+      result += char;
+      escapeNext = true;
+    } else if (char === '"') {
+      result += char;
+      inString = !inString;
+    } else if (inString && char.charCodeAt(0) < 32 && char !== '\t' && char !== '\n' && char !== '\r') {
+      // Carácter de control dentro de string, reemplazar con espacio
+      result += ' ';
+    } else {
+      result += char;
+    }
+  }
+  
+  return result;
+}
+
+/**
  * Intenta extraer y reparar un JSON que pueda venir con texto extra antes o después
+ * También maneja JSONs truncados y mal formados
  */
 function extractJsonFromText(text: string): string {
   try {
-    // Buscar el primer { y el último }
-    const start = text.indexOf('{');
-    const end = text.lastIndexOf('}');
+    // Limpiar caracteres de control primero
+    text = cleanControlCharacters(text);
     
-    if (start !== -1 && end !== -1 && end > start) {
-      return text.substring(start, end + 1);
+    // Buscar el primer { y el último }
+    let start = text.indexOf('{');
+    let end = text.lastIndexOf('}');
+    
+    if (start === -1 || end === -1 || end <= start) {
+      return text;
     }
-    return text;
-  } catch (e) {
+    
+    let extracted = text.substring(start, end + 1);
+    
+    // Fix common JSON errors
+    let fixed = extracted
+      // Fix missing colon after property name
+      .replace(/"\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*"/g, '"$1"')
+      // Fix missing commas between properties
+      .replace(/"\s*}\s*"/g, '","')
+      .replace(/"\s*,\s*{/g, '",{')
+      .replace(/}\s*"\s*:/g, '},"')
+      // Fix unclosed strings
+      .replace(/"([^"]*)$/g, '$1"')
+      // Remove trailing commas before }
+      .replace(/,\s*}/g, '}')
+      // Fix missing quotes around keys
+      .replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)(\s*:)/g, '$1"$2"$3');
+    
+    // Si el JSON está truncado, intentar cerrar objetos
+    const openBraces = (fixed.match(/{/g) || []).length;
+    const closeBraces = (fixed.match(/}/g) || []).length;
+    
+    if (openBraces > closeBraces) {
+      const missing = openBraces - closeBraces;
+      for (let i = 0; i < missing; i++) {
+        fixed += '}';
+      }
+    }
+    
+    return fixed;
+  } catch (_e) {
     return text;
   }
+}
+
+/**
+ * Intenta reparar un string JSON malformado
+ */
+function fixJsonString(jsonString: string): string {
+  let fixed = jsonString;
+  
+  // FIRST: Remove ALL control characters (except tab, LF, CR which are valid in JSON)
+  fixed = fixed.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, ' ');
+  
+  // Also clean Unicode control characters
+  fixed = fixed.replace(/[\u0080-\u009F\u200B-\u200F\u2028-\u202F\uFEFF]/g, '');
+  
+  // QUITAR TRAILING COMMAS
+  fixed = fixed.replace(/,\s*([}\]])/g, '$1');
+  
+  // AÑADIR ESPACIO DESPUÉS DE DOS PUNTOS si no lo hay (el problema principal)
+  fixed = fixed.replace(/"([^"]+)":(?!\s)/g, '$1": ');  // "key":valor -> "key": valor
+  
+  // Fix comillas simples
+  fixed = fixed.replace(/'([^']*)'/g, '"$1"');
+  
+  // Fix propiedades sin comillas
+  fixed = fixed.replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":');
+  
+  // Fix valores booleanos en minúsculas
+  fixed = fixed.replace(/:\s*(true|false|null)(?!\w)/g, (match) => match.toLowerCase());
+  
+  // Fix valores numéricos que tengan comillas demás
+  fixed = fixed.replace(/"(\d+)":/g, '$1:');
+  
+  // Quitar comas duplicadas
+  fixed = fixed.replace(/,\s*,/g, ',');
+  
+  return fixed;
 }
 
 /**
@@ -46,7 +165,7 @@ async function getFallbackArticle(topic?: string): Promise<GeneratedArticle> {
     const marketData = await getMarketData();
     const topCoins = marketData.slice(0, 3);
     marketContext = topCoins.map(c => `${c.name} cotizando a $${c.current_price.toLocaleString()} (${c.price_change_percentage_24h.toFixed(2)}% en 24h)`).join(', ');
-  } catch (e) {
+  } catch (_e) {
     marketContext = "Bitcoin, Ethereum y otros activos digitales clave experimentando alta volatilidad";
   }
 
@@ -142,12 +261,11 @@ Redacta la newsletter semanal basándote en estos eventos. Trata de agruparlos l
     });
 
     let content = "";
-    process.stdout.write("✍️ Escribiendo Newsletter: ");
+    process.stdout.write("✍️ Generando newsletter... ");
     
     for await (const chunk of response) {
       const text = chunk.choices[0]?.delta?.content || "";
       content += text;
-      process.stdout.write(text);
     }
     console.log("\n");
     
@@ -180,27 +298,28 @@ export async function translateArticleContent(article: GeneratedArticle): Promis
     ollamaBaseUrl = `${cleanUrl}/v1`;
   }
 
-  const modelName = process.env.OLLAMA_MODEL || "qwen3.5:27b";
+  const modelName = "qwen2.5:14b";
+  console.log(`🔄 Iniciando traducción al inglés...`);
 
-  try {
-    const openai = new OpenAI({
-      baseURL: ollamaBaseUrl,
-      apiKey: "ollama",
-      defaultHeaders: {
-        "ngrok-skip-browser-warning": "true"
-      }
-    });
-
-    const systemPrompt = `You are an expert crypto and financial translator.
+  const systemPrompt = `You are an expert crypto and financial translator.
 Your task is to perfectly translate a Spanish article into English.
 Maintain the exact same tone, analytical style, and HTML formatting.
-Return ONLY a valid JSON object with the following exact properties:
-1. "titleEn": The translated title.
-2. "summaryEn": The translated summary.
-3. "contentEn": The translated HTML content. Keep all HTML tags EXACTLY as they are. Translate the text inside the tags. Maintain any SEO interlinking <a href="..."> exactly as they are.
-4. ONLY return JSON. Do not return markdown blocks like \`\`\`json.`;
 
-    const userPrompt = `Please translate the following article to English:
+IMPORTANT: Return ONLY valid JSON.
+- Use ONLY double quotes for strings.
+- NO single quotes, NO backslash escapes unless absolutely necessary.
+- NO special characters or control characters.
+- NO markdown code blocks.
+
+Return ONLY a valid JSON object with these exact properties:
+1. "titleEn": The translated title - plain text, simple characters.
+2. "summaryEn": The translated summary - plain text.
+3. "contentEn": The translated HTML content. Keep all HTML tags exactly as they are. Translate the text inside. Maintain SEO links <a href="..."> exactly.
+
+Example format:
+{"titleEn":"Bitcoin Reaches New High","summaryEn":"Analysis of the latest price movement...","contentEn":"<p>Bitcoin has reached...","<h2>Key factors</h2>..."}`
+
+  const userPrompt = `Please translate the following article to English:
 
 TITLE:
 ${article.title}
@@ -211,7 +330,74 @@ ${article.summary}
 CONTENT:
 ${article.content}`;
 
-    console.log(`🧠 Solicitando traducción a Ollama (${modelName})...`);
+  // Priority 1: Try Gemini Flash 2.5
+  if (isGeminiAvailable()) {
+    console.log('🌐 INTENTANDO TRADUCIR CON GEMINI FLASH 2.5...');
+    
+    const geminiResult = await generateTextWithGemini({
+      systemPrompt,
+      userPrompt,
+      maxTokens: 6000,
+      temperature: 0.3
+    });
+    
+    if (geminiResult) {
+      try {
+        console.log(`📝 Traducción cruda de Gemini (${geminiResult.length} chars): ${geminiResult.substring(0, 150)}...`);
+        let cleaned = geminiResult.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+        
+        let parsed;
+        try {
+          parsed = JSON.parse(cleaned);
+        } catch {
+          // Try to fix and parse
+          const fixed = extractJsonFromText(cleaned);
+          try {
+            parsed = JSON.parse(fixed);
+          } catch {
+            // Last attempt with more aggressive fixes
+            const aggressiveFixed = cleaned
+              .replace(/,\s*}/g, '}')
+              .replace(/,\s*]/g, ']')
+              .replace(/"\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*":/g, '"$1":');
+            parsed = JSON.parse(aggressiveFixed);
+          }
+        }
+        
+        if (parsed.titleEn && parsed.summaryEn && parsed.contentEn) {
+          console.log('✅ Traducción completada con Gemini');
+          return {
+            ...article,
+            titleEn: parsed.titleEn,
+            summaryEn: parsed.summaryEn,
+            contentEn: parsed.contentEn
+          };
+        } else {
+          console.error('❌ JSON de traducción incompleto:', Object.keys(parsed));
+        }
+      } catch (parseError) {
+        console.error('❌ Error parseando traducción de Gemini:', parseError);
+      }
+    } else {
+      console.log('⚠️ Gemini retornó vacío, usando Ollama local...');
+    }
+  }
+
+
+
+  // Priority 2: Fallback to Ollama
+  console.log(`🌐 TRADUCIENDO CON OLLAMA LOCAL (${modelName})...`);
+
+  try {
+    const openai = new OpenAI({
+      baseURL: ollamaBaseUrl,
+      apiKey: "ollama",
+      defaultHeaders: {
+        "ngrok-skip-browser-warning": "true"
+      }
+    });
+    
+    console.log('✅ Conexión con Ollama establecida');
 
     const response = await openai.chat.completions.create({
       model: modelName,
@@ -226,12 +412,11 @@ ${article.content}`;
     });
 
     let content = "";
-    process.stdout.write("✍️ Traduciendo al Inglés: ");
+    process.stdout.write("✍️ Traduciendo... ");
     
     for await (const chunk of response) {
       const text = chunk.choices[0]?.delta?.content || "";
       content += text;
-      process.stdout.write(text);
     }
     console.log("\n");
     
@@ -239,10 +424,38 @@ ${article.content}`;
       throw new Error("Ollama devolvió una respuesta vacía en la traducción.");
     }
 
-    content = content.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+     content = content.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+    content = cleanControlCharacters(content);
     content = extractJsonFromText(content);
+    
+    // Apply fixJsonString BEFORE parsing
+    content = fixJsonString(content);
 
-    const parsedTranslation = JSON.parse(content);
+    let parsedTranslation;
+    try {
+        parsedTranslation = JSON.parse(content);
+    } catch (parseError) {
+        console.error("❌ Error parseando traducción de Ollama:", parseError);
+        // Debug: log content length and character codes around error position
+        console.error(`   Content length: ${content.length}`);
+        // Try to extract position from error message
+        const errorMsg = String(parseError);
+        const positionMatch = errorMsg.match(/position (\d+)/);
+        if (positionMatch) {
+            const pos = parseInt(positionMatch[1], 10);
+            debugStringAtPosition(content, pos);
+        } else {
+            // Default to middle of content
+            debugStringAtPosition(content, Math.floor(content.length / 2));
+        }
+        const fixedContent = fixJsonString(content);
+        try {
+            parsedTranslation = JSON.parse(fixedContent);
+            console.log("✅ JSON de traducción reparado");
+        } catch {
+            throw new Error("No se pudo parsear la traducción");
+        }
+    }
     
     return {
       ...article,
@@ -258,29 +471,16 @@ ${article.content}`;
 }
 
 export async function generateArticleContent(topic?: string): Promise<GeneratedArticle> {
-  // Configuración para usar Ollama local a través del SDK de OpenAI
   let ollamaBaseUrl = process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1";
   
-  // Asegurarnos de que la URL termine en /v1 para compatibilidad con la API de OpenAI
   if (process.env.OLLAMA_BASE_URL && !process.env.OLLAMA_BASE_URL.endsWith('/v1')) {
-    // Limpiar posible barra final
     const cleanUrl = process.env.OLLAMA_BASE_URL.replace(/\/$/, '');
     ollamaBaseUrl = `${cleanUrl}/v1`;
   }
 
-  const modelName = process.env.OLLAMA_MODEL || "qwen3.5:27b"; // Usaremos qwen3.5:27b a petición del usuario
+  const modelName = "qwen2.5:14b"; // Fallback local - using 2.5 for better JSON generation
 
   try {
-    const openai = new OpenAI({
-      baseURL: ollamaBaseUrl,
-      apiKey: "ollama", // El SDK requiere una key, pero Ollama la ignora
-      defaultHeaders: {
-        // MUY IMPORTANTE: Ngrok bloquea las peticiones automáticas con una pantalla de advertencia en cuentas gratuitas.
-        // Este header le dice a Ngrok que deje pasar la petición directamente a nuestro Ollama.
-        "ngrok-skip-browser-warning": "true"
-      }
-    });
-    
     // RAG Parte 1: Obtener contexto real del mercado actual (precios)
     const marketData = await getMarketData();
     const topCoins = marketData.slice(0, 5);
@@ -289,26 +489,24 @@ export async function generateArticleContent(topic?: string): Promise<GeneratedA
       `- ${coin.name} (${coin.symbol.toUpperCase()}): $${coin.current_price.toLocaleString()} (Cambio 24h: ${coin.price_change_percentage_24h.toFixed(2)}%)`
     ).join('\n');
 
-    // RAG Parte 2: Obtener noticias del mundo real (Cripto, Finanzas, Regulaciones)
+    // RAG Parte 2: Obtener noticias del mundo real
     const latestNews = await getLatestNews();
     
     const newsContext = latestNews.length > 0 
       ? latestNews.map(n => `- [${n.source}] ${n.title}`).join('\n')
       : "No hay noticias de última hora disponibles.";
 
-    // RAG Parte 3: Evitar repetición (obtenemos últimos artículos publicados)
-    const recentArticles = await getPublishedArticles(50); // Aumentado a 50 para mejor filtro histórico
+    // RAG Parte 3: Evitar repetición
+    const recentArticles = await getPublishedArticles(50);
     const recentTitles = recentArticles.map(a => a.title).join(' | ');
     const usedSourceUrls = new Set(recentArticles.map(a => a.sourceUrl).filter(Boolean));
     const usedImageUrls = new Set(recentArticles.map(a => a.imageUrl).filter(Boolean));
 
-    // Estrategia de Variedad: Si no hay un tema específico, escogemos una noticia nueva
     let specificFocus = topic;
     let selectedImageUrl: string | undefined = undefined;
     let selectedSourceUrl: string | undefined = undefined;
 
     if (!specificFocus && latestNews.length > 0) {
-      // Filtrar noticias que ya fueron procesadas por sourceUrl o imageUrl
       const availableNews = latestNews.filter(n => {
         const urlUsada = usedSourceUrls.has(n.link);
         const imagenUsada = n.imageUrl ? usedImageUrls.has(n.imageUrl) : false;
@@ -316,7 +514,6 @@ export async function generateArticleContent(topic?: string): Promise<GeneratedA
       });
 
       if (availableNews.length > 0) {
-        // Cogemos 1 noticia principal al azar de las DISPONIBLES
         const randomNews = availableNews[Math.floor(Math.random() * availableNews.length)];
         specificFocus = `Enfócate detalladamente en esta noticia específica: "${randomNews.title}" (Fuente: ${randomNews.source}). Úsala como núcleo central de tu artículo, y usa los precios de CoinGecko o el resto de titulares como contexto secundario.`;
         selectedImageUrl = randomNews.imageUrl;
@@ -329,45 +526,145 @@ export async function generateArticleContent(topic?: string): Promise<GeneratedA
     const systemPrompt = `Eres Carlos "Emérito" López Lovera, un prestigioso periodista humano y analista senior en mercados institucionales y tecnología Web3 para el portal financiero 'EmeDotEme'.
 Tu tarea es escribir un artículo analítico, frío, objetivo y PROFUNDAMENTE DETALLADO que relacione los datos del mercado en vivo con los eventos recientes.
 
-REGLAS ESTRICTAS DE TONO Y ESTILO (¡MUY IMPORTANTE PARA PARECER HUMANO!):
-1. PROHIBIDO usar frases clichés de IA como "En conclusión", "En resumen", "El mundo de las criptomonedas", "El mercado cripto está en vilo", "paisaje digital", "revolucionando la forma en que", etc.
-2. Mantén un tono frío, analítico y directo, similar a un reporte de Bloomberg, Reuters o The Wall Street Journal. Evita el sensacionalismo extremo o el dramatismo emocional.
-3. INVENTA citas plausibles o menciona firmas de análisis reales (ej. Glassnode, CoinGlass, Deribit, Kaiko, JPMorgan) para respaldar tus afirmaciones y darle un tono periodístico auténtico. Ejemplo: "Según datos de Glassnode..." o "Analistas de CoinGlass señalan que...".
-4. NO uses palabras excesivamente grandilocuentes. Cierra el artículo con un dato duro, una cita o una proyección sobria, NUNCA con una "conclusión" genérica.
-5. NO cometas errores matemáticos. Si citas un porcentaje de cambio (ej. 2%), no digas "subió un 2% que es más del mil por ciento". Sé preciso con los números.
+REGLAS ESTRICTAS DE TONO Y ESTILO:
+1. PROHIBIDO usar frases clichés de IA como "En conclusión", "En resumen", "El mundo de las criptomonedas", "El mercado cripto está en vilo", etc.
+2. Mantén un tono frío, analítico y directo, similar a Bloomberg/WSJ.
+3. INVENTA citas plausibles o menciona firmas de análisis reales (Glassnode, CoinGlass, JPMorgan).
+4. NO cometas errores matemáticos.
+5. NUNCA traduzcas literalmente del inglés: "El fundador de Telegram" ✅, "Telegram Fundador" ❌
 
-REGLAS ESTRICTAS DE FORMATO Y LONGITUD:
-1. Devuelve ÚNICAMENTE un objeto JSON válido con las siguientes 7 propiedades exactas: "title", "summary", "content", "tags", "imageCaption", "sentiment", "imagePrompt".
-2. "title": Un titular directo y periodístico, enfocado en datos y hechos (ej. "Bitcoin supera los $66K impulsado por la acumulación institucional").
-3. "summary": Un breve lead (sin HTML) directo al punto, explicando el "qué" y el "por qué" de la noticia.
-4. "content": Un artículo extenso en formato HTML. 
-   - Debe tener al menos 500-600 palabras y párrafos bien desarrollados.
-   - Usa etiquetas <h2> para subtítulos descriptivos (evita títulos robóticos como "La Noticia de Última Hora").
-   - Usa etiquetas como <p> y <strong>. NO uses <html>, <body> o <h1>.
-   - DEBES ESCRIBIR EL ARTÍCULO COMPLETAMENTE EN ESPAÑOL.
-5. "tags": Un array de 3 a 5 strings cortos que representen los temas clave del artículo (ej. ["Bitcoin", "Regulación", "DeFi"]).
-6. "imageCaption": Un pie de foto sobrio (1 oración) con un dato clave relacionado con el titular.
-7. "sentiment": Evalúa el sentimiento general de esta noticia para el mercado. DEBE ser EXACTAMENTE UNO de estos 3 valores, incluyendo el emoji de flecha económica: "Alcista ⬆️", "Bajista ⬇️" o "Neutral ➡️".
-8. "imagePrompt": A vivid, highly detailed visual description IN ENGLISH for Stable Diffusion to generate the article's header image. Describe a photorealistic scene related to the article's core topic (e.g. "a glowing bitcoin coin resting on a digital circuit board with neon blue and green lights, dramatic lighting"). Do not include words like "photo of" or camera settings.
-9. NUNCA menciones que eres una IA. Escribe como un analista de carne y hueso.
-10. NO ESCRIBAS SOBRE ESTOS TEMAS RECIENTES: ${recentTitles || "Ninguno"}.
-11. TEMA EXCLUSIVO: Tu artículo DEBE ser sobre criptomonedas, blockchain, Web3 o mercados macroeconómicos.
-12. MUY IMPORTANTE: Empieza con { y termina con }. NO uses markdown de bloques de código como \`\`\`json.
-13. SEO INTERLINKING: Si mencionas criptomonedas clave (como Bitcoin, Ethereum, Solana) o conceptos importantes, envuélvelos en un enlace HTML apuntando a nuestro propio tag en minúsculas. Ejemplo: <a href="/tag/bitcoin">Bitcoin</a>. Haz esto al menos 2-3 veces en el texto.`;
+IMPORTANTE sobre formato JSON:
+- NO uses caracteres especiales raros, emojis dentro de strings JSON, ni ningún carácter de control.
+- NO uses comillas simples para delimitar strings - usa solo comillas dobles.
+- NO uses barras invertidas innecesarias.
+- En el campo "content" (HTML), usa solo etiquetas básicas: <p>, <h2>, <strong>, <a href="/tag/xxx">.
+- El campo "tags" debe ser un array de strings simples, sin HTML.
+- Los campos "title", "summary", "imageCaption" deben ser texto plano simple, sin caracteres especiales raros.
 
-    const userPrompt = `Aquí tienes los datos actuales y reales del mercado en este mismo instante:
+REGLAS PARA IMAGEN (imagePrompt):
+1. El "imagePrompt" debe ser un prompt en INGLÉS para generar una imagen profesional relacionada con el artículo.
+2. DEBE ser 100% Safe For Work (SFW): nada de desnudez, violencia, contenido sexual o perturbador.
+3. Enfócate en conceptos financieros, gráficos, datos, tecnología, abstractos o metafóricos.
+4. Ejemplos buenos: "A detailed financial chart showing Bitcoin price movements with analytical indicators", "Conceptual illustration of blockchain technology as interconnected digital nodes", "Professional business graphic representing market volatility".
+5. Evita descripciones de personas a menos que sea estrictamente necesario; si incluyes personas, deben ser profesionales en entorno laboral.
+6. Añade al final: "professional illustration, clean, business aesthetic, safe for work".
 
-PRECIOS EN VIVO (TOP 5):
+REGLAS DE FORMATO:
+1. Devuelve ÚNICAMENTE JSON con: "title", "summary", "content", "tags", "imageCaption", "sentiment", "imagePrompt".
+2. "title": Sentence case, NO Title Case.
+3. "content": Mínimo 500-600 palabras en HTML con <p> y <h2>.
+4. "sentiment": "Alcista ⬆️", "Bajista ⬇️" o "Neutral ➡️".
+5. Empieza con { y termina con }. Sin markdown.
+6. SEO: Usa <a href="/tag/bitcoin">Bitcoin</a>.`;
+
+    const userPrompt = `PRECIOS EN VIVO:
 ${marketContext}
 
-TITULARES DE NOTICIAS DE ÚLTIMA HORA:
+TITULARES:
 ${newsContext}
 
-${specificFocus ? specificFocus : `Elige la noticia más relevante sobre mercados y escribe un análisis sobrio.`}
+${specificFocus || 'Elige la noticia más relevante sobre mercados.'}
 
-RECUERDA: Tu artículo debe ser analítico, basado en datos, con un tono humano frío y periodístico (estilo Bloomberg). Cita fuentes o firmas de análisis (pueden ser verosímiles o reales como CoinGlass/Glassnode) para darle autoridad. No uses fórmulas de conclusión genéricas. ESCRIBE COMPLETAMENTE EN ESPAÑOL.`;
+ESCRIBE EN ESPAÑOL, formato JSON.`;
 
-    console.log(`🧠 Solicitando generación a Ollama (${modelName})...`);
+    // Priority 1: Try Gemini Flash 2.5
+    if (isGeminiAvailable()) {
+      console.log('🎯 INTENTANDO GENERAR CON GEMINI FLASH 2.5...');
+      
+      const geminiResult = await generateTextWithGemini({
+        systemPrompt,
+        userPrompt,
+        maxTokens: 6000,
+        temperature: 0.7
+      });
+      
+       if (geminiResult) {
+        try {
+          console.log(`📝 Respuesta cruda de Gemini (${geminiResult.length} chars)`);
+          let cleaned = geminiResult.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+          
+          let parsedArticle: GeneratedArticle | null = null;
+          let parseSuccess = false;
+          
+          // Strategy 1: Direct parse
+          try {
+            parsedArticle = JSON.parse(cleaned) as GeneratedArticle;
+            parseSuccess = true;
+            console.log('✅ Parseado con estrategia directa');
+          } catch {
+            console.log('⚠️ Estrategia directa falló, intentando siguiente...');
+          }
+          
+          // Strategy 2: Extract and fix
+          if (!parseSuccess) {
+            try {
+              parsedArticle = JSON.parse(extractJsonFromText(cleaned)) as GeneratedArticle;
+              parseSuccess = true;
+              console.log('✅ Parseado con extracción');
+            } catch {
+              console.log('⚠️ Extracción falló, intentando siguiente...');
+            }
+          }
+          
+          // Strategy 3: Aggressive fix
+          if (!parseSuccess) {
+            try {
+              const aggressive = cleaned
+                .replace(/,\s*}/g, '}')
+                .replace(/,\s*]/g, ']')
+                .replace(/"([^"]*)$/g, '$1"')
+                .replace(/\}\s*$/g, '}');
+              parsedArticle = JSON.parse(extractJsonFromText(aggressive)) as GeneratedArticle;
+              parseSuccess = true;
+              console.log('✅ Parseado con fix agresivo');
+            } catch {
+              console.log('⚠️ Fix agresivo falló, intentando siguiente...');
+            }
+          }
+          
+          // Strategy 4: Find valid JSON subset
+          if (!parseSuccess) {
+            try {
+              const jsonMatch = cleaned.match(/\{[\s\S]*"tags":\s*\[[\s\S]*\][\s\S]*\}/);
+              if (jsonMatch) {
+                parsedArticle = JSON.parse(jsonMatch[0]) as GeneratedArticle;
+                parseSuccess = true;
+                console.log('✅ Parseado con subset JSON');
+              }
+            } catch {
+              console.log('⚠️ Subset falló...');
+            }
+          }
+          
+          if (parseSuccess && parsedArticle && parsedArticle.title && parsedArticle.summary && parsedArticle.content) {
+            if (selectedImageUrl) parsedArticle.sourceImageUrl = selectedImageUrl;
+            if (selectedSourceUrl) parsedArticle.sourceUrl = selectedSourceUrl;
+            
+            console.log(`✅ Artículo generado por Gemini: ${parsedArticle.title}`);
+            return parsedArticle;
+          } else {
+            console.error('❌ JSON de Gemini incompleto o no se pudo parsear');
+          }
+        } catch (parseError) {
+          console.error('❌ Error parseando respuesta de Gemini:', parseError);
+        }
+      } else {
+        console.log('⚠️ Gemini retornó vacío, usando Ollama local...');
+      }
+    } else {
+      console.log('⚠️ Gemini no disponible, usando Ollama local...');
+    }
+
+
+
+    // Priority 2: Fallback to Ollama local
+    console.log(`🧠 Generando con Ollama local (${modelName})...`);
+
+    const openai = new OpenAI({
+      baseURL: ollamaBaseUrl,
+      apiKey: "ollama",
+      defaultHeaders: { "ngrok-skip-browser-warning": "true" }
+    });
 
     const response = await openai.chat.completions.create({
       model: modelName,
@@ -382,12 +679,11 @@ RECUERDA: Tu artículo debe ser analítico, basado en datos, con un tono humano 
     });
 
     let content = "";
-    process.stdout.write("✍️ Escribiendo: ");
+    process.stdout.write("✍️ Generando artículo... ");
     
     for await (const chunk of response) {
       const text = chunk.choices[0]?.delta?.content || "";
       content += text;
-      process.stdout.write(text); // Mostrar en tiempo real en la terminal
     }
     console.log("\n");
     
@@ -395,42 +691,91 @@ RECUERDA: Tu artículo debe ser analítico, basado en datos, con un tono humano 
       throw new Error("Ollama devolvió una respuesta vacía.");
     }
 
-    // Limpieza y extracción robusta del JSON
     content = content.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+    content = cleanControlCharacters(content);
     content = extractJsonFromText(content);
+    
+    // FIRST clean: Remove ALL control characters aggressively
+    content = content.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, ' ');
+    content = content.replace(/[\u0080-\u009F\u200B-\u200F\u2028-\u202F\uFEFF]/g, '');
+    
+    // Apply fixJsonString BEFORE parsing to clean problematic chars first
+    content = fixJsonString(content);
 
-    const parsedArticle = JSON.parse(content) as GeneratedArticle;
-    
-    // FILTRO POST-PROCESAMIENTO: Eliminar conclusiones de IA
-    const clicheRegex = /<p>\s*(\*\*|<b>)?\s*(En conclusi[oó]n|En resumen|Para concluir|Para resumir|A modo de conclusi[oó]n|En definitiva|En síntesis|En pocas palabras|En suma)[,.:\s]*(?:\*\*|<\/b>)?\s*(.*?)/gi;
-    
-    parsedArticle.content = parsedArticle.content.replace(clicheRegex, (match, p1, p2, p3) => {
-        // p3 contiene el resto de la oración después del cliché.
-        if (p3) {
-            // Capitalizar la primera letra del texto que queda
-            const capitalizedText = p3.charAt(0).toUpperCase() + p3.slice(1);
-            return `<p>${capitalizedText}`;
+     let parsedArticle: GeneratedArticle;
+    try {
+        parsedArticle = JSON.parse(content) as GeneratedArticle;
+    } catch (parseError) {
+        console.error("❌ Error parsing JSON de Ollama:", parseError);
+        // Debug: log content length and character codes around error position
+        console.error(`   Content length: ${content.length}`);
+        // Try to extract position from error message
+        const errorMsg = String(parseError);
+        const positionMatch = errorMsg.match(/position (\d+)/);
+        if (positionMatch) {
+            const pos = parseInt(positionMatch[1], 10);
+            debugStringAtPosition(content, pos);
+        } else {
+            // Default to middle of content
+            debugStringAtPosition(content, Math.floor(content.length / 2));
         }
-        return '<p>';
+        // Second attempt with more aggressive repair
+        let aggressiveContent = content
+            .replace(/[\x00-\x1F\x7F]/g, ' ')  // Remove all control chars
+            .replace(/,\s*([}\]])/g, '$1')     // Remove trailing commas
+            .replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":')  // Quote properties
+            .replace(/"(\d+)":/g, '$1:');      // Unquote numbers
+        
+        try {
+            parsedArticle = JSON.parse(aggressiveContent) as GeneratedArticle;
+            console.log("✅ JSON reparado con estrategia agresiva");
+        } catch {
+            // Third attempt: extract just the keys we need
+            try {
+                const titleMatch = content.match(/"title"\s*:\s*"([^"]+)"/);
+                const summaryMatch = content.match(/"summary"\s*:\s*"([^"]+)"/);
+                const contentMatch = content.match(/"content"\s*:\s*"([\s\S]*?)"\s*,?\s*"/);
+                
+                if (titleMatch && summaryMatch) {
+                    parsedArticle = {
+                        title: titleMatch[1],
+                        summary: summaryMatch[1],
+                        content: contentMatch ? contentMatch[1] : "<p>Content not available</p>",
+                        tags: [],
+                        sentiment: "Neutral ➡️"
+                    };
+                    console.log("✅ JSON reconstruido manualmente");
+                } else {
+                    throw new Error("No se pudo parsear");
+                }
+            } catch {
+                throw new Error(`JSON inválido: no se pudo parsear ni reparar`);
+            }
+        }
+    }
+    
+    // Eliminar conclusiones de IA
+    const clicheRegex = /<p>\s*(\*\*|<b>)?\s*(En conclusi[oó]n|En resumen|Para concluir|Para resumir)[,.:\s]*(?:\*\*|<\/b>)?\s*(.*?)/gi;
+    parsedArticle.content = parsedArticle.content.replace(clicheRegex, (match, p1, p2, p3) => {
+      if (p3) {
+        const capitalizedText = p3.charAt(0).toUpperCase() + p3.slice(1);
+        return `<p>${capitalizedText}`;
+      }
+      return '<p>';
     });
 
-    // Validación básica de la estructura del JSON
     if (!parsedArticle.title || !parsedArticle.summary || !parsedArticle.content) {
-      throw new Error("El JSON devuelto por Ollama no tiene la estructura correcta.");
+      throw new Error("El JSON devuelto no tiene la estructura correcta.");
     }
 
-    if (selectedImageUrl) {
-      parsedArticle.sourceImageUrl = selectedImageUrl;
-    }
-    if (selectedSourceUrl) {
-      parsedArticle.sourceUrl = selectedSourceUrl;
-    }
+    if (selectedImageUrl) parsedArticle.sourceImageUrl = selectedImageUrl;
+    if (selectedSourceUrl) parsedArticle.sourceUrl = selectedSourceUrl;
 
     console.log(`✅ Artículo generado con éxito por Ollama: ${parsedArticle.title}`);
     return parsedArticle;
 
   } catch (error) {
-    console.error("❌ Error generando contenido con Ollama:", error instanceof Error ? error.message : error);
+    console.error("❌ Error generando contenido:", error instanceof Error ? error.message : error);
     return await getFallbackArticle(topic);
   }
 }

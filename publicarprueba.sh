@@ -20,19 +20,16 @@ if [ $? -eq 0 ]; then
     echo "====================================================="
     
     echo -e "\n🔸 BINANCE SQUARE (Modo Prueba):"
-    cd /home/emerito/BinanceSquare || exit
     export $(grep -v '^#' .env | xargs)
     export DRY_RUN=true
     python3 publish_direct.py /home/emerito/emedoteme/tmp/test_article.json
 
     echo -e "\n🔸 TELEGRAM CANAL (Modo Prueba):"
-    cd /home/emerito/TelegramNews || exit
     export $(grep -v '^#' .env | xargs)
     export DRY_RUN=true
     python3 publish_telegram.py /home/emerito/emedoteme/tmp/test_article.json
 
     echo -e "\n🔸 BLUESKY (Modo Prueba):"
-    cd /home/emerito/BlueskyNews || exit
     export $(grep -v '^#' .env | xargs)
     export DRY_RUN=true
     python3 publish_bluesky.py /home/emerito/emedoteme/tmp/test_article.json
@@ -41,7 +38,6 @@ if [ $? -eq 0 ]; then
     echo "====================================================="
     echo "📲 3️⃣ ENVIANDO IMAGEN A TU TELEGRAM PRIVADO..."
     echo "====================================================="
-    cd /home/emerito/TelegramNews || exit
     export $(grep -v '^#' .env | xargs)
     # Ejecutamos el script de envío privado (usará el archivo de test)
     python3 send_private_test.py /home/emerito/emedoteme/tmp/test_article.json

@@ -17,7 +17,6 @@ if [ $? -eq 0 ]; then
     echo "====================================================="
     echo "2️⃣ ENVIANDO A BINANCE SQUARE..."
     echo "====================================================="
-    cd /home/emerito/BinanceSquare || exit
     export $(grep -v '^#' .env | xargs)
     python3 publish_direct.py /home/emerito/emedoteme/tmp/latest_article.json
 
@@ -25,14 +24,12 @@ if [ $? -eq 0 ]; then
     echo "====================================================="
     echo "3️⃣ ENVIANDO A TELEGRAM..."
     echo "====================================================="
-    cd /home/emerito/TelegramNews || exit
     export $(grep -v '^#' .env | xargs)
     python3 publish_telegram.py /home/emerito/emedoteme/tmp/latest_article.json
 
     echo "====================================================="
     echo "4️⃣ ENVIANDO A BLUESKY..."
     echo "====================================================="
-    cd /home/emerito/BlueskyNews || exit
     export $(grep -v '^#' .env | xargs)
     python3 publish_bluesky.py /home/emerito/emedoteme/tmp/latest_article.json
 

@@ -34,7 +34,8 @@ async function saveImageToSupabase(imageUrl: string, slug: string): Promise<stri
 }
 
 function getFallbackImageByTopic(topic: string): { url: string; caption: string } {
-  // ...existing code from getFallbackImageByTopic...
+  // Implementación mínima temporal para evitar error de compilación
+  return { url: '', caption: `Imagen de fallback para ${topic}` };
 }
 
 async function unloadOllamaModel() {

@@ -1,3 +1,5 @@
-import { searchArticles, simpleSearchArticles, SearchOptions } from './article.service';
+import { searchArticles, simpleSearchArticles } from './article.service';
+import type { SearchOptions } from './article.service';
 
-export { searchArticles, simpleSearchArticles, SearchOptions };
+export { searchArticles, simpleSearchArticles };
+export type { SearchOptions };

@@ -48,5 +48,6 @@ export async function generateArticleImage(
   imageData: ArticleImageData,
   originalImageUrl?: string | null
 ): Promise<{ imageUrl: string; caption: string }> {
-  // ...existing code from generateArticleImage...
+  // Implementación mínima temporal para evitar error de compilación
+  return { imageUrl: '', caption: 'Imagen generada por IA (placeholder)' };
 }

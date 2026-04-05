@@ -3,8 +3,7 @@ import {
   generateImageWithAIHorde 
 } from '../ai/aihorde-image.service';
 import {
-  analyzeImageWithGemini,
-  generateImprovedCaption
+  analyzeImageWithGemini
 } from '../ai/gemini-vision.service';
 
 // Inicializar cliente de Supabase (usamos Service Role Key para poder subir archivos al bucket sin RLS auth)

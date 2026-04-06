@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { generateArticleContent } from './modules/ai/ai.service.js';
+import { fetchLatestNews } from './modules/news/news-sources.service.js';
 import { siteConfig } from './config/site.js';
 
 const prisma = new PrismaClient();
@@ -19,10 +20,15 @@ async function main() {
       orderBy: { createdAt: 'desc' },
       take: 10,
     });
-    const recentTitles = recentArticles.map(a => a.title);
+    const recentTitles = recentArticles.map((a: { title: string }) => a.title);
     console.log(`📰 Títulos recientes para evitar: ${recentTitles.length}`);
     
-    const aiResponse = await generateArticleContent(recentTitles);
+    // Fetch noticias reales de fuentes fiables
+    const newsContext = await fetchLatestNews(recentTitles);
+    console.log(`📰 Noticias obtenidas: ${newsContext.newsItems.length} de ${newsContext.sourcesResponded.join(', ') || 'ninguna fuente'}`);
+    
+    // Generar artículo con contexto de noticias reales
+    const aiResponse = await generateArticleContent(recentTitles, newsContext.newsItems);
     
     const slug = aiResponse.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
     
@@ -44,6 +50,7 @@ async function main() {
       imageUrl = options[0];
     }
 
+    const hasRealSources = newsContext.newsItems.length > 0;
     const newArticle = await prisma.article.create({
       data: {
         title: aiResponse.title,
@@ -52,9 +59,12 @@ async function main() {
         content: aiResponse.content,
         imageUrl: imageUrl,
         imageCaption: aiResponse.imageCaption,
+        sourceUrl: aiResponse.sourceUrl || null,
         categoryId: randomCategory.id,
         author: siteConfig.author,
         published: true,
+        isOriginal: !hasRealSources,
+        tags: aiResponse.tags || [],
       },
       include: {
         category: true,
@@ -67,6 +77,11 @@ async function main() {
     console.log("URL de Imagen:", newArticle.imageUrl);
     console.log("Pie de foto:", newArticle.imageCaption);
     console.log("Resumen:", newArticle.summary);
+    if (newArticle.sourceUrl) {
+      console.log("Fuente principal:", newArticle.sourceUrl);
+    }
+    console.log("Basado en fuentes reales:", !newArticle.isOriginal);
+    console.log("Tags:", newArticle.tags);
     
   } catch (error) {
     console.error("Error:", error);
@@ -76,3 +91,4 @@ async function main() {
 }
 
 main();
+

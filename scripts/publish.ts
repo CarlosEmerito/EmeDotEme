@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { generateArticleContent, translateArticleContent } from "../modules/ai/ai.service";
+import { fetchLatestNews } from "../modules/news/news-sources.service";
 import { generateArticleImageAndAnalyzeQA } from "../modules/images/image.service";
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
@@ -191,11 +192,15 @@ async function main() {
       orderBy: { createdAt: 'desc' },
       take: 10,
     });
-    const recentTitles = recentArticles.map(a => a.title);
+    const recentTitles = recentArticles.map((a: { title: string }) => a.title);
     console.log(`📰 Títulos recientes para evitar: ${recentTitles.length}`);
     
+    // Fetch noticias reales de fuentes fiables
+    const newsContext = await fetchLatestNews(recentTitles);
+    console.log(`📰 Noticias obtenidas: ${newsContext.newsItems.length} de ${newsContext.sourcesResponded.join(', ') || 'ninguna fuente'}`);
+    
     const t0 = Date.now();
-    let aiResponse = await generateArticleContent(recentTitles);
+    let aiResponse: any = await generateArticleContent(recentTitles, newsContext.newsItems);
     console.log('📝 ImagePrompt presente:', aiResponse.imagePrompt ? 'SÍ' : 'NO');
     if (aiResponse.imagePrompt) {
       console.log('   Prompt:', aiResponse.imagePrompt.substring(0, 100) + '...');
@@ -231,36 +236,35 @@ async function main() {
       ]
     };
 
-    // Procesar imagen usando el nuevo flujo con Gemini API
-    let imageUrl = aiResponse.sourceImageUrl;
-    let imageCaption = aiResponse.imageCaption || "";
+    // Procesar imagen con el pipeline: fuente RSS → AI Horde × 2 → Unsplash
+    // Priorizar imagen de la fuente RSS sobre sourceImageUrl del AI
+    const rssImageUrl = newsContext.newsItems[0]?.imageUrl || aiResponse.sourceImageUrl;
     
-    if (aiResponse.imagePrompt || aiResponse.sourceImageUrl) {
-      const imageData = {
-        title: aiResponse.title,
-        slug: slug,
-        topic: randomCategory.name,
-        originalPrompt: aiResponse.imagePrompt,
-        summary: aiResponse.summary
-      };
-      
-      try {
-        const imageResult = await generateArticleImageAndAnalyzeQA(imageData, aiResponse.sourceImageUrl);
-imageUrl = imageResult.imageUrl;
-imageCaption = imageResult.caption || aiResponse.imageCaption || `Ilustración sobre ${randomCategory.name}`;
-console.log(`✅ Imagen procesada: ${imageUrl ? imageUrl.substring(0, 100) : 'N/A'}...`);
-      } catch (error) {
-        console.error("❌ Error procesando imagen:", error);
-        // Fallback a imágenes de Unsplash
-        const options = fallbackImages[randomCategory.name] || fallbackImages["Tecnología"];
-        imageUrl = options[Math.floor(Math.random() * options.length)];
-        imageCaption = aiResponse.imageCaption || `Ilustración sobre ${randomCategory.name}`;
+    const imageData = {
+      title: aiResponse.title,
+      slug: slug,
+      topic: randomCategory.name,
+      originalPrompt: aiResponse.imagePrompt,
+      summary: aiResponse.summary
+    };
+    
+    let imageUrl: string;
+    let imageCaption: string;
+    
+    try {
+      const imageResult = await generateArticleImageAndAnalyzeQA(imageData, rssImageUrl);
+      imageUrl = imageResult.imageUrl;
+      imageCaption = imageResult.caption || aiResponse.imageCaption || `Ilustración sobre ${randomCategory.name}`;
+      console.log(`✅ Imagen final (${imageResult.source}): ${imageUrl.substring(0, 100)}...`);
+      console.log(`   Pasos: ${imageResult.attempts.join(' → ')}`);
+      if (imageResult.errors.length > 0) {
+        console.log(`   Errores recuperados: ${imageResult.errors.join(', ')}`);
       }
-    } else {
-      // Si no hay prompt ni imagen fuente, usar fallback
+    } catch (error) {
+      console.error("❌ Error crítico en pipeline de imagen:", error);
       const options = fallbackImages[randomCategory.name] || fallbackImages["Tecnología"];
       imageUrl = options[Math.floor(Math.random() * options.length)];
-      imageCaption = aiResponse.imageCaption || `Imagen relacionada con ${randomCategory.name}`;
+      imageCaption = aiResponse.imageCaption || `Ilustración sobre ${randomCategory.name}`;
     }
 
     console.log("\n💾 Guardando en la Base de Datos...");
@@ -276,7 +280,8 @@ console.log(`✅ Imagen procesada: ${imageUrl ? imageUrl.substring(0, 100) : 'N/
         tags: aiResponse.tags || [],
         imageUrl: imageUrl,
         imageCaption: imageCaption,
-        sourceUrl: aiResponse.sourceUrl,
+        sourceUrl: aiResponse.sourceUrl || null,
+        isOriginal: !(newsContext.newsItems.length > 0),
         sentiment: aiResponse.sentiment || "Neutral ➡️",
         categoryId: randomCategory.id,
         author: 'Carlos "Emérito" López Lovera',

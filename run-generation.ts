@@ -1,4 +1,5 @@
 import { generateArticleContent } from './modules/ai/ai.service.js';
+import { fetchLatestNews } from './modules/news/news-sources.service.js';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -13,10 +14,15 @@ async function main() {
     orderBy: { createdAt: 'desc' },
       take: 10,
   });
-  const recentTitles = recentArticles.map(a => a.title);
+  const recentTitles = recentArticles.map((a: { title: string }) => a.title);
   console.log(`📰 Títulos recientes para evitar: ${recentTitles.length}`);
   
-  const aiResponse = await generateArticleContent(recentTitles);
+  // Fetch noticias reales de fuentes fiables
+  const newsContext = await fetchLatestNews(recentTitles);
+  console.log(`📰 Noticias obtenidas: ${newsContext.newsItems.length} de ${newsContext.sourcesResponded.join(', ') || 'ninguna fuente'}`);
+
+  // Generar artículo con contexto de noticias reales
+  const aiResponse = await generateArticleContent(recentTitles, newsContext.newsItems);
   console.log("Articulo generado. Insertando en BD...");
 
   let category = await prisma.category.findFirst({ where: { name: "Web3" } });
@@ -26,6 +32,7 @@ async function main() {
 
   const slug = aiResponse.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now();
 
+  const hasRealSources = newsContext.newsItems.length > 0;
   const newArticle = await prisma.article.create({
     data: {
       title: aiResponse.title,
@@ -34,14 +41,21 @@ async function main() {
       content: aiResponse.content,
       imageUrl: aiResponse.sourceImageUrl || 'https://via.placeholder.com/800',
       imageCaption: aiResponse.imageCaption,
+      sourceUrl: aiResponse.sourceUrl || null,
       categoryId: category.id,
       author: 'Carlos "Emérito" López Lovera',
       published: true,
+      isOriginal: !hasRealSources,
+      tags: aiResponse.tags || [],
     }
   });
 
   console.log("--- RESULTADO DE LA BASE DE DATOS ---");
   console.log(JSON.stringify(newArticle, null, 2));
+  if (newArticle.sourceUrl) {
+    console.log(`\n📎 Fuente principal: ${newArticle.sourceUrl}`);
+  }
+  console.log(`📰 Basado en fuentes reales: ${!newArticle.isOriginal}`);
 }
 
 main().catch(e => {
@@ -50,3 +64,4 @@ main().catch(e => {
 }).finally(async () => {
   await prisma.$disconnect();
 });
+

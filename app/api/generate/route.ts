@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { siteConfig } from "@/config/site";
 import { generateArticleContent } from "@/modules/ai/ai.service";
+import { fetchLatestNews } from "@/modules/news/news-sources.service";
 
-export const maxDuration = 300; // Allow up to 5 minutes for AI generation
+export const maxDuration = 300; // Allow up to 5 minutes for AI generation + RSS fetch
 
 export async function GET(req: Request) {
   const authHeader = req.headers.get('authorization');
@@ -36,15 +37,19 @@ export async function GET(req: Request) {
       orderBy: { createdAt: 'desc' },
       take: 10,
     });
-    const recentTitles = recentArticles.map(a => a.title);
+    const recentTitles = recentArticles.map((a: { title: string }) => a.title);
     console.log(`📰 Títulos recientes para evitar: ${recentTitles.length}`);
 
-    // 2. Llamada al servicio de IA
-    const aiResponse = await generateArticleContent(recentTitles);
+    // 2. Fetch noticias reales de fuentes fiables
+    const newsContext = await fetchLatestNews(recentTitles);
+    console.log(`📰 Noticias obtenidas: ${newsContext.newsItems.length} de ${newsContext.sourcesResponded.join(', ') || 'ninguna fuente'}`);
+
+    // 3. Llamada al servicio de IA con contexto de noticias reales
+    const aiResponse = await generateArticleContent(recentTitles, newsContext.newsItems);
     
     const slug = aiResponse.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
-    // Fallback images if no image was extracted from the RSS feed
+    // Fallback images if no image was extracted
     const fallbackImages: Record<string, string[]> = {
       "Mercados": [
         "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop",
@@ -69,25 +74,34 @@ export async function GET(req: Request) {
       imageUrl = options[Math.floor(Math.random() * options.length)];
     }
 
-    // 3. Guardar el artículo generado en la base de datos
+    // 4. Guardar el artículo generado con fuentes
+    const hasRealSources = newsContext.newsItems.length > 0;
     const newArticle = await prisma.article.create({
       data: {
         title: aiResponse.title,
-        slug: slug + '-' + Date.now(), // Para evitar duplicados en la demo
+        slug: slug + '-' + Date.now(),
         summary: aiResponse.summary,
         content: aiResponse.content,
         imageUrl: imageUrl,
         imageCaption: aiResponse.imageCaption,
+        sourceUrl: aiResponse.sourceUrl || null,
         categoryId: randomCategory.id,
         author: siteConfig.author,
         published: true,
+        isOriginal: !hasRealSources, // false si se basa en fuentes externas
+        tags: aiResponse.tags || [],
       },
       include: {
         category: true,
       }
     });
 
-    return NextResponse.json({ success: true, article: newArticle }, { status: 201 });
+    return NextResponse.json({
+      success: true,
+      article: newArticle,
+      newsSourcesUsed: newsContext.sourcesResponded,
+      totalNewsFetched: newsContext.totalFetched,
+    }, { status: 201 });
   } catch (error) {
     console.error("Error generating article:", error);
     return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });

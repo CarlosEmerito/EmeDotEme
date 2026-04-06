@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { generateArticleContent, translateArticleContent } from "../modules/ai/ai.service";
+import { fetchLatestNews } from "../modules/news/news-sources.service";
 import { generateArticleImageAndAnalyzeQA } from "../modules/images/image.service";
-import { generateImageWithAIHorde } from "../modules/ai/aihorde-image.service";
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
 import * as path from "path";
@@ -36,73 +36,38 @@ async function main() {
       orderBy: { createdAt: 'desc' },
       take: 10,
     });
-    const recentTitles = recentArticles.map(a => a.title);
+    const recentTitles = recentArticles.map((a: { title: string }) => a.title);
     console.log(`📰 Títulos recientes para evitar: ${recentTitles.length}`);
     
+    // Fetch noticias reales de fuentes fiables
+    const newsContext = await fetchLatestNews(recentTitles);
+    console.log(`📰 Noticias obtenidas: ${newsContext.newsItems.length} de ${newsContext.sourcesResponded.join(', ') || 'ninguna fuente'}`);
+    
     const t0 = Date.now();
-    let aiResponse = await generateArticleContent(recentTitles);
+    let aiResponse: any = await generateArticleContent(recentTitles, newsContext.newsItems);
     aiResponse = await translateArticleContent(aiResponse);
     const t1 = Date.now();
     console.log(`\n⏱️ Tiempo de generación: ${((t1 - t0) / 1000).toFixed(2)} segundos`);
 
     const slug = aiResponse.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now();
 
-    const fallbackImages: Record<string, string[]> = {
-      "Mercados": [
-        "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1605792657660-596af9009e82?q=80&w=1200&auto=format&fit=crop",
-      ],
-      "Tecnología": [
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=1200&auto=format&fit=crop",
-      ],
-      "Web3": [
-        "https://images.unsplash.com/photo-1639762681485-074b7f4f039a?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?q=80&w=1200&auto=format&fit=crop"
-      ]
-    };
-
-    let imageUrl = aiResponse.sourceImageUrl;
-    let imageSource = "sourceImageUrl original";
+    // Procesar imagen con el pipeline unificado
+    const rssImageUrl = newsContext.newsItems[0]?.imageUrl || aiResponse.sourceImageUrl;
     
-    // INTENTAR GENERAR IMAGEN CON AI HORDE (gratuito, comunitario)
-    if (aiResponse.imagePrompt) {
-      console.log("\n🎨 INTENTANDO GENERAR IMAGEN CON AI HORDE...");
-      console.log(`📝 Prompt: ${aiResponse.imagePrompt}`);
-      
-      const aiHordeImageUrl = await generateImageWithAIHorde(
-        aiResponse.imagePrompt,
-        slug,
-        {}  // Use DEFAULT_PARAMS from service (max quality)
-      );
-      
-      if (aiHordeImageUrl) {
-        imageUrl = aiHordeImageUrl;
-        imageSource = "AI Horde (comunitario)";
-        console.log(`✅ IMAGEN GENERADA CON AI HORDE: ${imageUrl}`);
-      } else {
-        console.log("❌ AI Horde falló, intentando con Stable Diffusion local...");
-        
-         // Ya no se usa Stable Diffusion local: eliminada lógica legacy.
-         // TODO: todo el flujo se hace con generateArticleImageAndAnalyzeQA.
+    const imageResult = await generateArticleImageAndAnalyzeQA({
+      title: aiResponse.title,
+      slug: slug,
+      topic: randomCategory.name,
+      originalPrompt: aiResponse.imagePrompt,
+      summary: aiResponse.summary
+    }, rssImageUrl, { testMode: true });
 
-      }
-    }
-
-    // Fallback final a Unsplash
-    if (!imageUrl) {
-      console.log("⚠️ Usando imagen fallback de Unsplash...");
-      const options = fallbackImages[randomCategory.name] || fallbackImages["Tecnología"];
-      imageUrl = options[Math.floor(Math.random() * options.length)];
-      imageSource = "Unsplash fallback";
-    }
-    
-    console.log(`📊 RESUMEN IMAGEN: ${imageUrl}`);
-    console.log(`📊 FUENTE IMAGEN: ${imageSource}`);
+    console.log(`📊 RESUMEN IMAGEN: ${imageResult.imageUrl}`);
+    console.log(`📊 FUENTE IMAGEN: ${imageResult.source}`);
+    console.log(`📊 PASOS: ${imageResult.attempts.join(' → ')}`);
 
     console.log("\n💾 Saltando guardado en Base de Datos (MODO PRUEBA)...");
     
-    // Simular el objeto creado para evitar tocar la DB
     const newArticle = {
       title: aiResponse.title,
       titleEn: aiResponse.titleEn,
@@ -112,8 +77,8 @@ async function main() {
       content: aiResponse.content,
       contentEn: aiResponse.contentEn,
       tags: aiResponse.tags || [],
-      imageUrl: imageUrl,
-      imageCaption: aiResponse.imageCaption,
+      imageUrl: imageResult.imageUrl,
+      imageCaption: imageResult.caption,
       sourceUrl: aiResponse.sourceUrl,
       sentiment: aiResponse.sentiment || "Neutral ➡️",
       category: { name: randomCategory.name },
@@ -125,7 +90,7 @@ async function main() {
     console.log(`- Título: ${newArticle.title}`);
     console.log(`- Sentimiento: ${newArticle.sentiment}`);
     console.log(`- Categoría: ${newArticle.category.name}`);
-    console.log(`- URL Imagen (${imageSource}): ${newArticle.imageUrl}`);
+    console.log(`- URL Imagen (${imageResult.source}): ${newArticle.imageUrl}`);
     console.log(`- Resumen: ${newArticle.summary}`);
     
     // Guardar un archivo temporal para Binance Square
@@ -133,15 +98,6 @@ async function main() {
     if (!fs.existsSync(tmpDir)) {
       fs.mkdirSync(tmpDir);
     }
-    
-    // Ejecutar el pipeline completo de imagen y QA
-    const imageResult = await generateArticleImageAndAnalyzeQA({
-      title: aiResponse.title,
-      slug: slug,
-      topic: randomCategory.name,
-      originalPrompt: aiResponse.imagePrompt,
-      summary: aiResponse.summary
-    }, aiResponse.sourceImageUrl, { testMode: true });
 
     const articleData = {
       title: newArticle.title,
@@ -150,11 +106,10 @@ async function main() {
       imageUrl: imageResult.imageUrl,
       caption: imageResult.caption,
       sentiment: newArticle.sentiment,
-      mainQA: imageResult.mainQA,
-      originalQA: imageResult.originalQA,
-      flows: imageResult.flows,
-      usedFallback: imageResult.usedFallback,
-      errors: imageResult.errors
+      qaResult: imageResult.qaResult,
+      source: imageResult.source,
+      attempts: imageResult.attempts,
+      errors: imageResult.errors,
     };
 
     const jsonPath = path.join(tmpDir, 'test_article.json');

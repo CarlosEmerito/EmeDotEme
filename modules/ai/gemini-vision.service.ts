@@ -144,13 +144,13 @@ Devuelve SOLO el JSON de análisis, nada más.`;
 
       const parsed = JSON.parse(cleaned.substring(jsonStart, jsonEnd + 1)) as ImageAnalysisResult;
 
-      // Validar estructura mínima
       if (typeof parsed.coherente !== 'boolean' || typeof parsed.calidad_aceptable !== 'boolean') {
-        console.error(`❌ Estructura JSON incompleta de Gemini Vision`);
-        continue;
+        throw new Error('Estructura JSON incompleta devuelta por Gemini');
       }
 
-      console.log(`✅ Gemini Vision (${keyName}): coherente=${parsed.coherente}, calidad=${parsed.calidad_aceptable}, problemas=${parsed.problemas_detectados?.length || 0}`);
+      console.log(`✅ Gemini (${VISION_MODEL}):`);
+      console.log(JSON.stringify(parsed, null, 2));
+      
       return parsed;
 
     } catch (error) {

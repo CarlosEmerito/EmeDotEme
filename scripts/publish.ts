@@ -185,18 +185,23 @@ async function main() {
   const randomCategory = allCategories[Math.floor(Math.random() * allCategories.length)];
 
   try {
-    // Obtener títulos recientes para evitar repetición
+    // Obtener títulos y URLs recientes para evitar repetición
     const recentArticles = await prisma.article.findMany({
-      select: { title: true },
+      select: { title: true, sourceUrl: true },
       where: { published: true },
       orderBy: { createdAt: 'desc' },
-      take: 10,
+      take: 20, // Aumentado para mayor cobertura de deduplicación
     });
     const recentTitles = recentArticles.map((a: { title: string }) => a.title);
+    const recentSourceUrls = recentArticles
+      .map((a: { sourceUrl: string | null }) => a.sourceUrl)
+      .filter((url: string | null): url is string => Boolean(url));
+      
     console.log(`📰 Títulos recientes para evitar: ${recentTitles.length}`);
+    console.log(`📰 URLs recientes para evitar: ${recentSourceUrls.length}`);
     
     // Fetch noticias reales de fuentes fiables
-    const newsContext = await fetchLatestNews(recentTitles);
+    const newsContext = await fetchLatestNews(recentTitles, recentSourceUrls);
     console.log(`📰 Noticias obtenidas: ${newsContext.newsItems.length} de ${newsContext.sourcesResponded.join(', ') || 'ninguna fuente'}`);
     
     const t0 = Date.now();

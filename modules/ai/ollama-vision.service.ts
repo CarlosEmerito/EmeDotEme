@@ -111,7 +111,9 @@ Devuelve SOLO el JSON de análisis, nada más.`;
       throw new Error('Estructura JSON incompleta devuelta por Ollama');
     }
 
-    console.log(`✅ Ollama (${OLLAMA_VISION_MODEL}): coherente=${parsed.coherente}, calidad=${parsed.calidad_aceptable}, problemas=${parsed.problemas_detectados?.length || 0}`);
+    console.log(`✅ Ollama (${OLLAMA_VISION_MODEL}):`);
+    console.log(JSON.stringify(parsed, null, 2));
+    
     return parsed;
 
   } catch (error) {

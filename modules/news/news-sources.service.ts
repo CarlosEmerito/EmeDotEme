@@ -232,16 +232,24 @@ function deduplicateNews(items: NewsItem[]): NewsItem[] {
  */
 function filterAlreadyCovered(
   news: NewsItem[],
-  recentTitles: string[]
+  recentTitles: string[],
+  recentSourceUrls: string[]
 ): NewsItem[] {
-  if (recentTitles.length === 0) return news;
+  if (recentTitles.length === 0 && recentSourceUrls.length === 0) return news;
 
   return news.filter((item) => {
+    // 1. Precise check: Exact URL match
+    if (item.link && recentSourceUrls.includes(item.link)) {
+      console.log(`  🔄 Saltando (URL ya cubierta): "${item.link}"`);
+      return false;
+    }
+
+    // 2. Fallback check: Title similarity
     const isCovered = recentTitles.some(
       (recentTitle) => titleSimilarity(item.title, recentTitle) > 0.4
     );
     if (isCovered) {
-      console.log(`  🔄 Saltando (ya cubierta): "${item.title.substring(0, 60)}..."`);
+      console.log(`  🔄 Saltando (título ya cubierto): "${item.title.substring(0, 60)}..."`);
     }
     return !isCovered;
   });
@@ -304,6 +312,7 @@ export interface FetchedNewsContext {
  */
 export async function fetchLatestNews(
   recentTitles: string[] = [],
+  recentSourceUrls: string[] = [],
   maxNewsPerSource: number = 10
 ): Promise<FetchedNewsContext> {
   console.log('\n📰 ═══════════════════════════════════════════════════════');
@@ -351,7 +360,7 @@ export async function fetchLatestNews(
   console.log(`📊 Tras deduplicar: ${deduplicated.length} noticias únicas`);
 
   // Filtrar ya cubiertas
-  const fresh = filterAlreadyCovered(deduplicated, recentTitles);
+  const fresh = filterAlreadyCovered(deduplicated, recentTitles, recentSourceUrls);
   console.log(`📊 Tras filtrar cubiertas: ${fresh.length} noticias nuevas`);
 
   // Agrupar por tema

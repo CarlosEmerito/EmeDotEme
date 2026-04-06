@@ -15,6 +15,7 @@
  */
 
 import { analyzeImageWithGemini, type ImageAnalysisResult } from '../ai/gemini-vision.service';
+import { analyzeImageWithOllama } from '../ai/ollama-vision.service';
 import { generateImageWithAIHorde } from '../ai/aihorde-image.service';
 import { createClient } from '@supabase/supabase-js';
 
@@ -158,7 +159,14 @@ async function isImageValid(
 ): Promise<{ valid: boolean; qa: ImageAnalysisResult | null; error?: string }> {
   try {
     console.log(`🔍 [QA ${stepName}] Analizando imagen...`);
-    const qa = await analyzeImageWithGemini(imageUrl, title, summary, caption);
+    
+    let qa: ImageAnalysisResult | null = null;
+    try {
+      qa = await analyzeImageWithGemini(imageUrl, title, summary, caption);
+    } catch (geminiError) {
+      console.warn(`⚠️ [QA ${stepName}] Gemini Vision falló, intentando fallback con Ollama local... (${geminiError})`);
+      qa = await analyzeImageWithOllama(imageUrl, title, summary, caption);
+    }
 
     const hasWatermark = qa.problemas_detectados?.some(
       (p: string) => p.toLowerCase().includes('marca de agua') || p.toLowerCase().includes('watermark')
@@ -179,7 +187,7 @@ async function isImageValid(
     return { valid, qa };
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
-    console.error(`❌ [QA ${stepName}] Error de análisis: ${msg}`);
+    console.error(`❌ [QA ${stepName}] Error de análisis (ambos modelos fallaron): ${msg}`);
     return { valid: false, qa: null, error: msg };
   }
 }

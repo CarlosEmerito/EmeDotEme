@@ -301,26 +301,16 @@ export async function generateArticleImageAndAnalyzeQA(
 
   const hordeUrl1 = await generateWithAIHorde(hordePrompt, imageData.slug, 1);
   if (hordeUrl1) {
-    const { valid, qa } = await isImageValid(
-      hordeUrl1, imageData.title, imageData.summary || '', caption, 'AI Horde #1'
-    );
-
-    if (valid) {
-      const permanentUrl = await saveImageToSupabase(hordeUrl1, imageData.slug);
-      const finalCaption = qa?.caption_mejorado || caption;
-
-      console.log('🖼️ ═══ RESULTADO: AI Horde intento 1 aprobada ═══\n');
-      return {
-        imageUrl: permanentUrl,
-        caption: finalCaption,
-        qaResult: qa,
-        source: 'ai_horde',
-        attempts,
-        errors,
-      };
-    } else {
-      errors.push('AI Horde #1 no pasó QA');
-    }
+    const permanentUrl = await saveImageToSupabase(hordeUrl1, imageData.slug);
+    console.log('🖼️ ═══ RESULTADO: AI Horde intento 1 usada (sin QA) ═══\n');
+    return {
+      imageUrl: permanentUrl,
+      caption: caption,
+      qaResult: null,
+      source: 'ai_horde',
+      attempts,
+      errors,
+    };
   } else {
     errors.push('AI Horde #1 falló al generar');
   }
@@ -333,26 +323,16 @@ export async function generateArticleImageAndAnalyzeQA(
 
   const hordeUrl2 = await generateWithAIHorde(hordePrompt, `${imageData.slug}-retry`, 2);
   if (hordeUrl2) {
-    const { valid, qa } = await isImageValid(
-      hordeUrl2, imageData.title, imageData.summary || '', caption, 'AI Horde #2'
-    );
-
-    if (valid) {
-      const permanentUrl = await saveImageToSupabase(hordeUrl2, imageData.slug);
-      const finalCaption = qa?.caption_mejorado || caption;
-
-      console.log('🖼️ ═══ RESULTADO: AI Horde intento 2 aprobada ═══\n');
-      return {
-        imageUrl: permanentUrl,
-        caption: finalCaption,
-        qaResult: qa,
-        source: 'ai_horde',
-        attempts,
-        errors,
-      };
-    } else {
-      errors.push('AI Horde #2 no pasó QA');
-    }
+    const permanentUrl = await saveImageToSupabase(hordeUrl2, imageData.slug);
+    console.log('🖼️ ═══ RESULTADO: AI Horde intento 2 usada (sin QA) ═══\n');
+    return {
+      imageUrl: permanentUrl,
+      caption: caption,
+      qaResult: null,
+      source: 'ai_horde',
+      attempts,
+      errors,
+    };
   } else {
     errors.push('AI Horde #2 falló al generar');
   }

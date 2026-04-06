@@ -32,7 +32,8 @@ IMPORTANTE sobre coherencia:
 
 IMPORTANTE sobre calidad:
 - Rechaza imágenes borrosas, pixeladas, con resolución muy baja
-- Rechaza imágenes con marcas de agua visibles, logos superpuestos o texto sobrepuesto
+- RECHAZA ROTUNDAMENTE imágenes con marcas de agua, logos superpuestos, texto sobrepuesto o firmas.
+- Presta ESPECIAL ATENCIÓN a marcas de agua o logos de fuentes de noticias (ej: "Decrypt", "CoinDesk", "Cointelegraph", "The Block", "Bloomberg", "Reuters"). Si ves ALGÚN rastro de estos nombres o logos en la imagen, DEBES rechazarla marcando calidad_aceptable: false y detallando el problema.
 - Rechaza imágenes que sean capturas de pantalla de mala calidad
 - ACEPTA fotos editoriales profesionales, ilustraciones de calidad, infografías limpias
 
@@ -42,7 +43,7 @@ Debes responder ÚNICAMENTE con un objeto JSON con esta estructura exacta:
   "razon_coherencia": "explicación breve de por qué es coherente o no",
   "descripcion": "qué muestra la imagen en una frase",
   "calidad_aceptable": true/false,
-  "problemas_detectados": ["lista de problemas si los hay"],
+  "problemas_detectados": ["lista de problemas si los hay (ej: 'marca de agua de decrypt detectada')"],
   "caption_mejorado": "un pie de foto profesional y humano (solo si es coherente)"
 }`;
 

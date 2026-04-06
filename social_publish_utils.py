@@ -54,9 +54,8 @@ def log_event(msg, level=logging.INFO):
 
 def log_historial(red, status, title, extra=None):
     now = datetime.now().isoformat(timespec="seconds")
-    entry = (
-        f'"{now}","{red}","{status}","{title}","{(extra or "").replace('"', "'")}"\n'
-    )
+    extra_clean = (extra or "").replace('"', "'")
+    entry = f'"{now}","{red}","{status}","{title}","{extra_clean}"\n'
     with open(HISTORIAL_FILE, "a", encoding="utf-8") as f:
         f.write(entry)
 
@@ -72,38 +71,37 @@ def resumen_ai(
     max_output_tokens=600,
     **kwargs,
 ):
-    # Gemini primero si se quiere
-    if prefer_gemini and gemini_api_key:
-        try:
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={gemini_api_key}"
-            payload = {
-                "contents": [{"parts": [{"text": prompt}]}],
-                "generationConfig": {
-                    "temperature": 0.7,
-                    "maxOutputTokens": max_output_tokens,
-                    "responseMimeType": "text/plain",
-                },
-            }
-            r = requests.post(url, json=payload, timeout=45)
-            if r.status_code == 200:
-                result = r.json()
-                candidates = result.get("candidates", [])
-                if candidates:
-                    return candidates[0]["content"]["parts"][0]["text"].strip()
-            elif r.status_code == 429 and gemini_api_key_2:
-                return resumen_ai(
-                    prompt,
-                    ollama_model,
-                    gemini_api_key_2,
-                    gemini_api_key_3,
-                    None,
-                    prefer_gemini,
-                    max_output_tokens,
-                )
-            else:
-                log_event(f"[warn] Gemini API error {r.status_code}", logging.WARNING)
-        except Exception as e:
-            log_event(f"[warn] Gemini fallo: {e}", logging.WARNING)
+    # Gemini primero si se quiere — prueba las 3 keys en orden
+    if prefer_gemini:
+        gemini_keys = [k for k in [gemini_api_key, gemini_api_key_2, gemini_api_key_3] if k]
+        key_names = ["PRIMARIA", "SECUNDARIA", "TERCIARIA"]
+        for idx, key in enumerate(gemini_keys):
+            kname = key_names[idx] if idx < len(key_names) else f"EXTRA_{idx+1}"
+            try:
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
+                payload = {
+                    "contents": [{"parts": [{"text": prompt}]}],
+                    "generationConfig": {
+                        "temperature": 0.7,
+                        "maxOutputTokens": max_output_tokens,
+                        "responseMimeType": "text/plain",
+                    },
+                }
+                r = requests.post(url, json=payload, timeout=45)
+                if r.status_code == 200:
+                    result = r.json()
+                    candidates = result.get("candidates", [])
+                    if candidates:
+                        return candidates[0]["content"]["parts"][0]["text"].strip()
+                elif r.status_code == 429:
+                    log_event(f"[warn] Gemini {kname} cuota excedida (429), probando siguiente...", logging.WARNING)
+                    continue
+                else:
+                    log_event(f"[warn] Gemini {kname} error {r.status_code}, probando siguiente...", logging.WARNING)
+                    continue
+            except Exception as e:
+                log_event(f"[warn] Gemini {kname} fallo: {e}", logging.WARNING)
+                continue
     # Fallback Ollama
     try:
         payload = {"model": ollama_model, "prompt": prompt, "stream": False}

@@ -163,33 +163,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <div dangerouslySetInnerHTML={{ __html: article.content }} />
         </article>
 
-        {/* Source Attribution */}
-        {article.sourceUrl && (
-          <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/50 rounded-lg">
-            <div className="flex items-center gap-3">
-              <span className="flex-shrink-0 w-8 h-8 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 text-sm">📰</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-blue-900 dark:text-blue-200">Fuente original</p>
-                <a
-                  href={article.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate block"
-                >
-                  {new URL(article.sourceUrl).hostname.replace('www.', '')} →
-                </a>
-              </div>
-              <a
-                href={article.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-shrink-0 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-md transition-colors"
-              >
-                Ver fuente
-              </a>
-            </div>
-          </div>
-        )}
 
         {/* Footer info (Tags & Sentiment) */}
         <div className="mt-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-t border-zinc-100 dark:border-zinc-800 pt-8">

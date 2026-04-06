@@ -90,11 +90,10 @@ export async function generateArticleContent(
 REGLAS IMPORTANTES:
 1. BASA tu artículo ÚNICAMENTE en la información de las fuentes proporcionadas. NO inventes datos, cifras ni declaraciones.
 2. ESCRIBE en español, aunque las fuentes estén en inglés. Traduce y adapta el contenido.
-3. CITA las fuentes originales incluyendo enlaces HTML a las URLs proporcionadas.
-4. Incluye al final del artículo una sección "Fuentes" con enlaces a todas las fuentes consultadas.
-5. El contenido debe ser informativo, bien estructurado y profesional.
-6. NO copies textualmente. Analiza, sintetiza y añade contexto editorial.
-7. Si hay varias fuentes sobre el mismo tema, cruza la información para dar un análisis más completo.`
+3. NO incluyas ninguna sección de "Fuentes" ni enlaces a las fuentes originales en el contenido HTML. La atribución se maneja por separado.
+4. El contenido debe ser informativo, bien estructurado y profesional.
+5. NO copies textualmente. Analiza, sintetiza y añade contexto editorial.
+6. Si hay varias fuentes sobre el mismo tema, cruza la información para dar un análisis más completo.`
     : `Eres un generador de artículos de noticias sobre criptomonedas, blockchain y tecnología.`;
 
   // ---- Cláusula de evitación ----
@@ -119,13 +118,13 @@ ${newsText}
 INSTRUCCIONES:
 - Título: claro, atractivo, en español
 - Resumen: 1-2 líneas que capturen lo esencial
-- Contenido: HTML con etiquetas p, h2, a (para enlaces a fuentes). Incluye al final un bloque <h2>Fuentes</h2> con una lista <ul> de enlaces a las fuentes originales
+- Contenido: HTML con etiquetas p, h2. NO incluyas enlaces a fuentes ni sección de fuentes. Escribe el contenido como un artículo periodístico propio.
 - Tags: 3-5 palabras clave sin '#', ej: ["Bitcoin", "ETF", "Mercado"]
 - imagePrompt: descripción en inglés para generar una imagen ilustrativa
 - sourceUrl: la URL de la fuente principal (la más relevante)
 - sources: array con TODAS las URLs de las fuentes consultadas
 
-EVITA: hashtags en el HTML, inventar datos no presentes en las fuentes.
+EVITA: hashtags en el HTML, inventar datos no presentes en las fuentes, incluir enlaces o sección de fuentes en el contenido.
 
 Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags, sourceUrl, sources}.${avoidanceClause}`;
   } else {

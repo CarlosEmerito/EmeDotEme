@@ -17,10 +17,10 @@ IMPORTANTE sobre coherencia:
 - Solo es incoherente si la imagen no tiene relación alguna con el tema del artículo
 
 IMPORTANTE sobre calidad:
-- Rechaza imágenes borrosas, pixeladas, con resolución muy baja
-- RECHAZA ROTUNDAMENTE imágenes con marcas de agua, logos superpuestos, texto sobrepuesto o firmas.
-- Presta ESPECIAL ATENCIÓN a marcas de agua o logos de fuentes de noticias (ej: "Decrypt", "CoinDesk", "Cointelegraph", "The Block", "Bloomberg", "Reuters"). Si ves ALGÚN rastro de estos nombres o logos en la imagen, DEBES rechazarla detallando el problema.
-- ACEPTA fotos editoriales profesionales, ilustraciones de calidad, infografías limpias
+- Asume que la calidad_aceptable es TRUE por defecto. Las fotos periodísticas y de stock estándar SIEMPRE son aceptables.
+- SÉ FLEXIBLE: Se permiten imágenes que contengan algo de texto incidental (como señales, pantallas, carteles en el fondo).
+- RECHAZA SOLAMENTE basuras visuales claras: capturas de pantalla mal recortadas o imágenes extremadamente diminutas e ilegibles.
+- Presta ESPECIAL ATENCIÓN a marcas de agua o logos SUPERPUESTOS de fuentes de noticias (ej: "Decrypt", "CoinDesk", "Cointelegraph", "The Block", "Bloomberg", "Reuters"). SOLO si son claramente marcas de agua (logos pegados encima de la foto), debes rechazarla (calidad_aceptable: false). No rechaces por texto natural de la foto.
 
 Debes responder ÚNICAMENTE con un objeto JSON con esta estructura exacta, sin markdown ni comillas escapadas:
 {

@@ -63,7 +63,7 @@ def log_historial(red, status, title, extra=None):
 # IA: RESUMEN UNIFICADO ------------------------------------------------------
 def resumen_ai(
     prompt,
-    ollama_model="qwen2.5:14b",
+    ollama_model="qwen3.5:9b",
     gemini_api_key=None,
     gemini_api_key_2=None,
     gemini_api_key_3=None,
@@ -106,7 +106,7 @@ def resumen_ai(
     try:
         payload = {"model": ollama_model, "prompt": prompt, "stream": False}
         r = requests.post(
-            "http://localhost:11434/api/generate", json=payload, timeout=120
+            "http://localhost:11434/api/generate", json=payload, timeout=240
         )
         r.raise_for_status()
         texto = r.json().get("response", "").strip()

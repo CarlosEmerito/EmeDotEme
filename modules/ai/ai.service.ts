@@ -10,7 +10,7 @@ export async function generateWeeklyNewsletter(..._args: any[]) {
 	};
 }
 
-import { generateTextWithGemini } from './gemini-text.service.ts';
+import { generateTextWithGemini } from './gemini-text.service';
 
 // --- NUEVO: Generación vía Ollama local ---
 async function generateTextWithOllama({ systemPrompt, userPrompt }: { systemPrompt: string; userPrompt: string; }): Promise<string | null> {

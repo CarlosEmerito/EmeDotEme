@@ -125,6 +125,7 @@ INSTRUCCIONES:
 - sources: array con TODAS las URLs de las fuentes consultadas
 
 EVITA: hashtags en el HTML, inventar datos no presentes en las fuentes, incluir enlaces o sección de fuentes en el contenido.
+ATENCIÓN: Dado que la respuesta debe ser un JSON, NUNCA uses comillas dobles (") dentro del texto de los campos. Para el HTML, usa obligatoriamente comillas simples (ej: <h2 class='titulo'>) o escapa las comillas.
 
 Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags, sourceUrl, sources}.${avoidanceClause}`;
   } else {
@@ -136,6 +137,7 @@ Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags, sourceU
 - imagePrompt: descripción para generar imagen
 
 EVITA: hashtags en HTML, temas recientes listados arriba, contenido repetitivo.
+ATENCIÓN: Usa obligatoriamente comillas simples (') para cualquier atributo HTML. NO uses comillas dobles (") dentro de los campos para evitar romper el JSON.
 
 Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags}.${avoidanceClause}`;
   }
@@ -231,23 +233,37 @@ Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags}.${avoid
     console.error(`❌ Raw response length: ${result.length} chars`);
     console.error(`❌ Raw response (first 1000 chars): ${result.substring(0, 1000)}${result.length > 1000 ? '...' : ''}`);
     
-    // Intentar recuperación parcial
+    // Intentar recuperación parcial con JSON incompleto o usando Regex
     try {
-      const jsonMatch = result.match(/\{[\s\S]*?\}/);
-      if (jsonMatch) {
-        const partial = JSON.parse(jsonMatch[0]);
-        if (partial.title) {
-          console.log(`🔄 Recuperado parcialmente: "${partial.title}"`);
-          return {
-            title: partial.title || 'Artículo de ejemplo',
-            summary: partial.summary || 'Resumen de ejemplo',
-            content: partial.content || '<p>Contenido generado por IA.</p>',
-            imagePrompt: partial.imagePrompt || 'cryptocurrency, blockchain, digital assets',
-            tags: Array.isArray(partial.tags) ? partial.tags : [],
-            sourceUrl: partial.sourceUrl || newsContext[0]?.link,
-            sources: Array.isArray(partial.sources) ? partial.sources : newsContext.map(n => n.link),
-          };
-        }
+      const titleMatch = result.match(/"title"\s*:\s*"([^"]+)"/);
+      const summaryMatch = result.match(/"summary"\s*:\s*"([^"]+)"/);
+      
+      // Para content es más complejo por los saltos de línea y el HTML
+      // Buscamos todo lo que hay entre "content": " y el siguiente campo ", "imagePrompt" o "tags"
+      let contentMatch = '';
+      const contentRegex = /"content"\s*:\s*"([\s\S]*?)",\s*"/;
+      const cMatch = result.match(contentRegex);
+      if (cMatch && cMatch[1]) {
+        contentMatch = cMatch[1];
+      }
+
+      if (titleMatch && titleMatch[1]) {
+        console.log(`🔄 Recuperado usando Regex: "${titleMatch[1].substring(0,60)}"`);
+        
+        const cleanContent = contentMatch
+          .replace(/\\n/g, '\n')
+          .replace(/\\"/g, '"')
+          .replace(/\\\\/g, '\\');
+
+        return {
+          title: titleMatch[1],
+          summary: summaryMatch ? summaryMatch[1] : 'Resumen de la noticia',
+          content: cleanContent.length > 50 ? cleanContent : '<p>Contenido recuperado de emergencia.</p>',
+          imagePrompt: 'cryptocurrency, blockchain',
+          tags: [],
+          sourceUrl: newsContext[0]?.link || '',
+          sources: newsContext.map(n => n.link),
+        };
       }
     } catch (recoveryError) {
       console.error(`❌ Falló recuperación parcial: ${recoveryError}`);

@@ -1,6 +1,6 @@
 // ... código anterior ...
-import { analyzeImageWithGemini } from '../ai/gemini-vision.service.ts';
-import { generateImageWithAIHorde } from '../ai/aihorde-image.service.ts';
+import { analyzeImageWithGemini } from '../ai/gemini-vision.service';
+import { generateImageWithAIHorde } from '../ai/aihorde-image.service';
 import { createClient } from '@supabase/supabase-js';
 // TODO: replace with actual implementation
 async function analyzeImageWithOllama(imageUrl: string, title: string, summary: string, caption: string): Promise<any> {

@@ -12,7 +12,7 @@
     "delete-external-images": "npx tsx scripts/delete-external-images.ts"
   },
   "dependencies": {
-    "@ducanh2912/next-pwa": "^10.2.9",
+    "@ducanh2912/next-pwa": "^10.2.6",
     "@giscus/react": "^3.1.0",
     "@google/generative-ai": "^0.24.1",
     "@prisma/client": "^5.22.0",
@@ -27,8 +27,10 @@
     "dotenv": "^17.4.0",
     "lucide-react": "^1.7.0",
     "next": "16.2.2",
-    "next-pwa": "^5.6.0",
+    "next-pwa": "^2.0.2",
     "next-themes": "^0.4.6",
+    "node-fetch": "^3.3.2",
+    "ollama": "^0.6.3",
     "openai": "^6.33.0",
     "pg": "^8.20.0",
     "prisma": "^5.22.0",

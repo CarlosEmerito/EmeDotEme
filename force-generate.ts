@@ -12,7 +12,17 @@ async function main() {
     
     console.log("Categoría elegida:", randomCategory.name);
     
-    const aiResponse = await generateArticleContent();
+    // Obtener títulos recientes para evitar repetición
+    const recentArticles = await prisma.article.findMany({
+      select: { title: true },
+      where: { published: true },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    });
+    const recentTitles = recentArticles.map(a => a.title);
+    console.log(`📰 Títulos recientes para evitar: ${recentTitles.length}`);
+    
+    const aiResponse = await generateArticleContent(recentTitles);
     
     const slug = aiResponse.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
     

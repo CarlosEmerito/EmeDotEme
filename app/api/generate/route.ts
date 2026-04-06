@@ -29,8 +29,18 @@ export async function GET(req: Request) {
     const allCategories = await prisma.category.findMany();
     const randomCategory = allCategories[Math.floor(Math.random() * allCategories.length)];
 
+    // Obtener títulos recientes para evitar repetición
+    const recentArticles = await prisma.article.findMany({
+      select: { title: true },
+      where: { published: true },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    });
+    const recentTitles = recentArticles.map(a => a.title);
+    console.log(`📰 Títulos recientes para evitar: ${recentTitles.length}`);
+
     // 2. Llamada al servicio de IA
-    const aiResponse = await generateArticleContent();
+    const aiResponse = await generateArticleContent(recentTitles);
     
     const slug = aiResponse.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 

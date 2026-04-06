@@ -100,6 +100,9 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${ptSerif.variable} h-full antialiased`}
     >
+      <head>
+        <meta name="monetag" content="93734c0e14ec3b842d5e9e3c2befae9a" />
+      </head>
       <body className="min-h-full flex flex-col bg-white dark:bg-zinc-950 text-black dark:text-white">
         <Providers>
           {/* Schema.org Structured Data */}

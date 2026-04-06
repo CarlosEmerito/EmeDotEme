@@ -5,7 +5,18 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log("Generando articulo con IA...");
-  const aiResponse = await generateArticleContent();
+  
+  // Obtener títulos recientes para evitar repetición
+  const recentArticles = await prisma.article.findMany({
+    select: { title: true },
+    where: { published: true },
+    orderBy: { createdAt: 'desc' },
+      take: 10,
+  });
+  const recentTitles = recentArticles.map(a => a.title);
+  console.log(`📰 Títulos recientes para evitar: ${recentTitles.length}`);
+  
+  const aiResponse = await generateArticleContent(recentTitles);
   console.log("Articulo generado. Insertando en BD...");
 
   let category = await prisma.category.findFirst({ where: { name: "Web3" } });

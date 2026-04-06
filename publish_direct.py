@@ -15,8 +15,9 @@ SQUARE_API_URL = (
     "https://www.binance.com/bapi/composite/v1/public/pgc/openApi/content/add"
 )
 BINANCE_SQUARE_API_KEY = get_env("BINANCE_SQUARE_API_KEY", "").strip()
-GEMINI_API_KEY = get_env("GEMINI_API_KEY", "")
-GEMINI_API_KEY_2 = get_env("GEMINI_API_KEY_2", "")
+GEMINI_API_KEY = get_env("GEMINI_API_KEY", "").strip()
+GEMINI_API_KEY_2 = get_env("GEMINI_API_KEY_2", "").strip()
+GEMINI_API_KEY_3 = get_env("GEMINI_API_KEY_3", "").strip()
 OLLAMA_MODEL = get_env("OLLAMA_MODEL", "qwen2.5:14b").strip()
 MAX_POST_CHARS = int(get_env("MAX_POST_CHARS", "900"))
 

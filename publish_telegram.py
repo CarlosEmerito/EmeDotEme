@@ -14,8 +14,10 @@ import requests
 # --- Config
 TOKEN = get_env("TELEGRAM_TOKEN", "").strip()
 CHAT_ID = get_env("TELEGRAM_CHAT_ID", "").strip()
+CHANNEL_ID = get_env("TELEGRAM_CHANNEL_ID", "").strip()  # Nuevo: id canal publico
 GEMINI_API_KEY = get_env("GEMINI_API_KEY", "").strip()
 GEMINI_API_KEY_2 = get_env("GEMINI_API_KEY_2", "").strip()
+GEMINI_API_KEY_3 = get_env("GEMINI_API_KEY_3", "").strip()
 OLLAMA_MODEL = get_env("OLLAMA_MODEL", "qwen2.5:14b").strip()
 LINK_AFILIADO = "https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA"
 TEXTO_BOTON_DINERO = "🎁 RECLAMAR HASTA 100$ GRAN"
@@ -46,24 +48,37 @@ def obtener_datos_mercado():
     return "\n".join(info)
 
 
+import html
+
+
 def crea_mensaje(data, resumen, mercado, sentimiento):
-    titulo = data.get("title", "").strip()
+    titulo = html.escape(data.get("title", "").strip())
+    resumen = html.escape(resumen)
+    sentimiento = html.escape(sentimiento)
+    html_dyor = "<i>DYOR: No es consejo financiero.</i>"
+    emedoteme = "<b>EmeDotEme</b>"
+    hashtags = "#Criptomonedas #Web3 #EmeDotEme"
     if mercado:
+        mercado = html.escape(mercado)
         return (
             f"{mercado}\n──────────────\n"
-            f"📰 *{titulo}*\n\n{resumen}\n\nSentimiento del mercado: {sentimiento}\n\n_DYOR: No es consejo financiero._\n_EmeDotEme_"
+            f"📰 <b>{titulo}</b>\n\n{resumen}\n\nSentimiento del mercado: {sentimiento}\n\n{html_dyor}\n{emedoteme}\n\n{hashtags}"
         )
     else:
-        return f"📰 *{titulo}*\n\n{resumen}\n\nSentimiento del mercado: {sentimiento}\n\n_DYOR: No es consejo financiero._\n_EmeDotEme_"
+        return f"📰 <b>{titulo}</b>\n\n{resumen}\n\nSentimiento del mercado: {sentimiento}\n\n{html_dyor}\n{emedoteme}\n\n{hashtags}"
 
 
 def enviar_telegram(texto, imagen_url, link_noticia):
+    # Prioridad: canal, si está definido; si no, al private chat de pruebas
+    chat_id_target = CHANNEL_ID if CHANNEL_ID else CHAT_ID
     if is_dry_run():
         log_event(f"[DRY_RUN] No envío real a Telegram (solo simulación)", 20)
         log_event(texto, 20)
         return True, "[dry-run]"
-    if not TOKEN or not CHAT_ID:
-        return False, "Faltan credenciales de Telegram"
+    if not TOKEN or not (CHAT_ID or CHANNEL_ID):
+        return False, "Faltan credenciales de Telegram (chat y/o canal)"
+    import json
+
     teclado = {
         "inline_keyboard": [
             [{"text": "Leer en EmeDotEme.es", "url": link_noticia}],
@@ -76,11 +91,13 @@ def enviar_telegram(texto, imagen_url, link_noticia):
             ],
         ]
     }
-    payload = {
-        "chat_id": CHAT_ID,
-        "parse_mode": "Markdown",
-        "reply_markup": requests.utils.requote_uri(str(teclado)),
-    }
+
+    # Con HTML, solo hay que asegurarse que los campos ya vienen escapados
+    payload = {"chat_id": chat_id_target, "parse_mode": "HTML"}
+    # Solo agrega reply_markup si hay teclado definido y al menos un botón
+    if teclado and teclado.get("inline_keyboard"):
+        payload["reply_markup"] = json.dumps(teclado)
+
     endpoint = "/sendMessage"
     if imagen_url:
         payload["photo"] = imagen_url
@@ -88,14 +105,19 @@ def enviar_telegram(texto, imagen_url, link_noticia):
         endpoint = "/sendPhoto"
     else:
         payload["text"] = texto[:4096]
+    log_event(
+        f"[telegram/HTML] Enviando mensaje: {payload.get('caption', payload.get('text', ''))}"
+    )
     try:
         r = requests.post(
             f"https://api.telegram.org/bot{TOKEN}{endpoint}", data=payload, timeout=20
         )
+        log_event(f"[telegram/HTML] Status: {r.status_code}, response: {r.text}")
         if r.status_code == 200:
             return True, "Publicado correctamente"
         return False, f"API err: {r.status_code} - {r.text}"
     except Exception as e:
+        log_event(f"[telegram/HTML] Excepción al enviar: {e}", 40)
         return False, f"Excepción: {e}"
 
 
@@ -130,6 +152,7 @@ if __name__ == "__main__":
         ollama_model=OLLAMA_MODEL,
         gemini_api_key=GEMINI_API_KEY,
         gemini_api_key_2=GEMINI_API_KEY_2,
+        gemini_api_key_3=GEMINI_API_KEY_3,
         prefer_gemini=True,
         max_output_tokens=600,
     )

@@ -3,7 +3,10 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
 const GEMINI_API_KEY_2 = process.env.GEMINI_API_KEY_2 || "";
+const GEMINI_API_KEY_3 = process.env.GEMINI_API_KEY_3 || "";
 const VISION_MODEL = "gemini-2.5-flash";
+
+console.log(`🔑 Gemini Vision API Keys: ${GEMINI_API_KEY ? 'P' : ''}${GEMINI_API_KEY_2 ? 'S' : ''}${GEMINI_API_KEY_3 ? 'T' : ''} disponibles`);
 
 interface ImageAnalysisResult {
   coherente: boolean;

@@ -118,7 +118,7 @@ ${newsText}
 INSTRUCCIONES:
 - Título: claro, atractivo, en español
 - Resumen: 1-2 líneas que capturen lo esencial
-- Contenido: HTML con etiquetas p, h2. NO incluyas enlaces a fuentes ni sección de fuentes. Escribe el contenido como un artículo periodístico propio.
+- Contenido: HTML con etiquetas p, h2. El artículo DEBE SER LARGO, PROFUNDO Y DETALLADO. Escribe como en un periódico digital líder (al menos 5 a 6 párrafos extensos desarrollados con contexto, implicaciones y análisis, superando las 600 palabras). NO incluyas enlaces a fuentes ni sección de fuentes. Usa subtítulos <h2> para estructurar la noticia.
 - Tags: 3-5 palabras clave sin '#', ej: ["Bitcoin", "ETF", "Mercado"]
 - imagePrompt: descripción en inglés para generar una imagen ilustrativa
 - sourceUrl: la URL de la fuente principal (la más relevante)
@@ -131,7 +131,7 @@ Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags, sourceU
     userPrompt = `Genera un artículo de noticias cripto en español.
 - Título: claro y atractivo
 - Resumen: 1-2 líneas
-- Contenido: HTML simple (p, h2), sin hashtags
+- Contenido: HTML (p, h2), sin hashtags. El artículo DEBE SER LARGO, PROFUNDO Y DETALLADO. Extiéndete al menos 5 a 6 párrafos sustanciales con su debida introducción, desarrollo y conclusión técnica o de mercado. Usa subtítulos <h2> para seccionar.
 - Tags: 3-5 palabras clave sin '#', ej: ["Bitcoin", "ETF", "Mercado"]
 - imagePrompt: descripción para generar imagen
 

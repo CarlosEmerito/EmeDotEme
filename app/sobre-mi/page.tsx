@@ -33,8 +33,12 @@ export default async function AboutPage() {
       <main className="flex flex-col max-w-3xl mx-auto w-full px-4 py-12">
         <header className="mb-10 border-b border-zinc-200 dark:border-zinc-800 pb-8">
           <div className="flex items-center gap-6">
-            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center flex-shrink-0 text-zinc-500 font-serif text-4xl">
-              CE
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-zinc-200 dark:bg-zinc-800 flex flex-shrink-0 overflow-hidden relative border border-zinc-200 dark:border-zinc-800">
+              <img 
+                src="/EmeDotEme.jpg" 
+                alt="Carlos Emérito López Lovera" 
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
               <h1 className="text-3xl sm:text-5xl font-extrabold text-black dark:text-white font-serif mb-2">

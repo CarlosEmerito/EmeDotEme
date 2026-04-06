@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { generateArticleContent, translateArticleContent } from "../modules/ai/ai.service";
-import { generateArticleImage } from "../modules/images/image.service";
+import { generateArticleImageAndAnalyzeQA } from "../modules/images/image.service";
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
 import path from "path";
@@ -149,6 +149,13 @@ function normalizeArticleContent(article: any): any {
         text = text.replace(regex, proper);
       }
       
+      // Eliminar hashtags de redes sociales (no deben estar en contenido web)
+      text = text.replace(/#Criptomonedas\s*#Web3\s*#EmeDotEme/g, '')
+                 .replace(/#Criptomonedas/g, '')
+                 .replace(/#Web3/g, '')
+                 .replace(/#EmeDotEme/g, '')
+                 .replace(/\s*\n\s*\n\s*$/g, '\n'); // Limpiar líneas vacías extras al final
+      
       normalized[field] = text;
     }
   }
@@ -177,8 +184,18 @@ async function main() {
   const randomCategory = allCategories[Math.floor(Math.random() * allCategories.length)];
 
   try {
+    // Obtener títulos recientes para evitar repetición
+    const recentArticles = await prisma.article.findMany({
+      select: { title: true },
+      where: { published: true },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    });
+    const recentTitles = recentArticles.map(a => a.title);
+    console.log(`📰 Títulos recientes para evitar: ${recentTitles.length}`);
+    
     const t0 = Date.now();
-    let aiResponse = await generateArticleContent();
+    let aiResponse = await generateArticleContent(recentTitles);
     console.log('📝 ImagePrompt presente:', aiResponse.imagePrompt ? 'SÍ' : 'NO');
     if (aiResponse.imagePrompt) {
       console.log('   Prompt:', aiResponse.imagePrompt.substring(0, 100) + '...');
@@ -228,10 +245,10 @@ async function main() {
       };
       
       try {
-        const imageResult = await generateArticleImage(imageData, aiResponse.sourceImageUrl);
-        imageUrl = imageResult.imageUrl;
-        imageCaption = imageResult.caption;
-        console.log(`✅ Imagen procesada: ${imageUrl.substring(0, 100)}...`);
+        const imageResult = await generateArticleImageAndAnalyzeQA(imageData, aiResponse.sourceImageUrl);
+imageUrl = imageResult.imageUrl;
+imageCaption = imageResult.caption || aiResponse.imageCaption || `Ilustración sobre ${randomCategory.name}`;
+console.log(`✅ Imagen procesada: ${imageUrl ? imageUrl.substring(0, 100) : 'N/A'}...`);
       } catch (error) {
         console.error("❌ Error procesando imagen:", error);
         // Fallback a imágenes de Unsplash

@@ -18,22 +18,30 @@ import { formatNewsForPrompt } from '../news/news-sources.service';
 async function generateTextWithOllama({ systemPrompt, userPrompt }: { systemPrompt: string; userPrompt: string; }): Promise<string | null> {
   try {
     const url = 'http://localhost:11434/api/generate';
-    const model = process.env.OLLAMA_MODEL || 'llama3';
+    const model = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
     const prompt = `${systemPrompt}\n\n${userPrompt}`;
-    const response = await fetch(url, {
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 600000); // 10 min timeout (600,000 ms)
+
+    const fetchNode = (await import('node-fetch')).default;
+    const response = await fetchNode(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model,
         prompt,
         stream: false
-      })
+      }),
+      signal: controller.signal as any
     });
+    
+    clearTimeout(timeoutId);
     if (!response.ok) {
       console.error('❌ Error HTTP desde Ollama:', response.status, await response.text());
       return null;
     }
-    const data = await response.json();
+    const data = (await response.json()) as any;
     if (!data || !data.response) {
       console.error('❌ Respuesta inesperada desde Ollama:', data);
       return null;

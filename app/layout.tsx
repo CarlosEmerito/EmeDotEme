@@ -102,6 +102,7 @@ export default function RootLayout({
     >
       <head>
         <meta name="monetag" content="93734c0e14ec3b842d5e9e3c2befae9a" />
+        <script src="https://quge5.com/88/tag.min.js" data-zone="227092" async data-cfasync="false"></script>
       </head>
       <body className="min-h-full flex flex-col bg-white dark:bg-zinc-950 text-black dark:text-white">
         <Providers>

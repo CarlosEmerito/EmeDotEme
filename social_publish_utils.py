@@ -106,7 +106,7 @@ def resumen_ai(
     try:
         payload = {"model": ollama_model, "prompt": prompt, "stream": False}
         r = requests.post(
-            "http://localhost:11434/api/generate", json=payload, timeout=60
+            "http://localhost:11434/api/generate", json=payload, timeout=120
         )
         r.raise_for_status()
         texto = r.json().get("response", "").strip()

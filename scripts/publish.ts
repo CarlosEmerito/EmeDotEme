@@ -185,14 +185,20 @@ async function main() {
   const randomCategory = allCategories[Math.floor(Math.random() * allCategories.length)];
 
   try {
-    // Obtener títulos y URLs recientes para evitar repetición
+    // Obtener títulos (ES y EN) y URLs recientes para evitar repetición
     const recentArticles = await prisma.article.findMany({
-      select: { title: true, sourceUrl: true },
+      select: { title: true, titleEn: true, sourceUrl: true },
       where: { published: true },
       orderBy: { createdAt: 'desc' },
       take: 20, // Aumentado para mayor cobertura de deduplicación
     });
-    const recentTitles = recentArticles.map((a: { title: string }) => a.title);
+    
+    // Unir títulos en español y en inglés para aumentar las coincidencias con el RSS (que suele estar en inglés)
+    const recentTitles = recentArticles.flatMap((a: { title: string; titleEn: string | null }) => {
+      const titles = [a.title];
+      if (a.titleEn) titles.push(a.titleEn);
+      return titles;
+    });
     const recentSourceUrls = recentArticles
       .map((a: { sourceUrl: string | null }) => a.sourceUrl)
       .filter((url: string | null): url is string => Boolean(url));

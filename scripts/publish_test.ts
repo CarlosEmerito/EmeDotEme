@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { generateArticleContent, translateArticleContent } from "../modules/ai/ai.service.ts";
+import { generateArticleContent, translateArticleContent } from "../modules/ai/ai.service";
 import { generateArticleImageAndAnalyzeQA } from "../modules/images/image.service";
 import { generateImageWithAIHorde } from "../modules/ai/aihorde-image.service";
 import { PrismaClient } from "@prisma/client";

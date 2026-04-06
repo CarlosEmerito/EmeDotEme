@@ -1,6 +1,6 @@
 import 'dotenv/config';
-import { generateArticleContent, translateArticleContent } from "../modules/ai/ai.service";
-import { generateImageLocal } from "../modules/images/image.service";
+import { generateArticleContent, translateArticleContent } from "../modules/ai/ai.service.ts";
+import { generateArticleImageAndAnalyzeQA } from "../modules/images/image.service";
 import { generateImageWithAIHorde } from "../modules/ai/aihorde-image.service";
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
@@ -29,8 +29,18 @@ async function main() {
   const randomCategory = allCategories[Math.floor(Math.random() * allCategories.length)];
 
   try {
+    // Obtener títulos recientes para evitar repetición
+    const recentArticles = await prisma.article.findMany({
+      select: { title: true },
+      where: { published: true },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    });
+    const recentTitles = recentArticles.map(a => a.title);
+    console.log(`📰 Títulos recientes para evitar: ${recentTitles.length}`);
+    
     const t0 = Date.now();
-    let aiResponse = await generateArticleContent();
+    let aiResponse = await generateArticleContent(recentTitles);
     aiResponse = await translateArticleContent(aiResponse);
     const t1 = Date.now();
     console.log(`\n⏱️ Tiempo de generación: ${((t1 - t0) / 1000).toFixed(2)} segundos`);
@@ -73,15 +83,9 @@ async function main() {
       } else {
         console.log("❌ AI Horde falló, intentando con Stable Diffusion local...");
         
-        // Fallback a Stable Diffusion local
-        const generatedImageUrl = await generateImageLocal(aiResponse.imagePrompt, slug);
-        if (generatedImageUrl) {
-          imageUrl = generatedImageUrl;
-          imageSource = "Stable Diffusion local";
-          console.log(`✅ IMAGEN GENERADA CON STABLE DIFFUSION: ${imageUrl}`);
-        } else {
-          console.log("❌ Stable Diffusion también falló.");
-        }
+         // Ya no se usa Stable Diffusion local: eliminada lógica legacy.
+         // TODO: todo el flujo se hace con generateArticleImageAndAnalyzeQA.
+
       }
     }
 
@@ -130,17 +134,32 @@ async function main() {
       fs.mkdirSync(tmpDir);
     }
     
+    // Ejecutar el pipeline completo de imagen y QA
+    const imageResult = await generateArticleImageAndAnalyzeQA({
+      title: aiResponse.title,
+      slug: slug,
+      topic: randomCategory.name,
+      originalPrompt: aiResponse.imagePrompt,
+      summary: aiResponse.summary
+    }, aiResponse.sourceImageUrl, { testMode: true });
+
     const articleData = {
       title: newArticle.title,
       link: `https://www.emedoteme.es/articulo/${newArticle.slug}`,
       description: newArticle.content || newArticle.summary,
-      imageUrl: newArticle.imageUrl,
-      sentiment: newArticle.sentiment
+      imageUrl: imageResult.imageUrl,
+      caption: imageResult.caption,
+      sentiment: newArticle.sentiment,
+      mainQA: imageResult.mainQA,
+      originalQA: imageResult.originalQA,
+      flows: imageResult.flows,
+      usedFallback: imageResult.usedFallback,
+      errors: imageResult.errors
     };
-    
+
     const jsonPath = path.join(tmpDir, 'test_article.json');
     fs.writeFileSync(jsonPath, JSON.stringify(articleData, null, 2));
-    console.log(`\n💾 Datos guardados en ${jsonPath} para Binance Square.`);
+    console.log(`\n💾 Datos guardados en ${jsonPath} para Binance Square y QA visual.`);
     
   } catch (error) {
     console.error("\n❌ ERROR DURANTE EL PROCESO:", error);

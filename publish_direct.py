@@ -18,7 +18,7 @@ BINANCE_SQUARE_API_KEY = get_env("BINANCE_SQUARE_API_KEY", "").strip()
 GEMINI_API_KEY = get_env("GEMINI_API_KEY", "").strip()
 GEMINI_API_KEY_2 = get_env("GEMINI_API_KEY_2", "").strip()
 GEMINI_API_KEY_3 = get_env("GEMINI_API_KEY_3", "").strip()
-OLLAMA_MODEL = get_env("OLLAMA_MODEL", "qwen2.5:14b").strip()
+OLLAMA_MODEL = get_env("OLLAMA_MODEL", "qwen3.5:9b").strip()
 MAX_POST_CHARS = int(get_env("MAX_POST_CHARS", "900"))
 
 
@@ -56,6 +56,7 @@ def construir_post(data, mercado):
         ollama_model=OLLAMA_MODEL,
         gemini_api_key=GEMINI_API_KEY,
         gemini_api_key_2=GEMINI_API_KEY_2,
+        gemini_api_key_3=GEMINI_API_KEY_3,
         prefer_gemini=True,
         max_output_tokens=500,
     )
@@ -93,9 +94,18 @@ def publicar_en_square(post, sentimiento, imagen_url):
     }
     try:
         r = requests.post(SQUARE_API_URL, json=payload, headers=headers, timeout=15)
+        body = r.text[:500]
+        log_event(f"[debug] Binance Square response: status={r.status_code} body={body}")
         if r.status_code in [200, 201]:
+            # Verificar si la API devolvió éxito real en el body
+            try:
+                resp_json = r.json()
+                if resp_json.get("success") is False or resp_json.get("code") not in [None, 0, "000000"]:
+                    return False, f"API rechazó: {body}"
+            except Exception:
+                pass
             return True, "Publicado en Binance Square"
-        return False, f"API err: {r.status_code} - {r.text[:200]}"
+        return False, f"API err: {r.status_code} - {body}"
     except Exception as e:
         return False, f"Excepción: {e}"
 

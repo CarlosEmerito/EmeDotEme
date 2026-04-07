@@ -17,7 +17,8 @@ BLUESKY_HANDLE = get_env("BLUESKY_HANDLE", "").strip()
 BLUESKY_PASSWORD = get_env("BLUESKY_PASSWORD", "").strip()
 GEMINI_API_KEY = get_env("GEMINI_API_KEY", "")
 GEMINI_API_KEY_2 = get_env("GEMINI_API_KEY_2", "")
-OLLAMA_MODEL = get_env("OLLAMA_MODEL", "qwen2.5:14b").strip()
+GEMINI_API_KEY_3 = get_env("GEMINI_API_KEY_3", "")
+OLLAMA_MODEL = get_env("OLLAMA_MODEL", "qwen3.5:9b").strip()
 
 # --- Helpers
 
@@ -112,6 +113,7 @@ if __name__ == "__main__":
         ollama_model=OLLAMA_MODEL,
         gemini_api_key=GEMINI_API_KEY,
         gemini_api_key_2=GEMINI_API_KEY_2,
+        gemini_api_key_3=GEMINI_API_KEY_3,
         prefer_gemini=True,
         max_output_tokens=260,
     )

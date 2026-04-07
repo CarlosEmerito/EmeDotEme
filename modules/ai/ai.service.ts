@@ -126,7 +126,7 @@ ${newsText}
 INSTRUCCIONES:
 - Título: claro, atractivo, en español
 - Resumen: 1-2 líneas que capturen lo esencial
-- Contenido: HTML con etiquetas p, h2. El artículo DEBE SER LARGO, PROFUNDO Y DETALLADO. Escribe como en un periódico digital líder (al menos 5 a 6 párrafos extensos desarrollados con contexto, implicaciones y análisis, superando las 600 palabras). NO incluyas enlaces a fuentes ni sección de fuentes. Usa subtítulos <h2> para estructurar la noticia.
+- Contenido: HTML con etiquetas p, h2, h3. El artículo DEBE SER LARGO, PROFUNDO Y DETALLADO. Escribe como en un periódico digital líder (al menos 5 a 6 párrafos extensos). OBLIGATORIO: Intercala al menos 2 o 3 subtítulos secundarios (<h2> o <h3>) en medio del texto para dinamizar la lectura y separar las ideas. NO incluyas enlaces a fuentes ni sección de fuentes.
 - Tags: 3-5 palabras clave sin '#', ej: ["Bitcoin", "ETF", "Mercado"]
 - imagePrompt: descripción en inglés para generar una imagen ilustrativa
 - sourceUrl: la URL de la fuente principal (la más relevante)
@@ -140,7 +140,7 @@ Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags, sourceU
     userPrompt = `Genera un artículo de noticias cripto en español.
 - Título: claro y atractivo
 - Resumen: 1-2 líneas
-- Contenido: HTML (p, h2), sin hashtags. El artículo DEBE SER LARGO, PROFUNDO Y DETALLADO. Extiéndete al menos 5 a 6 párrafos sustanciales con su debida introducción, desarrollo y conclusión técnica o de mercado. Usa subtítulos <h2> para seccionar.
+- Contenido: HTML con etiquetas p, h2, h3. El artículo DEBE SER LARGO, PROFUNDO Y DETALLADO. Extiéndete al menos 5 a 6 párrafos sustanciales. OBLIGATORIO: Intercala al menos 2 o 3 subtítulos secundarios (<h2> o <h3>) en medio del texto para dinamizar la lectura y dividir la introducción, desarrollo y conclusión técnica.
 - Tags: 3-5 palabras clave sin '#', ej: ["Bitcoin", "ETF", "Mercado"]
 - imagePrompt: descripción para generar imagen
 

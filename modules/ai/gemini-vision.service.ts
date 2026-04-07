@@ -98,19 +98,39 @@ Devuelve SOLO el JSON de análisis, nada más.`;
         continue;
       }
 
-      // Parsear JSON
+      // Parsear JSON con reparación de emergencia para respuestas truncadas
       const cleaned = text.replace(/```json\n?/g, '').replace(/```/g, '').trim();
       const jsonStart = cleaned.indexOf('{');
-      const jsonEnd = cleaned.lastIndexOf('}');
-      if (jsonStart === -1 || jsonEnd === -1) {
-        console.error(`❌ JSON inválido de Gemini Vision: ${cleaned.substring(0, 200)}`);
+      
+      if (jsonStart === -1) {
+        console.error(`❌ Respuesta sin JSON de Gemini Vision (${keyName})`);
         continue;
       }
 
-      const parsed = JSON.parse(cleaned.substring(jsonStart, jsonEnd + 1)) as ImageAnalysisResult;
-
-      if (typeof parsed.coherente !== 'boolean' || typeof parsed.calidad_aceptable !== 'boolean') {
-        throw new Error('Estructura JSON incompleta devuelta por Gemini');
+      let parsed: ImageAnalysisResult;
+      
+      try {
+        const jsonEnd = cleaned.lastIndexOf('}');
+        if (jsonEnd === -1) throw new Error('JSON truncado (no se encontró })');
+        parsed = JSON.parse(cleaned.substring(jsonStart, jsonEnd + 1)) as ImageAnalysisResult;
+        
+        if (typeof parsed.coherente !== 'boolean' || typeof parsed.calidad_aceptable !== 'boolean') {
+          throw new Error('Estructura JSON incompleta devuelta por Gemini');
+        }
+      } catch (parseError) {
+        console.error(`❌ JSON inválido/truncado de Gemini Vision: ${cleaned.substring(0, 200)}...`);
+        console.log(`⚠️ Aplicando recuperación de emergencia (extrayendo variables directamente del string)`);
+        
+        const isCoherente = cleaned.includes('"coherente": true') || cleaned.includes('"coherente":true') || cleaned.includes('"coherente":  true');
+        const isAcceptable = cleaned.includes('"calidad_aceptable": false') || cleaned.includes('"calidad_aceptable":false') ? false : true;
+        
+        parsed = {
+          coherente: isCoherente,
+          razon_coherencia: "Recuperación automática de JSON truncado",
+          descripcion: "Descripción parcial recuperada mecánicamente.",
+          calidad_aceptable: isAcceptable,
+          problemas_detectados: []
+        };
       }
 
       console.log(`✅ Gemini (${GEMINI_MODEL_NAME}):`);

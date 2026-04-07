@@ -212,6 +212,36 @@ async function main() {
     
     const t0 = Date.now();
     let aiResponse: any = await generateArticleContent(recentTitles, newsContext.newsItems);
+    
+    // Si la IA devolvió el título de fallback estático, abortamos la ejecución
+    // y enviamos un aviso al Telegram privado del administrador.
+    if (aiResponse.title === 'Artículo de ejemplo') {
+      console.error("\n❌ Ollama falló y devolvió el artículo de ejemplo. Abortando publicación...");
+      const tgToken = process.env.TELEGRAM_TOKEN;
+      const tgChatId = process.env.TELEGRAM_CHAT_ID;
+      
+      if (tgToken && tgChatId) {
+        try {
+          const fetchNode = (await import('node-fetch')).default;
+          await fetchNode(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: tgChatId,
+              text: `❌ <b>ERROR CRÍTICO (EmeDotEme Bot):</b>\n\nGemini excedió la cuota y Ollama local falló o hizo timeout de nuevo.\nLa publicación automática fue <b>ABORTADA</b> para evitar generar artículos falsos de ejemplo.\n\nRevisa los logs del servidor para más detalles.`,
+              parse_mode: 'HTML'
+            })
+          });
+          console.log("✅ Aviso de error enviado al Telegram privado.");
+        } catch (tgErr) {
+          console.error("❌ No se pudo avisar por Telegram:", tgErr);
+        }
+      } else {
+          console.warn("⚠️ No hay credenciales de Telegram para enviar el aviso privado.");
+      }
+      process.exit(1);
+    }
+
     console.log('📝 ImagePrompt presente:', aiResponse.imagePrompt ? 'SÍ' : 'NO');
     if (aiResponse.imagePrompt) {
       console.log('   Prompt:', aiResponse.imagePrompt.substring(0, 100) + '...');

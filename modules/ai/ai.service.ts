@@ -184,10 +184,33 @@ Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags}.${avoid
       throw new Error('JSON incompleto o mal formado');
     }
     
-    const jsonStr = cleaned.substring(jsonStart, jsonEnd + 1);
+    let jsonStr = cleaned.substring(jsonStart, jsonEnd + 1);
     console.log(`🔍 JSON extraído: ${jsonStr.substring(0, 200)}...`);
     
-    const parsed = JSON.parse(jsonStr);
+    // Sanitizar JSON: fix bad escape sequences comunes de Ollama
+    // 1. Reemplazar backslash seguido de carácter no válido en JSON  
+    //    (válidos: " \ / b f n r t u)
+    jsonStr = jsonStr.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+    // 2. Reemplazar saltos de línea literales dentro de strings JSON
+    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\n/g, '\\n');
+    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\r/g, '\\r');
+    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\t/g, '\\t');
+    
+    let parsed: any;
+    try {
+      parsed = JSON.parse(jsonStr);
+    } catch (firstErr) {
+      console.warn(`⚠️ JSON.parse falló (${firstErr}), intentando sanitización agresiva...`);
+      // Sanitización agresiva: eliminar caracteres de control
+      const aggressive = jsonStr.replace(/[\x00-\x1F\x7F]/g, (ch) => {
+        if (ch === '\n') return '\\n';
+        if (ch === '\r') return '\\r';
+        if (ch === '\t') return '\\t';
+        return '';
+      });
+      parsed = JSON.parse(aggressive);
+      console.log('✅ JSON parseado tras sanitización agresiva');
+    }
     
     // Validar estructura mínima
     if (!parsed.title || typeof parsed.title !== 'string') {

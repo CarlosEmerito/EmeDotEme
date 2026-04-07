@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client';
-import { generateArticleContent } from './modules/ai/ai.service.js';
-import { fetchLatestNews } from './modules/news/news-sources.service.js';
-import { siteConfig } from './config/site.js';
+import { generateArticleContent } from '../modules/ai/ai.service.js';
+import { fetchLatestNews } from '../modules/news/news-sources.service.js';
+import { siteConfig } from '../config/site.js';
+import { generateSlug } from '../lib/utils.js';
+import { FALLBACK_IMAGES } from '../config/constants.js';
 
 const prisma = new PrismaClient();
 
@@ -30,23 +32,11 @@ async function main() {
     // Generar artículo con contexto de noticias reales
     const aiResponse = await generateArticleContent(recentTitles, newsContext.newsItems);
     
-    const slug = aiResponse.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const slug = generateSlug(aiResponse.title, false);
     
-    const fallbackImages: Record<string, string[]> = {
-      "Mercados": [
-        "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop"
-      ],
-      "Tecnología": [
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop"
-      ],
-      "Web3": [
-        "https://images.unsplash.com/photo-1639762681485-074b7f4f039a?q=80&w=1200&auto=format&fit=crop"
-      ]
-    };
-
     let imageUrl = aiResponse.sourceImageUrl;
     if (!imageUrl) {
-      const options = fallbackImages[randomCategory.name] || fallbackImages["Tecnología"];
+      const options = FALLBACK_IMAGES[randomCategory.name] || FALLBACK_IMAGES["Tecnología"];
       imageUrl = options[0];
     }
 

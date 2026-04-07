@@ -1,3 +1,7 @@
+import { generateTextWithGemini } from './gemini-text.service';
+import type { NewsItem } from '../news/news-sources.service';
+import { formatNewsForPrompt } from '../news/news-sources.service';
+
 /**
  * Placeholder para generación de newsletter semanal
  */
@@ -9,10 +13,6 @@ export async function generateWeeklyNewsletter(..._args: any[]) {
 		articles: []
 	};
 }
-
-import { generateTextWithGemini } from './gemini-text.service';
-import type { NewsItem } from '../news/news-sources.service';
-import { formatNewsForPrompt } from '../news/news-sources.service';
 
 // --- Generación vía Ollama local (fallback) ---
 async function generateTextWithOllama({ systemPrompt, userPrompt }: { systemPrompt: string; userPrompt: string; }): Promise<string | null> {

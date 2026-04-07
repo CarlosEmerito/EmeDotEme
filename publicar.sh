@@ -24,13 +24,13 @@ echo -e "\n================== 📰 PUBLICAR.sh ($TIMESTAMP) ==================" 
 echo "[1️⃣] Generando artículo principal..." | tee -a "$LOGFILE"
 if npx tsx scripts/publish.ts 2>&1 | tee -a "$LOGFILE"; then
   echo -e "\n[2️⃣] Enviando a Binance Square..." | tee -a "$LOGFILE"
-  python3 publish_direct.py tmp/latest_article.json 2>&1 | tee -a "$LOGFILE"
+  python3 scripts/python/publish_direct.py tmp/latest_article.json 2>&1 | tee -a "$LOGFILE"
 
   echo -e "\n[3️⃣] Enviando a Telegram..." | tee -a "$LOGFILE"
-  python3 publish_telegram.py tmp/latest_article.json 2>&1 | tee -a "$LOGFILE"
+  python3 scripts/python/publish_telegram.py tmp/latest_article.json 2>&1 | tee -a "$LOGFILE"
 
   echo -e "\n[4️⃣] Enviando a Bluesky..." | tee -a "$LOGFILE"
-  python3 publish_bluesky.py tmp/latest_article.json 2>&1 | tee -a "$LOGFILE"
+  python3 scripts/python/publish_bluesky.py tmp/latest_article.json 2>&1 | tee -a "$LOGFILE"
 else
   echo "❌ Error al generar el artículo. Abortando publicación en redes." | tee -a "$LOGFILE"
   exit 1

@@ -24,16 +24,16 @@ echo "[1️⃣] Generando artículo de prueba..." | tee -a "$LOGFILE"
 if npx tsx scripts/publish_test.ts 2>&1 | tee -a "$LOGFILE"; then
   echo -e "\n[2️⃣] Mostrando qué se publicaría en redes sociales (modo prueba)..." | tee -a "$LOGFILE"
   echo -e "\n🔸 Binance Square (Modo Prueba):" | tee -a "$LOGFILE"
-  python3 publish_direct.py tmp/test_article.json 2>&1 | tee -a "$LOGFILE"
+  python3 scripts/python/publish_direct.py tmp/test_article.json 2>&1 | tee -a "$LOGFILE"
 
   echo -e "\n🔸 Telegram Canal (Modo Prueba):" | tee -a "$LOGFILE"
-  python3 publish_telegram.py tmp/test_article.json 2>&1 | tee -a "$LOGFILE"
+  python3 scripts/python/publish_telegram.py tmp/test_article.json 2>&1 | tee -a "$LOGFILE"
 
   echo -e "\n🔸 Bluesky (Modo Prueba):" | tee -a "$LOGFILE"
-  python3 publish_bluesky.py tmp/test_article.json 2>&1 | tee -a "$LOGFILE"
+  python3 scripts/python/publish_bluesky.py tmp/test_article.json 2>&1 | tee -a "$LOGFILE"
 
   echo -e "\n[3️⃣] Enviando imagen generada a tu Telegram privado..." | tee -a "$LOGFILE"
-  python3 send_private_test.py tmp/test_article.json 2>&1 | tee -a "$LOGFILE"
+  python3 scripts/python/send_private_test.py tmp/test_article.json 2>&1 | tee -a "$LOGFILE"
 else
   echo "❌ Error al generar el artículo de prueba. Abortando." | tee -a "$LOGFILE"
   exit 1

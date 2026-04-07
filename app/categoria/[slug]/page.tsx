@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { Metadata, ResolvingMetadata } from "next";
 import { siteConfig } from "@/config/site";
-import { getArticlesByCategorySlug, getCategoryBySlug, getTotalArticlesByCategorySlug } from "@/modules/articles/article.service";
+import { getArticlesByCategorySlug, getCategoryBySlug, getTotalArticlesByCategorySlug } from "@/modules/articles";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
 import { Pagination } from "@/components/layout/Pagination";
 

@@ -8,6 +8,7 @@ from social_publish_utils import (
     resumen_ai,
     limpiar_html,
     get_env,
+    obtener_datos_mercado,
 )
 import requests
 
@@ -20,19 +21,6 @@ GEMINI_API_KEY_2 = get_env("GEMINI_API_KEY_2", "").strip()
 GEMINI_API_KEY_3 = get_env("GEMINI_API_KEY_3", "").strip()
 OLLAMA_MODEL = get_env("OLLAMA_MODEL", "qwen3.5:9b").strip()
 MAX_POST_CHARS = int(get_env("MAX_POST_CHARS", "900"))
-
-
-def obtener_datos_mercado():
-    try:
-        url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true"
-        data = requests.get(url, timeout=6).json()
-        btc = data["bitcoin"]["usd"]
-        eth = data["ethereum"]["usd"]
-        return f"BTC: ${btc:,.0f} | ETH: ${eth:,.0f}"
-    except Exception:
-        return ""
-
-
 def recortar_texto(texto, limite):
     texto = texto.strip()
     if len(texto) <= limite:

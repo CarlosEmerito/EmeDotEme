@@ -8,6 +8,7 @@ from social_publish_utils import (
     resumen_ai,
     limpiar_html,
     get_env,
+    obtener_datos_mercado,
 )
 import requests
 
@@ -20,36 +21,11 @@ GEMINI_API_KEY_2 = get_env("GEMINI_API_KEY_2", "").strip()
 GEMINI_API_KEY_3 = get_env("GEMINI_API_KEY_3", "").strip()
 OLLAMA_MODEL = get_env("OLLAMA_MODEL", "qwen3.5:9b").strip()
 LINK_AFILIADO = "https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA"
-TEXTO_BOTON_DINERO = "🎁 RECLAMAR HASTA 100$ GRAN"
+TEXTO_BOTON_DINERO = "🎁 RECLAMAR HASTA 100$"
 
 # --- Helpers
 
-
-def obtener_datos_mercado():
-    info = []
-    try:
-        url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd"
-        data = requests.get(url, timeout=5).json()
-        btc, eth, sol = (
-            data["bitcoin"]["usd"],
-            data["ethereum"]["usd"],
-            data["solana"]["usd"],
-        )
-        info.append(f"💎 BTC: ${btc:,.0f} | ETH: ${eth:,.0f} | SOL: ${sol:.1f}")
-    except Exception:
-        pass
-    try:
-        data_fg = requests.get("https://api.alternative.me/fng/", timeout=5).json()
-        val = int(data_fg["data"][0]["value"])
-        emoji = "🔴" if val <= 25 else "🟢" if val >= 75 else "⚪"
-        info.append(f"📊 Miedo/Codicia: {emoji} ({val}/100)")
-    except Exception:
-        pass
-    return "\n".join(info)
-
-
 import html
-
 
 def crea_mensaje(data, resumen, mercado, sentimiento):
     titulo = html.escape(data.get("title", "").strip())

@@ -18,6 +18,7 @@ import { analyzeImageWithGemini, type ImageAnalysisResult } from '../ai/gemini-v
 import { analyzeImageWithOllama } from '../ai/ollama-vision.service';
 import { generateImageWithAIHorde } from '../ai/aihorde-image.service';
 import { createClient } from '@supabase/supabase-js';
+import { FALLBACK_IMAGES } from '../../config/constants';
 
 // ============================================================
 // TIPOS
@@ -44,20 +45,7 @@ export interface ImagePipelineResult {
 // CONSTANTES
 // ============================================================
 
-const FALLBACK_IMAGES: Record<string, string[]> = {
-  "Mercados": [
-    "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1605792657660-596af9009e82?q=80&w=1200&auto=format&fit=crop",
-  ],
-  "Tecnología": [
-    "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=1200&auto=format&fit=crop",
-  ],
-  "Web3": [
-    "https://images.unsplash.com/photo-1639762681485-074b7f4f039a?q=80&w=1200&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?q=80&w=1200&auto=format&fit=crop",
-  ],
-};
+
 
 const AI_HORDE_OPTIONS = {
   width: 1024,

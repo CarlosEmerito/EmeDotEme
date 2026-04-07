@@ -5,6 +5,7 @@ import { generateArticleImageAndAnalyzeQA } from "../modules/images/image.servic
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
 import * as path from "path";
+import { generateSlug } from "../lib/utils";
 
 const prisma = new PrismaClient();
 
@@ -49,7 +50,7 @@ async function main() {
     const t1 = Date.now();
     console.log(`\n⏱️ Tiempo de generación: ${((t1 - t0) / 1000).toFixed(2)} segundos`);
 
-    const slug = aiResponse.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now();
+    const slug = generateSlug(aiResponse.title, true);
 
     // Procesar imagen con el pipeline unificado
     const rssImageUrl = newsContext.newsItems[0]?.imageUrl || aiResponse.sourceImageUrl;

@@ -1,14 +1,7 @@
 import 'dotenv/config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
-const GEMINI_API_KEY_2 = process.env.GEMINI_API_KEY_2 || "";
-const GEMINI_API_KEY_3 = process.env.GEMINI_API_KEY_3 || "";
-const TEXT_MODEL = "gemini-2.5-flash";
-
-console.log(`🔑 Gemini API Key principal: ${GEMINI_API_KEY ? 'SI' : 'NO'}`);
-console.log(`🔑 Gemini API Key secundaria: ${GEMINI_API_KEY_2 ? 'SI' : 'NO'}`);
-console.log(`🔑 Gemini API Key terciaria: ${GEMINI_API_KEY_3 ? 'SI' : 'NO'}`);
+import { getGeminiApiKeys, getKeyName } from './gemini-keys';
+import { GEMINI_MODEL_NAME } from './constants';
 
 interface GenerationOptions {
     systemPrompt: string;
@@ -17,28 +10,24 @@ interface GenerationOptions {
     temperature?: number;
 }
 
-export function isGeminiAvailable(): boolean {
-    return !!GEMINI_API_KEY || !!GEMINI_API_KEY_2 || !!GEMINI_API_KEY_3;
-}
+export { isGeminiAvailable } from './gemini-keys';
 
 export async function generateTextWithGemini(
     options: GenerationOptions
 ): Promise<string | null> {
     const { systemPrompt, userPrompt, maxTokens = 6000, temperature = 0.7 } = options;
-    const apiKeys = [GEMINI_API_KEY, GEMINI_API_KEY_2, GEMINI_API_KEY_3].filter(k => !!k);
+    const apiKeys = getGeminiApiKeys();
     if (apiKeys.length === 0) {
         console.log('⚠️ Ninguna API key de Gemini configurada');
         return null;
     }
     for (let i = 0; i < apiKeys.length; i++) {
         const apiKey = apiKeys[i];
-        const isPrimary = i === 0;
-        const keyNames = ['PRIMARIA', 'SECUNDARIA', 'TERCIARIA'];
-        const keyName = keyNames[i] || `EXTRA_${i+1}`;
+        const keyName = getKeyName(i);
         try {
-            console.log(`🔄 Generando con Gemini (${keyName}, modelo: ${TEXT_MODEL})...`);
+            console.log(`🔄 Generando con Gemini (${keyName}, modelo: ${GEMINI_MODEL_NAME})...`);
             const genAI = new GoogleGenerativeAI(apiKey);
-            const model = genAI.getGenerativeModel({ model: TEXT_MODEL });
+            const model = genAI.getGenerativeModel({ model: GEMINI_MODEL_NAME });
             const fullPrompt = `${systemPrompt}\n\n${userPrompt}`;
             const generationConfig = {
                 maxOutputTokens: maxTokens,

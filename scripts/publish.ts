@@ -5,164 +5,12 @@ import { generateArticleImageAndAnalyzeQA } from "../modules/images/image.servic
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
 import path from "path";
+import { FALLBACK_IMAGES } from "../config/constants";
+import { generateSlug, toSentenceCase, normalizeArticleContent } from "../lib/utils";
 
 const prisma = new PrismaClient();
 
-/**
- * Convierte un título a sentence case (solo primera letra mayúscula).
- * Preserva nombres propios, siglas y símbolos como $, %.
- */
-function toSentenceCase(title: string): string {
-  console.log(`🔧 toSentenceCase input: "${title}"`);
-  if (!title || title.length === 0) return title;
-  
-  // Lista de palabras que deben mantenerse en mayúsculas (siglas/acrónimos)
-  const keepUpperCase = [
-    'BTC', 'ETH', 'XRP', 'SOL', 'ADA', 'DOT', 'AVAX', 'MATIC', 'DOGE', 'SHIB', 'TON', 'BNB',
-    'USD', 'EUR', 'GBP', 'JPY', 'CNY', 'KRW',
-    'ETF', 'SEC', 'CFTC', 'FED', 'ECB', 'IMF', 'WTO', 'FINMA', 'ESMA',
-    'AI', 'API', 'NFT', 'DAO', 'DEFI', 'CEFI', 'WEB3', 'KYC', 'AML',
-    'USA', 'EEUU', 'UK', 'EU', 'ONU',
-    'BTC-USD', 'ETH-USD', 'XRP-USD',
-    'S&P', 'S&P 500', 'NASDAQ', 'NYSE', 'FTSE', 'DAX', 'CAC'
-    // NOTA: Nombres de empresas como Coinbase, Binance, etc. van en properNouns, no aquí
-  ];
-  
-  // Nombres propios que deben estar capitalizados (no todo uppercase)
-  const properNouns: Record<string, string> = {
-    'bitcoin': 'Bitcoin',
-    'ethereum': 'Ethereum',
-    'solana': 'Solana',
-    'cardano': 'Cardano',
-    'polkadot': 'Polkadot',
-    'polygon': 'Polygon',
-    'avalanche': 'Avalanche',
-    'ripple': 'Ripple',
-    'binance': 'Binance',
-    'coinbase': 'Coinbase',
-    'kraken': 'Kraken',
-    'telegram': 'Telegram',
-    'whatsapp': 'WhatsApp',
-    'instagram': 'Instagram',
-    'twitter': 'Twitter',
-    'facebook': 'Facebook',
-    'youtube': 'YouTube',
-    'glassnode': 'Glassnode',
-    'coingecko': 'CoinGecko',
-    'coinmetrics': 'CoinMetrics',
-    'deribit': 'Deribit',
-    'kaiko': 'Kaiko',
-    'jpmorgan': 'JP Morgan',
-    'goldman sachs': 'Goldman Sachs',
-    'blackrock': 'BlackRock',
-    'fidelity': 'Fidelity',
-    'vanguard': 'Vanguard'
-  };
-  
-  // Convertir todo a minúsculas primero
-  let lowercased = title.toLowerCase();
-  
-  // Capitalizar primera letra de la frase
-  let sentenceCased = lowercased.charAt(0).toUpperCase() + lowercased.slice(1);
-  
-  // Primero: Capitalizar nombres propios (Bitcoin, Ethereum, etc.)
-  for (const [lower, proper] of Object.entries(properNouns)) {
-    const regex = new RegExp(`\\b${lower}\\b`, 'gi');
-    sentenceCased = sentenceCased.replace(regex, proper);
-  }
-  
-  // Segundo: Mantener siglas en mayúsculas (ETF, SEC, BTC, etc.)
-  let result = sentenceCased;
-  keepUpperCase.forEach(word => {
-    const regex = new RegExp(`\\b${word.toLowerCase()}\\b`, 'gi');
-    result = result.replace(regex, word.toUpperCase());
-  });
-  
-  console.log(`🔧 toSentenceCase output: "${result}"`);
-  return result;
-}
 
-/**
- * Normaliza el contenido del artículo asegurando mayúsculas correctas
- * para nombres de criptomonedas, siglas, y nombres propios
- */
-function normalizeArticleContent(article: any): any {
-  const normalized = { ...article };
-  
-  const termsToCapitalize: Record<string, string> = {
-    'bitcoin': 'Bitcoin',
-    'ethereum': 'Ethereum', 
-    'solana': 'Solana',
-    'cardano': 'Cardano',
-    'polkadot': 'Polkadot',
-    'polygon': 'Polygon',
-    'avalanche': 'Avalanche',
-    'ripple': 'Ripple',
-    'binance': 'Binance',
-    'coinbase': 'Coinbase',
-    'kraken': 'Kraken',
-    'telegram': 'Telegram',
-    'whatsapp': 'WhatsApp',
-    'instagram': 'Instagram',
-    'twitter': 'Twitter',
-    'facebook': 'Facebook',
-    'youtube': 'YouTube',
-    'glassnode': 'Glassnode',
-    'coingecko': 'CoinGecko',
-    'coinmetrics': 'CoinMetrics',
-    'deribit': 'Deribit',
-    'kaiko': 'Kaiko',
-    'jpmorgan': 'JP Morgan',
-    'goldman sachs': 'Goldman Sachs',
-    'blackrock': 'BlackRock',
-    'fidelity': 'Fidelity',
-    'vanguard': 'Vanguard',
-    'etf': 'ETF',
-    'defi': 'DeFi',
-    'nft': 'NFT',
-    'web3': 'Web3',
-    'dao': 'DAO',
-    'sec': 'SEC',
-    'cftc': 'CFTC',
-    'fed': 'FED',
-    'ecb': 'ECB',
-    'imf': 'IMF',
-    'usd': 'USD',
-    'eur': 'EUR',
-    'gbp': 'GBP',
-    'jpy': 'JPY',
-    'cny': 'CNY',
-  };
-  
-  const fieldsToNormalize = ['title', 'summary', 'content', 'titleEn', 'summaryEn', 'contentEn'];
-  
-  for (const field of fieldsToNormalize) {
-    if (normalized[field]) {
-      let text = normalized[field];
-      
-      // Sanitizar escapes dobles (ej. \\n -> espacio)
-      text = text.replace(/\\\\n/g, ' ').replace(/\\\\r/g, ' ').replace(/\\\\t/g, ' ');
-      // También eliminar cualquier backslash solitario que pueda romper HTML
-      text = text.replace(/\\\\(.)/g, '$1');
-      
-      for (const [lower, proper] of Object.entries(termsToCapitalize)) {
-        const regex = new RegExp(`\\b${lower}\\b`, 'gi');
-        text = text.replace(regex, proper);
-      }
-      
-      // Eliminar hashtags de redes sociales (no deben estar en contenido web)
-      text = text.replace(/#Criptomonedas\s*#Web3\s*#EmeDotEme/g, '')
-                 .replace(/#Criptomonedas/g, '')
-                 .replace(/#Web3/g, '')
-                 .replace(/#EmeDotEme/g, '')
-                 .replace(/\s*\n\s*\n\s*$/g, '\n'); // Limpiar líneas vacías extras al final
-      
-      normalized[field] = text;
-    }
-  }
-  
-  return normalized;
-}
 
 async function main() {
   console.log("=====================================================");
@@ -260,22 +108,7 @@ async function main() {
     const t1 = Date.now();
     console.log(`\n⏱️ Tiempo de generación: ${((t1 - t0) / 1000).toFixed(2)} segundos`);
 
-    const slug = aiResponse.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now();
-
-    const fallbackImages: Record<string, string[]> = {
-      "Mercados": [
-        "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1605792657660-596af9009e82?q=80&w=1200&auto=format&fit=crop",
-      ],
-      "Tecnología": [
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=1200&auto=format&fit=crop",
-      ],
-      "Web3": [
-        "https://images.unsplash.com/photo-1639762681485-074b7f4f039a?q=80&w=1200&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?q=80&w=1200&auto=format&fit=crop"
-      ]
-    };
+    const slug = generateSlug(aiResponse.title, true);
 
     // Procesar imagen con el pipeline: fuente RSS → AI Horde × 2 → Unsplash
     // Priorizar imagen de la fuente RSS sobre sourceImageUrl del AI
@@ -303,7 +136,7 @@ async function main() {
       }
     } catch (error) {
       console.error("❌ Error crítico en pipeline de imagen:", error);
-      const options = fallbackImages[randomCategory.name] || fallbackImages["Tecnología"];
+      const options = FALLBACK_IMAGES[randomCategory.name] || FALLBACK_IMAGES["Tecnología"];
       imageUrl = options[Math.floor(Math.random() * options.length)];
       imageCaption = aiResponse.imageCaption || `Ilustración sobre ${randomCategory.name}`;
     }

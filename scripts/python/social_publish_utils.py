@@ -6,7 +6,7 @@ from datetime import datetime
 import requests
 
 # Setup directo de logger profesional y registros a archivo
-LOG_DIR = os.path.join(os.path.dirname(__file__), "logs")
+LOG_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
 LOG_FILE = os.path.join(LOG_DIR, "emedoteme.log")
 
@@ -115,6 +115,37 @@ def resumen_ai(
         log_event(f"[warn] Ollama fallo: {e}", logging.WARNING)
     return None
 
+
+def obtener_datos_mercado(coins="bitcoin,ethereum"):
+    """
+    Obtiene los precios actuales de las criptomonedas y (si aplica) el índice de miedo y codicia.
+    """
+    info = []
+    try:
+        url = f"https://api.coingecko.com/api/v3/simple/price?ids={coins}&vs_currencies=usd"
+        data = requests.get(url, timeout=6).json()
+        
+        parts = []
+        if "bitcoin" in data:
+            parts.append(f"BTC: ${data['bitcoin']['usd']:,.0f}")
+        if "ethereum" in data:
+            parts.append(f"ETH: ${data['ethereum']['usd']:,.0f}")
+        if "solana" in data:
+            parts.append(f"SOL: ${data['solana']['usd']:.1f}")
+            
+        info.append(" | ".join(parts).replace(",", ".")) # Format $XX.XXX instead of $XX,XXX in ES
+    except Exception:
+        pass
+        
+    try:
+        data_fg = requests.get("https://api.alternative.me/fng/", timeout=5).json()
+        val = int(data_fg["data"][0]["value"])
+        emoji = "🔴" if val <= 25 else "🟢" if val >= 75 else "⚪"
+        info.append(f"📊 Miedo/Codicia: {emoji} ({val}/100)")
+    except Exception:
+        pass
+        
+    return "\n".join(info)
 
 # --- Fin del módulo común ---
 

@@ -1,6 +1,7 @@
-import { generateArticleContent } from './modules/ai/ai.service.js';
-import { fetchLatestNews } from './modules/news/news-sources.service.js';
+import { generateArticleContent } from '../modules/ai/ai.service.js';
+import { fetchLatestNews } from '../modules/news/news-sources.service.js';
 import { PrismaClient } from '@prisma/client';
+import { generateSlug } from '../lib/utils.js';
 
 const prisma = new PrismaClient();
 
@@ -30,7 +31,7 @@ async function main() {
     category = await prisma.category.create({ data: { name: "Web3", slug: "web3" } });
   }
 
-  const slug = aiResponse.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now();
+  const slug = generateSlug(aiResponse.title, true);
 
   const hasRealSources = newsContext.newsItems.length > 0;
   const newArticle = await prisma.article.create({

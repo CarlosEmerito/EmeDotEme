@@ -71,6 +71,39 @@ export const NEWS_SOURCES: NewsSource[] = [
     reliability: 'medium',
     enabled: false, // Deshabilitado hasta confirmar que el RSS funciona
   },
+  // === FUENTES DE INTELIGENCIA ARTIFICIAL ===
+  {
+    name: 'VentureBeat AI',
+    slug: 'venturebeat-ai',
+    url: 'https://venturebeat.com/category/ai/feed/',
+    language: 'en',
+    reliability: 'high',
+    enabled: true,
+  },
+  {
+    name: 'MIT Technology Review AI',
+    slug: 'mit-ai',
+    url: 'https://www.technologyreview.com/feed/',
+    language: 'en',
+    reliability: 'medium',
+    enabled: true,
+  },
+  {
+    name: 'The AI Report',
+    slug: 'the-ai-report',
+    url: 'https://theaiexchange.com/feed/',
+    language: 'en',
+    reliability: 'medium',
+    enabled: true,
+  },
+  {
+    name: 'El País Tecnología',
+    slug: 'elpais-tecnologia',
+    url: 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/tecnologia/portada',
+    language: 'es',
+    reliability: 'medium',
+    enabled: true,
+  },
 ];
 
 // ============================================================

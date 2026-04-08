@@ -45,6 +45,9 @@ export function Header() {
             <Link className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" href="/categoria/web3">
               Web3
             </Link>
+            <Link className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" href="/categoria/ia">
+              IA
+            </Link>
           </nav>
         </div>
         
@@ -77,6 +80,13 @@ export function Header() {
             onClick={() => setIsMenuOpen(false)}
           >
             Web3
+          </Link>
+          <Link 
+            className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-900 pb-3" 
+            href="/categoria/ia"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            IA
           </Link>
           <Link 
             className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider" 

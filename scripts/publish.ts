@@ -17,7 +17,7 @@ async function main() {
   console.log("🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀");
   console.log("=====================================================\n");
 
-  const categories = ["Mercados", "Tecnología", "Web3"];
+  const categories = ["Mercados", "Tecnología", "Web3", "IA"];
   for (const name of categories) {
     await prisma.category.upsert({
       where: { name },

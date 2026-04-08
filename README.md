@@ -1,6 +1,7 @@
-# EMEDOTEME – Publicación Unificada en Redes Sociales
 
-Este proyecto centraliza y profesionaliza toda la operativa de distribución automática de artículos en redes sociales (Telegram, Binance Square, Bluesky, Twitter/X) para EMEDOTEME, con enfoque en mantenibilidad, logs y robustez.
+# EMEDOTEME – Portal de Noticias y Publicación Unificada
+
+Este proyecto centraliza la generación, publicación y visualización de artículos en redes sociales y web para EMEDOTEME, con enfoque en mantenibilidad, logs y robustez. Ahora incluye noticias de Criptomonedas, Web3, Tecnología y, desde 2026, Inteligencia Artificial (IA).
 
 ---
 
@@ -48,11 +49,30 @@ Este proyecto centraliza y profesionaliza toda la operativa de distribución aut
 
 ---
 
+
 ## 🧩 Estructura profesional
 
-- `/social_publish_utils.py` – Utilidades centrales: resumen IA, logs, normalización, historial, etc.
-- `/publish_telegram.py`, `/publish_bluesky.py`, `/publish_direct.py`, `/publish_twitter.py` – Scripts principales de publicación multi-red.
-- `/logs/emedoteme.log` – Log completo técnico y de auditoría.
+- `/app/` – Frontend Next.js: páginas, rutas, componentes y API.
+- `/modules/` – Lógica de negocio (artículos, IA, imágenes, mercados, newsletter, usuarios).
+- `/scripts/` – Scripts de automatización y utilidades (Node.js y Python).
+- `/public/` – Archivos estáticos y recursos públicos.
+- `/prisma/` – Esquema y migraciones de base de datos.
+- `/logs/` – Logs técnicos y de auditoría.
+- `/config/` – Configuración global y constantes.
+- `/hooks/` – Custom React hooks.
+- `/lib/` – Utilidades compartidas y acceso a servicios.
+- `/tests/` – Pruebas unitarias y de integración.
+---
+
+## 📰 Fuentes de noticias
+
+Las noticias se obtienen automáticamente de fuentes RSS fiables:
+- Cripto: CoinDesk, CoinTelegraph, Decrypt, etc.
+- IA: VentureBeat AI, MIT Technology Review AI, The AI Report, El País Tecnología, etc.
+
+Las fuentes se configuran en `modules/news/news-sources.service.ts`.
+
+---
 
 ---
 

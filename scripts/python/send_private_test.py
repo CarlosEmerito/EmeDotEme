@@ -26,12 +26,14 @@ def format_qa(qa, label):
     return "\n".join(lines)
 
 
+import sys
+
 load_dotenv()
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
-ARTICLE_PATH = os.path.join(os.path.dirname(__file__), "tmp", "test_article.json")
+ARTICLE_PATH = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "tmp", "test_article.json")
 
 if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
     print("❌ Falta TELEGRAM_TOKEN o TELEGRAM_CHAT_ID en el .env")

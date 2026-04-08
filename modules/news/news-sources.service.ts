@@ -38,6 +38,7 @@ export const NEWS_SOURCES: NewsSource[] = [
     language: 'en',
     reliability: 'high',
     enabled: true,
+  },
   // Fuente funcional de MIT Technology Review AI
   {
     name: 'MIT Technology Review AI',
@@ -46,7 +47,6 @@ export const NEWS_SOURCES: NewsSource[] = [
     language: 'en',
     reliability: 'high',
     enabled: true,
-  },
   },
   {
     name: 'Decrypt',
@@ -81,14 +81,7 @@ export const NEWS_SOURCES: NewsSource[] = [
     reliability: 'high',
     enabled: true,
   },
-  {
-    name: 'MIT Technology Review AI',
-    slug: 'mit-ai',
-    url: 'https://www.technologyreview.com/feed/',
-    language: 'en',
-    reliability: 'medium',
-    enabled: true,
-  },
+  // (Eliminado duplicado de MIT Technology Review AI)
   {
     name: 'El País Tecnología',
     slug: 'elpais-tecnologia',

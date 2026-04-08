@@ -31,6 +31,32 @@ export interface NewsItem {
 // ============================================================
 
 export const NEWS_SOURCES: NewsSource[] = [
+    // === FUENTES DE CIBERSEGURIDAD ===
+    {
+      name: 'The Hacker News',
+      slug: 'the-hacker-news',
+      url: 'https://feeds.feedburner.com/TheHackersNews',
+      language: 'en',
+      reliability: 'high',
+      enabled: true,
+    },
+    {
+      name: 'Krebs on Security',
+      slug: 'krebs-on-security',
+      url: 'https://krebsonsecurity.com/feed/',
+      language: 'en',
+      reliability: 'high',
+      enabled: true,
+    },
+    {
+      name: 'Security Affairs',
+      slug: 'security-affairs',
+      url: 'https://securityaffairs.com/feed',
+      language: 'en',
+      reliability: 'medium',
+      enabled: true,
+    },
+  // Para añadir una nueva categoría visible en la web, recuerda crearla en la base de datos y añadirla al menú si aplica.
   {
     name: 'CoinDesk',
     slug: 'coindesk',

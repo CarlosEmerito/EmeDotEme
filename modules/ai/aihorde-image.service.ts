@@ -42,7 +42,7 @@ export async function generateImageWithAIHorde(
     // Prefer square 1024 for SDXL quality unless overridden
     const width = options.width || 1024;
     const height = options.height || 1024;
-    const steps = options.steps || 70; // Subido a 70 para máximo detalle y realismo
+    const steps = options.steps || 100; // Subido a 100 para máximo detalle y realismo
     // Preferred samplers for realism and stability
     const sampler = options.sampler_name || 'k_dpmpp_2m';
 
@@ -57,7 +57,7 @@ export async function generateImageWithAIHorde(
         n: options.n || 1,
         karras: options.karras !== undefined ? options.karras : true,
         qualityToggle: options.qualityToggle !== undefined ? options.qualityToggle : true,
-        upscale: options.upscale !== undefined ? options.upscale : true, // high-res two-step
+        hires_fix: true,
         // NOTE: If 'single_pass' param available, set to false/prefer two-stage process for quality
         // single_pass: options.single_pass !== undefined ? options.single_pass : false,
       },
@@ -65,7 +65,7 @@ export async function generateImageWithAIHorde(
       censor_nsfw: true,
       r2: true,
       shared: false,
-      models: ["SDXL", "RealisticVision", "Deliberate"], // Strictly prioritize premium/photo-real models
+      models: ["AlbedoBase XL (SDXL)", "Juggernaut XL", "DreamShaper", "Deliberate"], // Strictly prioritize premium/photo-real models
     };
     // --- END AUTO-CONFIG ---
     console.log(`[AI HORDE] Negative prompt enviado (${articleSlug}):\n${negativePrompt}`); // Logging explícito

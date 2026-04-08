@@ -50,13 +50,12 @@ export interface ImagePipelineResult {
 const AI_HORDE_OPTIONS = {
   width: 1024,
   height: 1024,
-  steps: 70,
+  steps: 100,
   sampler_name: 'k_dpmpp_2m',
   n: 1,
   karras: true,
   qualityToggle: true,
-  upscale: true,
-  negative_prompt: "letter, text, watermark, logo, signature, words, handwriting, calligraphy, Chinese characters, captions, subtitles, labels, numbers, English characters, nsfw, porn, sex, sexual, child, children, naked, nude, loli, shota, explicit, underage, abuse, offensive, suggestive, erotic, hentai, mature, gore, violence, blood, disturbing, csam, lowres, bad anatomy, bad hands, missing fingers, extra digits, cropped, worst quality, low quality, jpeg artifacts",
+  negative_prompt: "text, watermark, logo, signature, words, handwriting, captions, subtitles, labels, numbers, nsfw, porn, nude, explicit, worst quality, low quality, jpeg artifacts, blurry, muted colors, deformed, bad anatomy",
 };
 
 // ============================================================
@@ -249,8 +248,8 @@ export async function generateArticleImageAndAnalyzeQA(
   const attempts: string[] = [];
   const errors: string[] = [];
   const caption = generateCaption(imageData.title, imageData.topic);
-  const hordePrompt = imageData.originalPrompt ||
-    `${imageData.title}. Professional illustration, high quality, no watermarks, no text, realistic style.`;
+  const basePrompt = imageData.originalPrompt || imageData.title;
+  const hordePrompt = `${basePrompt}, masterpiece, highly detailed, 8k resolution, award-winning photography, cinematic lighting, ultra-realistic, sharp focus, visually stunning, clean, vibrant`.slice(0, 1000);
 
   console.log('\n🖼️ ═══════════════════════════════════════════════════════');
   console.log('🖼️  PIPELINE DE IMAGEN');

@@ -121,33 +121,35 @@ REGLAS IMPORTANTES:
 
     userPrompt = `A continuación tienes noticias reales de fuentes verificadas. Usa esta información para generar UN artículo en español.
 
-${newsText}
+  ${newsText}
 
-INSTRUCCIONES:
-- Título: claro, atractivo, en español
-- Resumen: 1-2 líneas que capturen lo esencial
-- Contenido: HTML con etiquetas p, h2, h3. El artículo DEBE SER LARGO, PROFUNDO Y DETALLADO. Escribe como en un periódico digital líder (al menos 5 a 6 párrafos extensos). OBLIGATORIO: Intercala al menos 2 o 3 subtítulos secundarios (<h2> o <h3>) en medio del texto para dinamizar la lectura y separar las ideas. NO incluyas enlaces a fuentes ni sección de fuentes.
-- Tags: 3-5 palabras clave sin '#', ej: ["Bitcoin", "ETF", "Mercado"]
-- imagePrompt: descripción en inglés para generar una imagen ilustrativa
-- sourceUrl: la URL de la fuente principal (la más relevante)
-- sources: array con TODAS las URLs de las fuentes consultadas
+  INSTRUCCIONES:
+  - Título: claro, atractivo, en español
+  - Resumen: 1-2 líneas que capturen lo esencial
+  - Contenido: HTML con etiquetas p, h2, h3. El artículo DEBE SER LARGO, PROFUNDO Y DETALLADO. Escribe como en un periódico digital líder (al menos 5 a 6 párrafos extensos). OBLIGATORIO: Intercala al menos 2 o 3 subtítulos secundarios (<h2> o <h3>) en medio del texto para dinamizar la lectura y separar las ideas. NO incluyas enlaces a fuentes ni sección de fuentes.
+  - Tags: 3-5 palabras clave sin '#'
+  - imagePrompt: descripción en inglés para generar una imagen ilustrativa
+  - sourceUrl: la URL de la fuente principal (la más relevante)
+  - sources: array con TODAS las URLs de las fuentes consultadas
+  - Respeta las reglas ortográficas del español: usa mayúsculas en nombres propios y siglas.
 
-EVITA: hashtags en el HTML, inventar datos no presentes en las fuentes, incluir enlaces o sección de fuentes en el contenido.
-ATENCIÓN: Dado que la respuesta debe ser un JSON, NUNCA uses comillas dobles (") dentro del texto de los campos. Para el HTML, usa obligatoriamente comillas simples (ej: <h2 class='titulo'>) o escapa las comillas.
+  EVITA: hashtags en el HTML, inventar datos no presentes en las fuentes, incluir enlaces o sección de fuentes en el contenido.
+  ATENCIÓN: Dado que la respuesta debe ser un JSON, NUNCA uses comillas dobles (") dentro del texto de los campos. Para el HTML, usa obligatoriamente comillas simples (ej: <h2 class='titulo'>) o escapa las comillas.
 
-Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags, sourceUrl, sources}.${avoidanceClause}`;
+  Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags, sourceUrl, sources}.${avoidanceClause}`;
   } else {
     userPrompt = `Genera un artículo de noticias cripto en español.
-- Título: claro y atractivo
-- Resumen: 1-2 líneas
-- Contenido: HTML con etiquetas p, h2, h3. El artículo DEBE SER LARGO, PROFUNDO Y DETALLADO. Extiéndete al menos 5 a 6 párrafos sustanciales. OBLIGATORIO: Intercala al menos 2 o 3 subtítulos secundarios (<h2> o <h3>) en medio del texto para dinamizar la lectura y dividir la introducción, desarrollo y conclusión técnica.
-- Tags: 3-5 palabras clave sin '#', ej: ["Bitcoin", "ETF", "Mercado"]
-- imagePrompt: descripción para generar imagen
+  - Título: claro y atractivo
+  - Resumen: 1-2 líneas
+  - Contenido: HTML con etiquetas p, h2, h3. El artículo DEBE SER LARGO, PROFUNDO Y DETALLADO. Extiéndete al menos 5 a 6 párrafos sustanciales. OBLIGATORIO: Intercala al menos 2 o 3 subtítulos secundarios (<h2> o <h3>) en medio del texto para dinamizar la lectura y dividir la introducción, desarrollo y conclusión técnica.
+  - Tags: 3-5 palabras clave sin '#'
+  - imagePrompt: descripción para generar imagen
+  - Respeta las reglas ortográficas del español: usa mayúsculas en nombres propios y siglas.
 
-EVITA: hashtags en HTML, temas recientes listados arriba, contenido repetitivo.
-ATENCIÓN: Usa obligatoriamente comillas simples (') para cualquier atributo HTML. NO uses comillas dobles (") dentro de los campos para evitar romper el JSON.
+  EVITA: hashtags en HTML, temas recientes listados arriba, contenido repetitivo.
+  ATENCIÓN: Usa obligatoriamente comillas simples (') para cualquier atributo HTML. NO uses comillas dobles (") dentro de los campos para evitar romper el JSON.
 
-Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags}.${avoidanceClause}`;
+  Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags}.${avoidanceClause}`;
   }
   
   let result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });

@@ -27,7 +27,7 @@ echo "Se ejecutará cada 3-5 horas de forma aleatoria."
 echo "Puedes cerrar esta terminal y seguirá funcionando."
 echo ""
 echo "Para detenerlo usa: ./detener-bot.sh"
-echo "Para ver la actividad usa: tail -f bot.log"
+echo "Para ver la actividad usa: tail -f logs/emedoteme.log"
 echo "================================================="
 
 # Bucle Infinito que corre en background

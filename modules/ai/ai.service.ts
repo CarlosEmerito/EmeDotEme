@@ -1,3 +1,41 @@
+// --- Generación vía Ollama local (standalone) ---
+export async function generateTextWithOllama({ systemPrompt, userPrompt }: { systemPrompt: string; userPrompt: string; }): Promise<string | null> {
+  try {
+    const url = 'http://localhost:11434/api/generate';
+    const model = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
+    const prompt = `${systemPrompt}\n\n${userPrompt}`;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 600000); // 10 min timeout (600,000 ms)
+
+    const fetchNode = (await import('node-fetch')).default;
+    const response = await fetchNode(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model,
+        prompt,
+        stream: false
+      }),
+      signal: controller.signal as any
+    });
+    clearTimeout(timeoutId);
+    if (!response.ok) {
+      console.error('❌ Error HTTP desde Ollama:', response.status, await response.text());
+      return null;
+    }
+    const data = (await response.json()) as any;
+    if (!data || !data.response) {
+      console.error('❌ Respuesta inesperada desde Ollama:', data);
+      return null;
+    }
+    console.log('✅ Texto generado con Ollama:', data.response.substring(0, 100), '...');
+    return data.response;
+  } catch (err) {
+    console.error('❌ Error llamando a Ollama:', err);
+    return null;
+  }
+}
 // --- Post-procesado ortográfico vía Ollama local ---
 export async function postprocessWithOllama(article: any): Promise<any> {
   const systemPrompt = `Eres un corrector ortográfico experto en noticias de tecnología y criptomonedas. Tu tarea es corregir SOLO las mayúsculas de nombres propios, siglas, títulos y entidades relevantes en español. No modifiques el contenido, solo corrige las mayúsculas donde sea necesario. Devuelve el resultado en formato JSON con los mismos campos recibidos.`;

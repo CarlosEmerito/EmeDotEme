@@ -10,43 +10,7 @@ export async function generateWeeklyNewsletter(..._args: any[]) {
     subject: 'Newsletter semanal (placeholder)',
     html: '<p>Contenido de ejemplo generado por IA.</p>',
     htmlContent: '<p>Contenido de ejemplo generado por IA.</p>',
-    articles: []
-  };
-}
-
-// --- Post-procesado ortográfico vía Ollama local ---
-export async function postprocessWithOllama(article: any): Promise<any> {
-  const systemPrompt = `Eres un corrector ortográfico experto en noticias de tecnología y criptomonedas. Tu tarea es corregir SOLO las mayúsculas de nombres propios, siglas, títulos y entidades relevantes en español. No modifiques el contenido, solo corrige las mayúsculas donde sea necesario. Devuelve el resultado en formato JSON con los mismos campos recibidos.`;
-  const userPrompt = `Corrige las mayúsculas en el siguiente artículo:\n\n${JSON.stringify({
-    title: article.title,
-    summary: article.summary,
-    content: article.content
-  }, null, 2)}\n\nDevuelve SOLO el JSON corregido, nada más.`;
-  const result = await generateTextWithOllama({ systemPrompt, userPrompt });
-  if (!result) return article;
-  try {
-    // Limpiar posibles code blocks y parsear JSON
-    const cleaned = result.replace(/```json\n?/g, '').replace(/```/g, '').trim();
-    const jsonStart = cleaned.indexOf('{');
-    const jsonEnd = cleaned.lastIndexOf('}');
-    if (jsonStart === -1 || jsonEnd === -1) return article;
-    const parsed = JSON.parse(cleaned.substring(jsonStart, jsonEnd + 1));
-    return { ...article, ...parsed };
-  } catch (e) {
-    console.error('❌ Error parseando post-procesado Ollama:', e);
-    return article;
-  }
-}
-
-// --- Generación vía Ollama local (standalone) ---
-export async function generateTextWithOllama({ systemPrompt, userPrompt }: { systemPrompt: string; userPrompt: string; }): Promise<string | null> {
-  try {
-    const url = 'http://localhost:11434/api/generate';
-    const model = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
-    const prompt = `${systemPrompt}\n\n${userPrompt}`;
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 600000); // 10 min timeout (600,000 ms)
+    // (El bloque duplicado y la llave extra han sido eliminados)
 
     const fetchNode = (await import('node-fetch')).default;
     const response = await fetchNode(url, {

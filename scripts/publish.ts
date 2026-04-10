@@ -30,7 +30,7 @@ async function main() {
   }
 
   const allCategories = await prisma.category.findMany();
-  const randomCategory = allCategories[Math.floor(Math.random() * allCategories.length)];
+
 
   try {
     // Obtener títulos (ES y EN) y URLs recientes para evitar repetición
@@ -114,10 +114,19 @@ async function main() {
     // Priorizar imagen de la fuente RSS sobre sourceImageUrl del AI
     const rssImageUrl = newsContext.newsItems[0]?.imageUrl || aiResponse.sourceImageUrl;
     
+    // Determinar la categoría sugerida por la IA
+    let selectedCategory = allCategories.find(
+      (cat) => cat.name.toLowerCase() === (aiResponse.category || '').toLowerCase()
+    );
+    if (!selectedCategory) {
+      // Si la IA no sugiere una categoría válida, usar la primera por defecto
+      selectedCategory = allCategories[0];
+    }
+
     const imageData = {
       title: aiResponse.title,
       slug: slug,
-      topic: randomCategory.name,
+      topic: selectedCategory.name,
       originalPrompt: aiResponse.imagePrompt,
       summary: aiResponse.summary
     };
@@ -157,7 +166,7 @@ async function main() {
         sourceUrl: aiResponse.sourceUrl || null,
         isOriginal: !(newsContext.newsItems.length > 0),
         sentiment: aiResponse.sentiment || "Neutral ➡️",
-        categoryId: randomCategory.id,
+        categoryId: selectedCategory.id,
         author: 'Carlos "Emérito" López Lovera',
         published: true,
       },

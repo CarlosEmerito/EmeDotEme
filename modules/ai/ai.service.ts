@@ -71,6 +71,7 @@ export interface GeneratedArticle {
   /** Prompt para imagen */
   sourceImageUrl?: string;
   imageCaption?: string;
+  category?: string;
 }
 
 // ============================================================

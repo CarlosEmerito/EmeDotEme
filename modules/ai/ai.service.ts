@@ -6,9 +6,12 @@ import { formatNewsForPrompt } from '../news/news-sources.service';
  * Placeholder para generación de newsletter semanal
  */
 export async function generateWeeklyNewsletter(..._args: any[]) {
+  return {
+    subject: 'Newsletter semanal (placeholder)',
+    html: '<p>Contenido de ejemplo generado por IA.</p>',
+    htmlContent: '<p>Contenido de ejemplo generado por IA.</p>',
     articles: []
   };
-  }
 }
   try {
     const url = 'http://localhost:11434/api/generate';

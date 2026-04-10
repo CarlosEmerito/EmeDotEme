@@ -6,22 +6,22 @@ import { formatNewsForPrompt } from '../news/news-sources.service';
  * Placeholder para generación de newsletter semanal
  */
 export async function generateWeeklyNewsletter(..._args: any[]) {
-	return {
-		subject: 'Newsletter semanal (placeholder)',
-		html: '<p>Contenido de ejemplo generado por IA.</p>',
-		htmlContent: '<p>Contenido de ejemplo generado por IA.</p>',
-		articles: []
-	};
+  return {
+    subject: 'Newsletter semanal (placeholder)',
+    html: '<p>Contenido de ejemplo generado por IA.</p>',
+    htmlContent: '<p>Contenido de ejemplo generado por IA.</p>',
+    articles: []
+  };
+}
+
 // --- Post-procesado ortográfico vía Ollama local ---
 export async function postprocessWithOllama(article: any): Promise<any> {
   const systemPrompt = `Eres un corrector ortográfico experto en noticias de tecnología y criptomonedas. Tu tarea es corregir SOLO las mayúsculas de nombres propios, siglas, títulos y entidades relevantes en español. No modifiques el contenido, solo corrige las mayúsculas donde sea necesario. Devuelve el resultado en formato JSON con los mismos campos recibidos.`;
-  const userPrompt = `Corrige las mayúsculas en el siguiente artículo:
-}
-
+  const userPrompt = `Corrige las mayúsculas en el siguiente artículo:\n\n${JSON.stringify({
     title: article.title,
     summary: article.summary,
     content: article.content
-  }, null, 2)}
+  }, null, 2)}\n\nDevuelve SOLO el JSON corregido, nada más.`;
 // --- Generación vía Ollama local (fallback) ---
 async function generateTextWithOllama({ systemPrompt, userPrompt }: { systemPrompt: string; userPrompt: string; }): Promise<string | null> {
   const result = await generateTextWithOllama({ systemPrompt, userPrompt });

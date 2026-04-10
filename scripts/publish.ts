@@ -97,13 +97,9 @@ async function main() {
     aiResponse = await translateArticleContent(aiResponse);
     
     // Aplicar sentence case a los títulos
-    aiResponse.title = toSentenceCase(aiResponse.title);
-    if (aiResponse.titleEn) {
-      aiResponse.titleEn = toSentenceCase(aiResponse.titleEn);
-    }
-    
-    // Normalizar mayúsculas en todo el contenido (cryptos, siglas, etc.)
-    aiResponse = normalizeArticleContent(aiResponse);
+    // Post-procesado ortográfico por IA local (Ollama)
+    const { postprocessWithOllama } = await import("../modules/ai/ai.service");
+    aiResponse = await postprocessWithOllama(aiResponse);
     
     const t1 = Date.now();
     console.log(`\n⏱️ Tiempo de generación: ${((t1 - t0) / 1000).toFixed(2)} segundos`);

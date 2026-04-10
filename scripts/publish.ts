@@ -133,7 +133,7 @@ async function main() {
     try {
       const imageResult = await generateArticleImageAndAnalyzeQA(imageData, rssImageUrl);
       imageUrl = imageResult.imageUrl;
-      imageCaption = imageResult.caption || aiResponse.imageCaption || `Ilustración sobre ${randomCategory.name}`;
+      imageCaption = imageResult.caption || aiResponse.imageCaption || `Ilustración sobre ${selectedCategory.name}`;
       console.log(`✅ Imagen final (${imageResult.source}): ${imageUrl.substring(0, 100)}...`);
       console.log(`   Pasos: ${imageResult.attempts.join(' → ')}`);
       if (imageResult.errors.length > 0) {

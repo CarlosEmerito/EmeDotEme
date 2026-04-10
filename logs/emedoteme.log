@@ -5667,3 +5667,504 @@ text, watermark, logo, signature, words, handwriting, captions, subtitles, label
 ❌ Ollama falló y devolvió el artículo de ejemplo. Abortando publicación...
 ✅ Aviso de error enviado al Telegram privado.
 ❌ Error al generar el artículo. Abortando publicación en redes.
+
+================== 📰 PUBLICAR.sh (2026-04-10 17:34:01) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 6 noticias recientes (últimas 48h)
+✅ Decrypt: 38 noticias recientes (últimas 48h)
+✅ El País Tecnología: 1 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ The Hacker News: 13 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 47
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 47 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/363878/operation-atlantic-us-uk-agencies-trace-freeze-millions-stolen-crypto"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/190519/security/u-s-cisa-adds-a-flaw-in-ivanti-epmm-to-its-known-exploited-vulnerabilities-catalog-2.html"
+📊 Tras filtrar cubiertas: 45 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "BitTensor AI Token Plunges as Top Builder Departs Over Decen..." (1 fuentes)
+  📌 Cluster 2: "The magic word for digital assets adoption and success: choi..." (1 fuentes)
+  📌 Cluster 3: "Ransomware attack on ChipSoft knocks EHR services offline ac..." (1 fuentes)
+  📌 Cluster 4: "Morning Minute: Bitcoin Breaks $73K as Strategy's STRC Bid G..." (1 fuentes)
+  📌 Cluster 5: "What’s in a name? Moderna’s “vaccine” vs. “therapy” dilemma..." (1 fuentes)
+
+🎯 Cluster seleccionado: "BitTensor AI Token Plunges as Top Builder Departs Over Decen..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "BitTensor: El Token TAO Cae en Picado Tras la Salida de un Desarrollador Clave por Dud...
+📝 Gemini raw response length: 4762 chars
+📝 First 800 chars: {
+  "title": "BitTensor: El Token TAO Cae en Picado Tras la Salida de un Desarrollador Clave por Dudas de Descentralización",
+  "summary": "El token nativo de BitTensor, TAO, ha sufrido una caída de más del 18% en el mercado a raíz de un conflicto público entre un operador de subred líder y el fundador de la red de IA, centrado en preocupaciones sobre la descentralización del proyecto.",
+  "content": "<p>El ecosistema de inteligencia artificial descentralizada BitTensor se encuentra en el centro de la atención del mercado cripto, luego de que su token nativo, TAO, experimentara una drástica caída de más del 18%. Este descenso significativo en su valoración se produce en medio de una visible disputa pública que ha culminado con la partida de un operador de subred de gran influencia, quien h...
+🔍 JSON extraído: {
+  "title": "BitTensor: El Token TAO Cae en Picado Tras la Salida de un Desarrollador Clave por Dudas de Descentralización",
+  "summary": "El token nativo de BitTensor, TAO, ha sufrido una caída de m...
+✅ JSON parseado correctamente: "BitTensor: El Token TAO Cae en Picado Tras la Salida de un D..."
+✅ Tags: ["BitTensor","TAO","Criptomonedas","Inteligencia Artificial","Descentralización"]
+✅ Summary length: 248 chars
+✅ Content length: 3713 chars
+✅ Fuente principal: https://decrypt.co/363926/bittensor-token-plunges-builder-departs-decentralization-doubts
+✅ Total fuentes citadas: 1
+📝 ImagePrompt presente: SÍ
+   Prompt: A digital graph showing a sharp decline, with abstract representations of AI neural networks and blo...
+
+⏱️ Tiempo de generación: 12.94 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] Imagen de la fuente: https://cdn.decrypt.co/wp-content/uploads/2026/04/decrypt-style-bittensor-tao-gI...
+🔍 [QA Fuente RSS] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...
+✅ Gemini (gemini-2.5-flash):
+{
+  "coherente": true,
+  "razon_coherencia": "La imagen muestra tokens con la letra 'T', que es el símbolo del token TAO de Bittensor, el cual es el tema central del artículo.",
+  "descripcion": "La imagen presenta tres tokens metálicos de forma ovalada con una 'T' estilizada en su superficie, sobre un fondo oscuro con elementos abstractos en tonos rojos y rosados.",
+  "calidad_aceptable": false,
+  "problemas_detectados": [
+    "marca de agua de Decrypt detectada"
+  ],
+  "caption_mejorado": "Tokens digitales con la letra 'T', que representan el token TAO de Bittensor, en un contexto de mercado."
+}
+❌ [QA Fuente RSS] Imagen RECHAZADA: calidad baja, marca de agua — La imagen muestra tokens con la letra 'T', que es el símbolo del token TAO de Bittensor, el cual es el tema central del artículo.
+
+🎨 [Paso 2] Generación con AI Horde (intento 1)
+
+🎨 [AI Horde #1] Generando imagen...
+   Prompt: A digital graph showing a sharp decline, with abstract representations of AI neural networks and blo...
+[AI HORDE] Negative prompt enviado (bittensor-el-token-tao-cae-en-picado-tras-la-salida-de-un-desarrollador-clave-por-dudas-de-descentralizaci-n-1775835257966):
+text, watermark, logo, signature, words, handwriting, captions, subtitles, labels, numbers, nsfw, porn, nude, explicit, worst quality, low quality, jpeg artifacts, blurry, muted colors, deformed, bad anatomy
+[AI HORDE] Kudos usados: 402 para slug: bittensor-el-token-tao-cae-en-picado-tras-la-salida-de-un-desarrollador-clave-por-dudas-de-descentralizaci-n-1775835257966
+✅ [AI Horde #1] Imagen generada OK: https://a223539ccf6caa2d76459c9727d276e6.r2.cloudflarestorage.com/stable-horde/3...
+✅ [Supabase] Imagen subida: bittensor-el-token-tao-cae-en-picado-tras-la-salida-de-un-desarrollador-clave-por-dudas-de-descentralizaci-n-1775835257966-1775835359192.webp
+🖼️ ═══ RESULTADO: AI Horde intento 1 usada (sin QA) ═══
+
+✅ Imagen final (ai_horde): https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/bittensor-el-token-...
+   Pasos: Paso 1: Imagen de fuente RSS → Paso 2: AI Horde intento 1
+   Errores recuperados: Imagen de fuente RSS no pasó QA
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: Bittensor: el token tao cae en picado tras la salida de un desarrollador clave por dudas de descentralización
+- Sentimiento: Neutral ➡️
+- Categoría: IA
+- URL Imagen: https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/bittensor-el-token-tao-cae-en-picado-tras-la-salida-de-un-desarrollador-clave-por-dudas-de-descentralizaci-n-1775835257966-1775835359192.webp
+- Resumen: El token nativo de BitTensor, TAO, ha sufrido una caída de más del 18% en el mercado a raíz de un conflicto público entre un operador de subred líder y el fundador de la red de IA, centrado en preocupaciones sobre la descentralización del proyecto.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+[2️⃣] Enviando a Binance Square...
+2026-04-10 17:36:04,528 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-10 17:36:04,528 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-10 17:36:04,529 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-10 17:36:04,529 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+
+================== 📰 PUBLICAR.sh (2026-04-10 17:59:24) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 38 noticias recientes (últimas 48h)
+✅ El País Tecnología: 1 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 6 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ The Hacker News: 13 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 47
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 47 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/363926/bittensor-token-plunges-builder-departs-decentralization-doubts"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/363878/operation-atlantic-us-uk-agencies-trace-freeze-millions-stolen-crypto"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/190519/security/u-s-cisa-adds-a-flaw-in-ivanti-epmm-to-its-known-exploited-vulnerabilities-catalog-2.html"
+📊 Tras filtrar cubiertas: 44 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "Powell, Bessent Warn Banks About Security Risks From Anthrop..." (1 fuentes)
+  📌 Cluster 2: "Trump-Linked WLFI Erases $427 Million From Market Cap on DeF..." (1 fuentes)
+  📌 Cluster 3: "Star Xu calls CZ a ‘liar’ as founders of world’s largest cry..." (1 fuentes)
+  📌 Cluster 4: "The magic word for digital assets adoption and success: choi..." (1 fuentes)
+  📌 Cluster 5: "Ransomware attack on ChipSoft knocks EHR services offline ac..." (1 fuentes)
+
+🎯 Cluster seleccionado: "Powell, Bessent Warn Banks About Security Risks From Anthrop..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "Powell y Bessent Advierten a Bancos sobre Riesgos de Ciberseguridad por la IA Mythos d...
+📝 Gemini raw response length: 6913 chars
+📝 First 800 chars: {
+  "title": "Powell y Bessent Advierten a Bancos sobre Riesgos de Ciberseguridad por la IA Mythos de Anthropic",
+  "summary": "Altos funcionarios del Tesoro y la Reserva Federal de EE. UU. han alertado a las instituciones bancarias sobre potenciales riesgos de ciberseguridad derivados del avanzado modelo de inteligencia artificial Mythos de Anthropic.",
+  "content": "<p>En un movimiento que subraya la creciente preocupación por la intersección entre la inteligencia artificial de vanguardia y la estabilidad financiera, altos funcionarios del gobierno de Estados Unidos han emitido una advertencia a las instituciones bancarias. Según informes, Jerome Powell, presidente de la Reserva Federal, y un funcionario del Tesoro identificado como Bessent, alertaron a los bancos sobre los riesgos de ci...
+🔍 JSON extraído: {
+  "title": "Powell y Bessent Advierten a Bancos sobre Riesgos de Ciberseguridad por la IA Mythos de Anthropic",
+  "summary": "Altos funcionarios del Tesoro y la Reserva Federal de EE. UU. han alerta...
+✅ JSON parseado correctamente: "Powell y Bessent Advierten a Bancos sobre Riesgos de Ciberse..."
+✅ Tags: ["Ciberseguridad","Inteligencia Artificial","Banca","Regulación","Anthropic"]
+✅ Summary length: 226 chars
+✅ Content length: 5993 chars
+✅ Fuente principal: https://decrypt.co/363927/powell-bessent-warn-banks-security-anthropic-mythos-ai
+✅ Total fuentes citadas: 1
+📝 ImagePrompt presente: SÍ
+   Prompt: A futuristic bank vault door, with glowing AI neural network patterns overlaid on its surface, hinti...
+
+⏱️ Tiempo de generación: 38.13 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] Imagen de la fuente: https://cdn.decrypt.co/wp-content/uploads/2025/06/J-Powell-2-gID_7.png...
+🔍 [QA Fuente RSS] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...
+❌ Error Gemini Vision PRIMARIA: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔍 Analizando imagen con Gemini Vision (SECUNDARIA)...
+❌ Error Gemini Vision SECUNDARIA: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔍 Analizando imagen con Gemini Vision (TERCIARIA)...
+❌ Error Gemini Vision TERCIARIA: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+⚠️ [QA Fuente RSS] Gemini Vision falló, intentando fallback con Ollama local... (Error: Todas las keys de Gemini Vision fallaron: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.)
+🔍 Analizando imagen con Ollama (llama3.2-vision:11b)...
+✅ Ollama (llama3.2-vision:11b):
+{
+  "coherente": true,
+  "razon_coherencia": "El logo de la Federal Reserve System es coherente con el artículo.",
+  "descripcion": "El logo de la Federal Reserve System.",
+  "calidad_aceptable": true,
+  "problemas_detectados": [],
+  "caption_mejorado": "El logo de la Federal Reserve System."
+}
+✅ [QA Fuente RSS] Imagen APROBADA: El logo de la Federal Reserve System es coherente con el artículo.
+✅ [Supabase] Imagen subida: powell-y-bessent-advierten-a-bancos-sobre-riesgos-de-ciberseguridad-por-la-ia-mythos-de-anthropic-1775836806390-1775836848027.png
+🖼️ ═══ RESULTADO: Imagen de fuente RSS aprobada ═══
+
+✅ Imagen final (rss_source): https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/powell-y-bessent-ad...
+   Pasos: Paso 1: Imagen de fuente RSS
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: Powell y bessent advierten a bancos sobre riesgos de ciberseguridad por la ia mythos de anthropic
+- Sentimiento: Neutral ➡️
+- Categoría: Web3
+- URL Imagen: https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/powell-y-bessent-advierten-a-bancos-sobre-riesgos-de-ciberseguridad-por-la-ia-mythos-de-anthropic-1775836806390-1775836848027.png
+- Resumen: Altos funcionarios del Tesoro y la Reserva Federal de EE. UU. han alertado a las instituciones bancarias sobre potenciales riesgos de ciberseguridad derivados del avanzado modelo de inteligencia artificial Mythos de Anthropic.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+[2️⃣] Enviando a Binance Square...
+2026-04-10 18:00:51,016 [WARNING] [warn] Gemini PRIMARIA error 503, probando siguiente...
+2026-04-10 18:00:51,016 [WARNING] [warn] Gemini PRIMARIA error 503, probando siguiente...
+2026-04-10 18:00:54,413 [WARNING] [warn] Gemini SECUNDARIA error 503, probando siguiente...
+2026-04-10 18:00:54,413 [WARNING] [warn] Gemini SECUNDARIA error 503, probando siguiente...
+2026-04-10 18:00:59,255 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-10 18:00:59,255 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-10 18:00:59,256 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-10 18:00:59,256 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+
+================== 📰 PUBLICAR.sh (2026-04-10 18:09:32) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 38 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 6 noticias recientes (últimas 48h)
+✅ El País Tecnología: 1 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ The Hacker News: 13 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 47
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 47 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/363927/powell-bessent-warn-banks-security-anthropic-mythos-ai"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/363926/bittensor-token-plunges-builder-departs-decentralization-doubts"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/363878/operation-atlantic-us-uk-agencies-trace-freeze-millions-stolen-crypto"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/190519/security/u-s-cisa-adds-a-flaw-in-ivanti-epmm-to-its-known-exploited-vulnerabilities-catalog-2.html"
+📊 Tras filtrar cubiertas: 43 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "Trump-Linked WLFI Erases $427 Million From Market Cap on DeF..." (1 fuentes)
+  📌 Cluster 2: "Star Xu calls CZ a ‘liar’ as founders of world’s largest cry..." (1 fuentes)
+  📌 Cluster 3: "The magic word for digital assets adoption and success: choi..." (1 fuentes)
+  📌 Cluster 4: "Ransomware attack on ChipSoft knocks EHR services offline ac..." (1 fuentes)
+  📌 Cluster 5: "Morning Minute: Bitcoin Breaks $73K as Strategy's STRC Bid G..." (1 fuentes)
+
+🎯 Cluster seleccionado: "Trump-Linked WLFI Erases $427 Million From Market Cap on DeF..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "WLFI, el token vinculado a Trump, pierde 427 millones de dólares en capitalización de ...
+📝 Gemini raw response length: 4946 chars
+📝 First 800 chars: {
+  "title": "WLFI, el token vinculado a Trump, pierde 427 millones de dólares en capitalización de mercado por préstamo DeFi y propuesta de desbloqueo",
+  "summary": "El token WLFI, asociado a la figura de Donald Trump, ha experimentado una drástica caída de 427 millones de dólares en su capitalización, generando preocupación en el protocolo de préstamos descentralizados Dolomite por una posible deuda incobrable.",
+  "content": "<p>En un golpe significativo para el mercado de criptomonedas, el token World Liberty (WLFI), conocido por su vínculo con el expresidente estadounidense Donald Trump, ha borrado la asombrosa cifra de 427 millones de dólares de su capitalización de mercado. Este desplome se atribuye a una combinación de factores, incluyendo un préstamo en el ámbito de las finanzas ...
+🔍 JSON extraído: {
+  "title": "WLFI, el token vinculado a Trump, pierde 427 millones de dólares en capitalización de mercado por préstamo DeFi y propuesta de desbloqueo",
+  "summary": "El token WLFI, asociado a la fig...
+✅ JSON parseado correctamente: "WLFI, el token vinculado a Trump, pierde 427 millones de dól..."
+✅ Tags: ["DeFi","WLFI","Criptomonedas","Dolomite","Deuda"]
+✅ Summary length: 249 chars
+✅ Content length: 3924 chars
+✅ Fuente principal: https://decrypt.co/363928/trump-linked-wlfi-erases-427-million-token-unlock-proposal-defi-loan
+✅ Total fuentes citadas: 1
+📝 ImagePrompt presente: SÍ
+   Prompt: Digital representation of a plummeting market chart, with a stylized 'WLFI' token icon and a backdro...
+
+⏱️ Tiempo de generación: 15.38 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] Imagen de la fuente: https://cdn.decrypt.co/wp-content/uploads/2025/11/world-liberty-financial-wlfi-t...
+🔍 [QA Fuente RSS] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...
+✅ Gemini (gemini-2.5-flash):
+{
+  "coherente": true,
+  "razon_coherencia": "La imagen muestra una representación de Donald Trump y el logo de 'World Liberty Financial', que está directamente relacionado con el token WLFI y su asociación con Trump, ambos mencionados en el artículo.",
+  "descripcion": "La imagen muestra una composición abstracta con una imagen borrosa de Donald Trump, el logo y nombre de 'World Liberty Financial', y el texto 'Shape a New Era of Finance Be DeFiant', con formas geométricas en tonos azules y naranjas.",
+  "calidad_aceptable": false,
+  "problemas_detectados": [
+    "marca de agua de decrypt detectada"
+  ],
+  "caption_mejorado": "Representación visual del token WLFI, vinculado a Donald Trump y 'World Liberty Financial', en el contexto de las finanzas descentralizadas (DeFi)."
+}
+❌ [QA Fuente RSS] Imagen RECHAZADA: calidad baja, marca de agua — La imagen muestra una representación de Donald Trump y el logo de 'World Liberty Financial', que está directamente relacionado con el token WLFI y su asociación con Trump, ambos mencionados en el artículo.
+
+🎨 [Paso 2] Generación con AI Horde (intento 1)
+
+🎨 [AI Horde #1] Generando imagen...
+   Prompt: Digital representation of a plummeting market chart, with a stylized 'WLFI' token icon and a backdro...
+[AI HORDE] Negative prompt enviado (wlfi-el-token-vinculado-a-trump-pierde-427-millones-de-d-lares-en-capitalizaci-n-de-mercado-por-pr-stamo-defi-y-propuesta-de-desbloqueo-1775837390829):
+text, watermark, logo, signature, words, handwriting, captions, subtitles, labels, numbers, nsfw, porn, nude, explicit, worst quality, low quality, jpeg artifacts, blurry, muted colors, deformed, bad anatomy
+[AI HORDE] Kudos usados: 203 para slug: wlfi-el-token-vinculado-a-trump-pierde-427-millones-de-d-lares-en-capitalizaci-n-de-mercado-por-pr-stamo-defi-y-propuesta-de-desbloqueo-1775837390829
+✅ [AI Horde #1] Imagen generada OK: https://a223539ccf6caa2d76459c9727d276e6.r2.cloudflarestorage.com/stable-horde/7...
+✅ [Supabase] Imagen subida: wlfi-el-token-vinculado-a-trump-pierde-427-millones-de-d-lares-en-capitalizaci-n-de-mercado-por-pr-stamo-defi-y-propuesta-de-desbloqueo-1775837390829-1775837495628.webp
+🖼️ ═══ RESULTADO: AI Horde intento 1 usada (sin QA) ═══
+
+✅ Imagen final (ai_horde): https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/wlfi-el-token-vincu...
+   Pasos: Paso 1: Imagen de fuente RSS → Paso 2: AI Horde intento 1
+   Errores recuperados: Imagen de fuente RSS no pasó QA
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: Wlfi, el token vinculado a trump, pierde 427 millones de dólares en capitalización de mercado por préstamo DeFi y propuesta de desbloqueo
+- Sentimiento: Neutral ➡️
+- Categoría: Web3
+- URL Imagen: https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/wlfi-el-token-vinculado-a-trump-pierde-427-millones-de-d-lares-en-capitalizaci-n-de-mercado-por-pr-stamo-defi-y-propuesta-de-desbloqueo-1775837390829-1775837495628.webp
+- Resumen: El token WLFI, asociado a la figura de Donald Trump, ha experimentado una drástica caída de 427 millones de dólares en su capitalización, generando preocupación en el protocolo de préstamos descentralizados Dolomite por una posible deuda incobrable.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+[2️⃣] Enviando a Binance Square...
+2026-04-10 18:11:38,346 [WARNING] [warn] Gemini PRIMARIA error 503, probando siguiente...
+2026-04-10 18:11:38,346 [WARNING] [warn] Gemini PRIMARIA error 503, probando siguiente...
+2026-04-10 18:11:40,077 [WARNING] [warn] Gemini SECUNDARIA error 503, probando siguiente...
+2026-04-10 18:11:40,077 [WARNING] [warn] Gemini SECUNDARIA error 503, probando siguiente...
+2026-04-10 18:11:43,372 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-10 18:11:43,372 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-10 18:11:43,373 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-10 18:11:43,373 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+
+================== 📰 PUBLICAR.sh (2026-04-10 18:29:16) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 38 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ El País Tecnología: 1 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 6 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+✅ The Hacker News: 13 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 47
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 47 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/363927/powell-bessent-warn-banks-security-anthropic-mythos-ai"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/363928/trump-linked-wlfi-erases-427-million-token-unlock-proposal-defi-loan"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/363926/bittensor-token-plunges-builder-departs-decentralization-doubts"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/363878/operation-atlantic-us-uk-agencies-trace-freeze-millions-stolen-crypto"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/190519/security/u-s-cisa-adds-a-flaw-in-ivanti-epmm-to-its-known-exploited-vulnerabilities-catalog-2.html"
+📊 Tras filtrar cubiertas: 42 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "Star Xu calls CZ a ‘liar’ as founders of world’s largest cry..." (1 fuentes)
+  📌 Cluster 2: "The magic word for digital assets adoption and success: choi..." (1 fuentes)
+  📌 Cluster 3: "Ransomware attack on ChipSoft knocks EHR services offline ac..." (1 fuentes)
+  📌 Cluster 4: "Morning Minute: Bitcoin Breaks $73K as Strategy's STRC Bid G..." (1 fuentes)
+  📌 Cluster 5: "What’s in a name? Moderna’s “vaccine” vs. “therapy” dilemma..." (1 fuentes)
+
+🎯 Cluster seleccionado: "Star Xu calls CZ a ‘liar’ as founders of world’s largest cry..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "La Tensión Escala: Star Xu Acusa a CZ de 'Mentirosos' Reavivando Antiguas Disputas en ...
+📝 Gemini raw response length: 5115 chars
+📝 First 800 chars: {
+  "title": "La Tensión Escala: Star Xu Acusa a CZ de 'Mentirosos' Reavivando Antiguas Disputas en el Criptomundo",
+  "summary": "Una acalorada disputa pública entre los fundadores de dos de los mayores exchanges de criptomonedas, Star Xu de OKCoin y CZ de Binance, ha resurgido, con acusaciones directas y una provocadora apuesta de mil millones de dólares, desenterrando alegaciones de hace más de una década.",
+  "content": "<p>El ecosistema de las criptomonedas ha sido testigo de una escalada dramática en la rivalidad entre dos de sus figuras más influyentes: Star Xu, fundador de OKCoin (y su sucesor OKX), y Changpeng Zhao (CZ), el carismático líder de Binance. Lo que comenzó como una disputa latente ha estallado públicamente, con Xu calificando a CZ de 'mentiroso', reviviendo así acusaci...
+🔍 JSON extraído: {
+  "title": "La Tensión Escala: Star Xu Acusa a CZ de 'Mentirosos' Reavivando Antiguas Disputas en el Criptomundo",
+  "summary": "Una acalorada disputa pública entre los fundadores de dos de los mayo...
+✅ JSON parseado correctamente: "La Tensión Escala: Star Xu Acusa a CZ de 'Mentirosos' Reaviv..."
+✅ Tags: ["Binance","OKCoin","CZ","Star Xu","Disputa Cripto"]
+✅ Summary length: 281 chars
+✅ Content length: 3891 chars
+✅ Fuente principal: https://www.coindesk.com/business/2026/04/10/star-xu-calls-cz-a-liar-as-founders-of-world-s-largest-crypto-exchanges-argue-over-past-allegations
+✅ Total fuentes citadas: 1
+📝 ImagePrompt presente: SÍ
+   Prompt: Two prominent crypto exchange founders, Star Xu and CZ, facing each other in a tense, argumentative ...
+
+⏱️ Tiempo de generación: 14.36 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] Imagen de la fuente: https://cdn.sanity.io/images/s3y3vcno/production/d9828d5a1dcf4e1f9551968a3a6c2c7...
+🔍 [QA Fuente RSS] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...
+✅ Gemini (gemini-2.5-flash):
+{
+  "coherente": true,
+  "razon_coherencia": "La imagen muestra a Changpeng Zhao (CZ), fundador de Binance, y el logo de Binance es visible en el micrófono y en el fondo, lo cual es directamente relevante para un artículo que menciona a 'CZ de Binance'.",
+  "descripcion": "La imagen muestra a Changpeng Zhao (CZ) hablando en un evento, sosteniendo un micrófono con el logo de Binance, y parte del nombre 'BINANCE' es visible en el fondo.",
+  "calidad_aceptable": true,
+  "problemas_detectados": [],
+  "caption_mejorado": "Changpeng Zhao (CZ), fundador de Binance, durante una intervención pública, en el contexto de la reciente disputa con Star Xu de OKCoin."
+}
+✅ [QA Fuente RSS] Imagen APROBADA: La imagen muestra a Changpeng Zhao (CZ), fundador de Binance, y el logo de Binance es visible en el micrófono y en el fondo, lo cual es directamente relevante para un artículo que menciona a 'CZ de Binance'.
+✅ [Supabase] Imagen subida: la-tensi-n-escala-star-xu-acusa-a-cz-de-mentirosos-reavivando-antiguas-disputas-en-el-criptomundo-1775838573421-1775838577863.jpeg
+🖼️ ═══ RESULTADO: Imagen de fuente RSS aprobada ═══
+
+✅ Imagen final (rss_source): https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/la-tensi-n-escala-s...
+   Pasos: Paso 1: Imagen de fuente RSS
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: La tensión escala: star xu acusa a cz de 'mentirosos' reavivando antiguas disputas en el criptomundo
+- Sentimiento: Neutral ➡️
+- Categoría: Mercados
+- URL Imagen: https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/la-tensi-n-escala-star-xu-acusa-a-cz-de-mentirosos-reavivando-antiguas-disputas-en-el-criptomundo-1775838573421-1775838577863.jpeg
+- Resumen: Una acalorada disputa pública entre los fundadores de dos de los mayores exchanges de criptomonedas, Star Xu de OKCoin y CZ de Binance, ha resurgido, con acusaciones directas y una provocadora apuesta de mil millones de dólares, desenterrando alegaciones de hace más de una década.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+[2️⃣] Enviando a Binance Square...
+2026-04-10 18:29:42,866 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-10 18:29:42,866 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-10 18:29:42,867 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-10 18:29:42,867 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}

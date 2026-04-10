@@ -1,3 +1,26 @@
+// --- Post-procesado ortográfico vía Ollama local ---
+export async function postprocessWithOllama(article: any): Promise<any> {
+  const systemPrompt = `Eres un corrector ortográfico experto en noticias de tecnología y criptomonedas. Tu tarea es corregir SOLO las mayúsculas de nombres propios, siglas, títulos y entidades relevantes en español. No modifiques el contenido, solo corrige las mayúsculas donde sea necesario. Devuelve el resultado en formato JSON con los mismos campos recibidos.`;
+  const userPrompt = `Corrige las mayúsculas en el siguiente artículo:\n\n${JSON.stringify({
+    title: article.title,
+    summary: article.summary,
+    content: article.content
+  }, null, 2)}\n\nDevuelve SOLO el JSON corregido, nada más.`;
+  const result = await generateTextWithOllama({ systemPrompt, userPrompt });
+  if (!result) return article;
+  try {
+    // Limpiar posibles code blocks y parsear JSON
+    const cleaned = result.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+    const jsonStart = cleaned.indexOf('{');
+    const jsonEnd = cleaned.lastIndexOf('}');
+    if (jsonStart === -1 || jsonEnd === -1) return article;
+    const parsed = JSON.parse(cleaned.substring(jsonStart, jsonEnd + 1));
+    return { ...article, ...parsed };
+  } catch (e) {
+    console.error('❌ Error parseando post-procesado Ollama:', e);
+    return article;
+  }
+}
 import { generateTextWithGemini } from './gemini-text.service';
 import type { NewsItem } from '../news/news-sources.service';
 import { formatNewsForPrompt } from '../news/news-sources.service';

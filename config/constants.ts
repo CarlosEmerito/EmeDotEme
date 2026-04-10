@@ -55,11 +55,6 @@ export const CRYPTO_ACRONYMS: string[] = [
  * automática de textos generados por IA.
  */
 export const PROPER_NOUNS: Record<string, string> = {
-    'cz': 'CZ',
-    'star xu': 'Star Xu',
-    'satoshi nakamoto': 'Satoshi Nakamoto',
-    'vitalik buterin': 'Vitalik Buterin',
-    'changpeng zhao': 'Changpeng Zhao',
   'bitcoin': 'Bitcoin',
   'ethereum': 'Ethereum',
   'solana': 'Solana',
@@ -94,11 +89,6 @@ export const PROPER_NOUNS: Record<string, string> = {
  * Incluye PROPER_NOUNS + términos técnicos adicionales.
  */
 export const TERMS_TO_CAPITALIZE: Record<string, string> = {
-    'cz': 'CZ',
-    'star xu': 'Star Xu',
-    'satoshi nakamoto': 'Satoshi Nakamoto',
-    'vitalik buterin': 'Vitalik Buterin',
-    'changpeng zhao': 'Changpeng Zhao',
   ...PROPER_NOUNS,
   'etf': 'ETF',
   'defi': 'DeFi',

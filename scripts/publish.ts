@@ -141,9 +141,9 @@ async function main() {
       }
     } catch (error) {
       console.error("❌ Error crítico en pipeline de imagen:", error);
-      const options = FALLBACK_IMAGES[randomCategory.name] || FALLBACK_IMAGES["Tecnología"];
+      const options = FALLBACK_IMAGES[selectedCategory.name] || FALLBACK_IMAGES["Tecnología"];
       imageUrl = options[Math.floor(Math.random() * options.length)];
-      imageCaption = aiResponse.imageCaption || `Ilustración sobre ${randomCategory.name}`;
+      imageCaption = aiResponse.imageCaption || `Ilustración sobre ${selectedCategory.name}`;
     }
 
     console.log("\n💾 Guardando en la Base de Datos...");

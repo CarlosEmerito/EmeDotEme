@@ -6,7 +6,7 @@ import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
 import path from "path";
 import { FALLBACK_IMAGES } from "../config/constants";
-import { generateSlug, toSentenceCase, normalizeArticleContent } from "../lib/utils";
+import { generateSlug } from "../lib/utils";
 
 const prisma = new PrismaClient();
 

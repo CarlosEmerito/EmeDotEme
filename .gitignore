@@ -42,3 +42,8 @@ next-env.d.ts
 
 /app/generated/prisma
 .aider*
+
+__pycache__/publish_telegram.cpython-312.pyc
+__pycache__/social_publish_utils.cpython-312.pyc
+scripts/python/__pycache__/
+tmp/

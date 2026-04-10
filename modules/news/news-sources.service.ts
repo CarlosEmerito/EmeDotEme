@@ -82,22 +82,16 @@ export const NEWS_SOURCES: NewsSource[] = [
     reliability: 'high',
     enabled: true,
   },
-  {
-    name: 'The Block',
-    slug: 'theblock',
-    url: 'https://www.theblock.co/rss.xml',
-    language: 'en',
-    reliability: 'high',
-    enabled: false, // Deshabilitado hasta confirmar que el RSS funciona
-  },
-  {
-    name: 'Bitcoin Magazine',
-    slug: 'bitcoinmagazine',
-    url: 'https://bitcoinmagazine.com/feed',
-    language: 'en',
-    reliability: 'medium',
-    enabled: false, // Deshabilitado hasta confirmar que el RSS funciona
-  },
+    // --- Puedes añadir nuevas categorías aquí ---
+    // Ejemplo:
+    // {
+    //   name: 'Nueva Categoría',
+    //   slug: 'nueva-categoria',
+    //   url: 'https://ejemplo.com/rss',
+    //   language: 'es',
+    //   reliability: 'medium',
+    //   enabled: true,
+    // },
   // === FUENTES DE INTELIGENCIA ARTIFICIAL ===
   {
     name: 'VentureBeat AI',

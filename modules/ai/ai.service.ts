@@ -6,38 +6,8 @@ import { formatNewsForPrompt } from '../news/news-sources.service';
  * Placeholder para generación de newsletter semanal
  */
 export async function generateWeeklyNewsletter(..._args: any[]) {
-  return {
-    subject: 'Newsletter semanal (placeholder)',
-    html: '<p>Contenido de ejemplo generado por IA.</p>',
-    htmlContent: '<p>Contenido de ejemplo generado por IA.</p>',
-    // (El bloque duplicado y la llave extra han sido eliminados)
-
-    const fetchNode = (await import('node-fetch')).default;
-    const response = await fetchNode(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model,
-        prompt,
-        stream: false
-      }),
-      signal: controller.signal as any
-    });
-    clearTimeout(timeoutId);
-    if (!response.ok) {
-      console.error('❌ Error HTTP desde Ollama:', response.status, await response.text());
-      return null;
-    }
-    const data = (await response.json()) as any;
-    if (!data || !data.response) {
-      console.error('❌ Respuesta inesperada desde Ollama:', data);
-      return null;
-    }
-    console.log('✅ Texto generado con Ollama:', data.response.substring(0, 100), '...');
-    return data.response;
-  } catch (err) {
-    console.error('❌ Error llamando a Ollama:', err);
-    return null;
+    articles: []
+  };
   }
 }
   try {

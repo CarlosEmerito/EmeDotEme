@@ -6,7 +6,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
     const prompt = `${systemPrompt}\n\n${userPrompt}`;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 900000); // 15 min timeout (900,000 ms)
+    const timeoutId = setTimeout(() => controller.abort(), 900000); // 15 min timeout
 
     const fetchNode = (await import('node-fetch')).default;
     const response = await fetchNode(url, {
@@ -33,7 +33,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
     return data.response;
   } catch (err: any) {
     if (err.name === 'AbortError' || err.type === 'aborted') {
-      console.warn('⚠️ Timeout de Ollama (15 min). Continuando sin post-procesado...');
+      console.warn('⚠️ Timeout de Ollama. Continuando...');
     } else {
       console.error('❌ Error llamando a Ollama:', err);
     }
@@ -42,24 +42,54 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
 }
 // --- Post-procesado ortográfico vía Ollama local ---
 export async function postprocessWithOllama(article: any): Promise<any> {
-  const systemPrompt = `Eres un corrector ortográfico experto en noticias de tecnología y criptomonedas. Tu tarea es corregir SOLO las mayúsculas de nombres propios, siglas, títulos y entidades relevantes en español. No modifiques el contenido, solo corrige las mayúsculas donde sea necesario. Devuelve el resultado en formato JSON con los mismos campos recibidos.`;
-  const userPrompt = `Corrige las mayúsculas en el siguiente artículo:\n\n${JSON.stringify({
+  const systemPrompt = `Eres un corrector ortográfico experto en español. Corrige SOLO las mayúsculas de nombres propios, siglas y títulos. No modifiques el contenido. Devuelve el resultado en formato JSON con los mismos campos.`;
+  const userPrompt = `Corrige las mayúsculas del siguiente artículo:\n\n${JSON.stringify({
     title: article.title,
     summary: article.summary,
     content: article.content
-  }, null, 2)}\n\nDevuelve SOLO el JSON corregido, nada más.`;
+  }, null, 2)}\n\nDevuelve SOLO el JSON.`;
+  
   const result = await generateTextWithOllama({ systemPrompt, userPrompt });
   if (!result) return article;
+  
   try {
-    // Limpiar posibles code blocks y parsear JSON
+    // Limpiar code blocks y parsear JSON
     const cleaned = result.replace(/```json\n?/g, '').replace(/```/g, '').trim();
     const jsonStart = cleaned.indexOf('{');
     const jsonEnd = cleaned.lastIndexOf('}');
-    if (jsonStart === -1 || jsonEnd === -1) return article;
-    const parsed = JSON.parse(cleaned.substring(jsonStart, jsonEnd + 1));
+    if (jsonStart === -1 || jsonEnd === -1) {
+      console.warn('⚠️ postprocess: JSON inválido, usando regex recovery...');
+      return article;
+    }
+    
+    let jsonStr = cleaned.substring(jsonStart, jsonEnd + 1);
+    
+    // Sanitizar
+    jsonStr = jsonStr.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\n/g, '\\n');
+    
+    const parsed = JSON.parse(jsonStr);
+    console.log('✅ postprocess corregido');
     return { ...article, ...parsed };
   } catch (e) {
-    console.error('❌ Error parseando post-procesado Ollama:', e);
+    // Recovery con regex
+    try {
+      const titleMatch = result.match(/"title"\s*:\s*"([^"]+)"/);
+      const summaryMatch = result.match(/"summary"\s*:\s*"([^"]+)"/);
+      const contentMatch = result.match(/"content"\s*:\s*"([\s\S]*?)",\s*}/);
+      
+      if (titleMatch) {
+        console.log('⚠️ postprocess: recovery por regex');
+        return {
+          ...article,
+          title: titleMatch[1],
+          summary: summaryMatch ? summaryMatch[1] : article.summary,
+          content: contentMatch ? contentMatch[1].replace(/\\n/g, '\n') : article.content
+        };
+      }
+    } catch (err2) {
+      console.error('❌ postprocess recovery falló:', err2);
+    }
     return article;
   }
 }

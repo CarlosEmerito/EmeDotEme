@@ -13,15 +13,10 @@ import 'dotenv/config';
 import { generateTextWithOllama, postprocessWithOllama } from '../modules/ai/ai.service';
 
 const testArticle = {
-  title: 'Bitcoin Supera los $100,000 por Primera Vez en la Historia',
-  summary: 'La criptomoneda líder alcanza un nuevo máximo histórico tras la aprobación de ETFs de Bitcoin en Estados Unidos.',
-  content: `<p>Bitcoin ha alcanzado un precio sin precedentes, superando los $100,000 por primera vez en su historia. Este hito histórico llega después de meses de speculation y la aprobación histórica de los fondos cotizados (ETFs) de Bitcoin por parte de la SEC.</p>
-
-<h2>El Camino hacia los $100,000</h2>
-<p>Durante años, los analistas han predicho que bitcoin alcanzaría esta barrera psicológica. La subida se ha accelerado desde principios de 2024, impulsada por la institucionalización de bitcoin a través de productos financieros regulados.</p>
-
-<h2>Implicaciones para el Mercado</h2>
-<p>Este nuevo máximo histórico no solo tiene implicaciones para los inversores individuales, sino que marca un punto de inflexión en la adopción mainstream de las criptomonedas.</p>`
+  title: 'Bitcoin Supera los $100,000',
+  summary: 'Bitcoin alcanza un nuevo máximo histórico.',
+  content: `<p>Bitcoin ha alcanzado un nuevo máximo histórico al superar los $100,000.</p>
+<p>Este hito marca un momento significativo para las criptomonedas.</p>`
 };
 
 const testNews = [{

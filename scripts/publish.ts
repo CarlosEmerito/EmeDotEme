@@ -96,6 +96,8 @@ async function main() {
     }
     
     // Post-procesado ortográfico por IA local (Ollama) - solo español
+
+    console.log("\n🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...");
     const { postprocessWithOllama } = await import("../modules/ai/ai.service");
     aiResponse = await postprocessWithOllama(aiResponse);
     

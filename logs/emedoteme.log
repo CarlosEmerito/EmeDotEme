@@ -15887,3 +15887,122 @@ text, watermark, logo, signature, words, handwriting, captions, subtitles, label
    Prompt: Pope Francis's hand holding a smartphone with an AI detection app icon, showing a warning or 'AI-wri...
 [AI HORDE] Negative prompt enviado (la-iron-a-digital-advertencias-antia-ia-del-papa-francisco-escritas-por-inteligencia-artificial-1776888354084):
 text, watermark, logo, signature, words, handwriting, captions, subtitles, labels, numbers, nsfw, porn, nude, explicit, worst quality, low quality, jpeg artifacts, blurry, muted colors, deformed, bad anatomy
+❌ [AI Horde #1] URL inválida o vacía
+
+🎨 [Paso 3] Generación con AI Horde (intento 2)
+
+🎨 [AI Horde #2] Generando imagen...
+   Prompt: Pope Francis's hand holding a smartphone with an AI detection app icon, showing a warning or 'AI-wri...
+[AI HORDE] Negative prompt enviado (la-iron-a-digital-advertencias-antia-ia-del-papa-francisco-escritas-por-inteligencia-artificial-1776888354084-retry):
+text, watermark, logo, signature, words, handwriting, captions, subtitles, labels, numbers, nsfw, porn, nude, explicit, worst quality, low quality, jpeg artifacts, blurry, muted colors, deformed, bad anatomy
+[AI HORDE] Kudos usados: 136 para slug: la-iron-a-digital-advertencias-antia-ia-del-papa-francisco-escritas-por-inteligencia-artificial-1776888354084-retry
+❌ [AI Horde #2] Error verificando imagen
+
+⚠️ [Paso 4] FALLBACK: Usando imagen de stock Unsplash
+📷 Stock seleccionado: https://images.unsplash.com/photo-1641337424160-5a3d7d745fcd?q=80&w=1200&auto=format&fit=crop
+🖼️ ═══ RESULTADO: Usando imagen de stock ═══
+
+✅ Imagen final (unsplash_stock): https://images.unsplash.com/photo-1641337424160-5a3d7d745fcd?q=80&w=1200&auto=format&fit=crop...
+   Pasos: Paso 1: Imagen de fuente RSS → Paso 2: AI Horde intento 1 → Paso 3: AI Horde intento 2 → Paso 4: Fallback Unsplash
+   Errores recuperados: Imagen de fuente RSS no pasó QA, AI Horde #1 falló al generar, AI Horde #2 falló al generar
+
+❌ AI Horde fallió. Abortando publicación - no se usa imagen de stock.
+❌ Error al generar el artículo. Abortando publicación en redes.
+
+================== 📰 PUBLICAR.sh (2026-04-22 22:54:35) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Krebs on Security: 1 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ Decrypt: 40 noticias recientes (últimas 48h)
+✅ El País Tecnología: 2 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 53
+📊 Fuentes que respondieron: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 51 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "Kalshi Fines Meme Coin Candidate Mark Moran, Others for Bett..." (1 fuentes)
+  📌 Cluster 2: "Xiaomi's New MiMo 2.5 Pro AI Can See, Hear, and Act—All in O..." (1 fuentes)
+  📌 Cluster 3: "Elon Musk's Tesla reports unchanged bitcoin holdings, books ..." (1 fuentes)
+  📌 Cluster 4: "AngelList's USVC Gives Investors Exposure to OpenAI, Anthrop..." (1 fuentes)
+  📌 Cluster 5: "New York, Illinois Ban Government Employees From Insider Tra..." (1 fuentes)
+
+🎯 Cluster seleccionado: "Kalshi Fines Meme Coin Candidate Mark Moran, Others for Bett..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "Kalshi Sanciona a Candidatos por Apostar en sus Propias Elecciones: El Caso de Mark Mo...
+📝 Gemini raw response length: 4636 chars
+📝 First 800 chars: {
+  "title": "Kalshi Sanciona a Candidatos por Apostar en sus Propias Elecciones: El Caso de Mark Moran",
+  "summary": "La plataforma de mercados de predicción Kalshi ha impuesto multas a varios individuos, incluyendo al candidato al Senado de EE. UU. Mark Moran, por apostar en los resultados de sus propias elecciones, un acto que Moran calificó de 'publicidad gratuita'.",
+  "content": "<p>En un movimiento decisivo que subraya la importancia de la integridad en los mercados de predicción, la plataforma Kalshi ha sancionado a varios individuos, entre ellos a Mark Moran, un candidato que aspira al Senado de los Estados Unidos por Virginia. La razón de las multas es clara y controvertida: apostar en los resultados de sus propias elecciones. Este incidente pone de manifiesto las complejas líne...
+🔍 JSON extraído: {
+  "title": "Kalshi Sanciona a Candidatos por Apostar en sus Propias Elecciones: El Caso de Mark Moran",
+  "summary": "La plataforma de mercados de predicción Kalshi ha impuesto multas a varios indiv...
+✅ JSON parseado correctamente: "Kalshi Sanciona a Candidatos por Apostar en sus Propias Elec..."
+✅ Tags: ["Kalshi","Mercados de Predicción","Ética","Elecciones","Regulación"]
+✅ Summary length: 253 chars
+✅ Content length: 3582 chars
+✅ Fuente principal: https://decrypt.co/365212/kalshi-fines-candidate-mark-moran-others-betting-on-their-own-elections
+✅ Total fuentes citadas: 1
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "Outcome Trading Platform Penalizes Candidate for Self-Wagering in US Senate Race",
+ ...
+
+✅ Generación bilingüe completada en 35.18 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: An abstract image showing scales of justice with one side heavier than the other, representing fairn...
+✅ Texto generado con Ollama: ```json
+{
+  "title": "Kalshi sanciona a candidatos por apostar en sus propias elecciones: el caso de ...
+✅ postprocess corregido
+
+⏱️ Tiempo de generación: 192.31 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] Imagen de la fuente: https://cdn.decrypt.co/wp-content/uploads/2026/02/whoever-this-guy-is-decrypt-st...
+🔍 [QA Fuente RSS] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...

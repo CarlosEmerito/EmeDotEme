@@ -10,7 +10,7 @@
  */
 
 import 'dotenv/config';
-import { generateTextWithOllama, postprocessWithOllama } from './modules/ai/ai.service';
+import { generateTextWithOllama, postprocessWithOllama } from '../modules/ai/ai.service';
 
 const testArticle = {
   title: 'Bitcoin Supera los $100,000 por Primera Vez en la Historia',
@@ -70,7 +70,7 @@ async function testEnglish() {
   console.log('\n🧪 PROBANDO: generateBilingualContent');
   console.log('===================================');
   
-  const { generateBilingualContent } = await import('./modules/ai/ai.service');
+  const { generateBilingualContent } = await import('../modules/ai/ai.service');
   
   const result = await generateBilingualContent(['Recent test'], testNews);
   

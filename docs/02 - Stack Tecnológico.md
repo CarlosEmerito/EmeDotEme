@@ -39,8 +39,9 @@
 
 ## Variables de Entorno
 
-Ver [[Variables de Entorno]] para configuración completa.
+Ver [[05 - Configuración]] para configuración completa.
 
 ## Referencias
-- [[Arquitectura del Proyecto]]
-- [[Configuración]]
+
+- [[01 - Arquitectura]]
+- [[05 - Configuración]]

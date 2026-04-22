@@ -5,18 +5,13 @@
 ### Base de Datos
 
 | Variable | Descripción | Requerido |
-|----------|-----------|----------|
+|----------|-------------|----------|
 | `DATABASE_URL` | URL de PostgreSQL (Prisma) | ✅ |
-| `POSTGRES_USER` | Usuario PostgreSQL | (legacy) |
-| `POSTGRES_PASSWORD` | Contraseña PostgreSQL | (legacy) |
-| `POSTGRES_HOST` | Host PostgreSQL | (legacy) |
-| `POSTGRES_PORT` | Puerto PostgreSQL | (legacy) |
-| `POSTGRES_DB` | Nombre base de datos | (legacy) |
 
 ### AI - Gemini
 
 | Variable | Descripción | Requerido |
-|----------|-----------|----------|
+|----------|-------------|----------|
 | `GEMINI_API_KEY` | Clave API de Gemini (primaria) | ✅ |
 | `GEMINI_API_KEY_2` | Clave secundaria (fallback) | Recomendado |
 | `GEMINI_API_KEY_3` | Clave terciaria (fallback) | Recomendado |
@@ -25,42 +20,36 @@
 ### AI - Ollama (Local)
 
 | Variable | Descripción | Requerido |
-|----------|-----------|----------|
+|----------|-------------|----------|
 | `OLLAMA_MODEL` | Modelo (default: qwen3.5:9b) | Opcional |
 | `OLLAMA_BASE_URL` | URL base (default: http://localhost:11434) | Opcional |
 | `OLLAMA_TIMEOUT` | Timeout en ms (default: 600000) | Opcional |
 
-### AI - Vision (QA de Imágenes)
-
-| Variable | Descripción | Requerido |
-|----------|-----------|----------|
-| `GEMINI_VISION_KEY` | Clave para Gemini Vision | (hereda de GEMINI_API_KEY) |
-
 ### Imágenes - AI Horde
 
 | Variable | Descripción | Requerido |
-|----------|-----------|----------|
+|----------|-------------|----------|
 | `AI_HORDE_API_KEY` | Clave API de AI Horde | Recomendado |
 | `AI_HORDE_ENDPOINT` | Endpoint (default: https://aihorde.net) | Opcional |
 
 ### Imágenes - Supabase Storage
 
 | Variable | Descripción | Requerido |
-|----------|-----------|----------|
+|----------|-------------|----------|
 | `SUPABASE_URL` | URL del proyecto Supabase | Recomendado |
 | `SUPABASE_SERVICE_ROLE_KEY` | Clave de servicio (admin) | Recomendado |
 
 ### Telegram (Notificaciones)
 
 | Variable | Descripción | Requerido |
-|----------|-----------|----------|
+|----------|-------------|----------|
 | `TELEGRAM_TOKEN` | Token del bot | Recomendado |
 | `TELEGRAM_CHAT_ID` | Chat ID para notificaciones | Recomendado |
 
 ### Binance Square
 
 | Variable | Descripción | Requerido |
-|----------|-----------|----------|
+|----------|-------------|----------|
 | `BINANCE_SQUARE_API_KEY` | API Key de Binance Square | Opcional |
 | `BINANCE_SQUARE_SECRET` | Secret de Binance Square | Opcional |
 | `BINANCE_SQUARE_URL` | URL de la API | Opcional |
@@ -68,7 +57,7 @@
 ### Web/Auth
 
 | Variable | Descripción | Requerido |
-|----------|-----------|----------|
+|----------|-------------|----------|
 | `NEXTAUTH_URL` | URL de la app (ej: https://emedoteme.es) | ✅ |
 | `NEXTAUTH_SECRET` | Secret para NextAuth | ✅ |
 | `ADMIN_PASSWORD` | Contraseña admin | ✅ |
@@ -76,15 +65,13 @@
 ### Newsletter
 
 | Variable | Descripción | Requerido |
-|----------|-----------|----------|
+|----------|-------------|----------|
 | `RESEND_API_KEY` | API Key de Resend (envío emails) | Opcional |
 | `NEWSLETTER_FROM` | Email remitente | Opcional |
 
 ---
 
 ## Archivo .env.example
-
-Crear un archivo `.env.example` con esta estructura:
 
 ```env
 # ===========================================
@@ -132,8 +119,6 @@ ADMIN_PASSWORD="change-me"
 # NEWSLETTER
 # ===========================================
 RESEND_API_KEY=""
-
-
 ```
 
 ---
@@ -198,7 +183,7 @@ model Analytic {
 
 ### FALLBACK_IMAGES
 
-Imágenes de stock por categoría cuando todo falla:
+Imágenes de stock por categoría cuando todo falla (ubicadas en `config/constants.ts`):
 
 ```typescript
 const FALLBACK_IMAGES = {
@@ -216,11 +201,10 @@ const FALLBACK_IMAGES = {
 
 ### NEWS_SOURCES
 
-Fuentes RSS configuradas (ver [[Módulos#News Sources Module]]).
+Fuentes RSS configuradas en `modules/news/news-sources.service.ts`.
 
 ---
 
 ## Referencias
 
-- [[Stack Tecnológico]]
-- [[Prisma Schema]]
+- [[02 - Stack Tecnológico]]

@@ -7,41 +7,40 @@ EmeDotEme es un sistema automatizado de generación y publicación de artículos
 ## Diagrama de Arquitectura
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         FRONTEND (Next.js)                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌────────────┐  │
-│  │   Página   │  │   Admin   │  │    API    │  │  RSS/XML  │  │
-│  │  Principal│  │  Panel   │  │  Routes   │  │  Feeds   │  │
-│  └──────────────┘  └──────────────┘  └──────────────┘  └──────────┘  │
-└────────────────────────────────────────────────────────────────────────────┬───────┘
-                                       │                       │
-                                       ▼                       ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                          BACKEND                                     │
-│  ┌──────────────────────────────────────────────────────────────┐           │
-│  │              DATABASE (PostgreSQL + Prisma)              │           │
-│  │  Articles, Categories, Subscribers, Analytics      │           │
-│  └────────────────────────────────────────────┘           │
-│                                                                  │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │              CONTENT PIPELINE (scripts/publish.ts)         │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                            │                                       │
-│         ┌──────────────────┼──────────────────┐                │
-│         ▼                  ▼                  ▼                     │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐              │
-│  │ News       │    │ AI        │    │ Images    │              │
-│  │ Sources   │───▶│ Service   │───▶│ Service   │              │
-│  │ Service   │    │           │    │           │              │
-│  └─────────────┘    └─────────────┘    └─────────────┘              │
-│                            │                  │                       │
-│         ┌──────────────────┴──┐    ┌──┴───────────┐                │
-│         ▼                         ▼              ▼                 │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐              │
-│  │ Gemini    │    │ Ollama    │    │ AI Horde  │              │
-│  │ (API)    │    │ (Local)  │    │ (API)    │              │
-│  └─────────────┘    └─────────────┘    └─────────────┘              │
-└──────────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                        FRONTEND (Next.js)                      |
+|  +------------+  +------------+  +------------+  +------------+  |
+|  |  Página   |  |   Admin   |  |    API    |  |  RSS/XML   |  |
+|  | Principal|  |  Panel    |  |  Routes   |  |  Feeds    |  |
+|  +------------+  +------------+  +------------+  +------------+  |
++------------------------------------------------------------+
+                              |
+                              v
++-------------------------------------------------------------+
+|                          BACKEND                             |
+|  +-----------------------------------------------------+     |
+|  |          DATABASE (PostgreSQL + Prisma)            |     |
+|  |  Articles, Categories, Subscribers, Analytics    |     |
+|  +-----------------------------------------------------+     |
+|                                                           |
+|  +-----------------------------------------------------+   |
+|  |        CONTENT PIPELINE (scripts/publish.ts)       |   |
+|  +-----------------------------------------------------+   |
+|                            |                              |
+|         +------------------+--+-------------------+      |
+|         v                  v                  v           |
+|  +-----------+    +-----------+    +-----------+        |
+|  |   News    |    |    AI     |    |  Images   |        |
+|  |  Sources  |--->|  Service  |--->|  Service  |        |
+|  +-----------+    +-----------+    +-----------+        |
+|                            |                |             |
+|         +------------------+--+---------+     |          |
+|         v                  v              v            |
+|  +-----------+    +-----------+    +-----------+        |
+|  |  Gemini   |    |  Ollama   |    | AI Horde  |        |
+|  |  (API)    |    |  (Local) |    |  (API)   |        |
+|  +-----------+    +-----------+    +-----------+        |
++-------------------------------------------------------------+
 ```
 
 ## Componentes Principales
@@ -53,14 +52,15 @@ EmeDotEme es un sistema automatizado de generación y publicación de artículos
 - **Feeds**: RSS y Atom feeds
 
 ### Base de Datos
-- [[PostgreSQL]] con [[Prisma ORM]]
+- PostgreSQL con Prisma ORM
 - Tablas: Articles, Categories, Subscribers, Analytics
 
 ### Pipeline de Contenido
-- [[News Sources Service]]: Fetch de RSS
-- [[AI Service]]: Generación de artículos
-- [[Image Service]]: Pipeline de imágenes
+- News Sources Service: Fetch de RSS
+- AI Service: Generación de artículos
+- Image Service: Pipeline de imágenes
 
 ## Referencias
-- [[Stack Tecnológico]]
-- [[Flujo de Publicación Completo]]
+
+- [[02 - Stack Tecnológico]]
+- [[04 - Flujos de Trabajo]]

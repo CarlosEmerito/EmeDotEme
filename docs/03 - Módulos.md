@@ -2,12 +2,12 @@
 
 ## Índice de Módulos
 
-- [[Módulos#News Sources Module|News Sources]]
-- [[Módulos#AI Module|AI]]
-- [[Módulos#Articles Module|Articles]]
-- [[Módulos#Images Module|Images]]
-- [[Módulos#Newsletter Module|Newsletter]]
-- [[Módulos#Market Module|Market]]
+- News Sources Module
+- AI Module
+- Articles Module
+- Images Module
+- Newsletter Module
+- Market Module
 
 ---
 
@@ -23,23 +23,23 @@
 ### Archivos Clave
 
 | Archivo | Descripción |
-|---------|------------|
+|---------|-------------|
 | `news-sources.service.ts` | Servicio principal de fetch RSS |
 
 ### Fuentes Configuradas
 
 ```
-The Hacker News    → Ciberseguridad (alta fiablidad)
-Krebs on Security → Ciberseguridad (alta fiabilidad)
-Security Affairs  → Ciberseguridad (media fiabilidad)
-CoinDesk         → Criptomonedas (alta fiabilidad)
+The Hacker News      → Ciberseguridad (alta fiabilidad)
+Krebs on Security   → Ciberseguridad (alta fiabilidad)
+Security Affairs    → Ciberseguridad (media fiabilidad)
+CoinDesk            → Criptomonedas (alta fiabilidad)
 MIT Technology Review AI → IA (alta fiabilidad)
-Decrypt          → Criptomonedas (alta fiabilidad)
-VentureBeat AI   → IA (alta fiabilidad)
-El País Tecnología → Tecnología (media fiabilidad)
+Decrypt             → Criptomonedas (alta fiabilidad)
+VentureBeat AI      → IA (alta fiabilidad)
+El País Tecnología  → Tecnología (media fiabilidad)
 ```
 
-###API
+### API
 
 ```typescript
 // Fetch noticias principales
@@ -57,9 +57,6 @@ interface FetchedNewsContext {
 ### Dependencias
 - **rss-parser**: Para parsear feeds RSS
 - **dotenv**: Configuración
-
-### Referencias
-- [[Flujo de Publicación]] → Consumido por: [[Módulos#AI Module|AI Service]]
 
 ---
 
@@ -88,16 +85,16 @@ interface FetchedNewsContext {
 
 ```
 1. generateArticleContent(recentTitles, newsItems)
-   │
-   ├──▶ Intentar Gemini API
-   │      └─▶ Si falla → Ollama local
-   │              └─▶ Si falla → Artículo de ejemplo
-   │
+   |
+   +-> Intentar Gemini API
+   |     +-> Si falla -> Ollama local
+   |             +-> Si falla -> Artículo de ejemplo
+   |
    2. translateArticleContent()
-      └─▶ Añade campos *_en
-   │
+      +-> Añade campos *_en
+   |
    3. postprocessWithOllama()
-      └─▶ Corrige mayúsculas
+      +-> Corrige mayúsculas
 ```
 
 ### API Principal
@@ -125,18 +122,14 @@ interface GeneratedArticle {
 
 ### Estrategias de Fallback
 
-1. **Texto**: Gemini → Ollama local → Artículo estático de ejemplo
-2. **Imágenes**: RSS Source → AI Horde x2 → Unsplash Stock
-3. **QA**: Gemini Vision → Ollama Vision
+1. **Texto**: Gemini -> Ollama local -> Artículo estático de ejemplo
+2. **Imágenes**: RSS Source -> AI Horde x2 -> Unsplash Stock
+3. **QA**: Gemini Vision -> Ollama Vision
 
 ### Dependencias
 - **@google/generative-ai**: Gemini API
 - **node-fetch**: LLamadas HTTP
 - **dotenv**: Configuración
-
-### Referencias
-- Consumido por: [[Módulos#News Sources Module|News Sources]]
-- Produce: [[Módulos#Articles Module|Articles]]
 
 ---
 
@@ -206,11 +199,6 @@ interface Category {
 
 ### Dependencias
 - **@prisma/client**: ORM de base de datos
-- **prisma**: Schema del proyecto
-
-### Referencias
-- [[Prisma Schema]]
-- Consumido por: Frontend (pages/admin, pages/api)
 
 ---
 
@@ -226,22 +214,22 @@ interface Category {
 
 ```
 1. Imagen RSS Source
-   │
-   ├─▶ QA con Gemini Vision
-   │      └─▶ Aprobada → Subir a Supabase → USAR
-   │
-   └─▶ Rechazada → Paso 2
+   |
+   +-> QA con Gemini Vision
+   |     +-> Aprobada -> Subir a Supabase -> USAR
+   |
+   +-> Rechazada -> Paso 2
 
 2. AI Horde (intento 1)
-   │
-   ├─▶ Generar imagen
-   │      └─▶ Subir a Supabase → USAR
-   │
-   └─▶ Fallo → Paso 3
+   |
+   +-> Generar imagen
+   |     +-> Subir a Supabase -> USAR
+   |
+   +-> Fallo -> Paso 3
 
 3. AI Horde (intento 2)
-   │
-   └─▶ Fallo → Paso 4
+   |
+   +-> Fallo -> Paso 4
 
 4. Unsplash Stock (FALLBACK)
 ```
@@ -278,9 +266,6 @@ interface ImagePipelineResult {
 - **@supabase/supabase-js**: Storage
 - **dotenv**: Configuración
 
-### Referencias
-- [[Módulos#AI Module|AI Module]] (consume servicios de Vision y Horde)
-
 ---
 
 ## Newsletter Module
@@ -299,14 +284,12 @@ interface ImagePipelineResult {
 generateWeeklyNewsletter(...): Promise<Newsletter>
 
 // Routes
-POST /api/subscribe → Suscribirse
+POST /api/subscribe -> Suscribirse
 ```
 
 ### Dependencias
 - **PostgreSQL**: Almacenar suscriptores
-
-### Referencias
-- [[Cron Jobs]]
+- **resend**: SDK para envío de emails
 
 ---
 
@@ -326,18 +309,21 @@ POST /api/subscribe → Suscribirse
 
 ```bash
 # Ejecución
-npx ts-node scripts/publish.ts
+npx tsx scripts/publish.ts
 ```
 
 ### Otros Scripts
 
 | Script | Función |
-|---------|--------|
+|--------|----------|
 | `force-generate.ts` | Forzar generación |
 | `publish_test.ts` | Modo prueba |
-| `generateArticleContent()` | Desde código |
 | `send_newsletter.ts` | Enviar newsletter |
 
-### Referencias
-- [[Flujo de Publicación Completo]]
-- [[Cron Jobs]]
+---
+
+## Referencias
+
+- [[04 - Flujos de Trabajo]]
+- [[06 - Scripts]]
+- [[05 - Configuración]]

@@ -4,10 +4,10 @@
 
 | Script | Descripción |
 |--------|-------------|
-| [[Scripts#publish.ts\|publish.ts]] | Pipeline principal |
-| [[Scripts#force-generate.ts\|force-generate.ts]] | Forzar generación |
-| [[Scripts#publish_test.ts\|publish_test.ts]] | Modo prueba |
-| [[Scripts#send_newsletter.ts\|send_newsletter.ts]] | Newsletter |
+| `publish.ts` | Pipeline principal |
+| `force-generate.ts` | Forzar generación |
+| `publish_test.ts` | Modo prueba |
+| `send_newsletter.ts` | Newsletter |
 
 ---
 
@@ -22,9 +22,6 @@ Pipeline principal de generación y publicación automática de artículos.
 ### Uso
 
 ```bash
-# Ejecución directa
-npx ts-node scripts/publish.ts
-
 # Con tsx (más rápido)
 npx tsx scripts/publish.ts
 ```
@@ -33,7 +30,7 @@ npx tsx scripts/publish.ts
 
 1. Inicialización (categorías, artículos recientes)
 2. Fetch noticias desde fuentes RSS
-3. Generación IA (Gemini → Ollama → fallback)
+3. Generación IA (Gemini -> Ollama -> fallback)
 4. Traducción y post-procesado
 5. Pipeline de imagen
 6. Guardar en BD
@@ -48,11 +45,12 @@ npx tsx scripts/publish.ts
 
 ### Errores
 
-- Si todas las IAs fallan → Avisa por Telegram + exit(1)
-- Si el pipeline de imagen falla → Usa fallback de Unsplash
+- Si todas las IAs fallan -> Avisa por Telegram + exit(1)
+- Si el pipeline de imagen falla -> Usa fallback de Unsplash
 
 ### Referencias
-- [[Flujo de Publicación]]
+
+- [[04 - Flujos de Trabajo]]
 
 ---
 
@@ -120,17 +118,23 @@ npx tsx scripts/send_newsletter.ts
 
 ### delete-duplicates.ts
 
+Elimina artículos duplicados por slug.
+
 ```bash
 npx tsx scripts/delete-duplicates.ts
 ```
 
 ### delete-external-images.ts
 
+Elimina imágenes externas no almacenadas en Supabase.
+
 ```bash
 npx tsx scripts/delete-external-images.ts
 ```
 
 ### check-expired-images.ts
+
+Verifica imágenes expiradas.
 
 ```bash
 npx tsx scripts/check-expired-images.ts
@@ -140,5 +144,5 @@ npx tsx scripts/check-expired-images.ts
 
 ## Referencias
 
-- [[Cron Jobs]]
-- [[Flujo de Publicación]]
+- [[04 - Flujos de Trabajo]]
+- [[05 - Configuración]]

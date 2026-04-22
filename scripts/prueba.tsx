@@ -1,12 +1,11 @@
 /**
- * Script de prueba para funciones de IA de ai.service
+ * Script de prueba para funciones de IA de ai.service (solo Ollama)
  * Uso: npx tsx scripts/prueba.tsx [funcion]
  * 
  * Funciones disponibles:
  *   ollama      - Probar generación con Ollama
  *   postprocess - Probar post-procesado ortográfico
- *   en          - Probar generación inglés
- *   all         - Probar todas las funciones
+ *   all         - Probar todas las funciones (solo Ollama)
  */
 
 import 'dotenv/config';
@@ -18,17 +17,6 @@ const testArticle = {
   content: `<p>Bitcoin ha alcanzado un nuevo máximo histórico al superar los $100,000.</p>
 <p>Este hito marca un momento significativo para las criptomonedas.</p>`
 };
-
-const testNews = [{
-  title: 'Bitcoin Reaches $100,000',
-  description: 'Bitcoin hits new all-time high',
-  link: 'https://example.com/bitcoin-100k',
-  source: 'Test Source',
-  sourceSlug: 'test-source',
-  pubDate: new Date(),
-  categories: ['Bitcoin', 'Crypto'],
-  imageUrl: 'https://example.com/image.jpg'
-}];
 
 const timings: Record<string, number> = {};
 
@@ -73,36 +61,13 @@ async function testPostprocess() {
   console.log(`⏱️ Tiempo: ${(elapsed / 1000).toFixed(2)}s`);
 }
 
-async function testEnglish() {
-  const start = Date.now();
-  console.log('\n🧪 PROBANDO: generateBilingualContent');
-  console.log('===================================');
-  
-  const { generateBilingualContent } = await import('../modules/ai/ai.service');
-  
-  const result = await generateBilingualContent(['Recent test'], testNews);
-  
-  const elapsed = Date.now() - start;
-  timings.english = elapsed;
-  
-  if (result) {
-    console.log('✅ Resultado bilingüe:');
-    console.log('  ES:', result.title?.substring(0, 50));
-    console.log('  EN:', result.titleEn?.substring(0, 50));
-  } else {
-    console.log('❌ Falló generateBilingualContent');
-  }
-  console.log(`⏱️ Tiempo: ${(elapsed / 1000).toFixed(2)}s`);
-}
-
 async function testAll() {
   const totalStart = Date.now();
-  console.log('🚀 PROBANDO TODAS LAS FUNCIONES');
+  console.log('🚀 PROBANDO FUNCIONES OLLAMA');
   console.log('========================\n');
   
   await testOllama();
   await testPostprocess();
-  await testEnglish();
   
   const totalElapsed = Date.now() - totalStart;
   
@@ -112,9 +77,7 @@ async function testAll() {
   
   let totalTests = 0;
   for (const [test, time] of Object.entries(timings)) {
-    const testName = test === 'ollama' ? 'generateTextWithOllama' 
-                 : test === 'postprocess' ? 'postprocessWithOllama' 
-                 : test === 'english' ? 'generateBilingualContent' : test;
+    const testName = test === 'ollama' ? 'generateTextWithOllama' : 'postprocessWithOllama';
     console.log(`  ${testName}: ${(time / 1000).toFixed(2)}s`);
     totalTests += time;
   }
@@ -131,8 +94,8 @@ async function main() {
   const args = process.argv.slice(2);
   const test = args[0] || 'all';
   
-  console.log('🧪 Script de Prueba - EmeDotEme AI');
-  console.log('==============================');
+  console.log('🧪 Script de Prueba - EmeDotEme AI (Ollama)');
+  console.log('==========================================');
   console.log('📋 Test seleccionado:', test);
   
   switch (test) {
@@ -141,10 +104,6 @@ async function main() {
       break;
     case 'postprocess':
       await testPostprocess();
-      break;
-    case 'en':
-    case 'english':
-      await testEnglish();
       break;
     case 'all':
     default:

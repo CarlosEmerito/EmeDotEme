@@ -1,8 +1,13 @@
 // --- Generación vía Ollama local (standalone) ---
 export async function generateTextWithOllama({ systemPrompt, userPrompt }: { systemPrompt: string; userPrompt: string; }): Promise<string | null> {
+  const model = process.env.OLLAMA_MODEL;
+  if (!model) {
+    console.error('❌ OLLAMA_MODEL no está configurado en .env');
+    return null;
+  }
+  
   try {
     const url = 'http://localhost:11434/api/generate';
-    const model = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
     const prompt = `${systemPrompt}\n\n${userPrompt}`;
 
     const controller = new AbortController();

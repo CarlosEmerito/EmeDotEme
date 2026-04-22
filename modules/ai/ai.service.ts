@@ -6,7 +6,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
     const prompt = `${systemPrompt}\n\n${userPrompt}`;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 600000); // 10 min timeout (600,000 ms)
+    const timeoutId = setTimeout(() => controller.abort(), 900000); // 15 min timeout (900,000 ms)
 
     const fetchNode = (await import('node-fetch')).default;
     const response = await fetchNode(url, {
@@ -31,8 +31,12 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
     }
     console.log('✅ Texto generado con Ollama:', data.response.substring(0, 100), '...');
     return data.response;
-  } catch (err) {
-    console.error('❌ Error llamando a Ollama:', err);
+  } catch (err: any) {
+    if (err.name === 'AbortError' || err.type === 'aborted') {
+      console.warn('⚠️ Timeout de Ollama (15 min). Continuando sin post-procesado...');
+    } else {
+      console.error('❌ Error llamando a Ollama:', err);
+    }
     return null;
   }
 }

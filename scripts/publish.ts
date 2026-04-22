@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { generateArticleContent, translateArticleContent } from "../modules/ai/ai.service";
+import { generateBilingualContent } from "../modules/ai/ai.service";
 import { fetchLatestNews } from "../modules/news/news-sources.service";
 import { generateArticleImageAndAnalyzeQA } from "../modules/images/image.service";
 import { PrismaClient } from "@prisma/client";
@@ -59,7 +59,7 @@ async function main() {
     console.log(`📰 Noticias obtenidas: ${newsContext.newsItems.length} de ${newsContext.sourcesResponded.join(', ') || 'ninguna fuente'}`);
     
     const t0 = Date.now();
-    let aiResponse: any = await generateArticleContent(recentTitles, newsContext.newsItems);
+    let aiResponse: any = await generateBilingualContent(recentTitles, newsContext.newsItems);
     
     // Si la IA devolvió el título de fallback estático, abortamos la ejecución
     // y enviamos un aviso al Telegram privado del administrador.
@@ -94,10 +94,8 @@ async function main() {
     if (aiResponse.imagePrompt) {
       console.log('   Prompt:', aiResponse.imagePrompt.substring(0, 100) + '...');
     }
-    aiResponse = await translateArticleContent(aiResponse);
     
-    // Aplicar sentence case a los títulos
-    // Post-procesado ortográfico por IA local (Ollama)
+    // Post-procesado ortográfico por IA local (Ollama) - solo español
     const { postprocessWithOllama } = await import("../modules/ai/ai.service");
     aiResponse = await postprocessWithOllama(aiResponse);
     

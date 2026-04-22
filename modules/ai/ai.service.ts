@@ -337,6 +337,150 @@ REGLAS IMPORTANTES:
 }
 
 /**
+ * Genera contenido bilingüe (español e inglés) desde el inicio.
+ * Primero genera en español, luego usa ese contenido como base para generar en inglés.
+ * 
+ * @param recentTitles Títulos recientes para evitar repetición
+ * @param newsContext Noticias reales para usar como base del artículo
+ */
+export async function generateBilingualContent(
+  recentTitles: string[] = [],
+  newsContext: NewsItem[] = []
+): Promise<GeneratedArticle & { titleEn: string; summaryEn: string; contentEn: string }> {
+  const t0 = Date.now();
+  console.log('\n🌍 INICIANDO GENERACIÓN BILINGÜE');
+  
+  // === Paso 1: Generar en Español ===
+  console.log('\n🇪🇸 [1/2] Generando artículo en español...');
+  const esArticle = await generateArticleContent(recentTitles, newsContext);
+  
+  // === Paso 2: Generar en Inglés ===
+  console.log('\n🇬🇧 [2/2] Generando artículo en inglés...');
+  const enArticle = await generateEnglishContent(esArticle, newsContext);
+  
+  const t1 = Date.now();
+  console.log(`\n✅ Generación bilingüe completada en ${((t1 - t0) / 1000).toFixed(2)} segundos`);
+  
+  return {
+    ...esArticle,
+    titleEn: enArticle.titleEn,
+    summaryEn: enArticle.summaryEn,
+    contentEn: enArticle.contentEn
+  };
+}
+
+/**
+ * Genera la versión en inglés del artículo basándose en el contenido español
+ * y las noticias originales.
+ */
+async function generateEnglishContent(
+  esArticle: GeneratedArticle,
+  newsContext: NewsItem[]
+): Promise<{ titleEn: string; summaryEn: string; contentEn: string }> {
+  const hasRealNews = newsContext.length > 0;
+  
+  const systemPrompt = `You are a professional news journalist for the digital media "EmeDotEme", specializing in cryptocurrency, blockchain, and technology news.
+
+IMPORTANT RULES:
+1. Write ONLY in English. This is an English-language article.
+2. Translate and adapt the Spanish content provided. Do NOT literally translate - write as a native English news piece.
+3. The content must be informative, well-structured, and professional for an English-speaking audience.
+4. NEVER invent data, figures, or statements not present in the source material.
+5. Use English capitalization rules and grammar.
+6. If there are multiple sources on the same topic, cross-reference for a more complete analysis.`;
+
+  let avoidanceClause = '';
+  if (esArticle.tags && esArticle.tags.length > 0) {
+    avoidanceClause = `\n\nAVOID articles with these topics: ${esArticle.tags.join(', ')}.`;
+  }
+
+  let userPrompt: string;
+
+  if (hasRealNews) {
+    const newsText = formatNewsForPrompt(newsContext);
+    
+    userPrompt = `Below is a Spanish article that was written about verified news. Your task is to write an equivalent English version.
+
+SPANISH ORIGINAL:
+Title: ${esArticle.title}
+Summary: ${esArticle.summary}
+Content: ${esArticle.content}
+
+INSTRUCTIONS:
+- Title: Clear, attractive, in English (different from direct translation)
+- Summary: 1-2 lines capturing the essence (in English)
+- Content: HTML with p, h2, h3 tags. Make it LONG, DETAILED and professional like a leading digital newspaper (at least 5-6 substantial paragraphs). MUST include 2-3 secondary subheadings (h2 or h3) in the middle to break up the text.
+- imagePrompt: Description in English for generating an illustrative image
+- Use English news style and conventions
+- ATENTION: NEVER use double quotes (") inside JSON string fields. Use single quotes (') for HTML attributes.
+
+Return ONLY valid JSON: {titleEn, summaryEn, contentEn, imagePrompt}.${avoidanceClause}`;
+  } else {
+    userPrompt = `Translate and adapt this article for English readers.
+
+SPANISH ORIGINAL:
+Title: ${esArticle.title}
+Summary: ${esArticle.summary}
+Content: ${esArticle.content}
+
+INSTRUCTIONS:
+- Title: Clear, attractive, in English
+- Summary: 1-2 lines in English
+- Content: HTML with p, h2, h3 tags. LONG and DETAILED (at least 5-6 paragraphs). Include 2-3 subheadings.
+- imagePrompt: English description for image
+- Use English capitalization and grammar rules
+- ATENTION: Use single quotes (') for HTML attributes, never double quotes (") in JSON.
+
+Return ONLY valid JSON: {titleEn, summaryEn, contentEn, imagePrompt}.${avoidanceClause}`;
+  }
+
+  let result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
+  if (!result) {
+    console.warn('⚠️ Gemini falló para EN, intentando con Ollama...');
+    result = await generateTextWithOllama({ systemPrompt, userPrompt });
+    if (!result) {
+      // Fallback: return Spanish with minor adaptations
+      return {
+        titleEn: esArticle.title,
+        summaryEn: esArticle.summary,
+        contentEn: esArticle.content
+      };
+    }
+  }
+
+  try {
+    const cleaned = result.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+    const jsonStart = cleaned.indexOf('{');
+    const jsonEnd = cleaned.lastIndexOf('}');
+    if (jsonStart === -1 || jsonEnd === -1) throw new Error('Invalid JSON structure');
+
+    let jsonStr = cleaned.substring(jsonStart, jsonEnd + 1);
+    
+    // Sanitize JSON
+    jsonStr = jsonStr.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\n/g, '\\n');
+    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\r/g, '\\r');
+    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\t/g, '\\t');
+
+    const parsed = JSON.parse(jsonStr);
+    
+    return {
+      titleEn: parsed.titleEn || esArticle.title,
+      summaryEn: parsed.summaryEn || esArticle.summary,
+      contentEn: parsed.contentEn || esArticle.content
+    };
+  } catch (error) {
+    console.error('❌ Error parsing English content:', error);
+    // Fallback
+    return {
+      titleEn: esArticle.title,
+      summaryEn: esArticle.summary,
+      contentEn: esArticle.content
+    };
+  }
+}
+
+/**
  * Traduce el artículo generado al inglés (implementación mínima, solo copia los campos).
  * Personaliza para usar Gemini, OpenAI u otro servicio de traducción.
  */

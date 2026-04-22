@@ -439,7 +439,7 @@ Return ONLY valid JSON: {titleEn, summaryEn, contentEn, imagePrompt}.${avoidance
     console.warn('⚠️ Gemini falló para EN, intentando con Ollama...');
     result = await generateTextWithOllama({ systemPrompt, userPrompt });
     if (!result) {
-      // Fallback: return Spanish with minor adaptations
+      // Fallback: return Spanish
       return {
         titleEn: esArticle.title,
         summaryEn: esArticle.summary,
@@ -471,7 +471,31 @@ Return ONLY valid JSON: {titleEn, summaryEn, contentEn, imagePrompt}.${avoidance
     };
   } catch (error) {
     console.error('❌ Error parsing English content:', error);
-    // Fallback
+    
+    // Intentar recuperación con regex
+    try {
+      const titleMatch = result.match(/"titleEn"\s*:\s*"([^"]+)"/);
+      const summaryMatch = result.match(/"summaryEn"\s*:\s*"([^"]+)"/);
+      let contentMatch = '';
+      const contentRegex = /"contentEn"\s*:\s*"([\s\S]*?)",\s*"/;
+      const cMatch = result.match(contentRegex);
+      if (cMatch && cMatch[1]) {
+        contentMatch = cMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"');
+      }
+
+      if (titleMatch && titleMatch[1]) {
+        console.log('🔄 Recuperación EN exitosa por regex');
+        return {
+          titleEn: titleMatch[1],
+          summaryEn: summaryMatch ? summaryMatch[1] : esArticle.summary,
+          contentEn: contentMatch.length > 50 ? contentMatch : esArticle.content
+        };
+      }
+    } catch (regexError) {
+      console.error('❌ Falló recovery regex EN:', regexError);
+    }
+    
+    // Fallback final
     return {
       titleEn: esArticle.title,
       summaryEn: esArticle.summary,

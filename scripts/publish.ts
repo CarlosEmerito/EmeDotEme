@@ -137,11 +137,36 @@ async function main() {
       if (imageResult.errors.length > 0) {
         console.log(`   Errores recuperados: ${imageResult.errors.join(', ')}`);
       }
+      
+      // Si la imagen es de fallback Unsplash, abortar - no publicamos sin imagen generada por IA
+      if (imageResult.source === 'unsplash_stock') {
+        console.error("\n❌ AI Horde fallió. Abortando publicación - no se usa imagen de stock.");
+        
+        // Notificar por Telegram
+        const tgToken = process.env.TELEGRAM_TOKEN;
+        const tgChatId = process.env.TELEGRAM_CHAT_ID;
+        if (tgToken && tgChatId) {
+          try {
+            const fetchNode = (await import('node-fetch')).default;
+            await fetchNode(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: tgChatId,
+                text: `⚠️ <b>Publicación abortada:</b>\n\nEl artículo "${aiResponse.title}" no se publicó porque AI Horde falló al generar imagen.\n\nSe intentará en la siguiente ejecución.`,
+                parse_mode: 'HTML'
+              })
+            });
+          } catch (tgErr) {
+            console.error("❌ No se pudo notificar por Telegram:", tgErr);
+          }
+        }
+        
+        process.exit(1);
+      }
     } catch (error) {
       console.error("❌ Error crítico en pipeline de imagen:", error);
-      const options = FALLBACK_IMAGES[selectedCategory.name] || FALLBACK_IMAGES["Tecnología"];
-      imageUrl = options[Math.floor(Math.random() * options.length)];
-      imageCaption = aiResponse.imageCaption || `Ilustración sobre ${selectedCategory.name}`;
+      process.exit(1);
     }
 
     console.log("\n💾 Guardando en la Base de Datos...");

@@ -1,6 +1,6 @@
-# Módulos EmeDotEme
+# Módulos de EmeDotEme
 
-## Índice de Módulos
+## Índice de módulos
 
 - News Sources Module
 - AI Module
@@ -16,34 +16,33 @@
 **Ubicación**: `modules/news/`
 
 ### Funcionalidad
-- Fetch de noticias desde fuentes RSS fiables
-- Deduplicación y clustering de noticias
-- Filtrado de artículos recientes
+- Obtención de noticias desde fuentes RSS fiables.
+- Deduplicación y agrupamiento de noticias.
+- Filtrado de artículos recientes.
 
-### Archivos Clave
+### Archivos clave
 
-| Archivo | Descripción |
-|---------|-------------|
-| `news-sources.service.ts` | Servicio principal de fetch RSS |
+| Archivo                   | Descripción                        |
+|---------------------------|------------------------------------|
+| `news-sources.service.ts` | Servicio principal de fetch RSS    |
 
-### Fuentes Configuradas
+### Fuentes configuradas
 
 ```
-The Hacker News      → Ciberseguridad (alta fiabilidad)
-Krebs on Security   → Ciberseguridad (alta fiabilidad)
-Security Affairs    → Ciberseguridad (media fiabilidad)
-CoinDesk            → Criptomonedas (alta fiabilidad)
-MIT Technology Review AI → IA (alta fiabilidad)
-Decrypt             → Criptomonedas (alta fiabilidad)
-VentureBeat AI      → IA (alta fiabilidad)
-El País Tecnología  → Tecnología (media fiabilidad)
+The Hacker News           → Ciberseguridad (alta fiabilidad)
+Krebs on Security         → Ciberseguridad (alta fiabilidad)
+Security Affairs          → Ciberseguridad (media fiabilidad)
+CoinDesk                  → Criptomonedas (alta fiabilidad)
+MIT Technology Review AI  → IA (alta fiabilidad)
+Decrypt                   → Criptomonedas (alta fiabilidad)
+VentureBeat AI            → IA (alta fiabilidad)
+El País Tecnología        → Tecnología (media fiabilidad)
 ```
 
 ### API
 
 ```typescript
-// Fetch noticias principales
-fetchLatestNews(recentTitles, recentSourceUrls): Promise<FetchedNewsContext>
+// Obtener noticias principalesetchLatestNews(recentTitles, recentSourceUrls): Promise<FetchedNewsContext>
 
 // Tipos
 interface FetchedNewsContext {
@@ -55,8 +54,8 @@ interface FetchedNewsContext {
 ```
 
 ### Dependencias
-- **rss-parser**: Para parsear feeds RSS
-- **dotenv**: Configuración
+- **rss-parser**: Para parsear feeds RSS.
+- **dotenv**: Configuración.
 
 ---
 
@@ -65,30 +64,30 @@ interface FetchedNewsContext {
 **Ubicación**: `modules/ai/`
 
 ### Funcionalidad
-- Generación de artículos con IA (Gemini/Ollama)
-- Post-procesado ortográfico
-- Análisis de imágenes (Vision)
-- Generación de imágenes (AI Horde)
+- Generación de artículos con IA (Gemini/Ollama).
+- Post-procesado ortográfico.
+- Análisis de imágenes (Vision).
+- Generación de imágenes (AI Horde).
 
-### Sub-módulos
+### Submódulos
 
-| Servicio | Archivo | Función |
-|----------|---------|---------|
-| AI Service | `ai.service.ts` | Orquestación principal |
-| Gemini Text | `gemini-text.service.ts` | Generación de texto (API) |
-| Gemini Vision | `gemini-vision.service.ts` | QA de imágenes |
-| Ollama | `ai.service.ts` | Fallback local |
-| Ollama Vision | `ollama-vision.service.ts` | QA fallback |
-| AI Horde | `aihorde-image.service.ts` | Generación de imágenes |
+| Servicio      | Archivo                    | Función                  |
+|--------------|----------------------------|--------------------------|
+| AI Service   | `ai.service.ts`            | Orquestación principal   |
+| Gemini Text  | `gemini-text.service.ts`   | Generación de texto (API)|
+| Gemini Vision| `gemini-vision.service.ts` | QA de imágenes           |
+| Ollama       | `ai.service.ts`            | Fallback local           |
+| Ollama Vision| `ollama-vision.service.ts` | QA fallback              |
+| AI Horde     | `aihorde-image.service.ts` | Generación de imágenes   |
 
-### Flujo de Generación
+### Flujo de generación
 
 ```
 1. generateArticleContent(recentTitles, newsItems)
    |
    +-> Intentar Gemini API
-   |     +-> Si falla -> Ollama local
-   |             +-> Si falla -> Artículo de ejemplo
+   |     +-> Si falla → Ollama local
+   |             +-> Si falla → Artículo de ejemplo
    |
    2. translateArticleContent()
       +-> Añade campos *_en
@@ -97,7 +96,7 @@ interface FetchedNewsContext {
       +-> Corrige mayúsculas
 ```
 
-### API Principal
+### API principal
 
 ```typescript
 // Generar artículo desde noticias
@@ -120,16 +119,16 @@ interface GeneratedArticle {
 }
 ```
 
-### Estrategias de Fallback
+### Estrategias de fallback
 
-1. **Texto**: Gemini -> Ollama local -> Artículo estático de ejemplo
-2. **Imágenes**: RSS Source -> AI Horde x2 -> Unsplash Stock
-3. **QA**: Gemini Vision -> Ollama Vision
+1. **Texto**: Gemini → Ollama local → Artículo estático de ejemplo.
+2. **Imágenes**: RSS Source → AI Horde x2 → Unsplash Stock.
+3. **QA**: Gemini Vision → Ollama Vision.
 
 ### Dependencias
-- **@google/generative-ai**: Gemini API
-- **node-fetch**: LLamadas HTTP
-- **dotenv**: Configuración
+- **@google/generative-ai**: Gemini API.
+- **node-fetch**: Llamadas HTTP.
+- **dotenv**: Configuración.
 
 ---
 
@@ -138,9 +137,9 @@ interface GeneratedArticle {
 **Ubicación**: `modules/articles/`
 
 ### Funcionalidad
-- Gestión de artículos en la base de datos
-- Búsqueda y filtrado
-- Categorías y tags
+- Gestión de artículos en la base de datos.
+- Búsqueda y filtrado.
+- Categorías y etiquetas.
 
 ### API
 
@@ -160,7 +159,7 @@ getArticlesByCategorySlug(slug, limit, skip)
 // Búsqueda avanzada
 searchArticles(options): Promise<SearchResult>
 
-// Simple search
+// Búsqueda simple
 simpleSearchArticles(query, limit)
 ```
 
@@ -198,7 +197,7 @@ interface Category {
 ```
 
 ### Dependencias
-- **@prisma/client**: ORM de base de datos
+- **@prisma/client**: ORM de base de datos.
 
 ---
 
@@ -207,29 +206,29 @@ interface Category {
 **Ubicación**: `modules/images/`
 
 ### Funcionalidad
-- Pipeline de imágenes para artículos
-- Generación, QA, y almacenamiento
+- Pipeline de imágenes para artículos.
+- Generación, QA y almacenamiento.
 
-### Pipeline de Imagen
+### Pipeline de imagen
 
 ```
 1. Imagen RSS Source
    |
    +-> QA con Gemini Vision
-   |     +-> Aprobada -> Subir a Supabase -> USAR
+   |     +-> Aprobada → Subir a Supabase → USAR
    |
-   +-> Rechazada -> Paso 2
+   +-> Rechazada → Paso 2
 
 2. AI Horde (intento 1)
    |
    +-> Generar imagen
-   |     +-> Subir a Supabase -> USAR
+   |     +-> Subir a Supabase → USAR
    |
-   +-> Fallo -> Paso 3
+   +-> Fallo → Paso 3
 
 3. AI Horde (intento 2)
    |
-   +-> Fallo -> Paso 4
+   +-> Fallo → Paso 4
 
 4. Unsplash Stock (FALLBACK)
 ```
@@ -258,13 +257,13 @@ interface ImagePipelineResult {
 ```
 
 ### QA Features
-- Coherencia con el artículo
-- Calidad aceptable
-- Sin marcas de agua
+- Coherencia con el artículo.
+- Calidad aceptable.
+- Sin marcas de agua.
 
 ### Dependencias
-- **@supabase/supabase-js**: Storage
-- **dotenv**: Configuración
+- **@supabase/supabase-js**: Storage.
+- **dotenv**: Configuración.
 
 ---
 
@@ -273,23 +272,23 @@ interface ImagePipelineResult {
 **Ubicación**: `modules/newsletter/`
 
 ### Funcionalidad
-- Generación de newsletter semanal
-- Envío a suscriptores
-- Gestión de suscriptores
+- Generación de newsletter semanal.
+- Envío a suscriptores.
+- Gestión de suscriptores.
 
 ### API
 
 ```typescript
-// Service
+// Servicio
 generateWeeklyNewsletter(...): Promise<Newsletter>
 
-// Routes
-POST /api/subscribe -> Suscribirse
+// Rutas
+POST /api/subscribe → Suscribirse
 ```
 
 ### Dependencias
-- **PostgreSQL**: Almacenar suscriptores
-- **resend**: SDK para envío de emails
+- **PostgreSQL**: Almacenamiento de suscriptores.
+- **resend**: SDK para envío de emails.
 
 ---
 
@@ -298,27 +297,27 @@ POST /api/subscribe -> Suscribirse
 **Ubicación**: `modules/market/`
 
 ### Funcionalidad
-- Integración con Binance Square
-- APIs de mercado
+- Integración con Binance Square.
+- APIs de mercado.
 
 ---
 
 ## Scripts
 
-### publish.ts (Main Pipeline)
+### publish.ts (Pipeline principal)
 
 ```bash
 # Ejecución
 npx tsx scripts/publish.ts
 ```
 
-### Otros Scripts
+### Otros scripts
 
-| Script | Función |
-|--------|----------|
-| `force-generate.ts` | Forzar generación |
-| `publish_test.ts` | Modo prueba |
-| `send_newsletter.ts` | Enviar newsletter |
+| Script                | Función            |
+|-----------------------|--------------------|
+| `force-generate.ts`   | Forzar generación  |
+| `publish_test.ts`     | Modo prueba        |
+| `send_newsletter.ts`  | Enviar newsletter  |
 
 ---
 

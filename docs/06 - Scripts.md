@@ -1,13 +1,13 @@
-# Scripts EmeDotEme
+# Scripts de EmeDotEme
 
-## Índice de Scripts
+## Índice de scripts
 
-| Script | Descripción |
-|--------|-------------|
-| `publish.ts` | Pipeline principal |
-| `force-generate.ts` | Forzar generación |
-| `publish_test.ts` | Modo prueba |
-| `send_newsletter.ts` | Newsletter |
+| Script                | Descripción                        |
+|-----------------------|------------------------------------|
+| `publish.ts`          | Pipeline principal                 |
+| `force-generate.ts`   | Forzar generación                  |
+| `publish_test.ts`     | Modo prueba                        |
+| `send_newsletter.ts`  | Newsletter                         |
 
 ---
 
@@ -29,11 +29,11 @@ npx tsx scripts/publish.ts
 ### Flujo
 
 1. Inicialización (categorías, artículos recientes)
-2. Fetch noticias desde fuentes RSS
-3. Generación IA (Gemini -> Ollama -> fallback)
-4. Traducción y post-procesado
+2. Obtención de noticias desde fuentes RSS
+3. Generación IA (Gemini → Ollama → fallback)
+4. Traducción y postprocesado
 5. Pipeline de imagen
-6. Guardar en BD
+6. Guardar en base de datos
 7. Publicar en redes (opcional)
 
 ### Dependencias
@@ -45,8 +45,8 @@ npx tsx scripts/publish.ts
 
 ### Errores
 
-- Si todas las IAs fallan -> Avisa por Telegram + exit(1)
-- Si el pipeline de imagen falla -> Usa fallback de Unsplash
+- Si todas las IAs fallan → Avisa por Telegram + exit(1)
+- Si el pipeline de imagen falla → Usa fallback de Unsplash
 
 ### Referencias
 
@@ -60,7 +60,7 @@ npx tsx scripts/publish.ts
 
 ### Descripción
 
-Fuerza la generación de un artículo bypassing las verificaciones de duplicados.
+Fuerza la generación de un artículo, omitiendo las verificaciones de duplicados.
 
 ### Uso
 
@@ -76,7 +76,7 @@ npx tsx scripts/force-generate.ts
 
 ### Descripción
 
-Versión de prueba del pipeline sin publicar en BD.
+Versión de prueba del pipeline sin publicar en la base de datos.
 
 ### Uso
 
@@ -102,10 +102,10 @@ npx tsx scripts/send_newsletter.ts
 
 ### Funcionalidad
 
-1. Fetch últimos artículos de la semana
+1. Obtención de los últimos artículos de la semana
 2. Generación de contenido del newsletter
 3. Envío a través de Resend API
-4. Actualizar estadísticas
+4. Actualización de estadísticas
 
 ### Dependencias
 
@@ -114,7 +114,7 @@ npx tsx scripts/send_newsletter.ts
 
 ---
 
-## Scripts de Mantenimiento
+## Scripts de mantenimiento
 
 ### delete-duplicates.ts
 

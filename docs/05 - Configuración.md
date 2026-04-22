@@ -1,73 +1,73 @@
-# Configuración EmeDotEme
+# Configuración de EmeDotEme
 
-## Variables de Entorno
+## Variables de entorno
 
-### Base de Datos
+### Base de datos
 
-| Variable | Descripción | Requerido |
-|----------|-------------|----------|
-| `DATABASE_URL` | URL de PostgreSQL (Prisma) | ✅ |
+| Variable         | Descripción                        | Requerido |
+|------------------|------------------------------------|-----------|
+| `DATABASE_URL`   | URL de PostgreSQL (Prisma)         | ✅        |
 
-### AI - Gemini
+### IA - Gemini
 
-| Variable | Descripción | Requerido |
-|----------|-------------|----------|
-| `GEMINI_API_KEY` | Clave API de Gemini (primaria) | ✅ |
-| `GEMINI_API_KEY_2` | Clave secundaria (fallback) | Recomendado |
-| `GEMINI_API_KEY_3` | Clave terciaria (fallback) | Recomendado |
-| `GEMINI_MODEL` | Modelo a usar (default: gemini-2.5-flash) | Opcional |
+| Variable           | Descripción                                 | Requerido    |
+|--------------------|---------------------------------------------|--------------|
+| `GEMINI_API_KEY`   | Clave API de Gemini (primaria)              | ✅           |
+| `GEMINI_API_KEY_2` | Clave secundaria (fallback)                 | Recomendado  |
+| `GEMINI_API_KEY_3` | Clave terciaria (fallback)                  | Recomendado  |
+| `GEMINI_MODEL`     | Modelo a usar (por defecto: gemini-2.5-flash)| Opcional     |
 
-### AI - Ollama (Local)
+### IA - Ollama (Local)
 
-| Variable | Descripción | Requerido |
-|----------|-------------|----------|
-| `OLLAMA_MODEL` | Modelo (default: qwen3.5:9b) | Opcional |
-| `OLLAMA_BASE_URL` | URL base (default: http://localhost:11434) | Opcional |
-| `OLLAMA_TIMEOUT` | Timeout en ms (default: 600000) | Opcional |
+| Variable           | Descripción                                 | Requerido |
+|--------------------|---------------------------------------------|-----------|
+| `OLLAMA_MODEL`     | Modelo (por defecto: qwen3.5:9b)            | Opcional  |
+| `OLLAMA_BASE_URL`  | URL base (por defecto: http://localhost:11434)| Opcional  |
+| `OLLAMA_TIMEOUT`   | Timeout en ms (por defecto: 600000)         | Opcional  |
 
 ### Imágenes - AI Horde
 
-| Variable | Descripción | Requerido |
-|----------|-------------|----------|
-| `AI_HORDE_API_KEY` | Clave API de AI Horde | Recomendado |
-| `AI_HORDE_ENDPOINT` | Endpoint (default: https://aihorde.net) | Opcional |
+| Variable             | Descripción                                | Requerido   |
+|----------------------|--------------------------------------------|-------------|
+| `AI_HORDE_API_KEY`   | Clave API de AI Horde                      | Recomendado |
+| `AI_HORDE_ENDPOINT`  | Endpoint (por defecto: https://aihorde.net)| Opcional    |
 
 ### Imágenes - Supabase Storage
 
-| Variable | Descripción | Requerido |
-|----------|-------------|----------|
-| `SUPABASE_URL` | URL del proyecto Supabase | Recomendado |
-| `SUPABASE_SERVICE_ROLE_KEY` | Clave de servicio (admin) | Recomendado |
+| Variable                   | Descripción                  | Requerido   |
+|----------------------------|------------------------------|-------------|
+| `SUPABASE_URL`             | URL del proyecto Supabase    | Recomendado |
+| `SUPABASE_SERVICE_ROLE_KEY`| Clave de servicio (admin)    | Recomendado |
 
 ### Telegram (Notificaciones)
 
-| Variable | Descripción | Requerido |
-|----------|-------------|----------|
-| `TELEGRAM_TOKEN` | Token del bot | Recomendado |
-| `TELEGRAM_CHAT_ID` | Chat ID para notificaciones | Recomendado |
+| Variable           | Descripción                      | Requerido   |
+|--------------------|----------------------------------|-------------|
+| `TELEGRAM_TOKEN`   | Token del bot                    | Recomendado |
+| `TELEGRAM_CHAT_ID` | Chat ID para notificaciones      | Recomendado |
 
 ### Binance Square
 
-| Variable | Descripción | Requerido |
-|----------|-------------|----------|
-| `BINANCE_SQUARE_API_KEY` | API Key de Binance Square | Opcional |
-| `BINANCE_SQUARE_SECRET` | Secret de Binance Square | Opcional |
-| `BINANCE_SQUARE_URL` | URL de la API | Opcional |
+| Variable                  | Descripción                  | Requerido |
+|---------------------------|------------------------------|-----------|
+| `BINANCE_SQUARE_API_KEY`  | API Key de Binance Square    | Opcional  |
+| `BINANCE_SQUARE_SECRET`   | Secret de Binance Square     | Opcional  |
+| `BINANCE_SQUARE_URL`      | URL de la API                | Opcional  |
 
 ### Web/Auth
 
-| Variable | Descripción | Requerido |
-|----------|-------------|----------|
-| `NEXTAUTH_URL` | URL de la app (ej: https://emedoteme.es) | ✅ |
-| `NEXTAUTH_SECRET` | Secret para NextAuth | ✅ |
-| `ADMIN_PASSWORD` | Contraseña admin | ✅ |
+| Variable           | Descripción                                 | Requerido |
+|--------------------|---------------------------------------------|-----------|
+| `NEXTAUTH_URL`     | URL de la app (ej: https://emedoteme.es)    | ✅        |
+| `NEXTAUTH_SECRET`  | Secret para NextAuth                        | ✅        |
+| `ADMIN_PASSWORD`   | Contraseña admin                            | ✅        |
 
 ### Newsletter
 
-| Variable | Descripción | Requerido |
-|----------|-------------|----------|
-| `RESEND_API_KEY` | API Key de Resend (envío emails) | Opcional |
-| `NEWSLETTER_FROM` | Email remitente | Opcional |
+| Variable           | Descripción                                 | Requerido |
+|--------------------|---------------------------------------------|-----------|
+| `RESEND_API_KEY`   | API Key de Resend (envío de emails)         | Opcional  |
+| `NEWSLETTER_FROM`  | Email remitente                             | Opcional  |
 
 ---
 
@@ -80,14 +80,14 @@
 DATABASE_URL="postgresql://..."
 
 # ===========================================
-# GEMINI (AI - Texto)
+# GEMINI (IA - Texto)
 # ===========================================
 GEMINI_API_KEY="AIza..."
 GEMINI_API_KEY_2=""
 GEMINI_API_KEY_3=""
 
 # ===========================================
-# OLLAMA (AI Local - Fallback)
+# OLLAMA (IA Local - Fallback)
 # ===========================================
 OLLAMA_MODEL="qwen3.5:9b"
 
@@ -125,7 +125,7 @@ RESEND_API_KEY=""
 
 ## Prisma Schema
 
-### Models
+### Modelos
 
 ```prisma
 model Article {
@@ -144,9 +144,9 @@ model Article {
   isOriginal  Boolean  @default(false)
   sentiment   String   @default("Neutral ➡️")
   categoryId  String
-  category   Category @relation(fields: [categoryId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
   author      String   @default("Carlos 'Emérito' López Lovera")
-  published  Boolean  @default(false)
+  published   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -159,7 +159,7 @@ model Category {
   id        String    @id @default(cuid())
   name      String    @unique
   slug      String    @unique
-  articles Article[]
+  articles  Article[]
 }
 
 model Subscriber {
@@ -179,7 +179,7 @@ model Analytic {
 
 ---
 
-## Constantes del Proyecto
+## Constantes del proyecto
 
 ### FALLBACK_IMAGES
 

@@ -1,64 +1,64 @@
-# Arquitectura del Proyecto EmeDotEme
+# Arquitectura de EmeDotEme
 
-## Visión General
+## Visión general
 
-EmeDotEme es un sistema automatizado de generación y publicación de artículos de noticias sobre criptomonedas, blockchain, tecnología e inteligencia artificial.
+EmeDotEme es un sistema automatizado para la generación y publicación de artículos de noticias sobre criptomonedas, blockchain, tecnología e inteligencia artificial.
 
-## Diagrama de Arquitectura
+## Diagrama de arquitectura
 
 ```
 +-------------------------------------------------------------+
-|                        FRONTEND (Next.js)                      |
-|  +------------+  +------------+  +------------+  +------------+  |
-|  |  Página   |  |   Admin   |  |    API    |  |  RSS/XML   |  |
-|  | Principal|  |  Panel    |  |  Routes   |  |  Feeds    |  |
-|  +------------+  +------------+  +------------+  +------------+  |
-+------------------------------------------------------------+
+|                        FRONTEND (Next.js)                  |
+|  +------------+  +------------+  +------------+  +--------+|
+|  |  Página    |  |   Admin    |  |    API     |  |  RSS/  ||
+|  | Principal  |  |   Panel    |  |  Routes    |  |  Feeds ||
+|  +------------+  +------------+  +------------+  +--------+|
++-------------------------------------------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-|                          BACKEND                             |
-|  +-----------------------------------------------------+     |
-|  |          DATABASE (PostgreSQL + Prisma)            |     |
-|  |  Articles, Categories, Subscribers, Analytics    |     |
-|  +-----------------------------------------------------+     |
+|                          BACKEND                            |
+|  +-----------------------------------------------------+    |
+|  |          BASE DE DATOS (PostgreSQL + Prisma)         |    |
+|  |  Articles, Categories, Subscribers, Analytics         |    |
+|  +-----------------------------------------------------+    |
 |                                                           |
 |  +-----------------------------------------------------+   |
-|  |        CONTENT PIPELINE (scripts/publish.ts)       |   |
+|  |        PIPELINE DE CONTENIDO (scripts/publish.ts)    |   |
 |  +-----------------------------------------------------+   |
 |                            |                              |
-|         +------------------+--+-------------------+      |
-|         v                  v                  v           |
-|  +-----------+    +-----------+    +-----------+        |
-|  |   News    |    |    AI     |    |  Images   |        |
-|  |  Sources  |--->|  Service  |--->|  Service  |        |
-|  +-----------+    +-----------+    +-----------+        |
-|                            |                |             |
-|         +------------------+--+---------+     |          |
-|         v                  v              v            |
-|  +-----------+    +-----------+    +-----------+        |
-|  |  Gemini   |    |  Ollama   |    | AI Horde  |        |
-|  |  (API)    |    |  (Local) |    |  (API)   |        |
-|  +-----------+    +-----------+    +-----------+        |
+|         +------------------+--+-------------------+        |
+|         v                  v                  v             |
+|  +-----------+    +-----------+    +-----------+           |
+|  |   News    |    |    IA     |    |  Imágenes  |           |
+|  |  Sources  |--->|  Service  |--->|  Service   |           |
+|  +-----------+    +-----------+    +-----------+           |
+|                            |                |              |
+|         +------------------+--+---------+     |            |
+|         v                  v              v                |
+|  +-----------+    +-----------+    +-----------+           |
+|  |  Gemini   |    |  Ollama   |    | AI Horde  |           |
+|  |  (API)    |    |  (Local)  |    |  (API)    |           |
+|  +-----------+    +-----------+    +-----------+           |
 +-------------------------------------------------------------+
 ```
 
-## Componentes Principales
+## Componentes principales
 
 ### Frontend (Next.js)
-- **Páginas**: Inicio, artículos, categorías
-- **Admin Panel**: Gestión de contenido
-- **API Routes**: Endpoints para generación, suscripción
-- **Feeds**: RSS y Atom feeds
+- **Páginas**: Inicio, artículos, categorías.
+- **Panel de administración**: Gestión de contenido.
+- **Rutas API**: Endpoints para generación y suscripción.
+- **Feeds**: RSS y Atom.
 
-### Base de Datos
-- PostgreSQL con Prisma ORM
-- Tablas: Articles, Categories, Subscribers, Analytics
+### Base de datos
+- PostgreSQL con Prisma ORM.
+- Tablas: Articles, Categories, Subscribers, Analytics.
 
-### Pipeline de Contenido
-- News Sources Service: Fetch de RSS
-- AI Service: Generación de artículos
-- Image Service: Pipeline de imágenes
+### Pipeline de contenido
+- Servicio de fuentes de noticias: Fetch de RSS.
+- Servicio de IA: Generación de artículos.
+- Servicio de imágenes: Pipeline de imágenes.
 
 ## Referencias
 

@@ -1,45 +1,45 @@
-# Stack Tecnológico EmeDotEme
+# Stack Tecnológico de EmeDotEme
 
-## Core
+## Núcleo
 
 - **Runtime**: Node.js v22
 - **Framework**: Next.js 14 (App Router)
 - **Lenguaje**: TypeScript
-- **Base de Datos**: PostgreSQL
+- **Base de datos**: PostgreSQL
 
-## ORM & DB
+## ORM y Base de datos
 
-- **Prisma**: ORM principal
-- **PostgreSQL**: Base de datos relacional
+- **Prisma**: ORM principal.
+- **PostgreSQL**: Base de datos relacional.
 
-## AI & ML
+## IA y Machine Learning
 
-| Servicio | Uso | API/Local |
-|----------|-----|----------|
-| Gemini (Google) | Generación de texto principal | API externa |
-| Ollama | Fallback y post-procesado | Local (localhost:11434) |
-| Gemini Vision | QA de imágenes | API externa |
-| Ollama Vision | QA de imágenes fallback | Local |
-| AI Horde | Generación de imágenes | API externa |
+| Servicio         | Uso                        | API/Local                |
+|------------------|---------------------------|--------------------------|
+| Gemini (Google)  | Generación de texto       | API externa              |
+| Ollama           | Fallback y post-procesado | Local (localhost:11434)  |
+| Gemini Vision    | QA de imágenes            | API externa              |
+| Ollama Vision    | QA de imágenes fallback   | Local                    |
+| AI Horde         | Generación de imágenes    | API externa              |
 
-## Imágenes & Storage
+## Imágenes y almacenamiento
 
-- **AI Horde**: Generación de imágenes (Stable Diffusion)
-- **Supabase Storage**: Almacenamiento de imágenes
-- **Unsplash**: Imágenes de stock fallback
+- **AI Horde**: Generación de imágenes (Stable Diffusion).
+- **Supabase Storage**: Almacenamiento de imágenes.
+- **Unsplash**: Imágenes de stock (fallback).
 
-## RSS & Feeds
+## RSS y Feeds
 
-- **rss-parser**: Parseo de feeds RSS
+- **rss-parser**: Parseo de feeds RSS.
 
-## Deployment
+## Despliegue
 
-- **Vercel**: Hosting principal
-- **Cron**: Programación de tareas (cron-job.org)
+- **Vercel**: Hosting principal.
+- **Cron**: Programación de tareas (cron-job.org).
 
-## Variables de Entorno
+## Variables de entorno
 
-Ver [[05 - Configuración]] para configuración completa.
+Consulta [[05 - Configuración]] para la configuración completa.
 
 ## Referencias
 

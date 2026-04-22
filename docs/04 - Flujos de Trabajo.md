@@ -1,17 +1,17 @@
-# Flujos de Trabajo EmeDotEme
+# Flujos de Trabajo de EmeDotEme
 
 ## Índice
 
-- Pipeline de Publicación
-- Flujo de Imágenes
-- Flujo de AI
-- Cron Jobs
+- Pipeline de publicación
+- Flujo de imágenes
+- Flujo de IA
+- Cron jobs
 
 ---
 
-## Pipeline de Publicación
+## Pipeline de publicación
 
-### Descripción General
+### Descripción general
 
 El pipeline de publicación es el flujo principal que genera y publica automáticamente un artículo cada día.
 
@@ -19,117 +19,117 @@ El pipeline de publicación es el flujo principal que genera y publica automáti
 
 ```
 +-------------------------------------------------------------+
-|                 PIPELINE DE PUBLICACIÓN                       |
+|                 PIPELINE DE PUBLICACIÓN                    |
 +-------------------------------------------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| 1. INICIALIZACIÓN                                           |
-|    - Cargar categorías desde BD                            |
-|    - Fetch títulos recientes                               |
-|    - Fetch URLs recientes                                   |
+| 1. INICIALIZACIÓN                                            |
+|    - Cargar categorías desde la BD                           |
+|    - Obtener títulos recientes                               |
+|    - Obtener URLs recientes                                  |
 +-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| 2. FETCH NOTICIAS (NewsSources Service)                    |
-|    +---------------------------------------------------+     |
-|    | - Fetch RSS de fuentes fiables                    |     |
-|    | - Parsear y filtrar noticias (últimas 48h)     |     |
-|    | - Deduplicar por similitud de títulos           |     |
-|    | - Filtrar artículos ya cubiertos                |     |
-|    | - Clustering por tema                          |     |
-|    +---------------------------------------------------+     |
-|    Resultado: newsItems[]                                 |
+| 2. FETCH NOTICIAS (NewsSources Service)                     |
+|    +---------------------------------------------------+    |
+|    | - Fetch RSS de fuentes fiables                     |    |
+|    | - Parsear y filtrar noticias (últimas 48h)         |    |
+|    | - Deduplicar por similitud de títulos              |    |
+|    | - Filtrar artículos ya cubiertos                   |    |
+|    | - Clustering por tema                              |    |
+|    +---------------------------------------------------+    |
+|    Resultado: newsItems[]                                   |
 +-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| 3. GENERACIÓN IA (AI Service)                              |
-|    +---------------------------------------------------+   |
-|    | SYSTEM PROMPT: "Eres periodista profesional..." |   |
-|    | USER PROMPT: Noticias + instrucciones              |   |
-|    +---------------------------------------------------+   |
+| 3. GENERACIÓN IA (AI Service)                               |
+|    +---------------------------------------------------+    |
+|    | SYSTEM PROMPT: "Eres periodista profesional..."    |    |
+|    | USER PROMPT: Noticias + instrucciones               |    |
+|    +---------------------------------------------------+    |
 |                           |                               |
-|              +------------+-----------+                 |
+|              +------------+-----------+                   |
 |              v                        v                  |
-|         GEMINI API            OLLAMA LOCAL             |
+|         GEMINI API            OLLAMA LOCAL                |
 |              |                        |                  |
-|              +-> OK -> JSON válido  +-> JSON válido    |
+|              +-> OK -> JSON válido  +-> JSON válido      |
 |              |                        |                  |
-|              +-- FAIL --+          +-- FAIL --+       |
+|              +-- FAIL --+          +-- FAIL --+          |
 |              v                        v                  |
-|         Try Ollama         Artículo de ejemplo         |
+|         Try Ollama         Artículo de ejemplo            |
 |              |                        |                  |
-|              +-- FAIL --+          +-- (ERROR)        |
-|                         v                        v      |
-|                     Artículo de ejemplo              |
-|                     (notifica Telegram)              |
+|              +-- FAIL --+          +-- (ERROR)           |
+|                         v                        v       |
+|                     Artículo de ejemplo                  |
+|                     (notifica Telegram)                  |
 |                                                          |
-|    Resultado: {title, summary, content, tags, ...}     |
+|    Resultado: {title, summary, content, tags, ...}        |
 +-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| 4. TRADUCCIÓN Y POST-PROCESADO                             |
-|    +---------------------------------------------------+   |
-|    | translateArticleContent()                         |   |
-|    |   - Añade campos *_en (titleEn, summaryEn, ...)  |   |
-|    +---------------------------------------------------+   |
+| 4. TRADUCCIÓN Y POSTPROCESADO                              |
+|    +---------------------------------------------------+    |
+|    | translateArticleContent()                          |    |
+|    |   - Añade campos *_en (titleEn, summaryEn, ...)    |    |
+|    +---------------------------------------------------+    |
 |                           |                               |
 |                           v                               |
-|    +---------------------------------------------------+   |
-|    | postprocessWithOllama()                    |   |
-|    |   - Corrige mayúsculas                       |   |
-|    |   - Nombres propios, siglas                 |   |
-|    +---------------------------------------------------+   |
+|    +---------------------------------------------------+    |
+|    | postprocessWithOllama()                            |    |
+|    |   - Corrige mayúsculas                             |    |
+|    |   - Nombres propios, siglas                        |    |
+|    +---------------------------------------------------+    |
 +-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| 5. PROCESO DE IMAGEN (Image Service)                       |
-|    +----------------------------------------+            |
-|    | generateArticleImageAndAnalyzeQA()      |            |
-|    +----------------------------------------+            |
-|                           |                            |
-|              +------------+-----------+              |
-|              v                        v               |
-|       RSS SOURCE              AI HORDE + QA          |
-|              |                        |               |
-|              +-- FALLBACK: UNSPLASH -+               |
+| 5. PROCESO DE IMAGEN (Image Service)                        |
+|    +----------------------------------------+               |
+|    | generateArticleImageAndAnalyzeQA()      |               |
+|    +----------------------------------------+               |
+|                           |                                 |
+|              +------------+-----------+                     |
+|              v                        v                    |
+|       RSS SOURCE              AI HORDE + QA                 |
+|              |                        |                     |
+|              +-- FALLBACK: UNSPLASH -+                      |
 |                                            |
-|    Resultado: {imageUrl, caption}          |
+|    Resultado: {imageUrl, caption}                           |
 +-------------------------------+------------+
                               |
                               v
 +-------------------------------------------------------------+
-| 6. GUARDAR EN BASE DE DATOS                             |
-|    +-------------------------------------------+        |
-|    | prisma.article.create({                  |        |
-|    |   title, titleEn, slug, summary, ...     |        |
-|    |   published: true                         |        |
-|    | })                                       |        |
-|    +-------------------------------------------+        |
-+-------------------------------+------------+------------+
+| 6. GUARDAR EN BASE DE DATOS                                 |
+|    +-------------------------------------------+            |
+|    | prisma.article.create({                    |            |
+|    |   title, titleEn, slug, summary, ...       |            |
+|    |   published: true                          |            |
+|    | })                                         |            |
+|    +-------------------------------------------+            |
++-------------------------------+------------+----------------+
                               |
                               v
 +-------------------------------------------------------------+
-| 7. PUBLICAR EN REDES SOCIALES (opcional)                |
-|    - Guardar latest_article.json para Binance Square     |
-|    - Notificar errores por Telegram                      |
+| 7. PUBLICAR EN REDES SOCIALES (opcional)                    |
+|    - Guardar latest_article.json para Binance Square         |
+|    - Notificar errores por Telegram                         |
 +-------------------------------------------------------------+
 ```
 
-### Código de Ejecución
+### Código de ejecución
 
 ```bash
 # Manual
 npx tsx scripts/publish.ts
 
-# O automáticamente via Cron Job (configurado en cron-job.org)
+# O automáticamente vía Cron Job (configurado en cron-job.org)
 ```
 
-### Variables de Entorno Requeridas
+### Variables de entorno requeridas
 
 ```env
 # Base de datos
@@ -157,9 +157,9 @@ SUPABASE_SERVICE_ROLE_KEY=
 
 ---
 
-## Flujo de Imágenes
+## Flujo de imágenes
 
-### Pipeline de Imagen Detallado
+### Pipeline de imagen detallado
 
 ```
 +-------------------------------------------------------------+
@@ -169,62 +169,62 @@ SUPABASE_SERVICE_ROLE_KEY=
                               v
 +-------------------------------------------------------------+
 | PASO 0: Recibir datos del artículo                          |
-|    {title, slug, topic, originalPrompt, summary}           |
+|    {title, slug, topic, originalPrompt, summary}            |
 +-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| PASO 1: Imagen de Fuente RSS                              |
-|    +---------------------------------------------+         |
-|    | 1. ¿sourceImageUrl existe? NO -> Paso 2    |         |
-|    |                                            |         |
-|    | 2. QA con Gemini Vision                   |         |
-|    |    - Es coherente con el artículo?        |         |
-|    |    - Calidad aceptable?                  |         |
-|    |    - Tiene marca de agua?                |         |
-|    |                                            |         |
-|    | 3. Si APROBADA:                        |         |
-|    |    - Subir a Supabase Storage          |         |
-|    |    - Usar como imagen final            |         |
-|    |                                            |         |
-|    | 4. Si RECHAZADA:                      |         |
-|    |    - Error "no pasó QA" -> Paso 2     |         |
-|    +---------------------------------------------+         |
+| PASO 1: Imagen de fuente RSS                                |
+|    +---------------------------------------------+          |
+|    | 1. ¿sourceImageUrl existe? NO → Paso 2      |          |
+|    |                                             |          |
+|    | 2. QA con Gemini Vision                     |          |
+|    |    - ¿Es coherente con el artículo?         |          |
+|    |    - ¿Calidad aceptable?                    |          |
+|    |    - ¿Tiene marca de agua?                  |          |
+|    |                                             |          |
+|    | 3. Si APROBADA:                             |          |
+|    |    - Subir a Supabase Storage               |          |
+|    |    - Usar como imagen final                 |          |
+|    |                                             |          |
+|    | 4. Si RECHAZADA:                            |          |
+|    |    - Error "no pasó QA" → Paso 2           |          |
+|    +---------------------------------------------+          |
 +-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| PASO 2: AI Horde (intento 1)                             |
-|    +---------------------------------------------+         |
-|    | 1. Generar imagen con AI Horde          |         |
-|    |    - Prompt mejorado: title + "..."     |         |
-|    |    - 1024x1024, 100 steps             |         |
-|    |                                            |         |
-|    | 2. Verificar que no sea CSAM/error     |         |
-|    |                                            |         |
-|    | 3. Si OK:                           |         |
-|    |    - Subir a Supabase Storage          |         |
-|    |    - Usar (sin QA para ahorrar)      |         |
-|    |                                            |         |
-|    | 4. Si ERROR:                        |         |
-|    |    - "falló generación" -> Paso 3    |         |
-|    +---------------------------------------------+         |
+| PASO 2: AI Horde (intento 1)                                |
+|    +---------------------------------------------+          |
+|    | 1. Generar imagen con AI Horde              |          |
+|    |    - Prompt mejorado: title + "..."         |          |
+|    |    - 1024x1024, 100 steps                   |          |
+|    |                                             |          |
+|    | 2. Verificar que no sea CSAM/error          |          |
+|    |                                             |          |
+|    | 3. Si OK:                                   |          |
+|    |    - Subir a Supabase Storage               |          |
+|    |    - Usar (sin QA para ahorrar)             |          |
+|    |                                             |          |
+|    | 4. Si ERROR:                                |          |
+|    |    - "falló generación" → Paso 3           |          |
+|    +---------------------------------------------+          |
 +-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| PASO 3: AI Horde (intento 2)                             |
-|    Mismo proceso que Paso 2                                    |
+| PASO 3: AI Horde (intento 2)                                |
+|    Mismo proceso que Paso 2                                 |
 +-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| PASO 4: FALLBACK - Unsplash Stock                          |
-|    +---------------------------------------------+         |
-|    | 1. Seleccionar imagen por categoría   |         |
-|    | 2. Usar Caption genérico           |         |
-|    | 3. Final                           |         |
-|    +---------------------------------------------+         |
+| PASO 4: FALLBACK - Unsplash Stock                           |
+|    +---------------------------------------------+          |
+|    | 1. Seleccionar imagen por categoría          |          |
+|    | 2. Usar caption genérico                    |          |
+|    | 3. Final                                    |          |
+|    +---------------------------------------------+          |
 +-------------------------------------------------------------+
 ```
 
@@ -243,9 +243,9 @@ const result = await generateArticleImageAndAnalyzeQA(
 
 ---
 
-## Flujo de AI
+## Flujo de IA
 
-### Generación de Texto
+### Generación de texto
 
 ```
 +-------------------------------------------------------------+
@@ -254,26 +254,26 @@ const result = await generateArticleImageAndAnalyzeQA(
                               |
                               v
 +-------------------------------------------------------------+
-| INPUT: Contexto                                           |
-|    - recentTitles: string[]                               |
-|    - newsItems: NewsItem[]                                 |
-+-------------------------------+---------------------------+
+| INPUT: Contexto                                              |
+|    - recentTitles: string[]                                  |
+|    - newsItems: NewsItem[]                                   |
++-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| SYSTEM PROMPT                                             |
-|    "Eres un periodista profesional de noticias           |
-|     sobre criptomonedas, blockchain y tecnología           |
-|     para el medio digital EmeDotEme..."                  |
-+-------------------------------+---------------------------+
+| SYSTEM PROMPT                                                |
+|    "Eres un periodista profesional de noticias               |
+|     sobre criptomonedas, blockchain y tecnología             |
+|     para el medio digital EmeDotEme..."                      |
++-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| USER PROMPT                                              |
-|    - Noticias formateadas                                 |
-|    - Instrucciones del artículo                          |
-|    - Cláusula de evitación                              |
-+-------------------------------+---------------------------+
+| USER PROMPT                                                  |
+|    - Noticias formateadas                                    |
+|    - Instrucciones del artículo                              |
+|    - Cláusula de evitación                                   |
++-------------------------------+-----------------------------+
                               |
               +-------------------+-------------------+
               v                                   v
@@ -290,30 +290,30 @@ const result = await generateArticleImageAndAnalyzeQA(
         Ejemplo estático
 ```
 
-### Post-procesado
+### Postprocesado
 
 ```
 +-------------------------------------------------------------+
-|        POST-PROCESADO ORTOGRÁFICO                            |
+|        POSTPROCESADO ORTOGRÁFICO                            |
 +-------------------------------------------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| INPUT: Artículo generado                                   |
-|    {title, summary, content}                            |
-+-------------------------------+---------------------------+
+| INPUT: Artículo generado                                    |
+|    {title, summary, content}                                |
++-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| OLLAMA LOCAL: postprocessWithOllama                     |
-|    System: "Eres un corrector ortográfico experto..."    |
-|    User: JSON.stringify(article)                        |
-+-------------------------------+---------------------------+
+| OLLAMA LOCAL: postprocessWithOllama                         |
+|    System: "Eres un corrector ortográfico experto..."        |
+|    User: JSON.stringify(article)                            |
++-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| OUTPUT: Artículo corregido                                |
-|    {title: "...", summary: "...", content: "..."}        |
+| OUTPUT: Artículo corregido                                  |
+|    {title: "...", summary: "...", content: "..."}           |
 +-------------------------------------------------------------+
 ```
 
@@ -323,14 +323,14 @@ const result = await generateArticleImageAndAnalyzeQA(
 
 ---
 
-## Cron Jobs
+## Cron jobs
 
 ### Programación
 
-| Job | Frecuencia | Script |
-|-----|-----------|---------|
-| Publicación diaria | 1x día (8:00 UTC) | `scripts/publish.ts` |
-| Newsletter semanal | 1x semana | `scripts/send_newsletter.ts` |
+| Job                 | Frecuencia         | Script                      |
+|---------------------|-------------------|-----------------------------|
+| Publicación diaria  | 1x día (8:00 UTC) | `scripts/publish.ts`        |
+| Newsletter semanal  | 1x semana         | `scripts/send_newsletter.ts`|
 
 ### Configuración
 

@@ -15591,3 +15591,299 @@ text, watermark, logo, signature, words, handwriting, captions, subtitles, label
 2026-04-17 21:33:26,661 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
 2026-04-17 21:33:26,663 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
 2026-04-17 21:33:26,663 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+
+================== 📰 PUBLICAR.sh (2026-04-22 21:05:18) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Krebs on Security: 1 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ Decrypt: 38 noticias recientes (últimas 48h)
+✅ El País Tecnología: 2 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 53
+📊 Fuentes que respondieron: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+📊 Tras filtrar cubiertas: 52 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "DDoS wave continues as Mastodon hit after Bluesky incident..." (1 fuentes)
+  📌 Cluster 2: "The question isn't whether privacy. It's what sort of privac..." (1 fuentes)
+  📌 Cluster 3: "UK’s Financial Conduct Authority Leads London Crackdown on C..." (1 fuentes)
+  📌 Cluster 4: "Justin Sun Alleges Trump's World Liberty Threatened to Burn ..." (1 fuentes)
+  📌 Cluster 5: "Malicious KICS Docker Images and VS Code Extensions Hit Chec..." (1 fuentes)
+
+🎯 Cluster seleccionado: "DDoS wave continues as Mastodon hit after Bluesky incident..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "Oleada de Ataques DDoS Azota a Plataformas Descentralizadas: Mastodon la Última Víctim...
+📝 Gemini raw response length: 5025 chars
+📝 First 800 chars: {
+  "title": "Oleada de Ataques DDoS Azota a Plataformas Descentralizadas: Mastodon la Última Víctima Tras Incidente en Bluesky",
+  "summary": "Una reciente oleada de ataques de denegación de servicio distribuido (DDoS) ha sacudido el panorama de las redes sociales descentralizadas, con Mastodon sufriendo una interrupción significativa poco después de un incidente similar que afectó a Bluesky.",
+  "content": "<p>El ecosistema de las redes sociales descentralizadas se encuentra bajo una creciente presión tras una serie de ataques de denegación de servicio distribuido (DDoS). La plataforma de código abierto Mastodon fue la víctima más reciente de esta tendencia, experimentando una interrupción importante apenas unos días después de que un incidente similar afectara a Bluesky. Estos eventos s...
+🔍 JSON extraído: {
+  "title": "Oleada de Ataques DDoS Azota a Plataformas Descentralizadas: Mastodon la Última Víctima Tras Incidente en Bluesky",
+  "summary": "Una reciente oleada de ataques de denegación de servicio...
+✅ JSON parseado correctamente: "Oleada de Ataques DDoS Azota a Plataformas Descentralizadas:..."
+✅ Tags: ["Ciberseguridad","DDoS","Mastodon","Bluesky","Ataques Cibernéticos"]
+✅ Summary length: 252 chars
+✅ Content length: 4011 chars
+✅ Fuente principal: https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html
+✅ Total fuentes citadas: 1
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini primaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini secundaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini terciaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+⚠️ Gemini falló para EN, intentando con Ollama...
+✅ Texto generado con Ollama: ```json
+{
+  "titleEn": "Decentralized Social Media Under Fire: Recent DDoS Attacks Target Mastodon a ...
+
+✅ Generación bilingüe completada en 210.45 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: Digital disruption, network outage, abstract representation of a DDoS attack with data packets flood...
+❌ Respuesta inesperada desde Ollama: {
+  model: 'gemma4:26b',
+  created_at: '2026-04-22T19:16:49.228478808Z',
+  response: '',
+  done: true,
+  done_reason: 'stop',
+  context: [
+         2,    105,   9731,    107,     98,    107,    106,    107,
+       105,   2364,    107, 202057,    723, 236330,  26378,  94213,
+    188515,    696,  74709,    569,  47472,    570, 115920,    542,
+     23446,    527, 236761,  17206,  40606,   1115, 133413,    583,
+    228373,   2137,   1149, 116635,  13353,    569,  66714,  86789,
+    236764, 221714, 236764, 100947,    570,  81634, 114235,    696,
+     46660, 236761,   2301,   1120,  62127,    862,  36919, 236764,
+      8935,  73638,   2137,   1149, 116635,  13353,  12704,   5442,
+     38259, 236761,   9757,  69961,    862,  24253,    696,  51496,
+     10434,    591,   1450,  59431,  60513,  24677,   6441, 236761,
+       108, 115583,   4436,   2137,   1149, 116635,  13353,    696,
+       862,  25155,  34801, 236787,    108, 236782,    107,    138,
+    236775,   3250,   1083,    623,
+    ... 10657 more items
+  ],
+  total_duration: 476184219635,
+  load_duration: 184729574,
+  prompt_eval_count: 1022,
+  prompt_eval_duration: 2088613874,
+  eval_count: 9707,
+  eval_duration: 468771534889
+}
+
+⏱️ Tiempo de generación: 686.67 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] No hay imagen de fuente RSS, saltando al paso 2
+
+🎨 [Paso 2] Generación con AI Horde (intento 1)
+
+🎨 [AI Horde #1] Generando imagen...
+   Prompt: Digital disruption, network outage, abstract representation of a DDoS attack with data packets flood...
+[AI HORDE] Negative prompt enviado (oleada-de-ataques-ddos-azota-a-plataformas-descentralizadas-mastodon-la-ltima-v-ctima-tras-incidente-en-bluesky-1776885409263):
+text, watermark, logo, signature, words, handwriting, captions, subtitles, labels, numbers, nsfw, porn, nude, explicit, worst quality, low quality, jpeg artifacts, blurry, muted colors, deformed, bad anatomy
+[AI HORDE] Kudos usados: 136 para slug: oleada-de-ataques-ddos-azota-a-plataformas-descentralizadas-mastodon-la-ltima-v-ctima-tras-incidente-en-bluesky-1776885409263
+❌ [AI Horde #1] Error verificando imagen
+
+🎨 [Paso 3] Generación con AI Horde (intento 2)
+
+🎨 [AI Horde #2] Generando imagen...
+   Prompt: Digital disruption, network outage, abstract representation of a DDoS attack with data packets flood...
+[AI HORDE] Negative prompt enviado (oleada-de-ataques-ddos-azota-a-plataformas-descentralizadas-mastodon-la-ltima-v-ctima-tras-incidente-en-bluesky-1776885409263-retry):
+text, watermark, logo, signature, words, handwriting, captions, subtitles, labels, numbers, nsfw, porn, nude, explicit, worst quality, low quality, jpeg artifacts, blurry, muted colors, deformed, bad anatomy
+[AI HORDE] Kudos usados: 70 para slug: oleada-de-ataques-ddos-azota-a-plataformas-descentralizadas-mastodon-la-ltima-v-ctima-tras-incidente-en-bluesky-1776885409263-retry
+❌ [AI Horde #2] Error verificando imagen
+
+⚠️ [Paso 4] FALLBACK: Usando imagen de stock Unsplash
+📷 Stock seleccionado: https://images.unsplash.com/photo-1605792657660-596af9009e82?q=80&w=1200&auto=format&fit=crop
+🖼️ ═══ RESULTADO: Usando imagen de stock ═══
+
+✅ Imagen final (unsplash_stock): https://images.unsplash.com/photo-1605792657660-596af9009e82?q=80&w=1200&auto=format&fit=crop...
+   Pasos: Paso 1: Sin imagen de fuente → Paso 2: AI Horde intento 1 → Paso 3: AI Horde intento 2 → Paso 4: Fallback Unsplash
+   Errores recuperados: AI Horde #1 falló al generar, AI Horde #2 falló al generar
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: Oleada de Ataques DDoS Azota a Plataformas Descentralizadas: Mastodon la Última Víctima Tras Incidente en Bluesky
+- Sentimiento: Neutral ➡️
+- Categoría: Mercados
+- URL Imagen: https://images.unsplash.com/photo-1605792657660-596af9009e82?q=80&w=1200&auto=format&fit=crop
+- Resumen: Una reciente oleada de ataques de denegación de servicio distribuido (DDoS) ha sacudido el panorama de las redes sociales descentralizadas, con Mastodon sufriendo una interrupción significativa poco después de un incidente similar que afectó a Bluesky.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+[2️⃣] Enviando a Binance Square...
+2026-04-22 21:20:48,463 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-22 21:20:48,463 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-22 21:20:48,465 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-22 21:20:48,465 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+
+================== 📰 PUBLICAR.sh (2026-04-22 21:55:22) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ Krebs on Security: 1 noticias recientes (últimas 48h)
+✅ El País Tecnología: 2 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 53
+📊 Fuentes que respondieron: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 51 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "Pope’s Anti-AI Warnings May Be AI-Written, Detection Tool Cl..." (1 fuentes)
+  📌 Cluster 2: "Google Will Spend Up to $185 Billion This Year to Power AI '..." (1 fuentes)
+  📌 Cluster 3: "The question isn't whether privacy. It's what sort of privac..." (1 fuentes)
+  📌 Cluster 4: "UK’s Financial Conduct Authority Leads London Crackdown on C..." (1 fuentes)
+  📌 Cluster 5: "Justin Sun Alleges Trump's World Liberty Threatened to Burn ..." (1 fuentes)
+
+🎯 Cluster seleccionado: "Pope’s Anti-AI Warnings May Be AI-Written, Detection Tool Cl..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "La Ironía Digital: ¿Advertencias Antia-IA del Papa Francisco Escritas por Inteligencia...
+📝 Gemini raw response length: 4968 chars
+📝 First 800 chars: {
+  "title": "La Ironía Digital: ¿Advertencias Antia-IA del Papa Francisco Escritas por Inteligencia Artificial?",
+  "summary": "Una extensión de navegador de Pangram Labs, desarrollador de detectores de IA, ha señalado varias publicaciones de la cuenta X del Papa como potencialmente generadas por inteligencia artificial, creando un giro irónico en el debate sobre la tecnología.",
+  "content": "<p>En un desarrollo que subraya la creciente complejidad y las paradojas de la era digital, una herramienta de detección de inteligencia artificial ha lanzado una afirmación sorprendente: varias publicaciones de la cuenta oficial del Papa Francisco en la plataforma X (anteriormente Twitter), que contienen advertencias contra la IA, podrían haber sido escritas por la propia inteligencia artificial. E...
+🔍 JSON extraído: {
+  "title": "La Ironía Digital: ¿Advertencias Antia-IA del Papa Francisco Escritas por Inteligencia Artificial?",
+  "summary": "Una extensión de navegador de Pangram Labs, desarrollador de detectores...
+✅ JSON parseado correctamente: "La Ironía Digital: ¿Advertencias Antia-IA del Papa Francisco..."
+✅ Tags: ["Inteligencia Artificial","Papa Francisco","Pangram Labs","Detección de IA","Redes Sociales"]
+✅ Summary length: 252 chars
+✅ Content length: 4015 chars
+✅ Fuente principal: https://decrypt.co/365151/pope-anti-ai-warnings-ai-written-detection-tool
+✅ Total fuentes citadas: 1
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "The Digital Paradox: Were Pope Francis' Anti-AI Warnings Penned by Artificial Intell...
+
+✅ Generación bilingüe completada en 27.48 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: Pope Francis's hand holding a smartphone with an AI detection app icon, showing a warning or 'AI-wri...
+❌ Error llamando a Ollama: AbortError: The operation was aborted.
+    at abort (file:///home/emerito/emedoteme/node_modules/node-fetch/src/index.js:70:18)
+    at AbortSignal.abortAndFinalize (file:///home/emerito/emedoteme/node_modules/node-fetch/src/index.js:89:4)
+    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:843:20)
+    at AbortSignal.dispatchEvent (node:internal/event_target:776:26)
+    at runAbort (node:internal/abort_controller:486:10)
+    at abortSignal (node:internal/abort_controller:457:3)
+    at AbortController.abort (node:internal/abort_controller:505:5)
+    at Timeout._onTimeout (/home/emerito/emedoteme/modules/ai/ai.service.ts:9:51)
+    at listOnTimeout (node:internal/timers:585:17)
+    at process.processTimers (node:internal/timers:521:7) {
+  type: 'aborted'
+}
+
+⏱️ Tiempo de generación: 627.59 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] Imagen de la fuente: https://cdn.decrypt.co/wp-content/uploads/2025/11/pope-leo-xiv-decrypt-style-gID...
+🔍 [QA Fuente RSS] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...
+✅ Gemini (gemini-2.5-flash):
+{
+  "coherente": true,
+  "razon_coherencia": "La imagen muestra una figura que representa a un Papa, lo cual es directamente relevante para un artículo sobre el Papa Francisco y sus advertencias sobre la IA.",
+  "descripcion": "La imagen en blanco y negro muestra a una figura vestida como un Papa, con gafas, hablando en un podio y levantando una mano, sobre un fondo degradado azul y naranja con patrones circulares.",
+  "calidad_aceptable": false,
+  "problemas_detectados": [
+    "marca de agua de Decrypt detectada"
+  ],
+  "caption_mejorado": "Representación artística de un Papa, en el contexto de la discusión sobre la inteligencia artificial y sus implicaciones."
+}
+❌ [QA Fuente RSS] Imagen RECHAZADA: calidad baja, marca de agua — La imagen muestra una figura que representa a un Papa, lo cual es directamente relevante para un artículo sobre el Papa Francisco y sus advertencias sobre la IA.
+
+🎨 [Paso 2] Generación con AI Horde (intento 1)
+
+🎨 [AI Horde #1] Generando imagen...
+   Prompt: Pope Francis's hand holding a smartphone with an AI detection app icon, showing a warning or 'AI-wri...
+[AI HORDE] Negative prompt enviado (la-iron-a-digital-advertencias-antia-ia-del-papa-francisco-escritas-por-inteligencia-artificial-1776888354084):
+text, watermark, logo, signature, words, handwriting, captions, subtitles, labels, numbers, nsfw, porn, nude, explicit, worst quality, low quality, jpeg artifacts, blurry, muted colors, deformed, bad anatomy

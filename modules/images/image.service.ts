@@ -203,26 +203,8 @@ async function generateWithAIHorde(
       return null;
     }
 
-    // Verificar que no sea imagen de error/CSAM
-    try {
-      const fetch = (await import('node-fetch')).default;
-      const resp = await fetch(aiHordeUrl, { method: 'GET' });
-      if (!resp.ok) {
-        console.error(`❌ [AI Horde #${attemptNumber}] HTTP ${resp.status} al verificar imagen`);
-        return null;
-      }
-      const buf = await resp.arrayBuffer();
-      const text = Buffer.from(buf).toString('utf-8');
-      if (text.includes('Potentially CSAM') || text.includes('had to be deleted')) {
-        console.error(`❌ [AI Horde #${attemptNumber}] Imagen blacklisted/CSAM`);
-        return null;
-      }
-    } catch {
-      console.error(`❌ [AI Horde #${attemptNumber}] Error verificando imagen`);
-      return null;
-    }
+    console.log(`✅ [AI Horde #${attemptNumber}] URL generada: ${aiHordeUrl.substring(0, 80)}...`);
 
-    console.log(`✅ [AI Horde #${attemptNumber}] Imagen generada OK: ${aiHordeUrl.substring(0, 80)}...`);
     return aiHordeUrl;
   } catch (error) {
     console.error(`❌ [AI Horde #${attemptNumber}] Error: ${error}`);

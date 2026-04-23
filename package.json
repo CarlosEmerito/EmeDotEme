@@ -25,6 +25,7 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "dotenv": "^17.4.0",
+    "isomorphic-dompurify": "^3.10.0",
     "lucide-react": "^1.7.0",
     "next": "16.2.2",
     "next-pwa": "^2.0.2",

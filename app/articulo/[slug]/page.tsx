@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import DOMPurify from "isomorphic-dompurify";
 import { Metadata, ResolvingMetadata } from "next";
 import { siteConfig } from "@/config/site";
 import { getArticleBySlug, getRelatedArticles } from "@/modules/articles/article.service";
@@ -160,7 +161,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
         {/* Content */}
         <article className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
-          <div dangerouslySetInnerHTML={{ __html: article.content }} />
+          <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }} />
         </article>
 
 

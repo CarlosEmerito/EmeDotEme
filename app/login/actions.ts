@@ -3,9 +3,9 @@
 import { cookies } from 'next/headers'
 
 export async function loginAction(password: string) {
-  const expectedPwd = process.env.ADMIN_PASSWORD || 'admin'
+  const expectedPwd = process.env.ADMIN_PASSWORD
   
-  if (password === expectedPwd) {
+  if (expectedPwd && password === expectedPwd) {
     const cookieStore = await cookies()
     const value = btoa(`admin:${expectedPwd}`)
     

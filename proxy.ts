@@ -2,13 +2,16 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function proxy(req: NextRequest) {
-  // Check for session cookie
-  const sessionCookie = req.cookies.get('admin_session')
-  const expectedPwd = process.env.ADMIN_PASSWORD || 'admin'
-  const expectedCookieValue = btoa(`admin:${expectedPwd}`)
+  const expectedPwd = process.env.ADMIN_PASSWORD
 
-  if (sessionCookie && sessionCookie.value === expectedCookieValue) {
-    return NextResponse.next()
+  // Check for session cookie if ADMIN_PASSWORD is set
+  if (expectedPwd) {
+    const sessionCookie = req.cookies.get('admin_session')
+    const expectedCookieValue = btoa(`admin:${expectedPwd}`)
+
+    if (sessionCookie && sessionCookie.value === expectedCookieValue) {
+      return NextResponse.next()
+    }
   }
 
   // Si no está autenticado, redirigir a /login

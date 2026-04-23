@@ -10,6 +10,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Todos los campos son obligatorios" }, { status: 400 });
     }
 
+    // Validaciones de tipo
+    if (typeof name !== 'string' || typeof email !== 'string' || typeof message !== 'string') {
+      return NextResponse.json({ error: "Formato de datos inválido" }, { status: 400 });
+    }
+
+    // Validaciones de longitud
+    if (name.length > 100) {
+      return NextResponse.json({ error: "El nombre es demasiado largo (máximo 100 caracteres)" }, { status: 400 });
+    }
+
+    if (email.length > 255) {
+      return NextResponse.json({ error: "El email es demasiado largo (máximo 255 caracteres)" }, { status: 400 });
+    }
+
+    if (message.length > 5000) {
+      return NextResponse.json({ error: "El mensaje es demasiado largo (máximo 5000 caracteres)" }, { status: 400 });
+    }
+
     if (!/^\S+@\S+\.\S+$/.test(email)) {
       return NextResponse.json({ error: "Email inválido" }, { status: 400 });
     }

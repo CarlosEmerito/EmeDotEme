@@ -113,7 +113,6 @@ export async function saveImageToSupabase(url: string, slug: string): Promise<st
       .upload(fileName, Buffer.from(buffer), { contentType, upsert: false });
 
     if (error) {
-      console.error('[Supabase] Error de upload:', error.message);
       return url;
     }
 

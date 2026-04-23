@@ -205,29 +205,55 @@ async function fetchFromSource(source: NewsSource): Promise<NewsItem[]> {
 // DEDUPLICACIÓN
 // ============================================================
 
+// Cache para evitar normalizar y crear Sets repetidamente
+const titleCache = new Map<string, Set<string>>();
+
+/**
+ * Normaliza un título a un Set de palabras relevantes.
+ * Utiliza un cache en memoria para optimizar búsquedas.
+ */
+function getNormalizedWords(s: string): Set<string> {
+  let words = titleCache.get(s);
+  if (words) return words;
+
+  // Limitar el cache a 1000 elementos (FIFO simple para evitar memory leaks)
+  if (titleCache.size >= 1000) {
+    const firstKey = titleCache.keys().next().value;
+    if (firstKey !== undefined) titleCache.delete(firstKey);
+  }
+
+  words = new Set(
+    s
+      .toLowerCase()
+      .replace(/[^a-záéíóúñü0-9\s]/g, '')
+      .split(/\s+/)
+      .filter((w) => w.length > 2)
+  );
+  titleCache.set(s, words);
+  return words;
+}
+
 /**
  * Calcula similitud simple entre dos títulos (Jaccard sobre palabras).
  * Retorna un valor entre 0 y 1.
  */
 function titleSimilarity(a: string, b: string): number {
-  const normalize = (s: string) =>
-    s
-      .toLowerCase()
-      .replace(/[^a-záéíóúñü0-9\s]/g, '')
-      .split(/\s+/)
-      .filter((w) => w.length > 2); // Ignorar palabras cortas
-
-  const wordsA = new Set(normalize(a));
-  const wordsB = new Set(normalize(b));
+  const wordsA = getNormalizedWords(a);
+  const wordsB = getNormalizedWords(b);
 
   if (wordsA.size === 0 || wordsB.size === 0) return 0;
 
   let intersection = 0;
-  for (const word of wordsA) {
-    if (wordsB.has(word)) intersection++;
+
+  // Optimización: iterar sobre el conjunto más pequeño
+  const [smaller, larger] = wordsA.size < wordsB.size ? [wordsA, wordsB] : [wordsB, wordsA];
+
+  for (const word of smaller) {
+    if (larger.has(word)) intersection++;
   }
 
-  const union = new Set([...wordsA, ...wordsB]).size;
+  // Optimización: |A U B| = |A| + |B| - |A n B|
+  const union = wordsA.size + wordsB.size - intersection;
   return intersection / union;
 }
 

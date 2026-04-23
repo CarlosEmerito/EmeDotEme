@@ -3,47 +3,60 @@ import { OLLAMA_TEXT_MODEL_DEFAULT, OLLAMA_URL } from './constants';
 // --- Generación vía Ollama local (standalone) ---
 export async function generateTextWithOllama({ systemPrompt, userPrompt }: { systemPrompt: string; userPrompt: string; }): Promise<string | null> {
   const model = process.env.OLLAMA_MODEL || OLLAMA_TEXT_MODEL_DEFAULT;
-  
-  try {
-    const prompt = `${systemPrompt}\n\n${userPrompt}`;
+  const maxRetries = 2;
+  let attempt = 0;
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 900000); // 15 min timeout
+  while (attempt <= maxRetries) {
+    try {
+      const prompt = `${systemPrompt}\n\n${userPrompt}`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 1200000); // 20 min timeout
 
-    const fetchNode = (await import('node-fetch')).default;
-    const response = await fetchNode(OLLAMA_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model,
-        prompt,
-        stream: false,
-        options: {
-          temperature: 0.1,
-          num_ctx: 8192
-        },
-        keep_alive: 0
-      }),
-      signal: controller.signal as any
-    });
-    clearTimeout(timeoutId);
-    if (!response.ok) {
-      console.error('❌ Error HTTP desde Ollama:', response.status, await response.text());
-      return null;
+      const fetchNode = (await import('node-fetch')).default;
+      const response = await fetchNode(OLLAMA_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model,
+          prompt,
+          stream: false,
+          options: {
+            temperature: 0.1,
+            num_ctx: 8192
+          },
+          keep_alive: 0
+        }),
+        signal: controller.signal as any
+      });
+      
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`Error HTTP ${response.status}: ${await response.text()}`);
+      }
+
+      const data = (await response.json()) as any;
+      if (!data || !data.response) {
+        throw new Error('Respuesta de Ollama vacía');
+      }
+
+      return data.response;
+
+    } catch (err: any) {
+      attempt++;
+      const isTimeout = err.name === 'AbortError' || err.type === 'aborted';
+      
+      if (attempt <= maxRetries) {
+        const waitTime = 10000; // 10 segundos
+        console.warn(`⚠️ Intento ${attempt} fallido con Ollama (${isTimeout ? 'Timeout' : err.message}). Reintentando en ${waitTime/1000}s...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+      } else {
+        console.error('❌ Todos los intentos con Ollama han fallado:', err);
+        return null;
+      }
     }
-    const data = (await response.json()) as any;
-    if (!data || !data.response) {
-      return null;
-    }
-    return data.response;
-  } catch (err: any) {
-    if (err.name === 'AbortError' || err.type === 'aborted') {
-      console.warn('⚠️ Timeout de Ollama. Continuando...');
-    } else {
-      console.error('❌ Error llamando a Ollama:', err);
-    }
-    return null;
   }
+  return null;
 }
 // --- Post-procesado ortográfico vía Ollama local ---
 export async function postprocessWithOllama(article: any): Promise<any> {

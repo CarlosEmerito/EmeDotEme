@@ -6,41 +6,39 @@ EmeDotEme es un sistema automatizado para la generación y publicación de artí
 
 ## Diagrama de arquitectura
 
-```
-+-------------------------------------------------------------+
-|                        FRONTEND (Next.js 16)               |
-|  +------------+  +------------+  +------------+  +--------+|
-|  |  Página    |  |   Admin    |  |    API     |  |  RSS/  ||
-|  | Principal  |  |   Panel    |  |  Routes    |  |  Feeds ||
-|  +------------+  +------------+  +------------+  +--------+|
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-|                          BACKEND                            |
-|  +-----------------------------------------------------+    |
-|  |          BASE DE DATOS (PostgreSQL + Prisma)         |    |
-|  |  Articles, Categories, Subscribers, Analytics         |    |
-|  +-----------------------------------------------------+    |
-|                                                           |
-|  +-----------------------------------------------------+   |
-|  |        PIPELINE DE CONTENIDO (scripts/publish.ts)    |   |
-|  +-----------------------------------------------------+   |
-|                            |                              |
-|         +------------------+--+-------------------+        |
-|         v                  v                  v             |
-|  +-----------+    +-----------+    +-----------+           |
-|  |   News    |    |    IA     |    |  Imágenes  |           |
-|  |  Sources  |--->|  Service  |--->|  Service   |           |
-|  +-----------+    +-----------+    +-----------+           |
-|                            |                |              |
-|         +------------------+--+---------+     |            |
-|         v                  v              v                |
-|  +-----------+    +-----------+    +-----------+           |
-|  |  Gemini   |    |  Ollama   |    | AI Horde  |           |
-|  |  (API)    |    |  (Local)  |    |  (API)    |           |
-|  +-----------+    +-----------+    +-----------+           |
-+-------------------------------------------------------------+
+```mermaid
+graph TB
+    subgraph Frontend [Next.js 16 - Vercel]
+        UI[Página Principal]
+        Admin[Panel Admin]
+        API[API Routes]
+    end
+
+    subgraph Backend [Backend Services]
+        DB[(PostgreSQL + Prisma)]
+        Pipeline[Pipeline de Publicación]
+    end
+
+    subgraph Intelligence [AI & ML]
+        Gemini[Gemini API]
+        Ollama[Ollama Local]
+        Horde[AI Horde]
+    end
+
+    subgraph Storage [External Services]
+        Supa[Supabase Storage]
+        Resend[Resend Email]
+    end
+
+    UI <--> API
+    Admin <--> API
+    API <--> DB
+    Pipeline <--> DB
+    Pipeline --> Gemini
+    Pipeline --> Ollama
+    Pipeline --> Horde
+    Pipeline --> Supa
+    API --> Resend
 ```
 
 ## Componentes principales

@@ -1,102 +1,90 @@
+# EMEDOTEME - Portal de Noticias Inteligente
 
-# EMEDOTEME – Portal de Noticias y Publicación Unificada
+[![Next.js](https://img.shields.io/badge/Next.js-16.2.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-5.22-5a67d8?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
 
-Este proyecto centraliza la generación, publicación y visualización de artículos en redes sociales y web para EMEDOTEME, con enfoque en mantenibilidad, logs y robustez. Ahora incluye noticias de Criptomonedas, Web3, Tecnología e Inteligencia Artificial (IA).
-
-Para ver la documentación completa, consulta el índice en [[docs/00 - Índice]].
-
----
-
-## 🚀 Instalación y requisitos
-
-1. **Clona el proyecto y entra a la carpeta:**
-   ```bash
-   git clone <repo-url>
-   cd emedoteme
-   ```
-2. **Crea o copia tu archivo `.env`** con todas las claves y configuraciones necesarias (ver `.env.example`).
-3. **Instala dependencias Python:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-   Y asegúrate de tener Node.js (v22) y las dependencias npm (usa Next.js 16.2.2):
-   ```bash
-   npm install
-   ```
----
-
-## 🛠️ Variables de entorno clave (`.env`)
-- Integra TODO en un solo `.env`, limpio y bien comentado.
-- Ejemplos en `.env.example`.
-- No compartas ni publiques este archivo con credenciales reales.
+EmeDotEme es una plataforma automatizada de vanguardia diseñada para centralizar la generación, curación y publicación de noticias sobre Criptomonedas, Web3, Tecnología e Inteligencia Artificial. Utilizando pipelines avanzados de IA, el sistema transforma fuentes RSS en artículos profesionales publicados automáticamente en múltiples canales.
 
 ---
 
-## 📤 Scripts principales
+## 📖 Documentación Completa
 
-- **Producción automática (publica en redes):**
-  ```bash
-  bash publicar.sh
-  ```
-  > Publicará el artículo generado en Binance Square, Telegram Canal y Bluesky. Todos los logs y errores centralizados en `logs/emedoteme.log`.
+Para una comprensión profunda del sistema, consulta nuestra documentación técnica:
 
-- **Prueba segura (no publica en producción, solo test):**
-  ```bash
-  bash publicarprueba.sh
-  ```
-  > Simula la publicación (DRY_RUN) y manda la imagen al Telegram privado. Útil para verificar formato, logs y lógica IA. Logs completos en `logs/emedoteme.log`.
-
-- **Historial:**
-  - Todas las publicaciones y errores quedan documentadas en `logs/emedoteme.log` y (para auditoría social) en `logs/historial_publicaciones.csv`.
+*   **[Índice de Documentación](docs/00 - Índice.md)**
+*   **[Arquitectura del Sistema](docs/01 - Arquitectura.md)**
+*   **[Guía de Desarrollo](docs/07 - Guía de Desarrollo.md)**
+*   **[Referencia de la API](docs/08 - API.md)**
 
 ---
 
+## 🚀 Características Principales
 
-## 🧩 Estructura profesional
-
-- `/app/` – Frontend Next.js: páginas, rutas, componentes y API.
-- `/modules/` – Lógica de negocio (artículos, IA, imágenes, mercados, newsletter, usuarios).
-- `/scripts/` – Scripts de automatización y utilidades (Node.js y Python).
-- `/public/` – Archivos estáticos y recursos públicos.
-- `/prisma/` – Esquema y migraciones de base de datos.
-- `/logs/` – Logs técnicos y de auditoría.
-- `/config/` – Configuración global y constantes.
-- `/hooks/` – Custom React hooks.
-- `/lib/` – Utilidades compartidas y acceso a servicios.
-- `/tests/` – Pruebas unitarias y de integración.
----
-
-## 📰 Fuentes de noticias
-
-Las noticias se obtienen automáticamente de fuentes RSS fiables:
-- Cripto: CoinDesk, CoinTelegraph, Decrypt, etc.
-- IA: VentureBeat AI, MIT Technology Review AI, The AI Report, El País Tecnología, etc.
-
-Las fuentes se configuran en `modules/news/news-sources.service.ts`.
+-   **Pipeline de IA Multicanal**: Generación de texto con Gemini (Google) y fallback local con Ollama.
+-   **Curación Inteligente**: Obtención y filtrado automático de noticias desde fuentes RSS de alta fiabilidad.
+-   **Generación de Imágenes**: Creación de visuales únicos mediante AI Horde (Stable Diffusion) con QA mediante visión artificial.
+-   **Publicación Unificada**: Distribución automática en Binance Square, Telegram, Bluesky y Web.
+-   **Newsletter Semanal**: Generación y envío automático de boletines informativos a suscriptores.
 
 ---
 
+## 🛠️ Instalación Rápida
+
+### Requisitos
+- Node.js v22
+- Python 3.10+
+- PostgreSQL
+
+### Pasos
+1.  **Clonar el repositorio**:
+    ```bash
+    git clone https://github.com/usuario/emedoteme.git
+    cd emedoteme
+    ```
+2.  **Instalar dependencias**:
+    ```bash
+    npm install
+    pip install -r requirements.txt
+    ```
+3.  **Configurar entorno**:
+    Copia `.env.example` a `.env` y añade tus credenciales.
+4.  **Inicializar base de datos**:
+    ```bash
+    npx prisma migrate dev
+    ```
+5.  **Iniciar en desarrollo**:
+    ```bash
+    npm run dev
+    ```
+
 ---
 
-## 🧑‍💻 Añadir o mantener redes
-- Suma nuevos scripts al estilo `/publish_xxx.py`, importando `social_publish_utils.py` y siguiendo los patrones de logging e historial.
-- Documenta tus cambios en este README.
+## 📤 Automatización y Scripts
+
+El sistema incluye scripts robustos para la operación diaria:
+
+-   **Publicación Diaria**: `npx tsx scripts/publish.ts`
+-   **Prueba de Pipeline**: `npx tsx scripts/publish_test.ts`
+-   **Mantenimiento**: Ver [Catálogo de Scripts](docs/06 - Scripts.md).
 
 ---
 
-## 🧪 Pruebas e integración
-- Ejecuta flujos completos: `bash publicarprueba.sh` (prueba) y `bash publicar.sh` (real)
-- Verifica logs y el historial.
-- Si introduces nueva dependencia Python, añade explícitamente a `requirements.txt` y detállalo aquí.
+## 🧪 Calidad y Robustez
+
+-   **Logs Centralizados**: Todos los eventos técnicos se registran en `logs/emedoteme.log`.
+-   **Auditoría Social**: Registro de publicaciones en `logs/historial_publicaciones.csv`.
+-   **QA de Imágenes**: Verificación automática de calidad y coherencia mediante modelos de visión.
 
 ---
 
-## 🔧 Troubleshooting
-- Fallos o errores quedan reflejados con timestamp en `logs/emedoteme.log`.
-- Asegúrate de tener el `.env` y permisos válidos.
-- Consulta el archivo de log antes de escalar/tocar código.
+## 🧑‍💻 Contribuir
+
+Si deseas contribuir al proyecto, por favor lee la **[Guía de Desarrollo](docs/07 - Guía de Desarrollo.md)**.
 
 ---
 
-## 📚 Licencia
-- Consultar condiciones internas EMEDOTEME. Uso restringido, credenciales estrictamente confidenciales.
+## ⚖️ Licencia
+
+Uso restringido bajo condiciones internas de EMEDOTEME. Todos los derechos reservados.

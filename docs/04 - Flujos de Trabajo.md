@@ -162,71 +162,19 @@ SUPABASE_SERVICE_ROLE_KEY=
 
 ### Pipeline de imagen detallado
 
-```
-+-------------------------------------------------------------+
-|              PIPELINE DE IMAGEN                             |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| PASO 0: Recibir datos del artículo                          |
-|    {title, slug, topic, originalPrompt, summary}            |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| PASO 1: Imagen de fuente RSS                                |
-|    +---------------------------------------------+          |
-|    | 1. ¿sourceImageUrl existe? NO → Paso 2      |          |
-|    |                                             |          |
-|    | 2. QA con Gemini Vision                     |          |
-|    |    - ¿Es coherente con el artículo?         |          |
-|    |    - ¿Calidad aceptable?                    |          |
-|    |    - ¿Tiene marca de agua?                  |          |
-|    |                                             |          |
-|    | 3. Si APROBADA:                             |          |
-|    |    - Subir a Supabase Storage               |          |
-|    |    - Usar como imagen final                 |          |
-|    |                                             |          |
-|    | 4. Si RECHAZADA:                            |          |
-|    |    - Error "no pasó QA" → Paso 2           |          |
-|    +---------------------------------------------+          |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| PASO 2: AI Horde (intento 1)                                |
-|    +---------------------------------------------+          |
-|    | 1. Generar imagen con AI Horde              |          |
-|    |    - Prompt mejorado: title + "..."         |          |
-|    |    - 1024x1024, 100 steps                   |          |
-|    |                                             |          |
-|    | 2. Verificar que no sea CSAM/error          |          |
-|    |                                             |          |
-|    | 3. Si OK:                                   |          |
-|    |    - Subir a Supabase Storage               |          |
-|    |    - Usar (sin QA para ahorrar)             |          |
-|    |                                             |          |
-|    | 4. Si ERROR:                                |          |
-|    |    - "falló generación" → Paso 3           |          |
-|    +---------------------------------------------+          |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| PASO 3: AI Horde (intento 2)                                |
-|    Mismo proceso que Paso 2                                 |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| PASO 4: FALLBACK - Unsplash Stock                           |
-|    +---------------------------------------------+          |
-|    | 1. Seleccionar imagen por categoría          |          |
-|    | 2. Usar caption genérico                    |          |
-|    | 3. Final                                    |          |
-|    +---------------------------------------------+          |
-+-------------------------------------------------------------+
+```mermaid
+graph TD
+    A[Inicio: Datos del Artículo] --> B{¿Hay Imagen RSS?}
+    B -- Sí --> C[QA Gemini Vision]
+    B -- No --> D[AI Horde Intento 1]
+    C -- Aprobada --> E[Subir a Supabase]
+    C -- Rechazada --> D
+    D -- Éxito --> E
+    D -- Fallo --> F[AI Horde Intento 2]
+    F -- Éxito --> E
+    F -- Fallo --> G[Unsplash Stock Fallback]
+    G --> H[Imagen Final]
+    E --> H
 ```
 
 ### Código

@@ -16006,3 +16006,38 @@ text, watermark, logo, signature, words, handwriting, captions, subtitles, label
 📸 [Paso 1] Imagen de la fuente: https://cdn.decrypt.co/wp-content/uploads/2026/02/whoever-this-guy-is-decrypt-st...
 🔍 [QA Fuente RSS] Analizando imagen...
 🔍 Analizando imagen con Gemini Vision (PRIMARIA)...
+❌ JSON inválido/truncado de Gemini Vision: {
+  "coherente": true,
+  "razon_coherencia": "La imagen muestra a un hombre en un contexto que podría representar a un candidato o una figura política, lo...
+⚠️ Aplicando recuperación de emergencia (extrayendo variables directamente del string)
+✅ Gemini (gemini-2.5-flash):
+{
+  "coherente": true,
+  "razon_coherencia": "Recuperación automática de JSON truncado",
+  "descripcion": "Descripción parcial recuperada mecánicamente.",
+  "calidad_aceptable": true,
+  "problemas_detectados": []
+}
+✅ [QA Fuente RSS] Imagen APROBADA: Recuperación automática de JSON truncado
+✅ [Supabase] Imagen subida: kalshi-sanciona-a-candidatos-por-apostar-en-sus-propias-elecciones-el-caso-de-mark-moran-1776891471242-1776891478001.jpeg
+🖼️ ═══ RESULTADO: Imagen de fuente RSS aprobada ═══
+
+✅ Imagen final (rss_source): https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/kalshi-sanciona-a-c...
+   Pasos: Paso 1: Imagen de fuente RSS
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: Kalshi sanciona a candidatos por apostar en sus propias elecciones: el caso de Mark Moran
+- Sentimiento: Neutral ➡️
+- Categoría: Mercados
+- URL Imagen: https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/kalshi-sanciona-a-candidatos-por-apostar-en-sus-propias-elecciones-el-caso-de-mark-moran-1776891471242-1776891478001.jpeg
+- Resumen: La plataforma de mercados de predicción Kalshi ha impuesto multas a varios individuos, incluyendo al candidato al Senado de EE. UU. Mark Moran, por apostar en los resultados de sus propias elecciones, un acto que Moran calificó de 'publicidad gratuita'.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+[2️⃣] Enviando a Binance Square...
+2026-04-22 22:58:03,423 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-22 22:58:03,423 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-22 22:58:03,425 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-22 22:58:03,425 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}

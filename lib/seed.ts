@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const categories = ["Mercados", "Tecnología", "Web3"];
+  const categories = ["Criptomonedas", "Empresa", "IA", "Ciberseguridad"];
   for (const name of categories) {
     await prisma.category.upsert({
       where: { name },

@@ -21,6 +21,10 @@ fi
 echo "================================================="
 echo "🤖 INICIANDO BOT AUTOMÁTICO DE EMEDOTEME 🤖"
 echo "================================================="
+
+# Iniciar la IA de imagen primero
+./iniciar-imagen.sh
+
 echo "El bot se ha iniciado en segundo plano."
 echo "Generará y publicará noticias localmente usando Ollama."
 echo "Se ejecutará cada 3-5 horas de forma aleatoria."

@@ -32,6 +32,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Email inválido" }, { status: 400 });
     }
 
+    // Sanitización básica para prevenir inyección HTML en el correo
+    const escapeHtml = (unsafe: string) => {
+      return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    };
+
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeMessage = escapeHtml(message);
+
     // Verificar si Resend está configurado
     const resendApiKey = process.env.RESEND_API_KEY;
     
@@ -61,11 +75,11 @@ export async function POST(req: Request) {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333;">Nuevo mensaje de contacto desde EmeDotEme</h2>
-          <p><strong>Nombre:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Nombre:</strong> ${safeName}</p>
+          <p><strong>Email:</strong> ${safeEmail}</p>
           <p><strong>Mensaje:</strong></p>
           <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
-            ${message.replace(/\n/g, '<br>')}
+            ${safeMessage.replace(/\n/g, '<br>')}
           </div>
           <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
           <p style="font-size: 12px; color: #777;">Este mensaje fue enviado desde el formulario de contacto de EmeDotEme.</p>
@@ -89,7 +103,7 @@ export async function POST(req: Request) {
           <p>Hemos recibido tu mensaje y te responderemos lo antes posible.</p>
           <p><strong>Resumen de tu mensaje:</strong></p>
           <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
-            ${message.replace(/\n/g, '<br>')}
+            ${safeMessage.replace(/\n/g, '<br>')}
           </div>
           <p>Saludos,<br>El equipo de EmeDotEme</p>
           <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">

@@ -50,12 +50,12 @@ export interface ImagePipelineResult {
 const AI_HORDE_OPTIONS = {
   width: 1024,
   height: 1024,
-  steps: 100,
+  steps: 50,
   sampler_name: 'k_dpmpp_2m',
   n: 1,
   karras: true,
   qualityToggle: true,
-  negative_prompt: "text, watermark, logo, signature, words, handwriting, captions, subtitles, labels, numbers, nsfw, porn, nude, explicit, worst quality, low quality, jpeg artifacts, blurry, muted colors, deformed, bad anatomy",
+  negative_prompt: "(worst quality, low quality, normal quality, lowres, low details, grayscale), text, watermark, logo, signature, words, handwriting, captions, subtitles, labels, numbers, nsfw, porn, nude, explicit, jpeg artifacts, blurry, muted colors, deformed, bad anatomy, bad proportions, bad hands, extra fingers, missing fingers",
 };
 
 // ============================================================

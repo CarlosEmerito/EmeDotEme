@@ -7,7 +7,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
   }
   
   try {
-    const url = 'http://localhost:11434/api/generate';
+    const url = 'http://127.0.0.1:11434/api/generate';
     const prompt = `${systemPrompt}\n\n${userPrompt}`;
 
     const controller = new AbortController();
@@ -20,7 +20,13 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
       body: JSON.stringify({
         model,
         prompt,
-        stream: false
+        stream: false,
+        options: {
+          num_gpu: -1,
+          num_thread: 16,
+          temperature: 0.1,
+          num_ctx: 8192
+        }
       }),
       signal: controller.signal as any
     });

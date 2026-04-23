@@ -16169,3 +16169,1894 @@ text, watermark, logo, signature, words, handwriting, captions, subtitles, label
 📤 Enviando prompt a Gemini...
 ❌ Error con Gemini terciaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
 ⚠️ Gemini falló, intentando con Ollama local...
+📝 Gemini raw response length: 4032 chars
+📝 First 800 chars: {
+  "title": "Entre la inteligencia artificial y la huella ambiental: El reto de entender la tecnología actual",
+  "summary": "Un análisis sobre la dificultad de distinguir avances reales en la era de la inteligencia artificial frente a la creciente presencia de la actividad humana en los ecosistemas naturales.",
+  "content": "<p>En el actual panorama de la innovación, la velocidad con la que se generan noticias y descubrimientos tecnológicos ha creado un entorno de saturación informativa sin precedentes. Nos encontramos en una era donde la capacidad de procesar la relevancia de cada nuevo avance se ve desafiada por un flujo constante de actualizaciones, lo que obliga a los profesionales del sector a desarrollar un criterio cada vez más agudo para navegar entre la verdadera innovación y el...
+🔍 JSON extraído: {
+  "title": "Entre la inteligencia artificial y la huella ambiental: El reto de entender la tecnología actual",
+  "summary": "Un análisis sobre la dificultad de distinguir avances reales en la era de...
+⚠️ Campo 'imagePrompt' ausente, usando default
+⚠️ Campo 'sourceUrl' ausente, usando primera fuente del contexto
+⚠️ Campo 'sources' ausente, usando URLs del contexto
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini primaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini secundaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "Beyond the Hype: Unpacking AI's True Impact in a Material World",
+  "summaryEn": "Na...
+
+✅ Generación bilingüe completada en 207.38 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: cryptocurrency, blockchain, digital assets...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+
+================== 📰 PUBLICAR.sh (2026-04-23 17:52:25) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 51 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "Founder of Solana Token Launchpad Believe Arrested on Assaul..." (1 fuentes)
+  📌 Cluster 2: "White House Accuses China of 'Industrial-Scale' Theft From A..." (1 fuentes)
+  📌 Cluster 3: "Sam Bankman-Fried Withdraws Motion for New Trial, Denies Gho..." (2 fuentes)
+  📌 Cluster 4: "Crypto for Advisors: AI Agents Using Crypto..." (1 fuentes)
+  📌 Cluster 5: "French Weather Agency Alerts Police to Sensor ‘Interference’..." (1 fuentes)
+
+🎯 Cluster seleccionado: "Sam Bankman-Fried Withdraws Motion for New Trial, Denies Gho..." con 2 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 2 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "Sam Bankman-Fried Retira Solicitud de Nuevo Juicio, Apuesta a la Apelación y Rumores d...
+📝 Gemini raw response length: 4576 chars
+📝 First 800 chars: {
+  "title": "Sam Bankman-Fried Retira Solicitud de Nuevo Juicio, Apuesta a la Apelación y Rumores de Indulto",
+  "summary": "Sam Bankman-Fried, el fundador de la colapsada FTX, ha retirado su moción para un nuevo juicio, creyendo que no obtendría un proceso justo en este momento, mientras sus padres habrían buscado un indulto presidencial de Donald Trump.",
+  "content": "<p>Sam Bankman-Fried, la figura central en el dramático colapso del intercambio de criptomonedas FTX, ha dado un giro inesperado en su batalla legal al retirar su solicitud de un nuevo juicio. La decisión, que se conoció el 23 de abril de 2026, refleja la convicción de Bankman-Fried de que no recibiría un juicio justo en las circunstancias actuales. Este movimiento no descarta por completo la posibilidad de un nuevo proce...
+🔍 JSON extraído: {
+  "title": "Sam Bankman-Fried Retira Solicitud de Nuevo Juicio, Apuesta a la Apelación y Rumores de Indulto",
+  "summary": "Sam Bankman-Fried, el fundador de la colapsada FTX, ha retirado su moción ...
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "Sam Bankman-Fried Withdraws New Trial Bid, Shifts Focus to Appeal Amidst Pardon Rumo...
+
+✅ Generación bilingüe completada en 31.35 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: A conceptual image showing Sam Bankman-Fried in a courtroom setting, with a subtle overlay of a pres...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+⚠️ postprocess: recovery por regex
+
+⏱️ Tiempo de generación: 238.84 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] Imagen de la fuente: https://cdn.decrypt.co/wp-content/uploads/2025/10/SBF-DecryptStyle2-scaled-gID_7...
+🔍 [QA Fuente RSS] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...
+❌ Error Gemini Vision PRIMARIA: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔍 Analizando imagen con Gemini Vision (SECUNDARIA)...
+✅ Gemini (gemini-2.5-flash):
+{
+  "coherente": true,
+  "razon_coherencia": "La imagen muestra a Sam Bankman-Fried, el sujeto principal del artículo, en un contexto que sugiere un entorno legal o de custodia, lo cual es directamente relevante para la noticia sobre su juicio y apelación.",
+  "descripcion": "La imagen muestra a Sam Bankman-Fried en el centro, flanqueado por otro hombre (posiblemente un abogado o familiar) y un oficial de US Marshal, con un filtro azul y un estilo artístico.",
+  "calidad_aceptable": false,
+  "problemas_detectados": [
+    "marca de agua/logo superpuesto de 'decrypt' detectado"
+  ],
+  "caption_mejorado": "Sam Bankman-Fried, fundador de FTX, en una imagen que evoca su situación legal, mientras retira su solicitud de nuevo juicio y explora opciones de apelación."
+}
+❌ [QA Fuente RSS] Imagen RECHAZADA: calidad baja, marca de agua — La imagen muestra a Sam Bankman-Fried, el sujeto principal del artículo, en un contexto que sugiere un entorno legal o de custodia, lo cual es directamente relevante para la noticia sobre su juicio y apelación.
+
+🎨 [Paso 2] Generación con AI Horde (intento 1)
+
+🎨 [AI Horde #1] Generando imagen...
+   Prompt: A conceptual image showing Sam Bankman-Fried in a courtroom setting, with a subtle overlay of a pres...
+[AI HORDE] Generando imagen para: sam-bankman-fried-retira-solicitud-de-nuevo-juicio-apuesta-a-la-apelaci-n-y-rumores-de-indulto-1776959787854
+[AI HORDE] Prompt (423 chars): A conceptual image showing Sam Bankman-Fried in a courtroom setting, with a subt...
+[AI HORDE] Job creado: 00adf4db-dc92-48d3-9205-9d8337e43bdb
+[AI HORDE] Esperando... (1/60)
+[AI HORDE] Esperando... (2/60)
+[AI HORDE] Esperando... (3/60)
+[AI HORDE] Esperando... (4/60)
+[AI HORDE] Esperando... (5/60)
+[AI HORDE] Esperando... (6/60)
+[AI HORDE] Esperando... (7/60)
+[AI HORDE] Kudos usados: 136
+✅ [AI Horde #1] URL generada: https://a223539ccf6caa2d76459c9727d276e6.r2.cloudflarestorage.com/stable-horde/4...
+🖼️ ═══ RESULTADO: AI Horde intento 1 usada (sin QA) ═══
+
+✅ Imagen final (ai_horde): https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/sam-bankman-fried-r...
+   Pasos: Paso 1: Imagen de fuente RSS → Paso 2: AI Horde intento 1
+   Errores recuperados: Imagen de fuente RSS no pasó QA
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: Sam Bankman-Fried retira solicitud de nuevo juicio, apuesta a la apelación y rumores de indulto
+- Sentimiento: Neutral ➡️
+- Categoría: Mercados
+- URL Imagen: https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/sam-bankman-fried-retira-solicitud-de-nuevo-juicio-apuesta-a-la-apelaci-n-y-rumores-de-indulto-1776959787854-1776959846908.webp
+- Resumen: Sam Bankman-Fried, el fundador de la colapsada FTX, ha retirado su moción para un nuevo juicio, creyendo que no obtendría un proceso justo en este momento, mientras sus padres habrían buscado un indulto presidencial de Donald Trump.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+[2️⃣] Enviando a Binance Square...
+2026-04-23 17:57:32,278 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-23 17:57:32,278 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-23 17:57:32,280 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+2026-04-23 17:57:32,280 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+
+================== 📰 PUBLICAR.sh (2026-04-23 17:59:19) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://www.coindesk.com/policy/2026/04/23/sam-bankman-fried-withdraws-retrial-motion-he-believes-he-would-not-get-a-fair-trial"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 50 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "Founder of Solana Token Launchpad Believe Arrested on Assaul..." (1 fuentes)
+  📌 Cluster 2: "White House Accuses China of 'Industrial-Scale' Theft From A..." (1 fuentes)
+  📌 Cluster 3: "Sam Bankman-Fried Withdraws Motion for New Trial, Denies Gho..." (1 fuentes)
+  📌 Cluster 4: "Crypto for Advisors: AI Agents Using Crypto..." (1 fuentes)
+  📌 Cluster 5: "French Weather Agency Alerts Police to Sensor ‘Interference’..." (1 fuentes)
+
+🎯 Cluster seleccionado: "Founder of Solana Token Launchpad Believe Arrested on Assaul..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "Benjamin Pasternak, Fundador de Believe en Solana, Arrestado por Cargos de Asalto y Es...
+📝 Gemini raw response length: 3908 chars
+📝 First 800 chars: {
+  "title": "Benjamin Pasternak, Fundador de Believe en Solana, Arrestado por Cargos de Asalto y Estrangulación",
+  "summary": "Benjamin Pasternak, figura prominente en el espacio de las plataformas de lanzamiento de tokens de Solana con su proyecto Believe, ha sido arrestado y enfrenta graves cargos criminales, lo que añade una nueva capa de complejidad a sus ya existentes problemas legales relacionados con inversores.",
+  "content": "<p>La comunidad de criptomonedas y el ecosistema de Solana se encuentran en vilo tras la noticia del arresto de Benjamin Pasternak, el fundador de Believe, una plataforma de lanzamiento de tokens. Pasternak ha sido detenido y enfrenta cargos criminales serios, incluyendo asalto y estrangulación, un desarrollo que sacude aún más su reputación ya empañada por...
+🔍 JSON extraído: {
+  "title": "Benjamin Pasternak, Fundador de Believe en Solana, Arrestado por Cargos de Asalto y Estrangulación",
+  "summary": "Benjamin Pasternak, figura prominente en el espacio de las plataformas ...
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "Solana's Believe Founder Benjamin Pasternak Arrested on Assault, Strangulation Charg...
+
+✅ Generación bilingüe completada en 23.15 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: Illustration of a person in handcuffs in a digital, blockchain-themed setting, representing legal tr...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+
+================== 📰 PUBLICAR.sh (2026-04-23 18:05:11) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://www.coindesk.com/policy/2026/04/23/sam-bankman-fried-withdraws-retrial-motion-he-believes-he-would-not-get-a-fair-trial"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 50 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "Founder of Solana Token Launchpad Believe Arrested on Assaul..." (1 fuentes)
+  📌 Cluster 2: "White House Accuses China of 'Industrial-Scale' Theft From A..." (1 fuentes)
+  📌 Cluster 3: "Sam Bankman-Fried Withdraws Motion for New Trial, Denies Gho..." (1 fuentes)
+  📌 Cluster 4: "Crypto for Advisors: AI Agents Using Crypto..." (1 fuentes)
+  📌 Cluster 5: "French Weather Agency Alerts Police to Sensor ‘Interference’..." (1 fuentes)
+
+🎯 Cluster seleccionado: "Founder of Solana Token Launchpad Believe Arrested on Assaul..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "Fundador de 'Believe', el launchpad de Solana, arrestado por cargos de agresión y estr...
+📝 Gemini raw response length: 4787 chars
+📝 First 800 chars: {
+  "title": "Fundador de 'Believe', el launchpad de Solana, arrestado por cargos de agresión y estrangulación",
+  "summary": "Benjamin Pasternak, la figura detrás del launchpad de tokens 'Believe' en Solana, ha sido arrestado y enfrenta cargos criminales serios, sumándose a una demanda colectiva previa y acusaciones de incumplimiento de acuerdos OTC.",
+  "content": "<p>En un giro impactante que sacude a la comunidad de criptomonedas, Benjamin Pasternak, el fundador detrás de 'Believe', un prominente launchpad de tokens en la blockchain de Solana, ha sido arrestado y ahora enfrenta graves cargos criminales. La detención de Pasternak se produce en un momento de escrutinio creciente sobre la integridad y la responsabilidad de los líderes de proyectos en el espacio Web3, y añade una capa somb...
+🔍 JSON extraído: {
+  "title": "Fundador de 'Believe', el launchpad de Solana, arrestado por cargos de agresión y estrangulación",
+  "summary": "Benjamin Pasternak, la figura detrás del launchpad de tokens 'Believe' en...
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "Founder of Solana Launchpad 'Believe' Arrested on Assault and Strangulation Charges"...
+
+✅ Generación bilingüe completada en 34.98 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: A stylized image depicting a blockchain network with a silhouette of a person being apprehended, set...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+⚠️ postprocess: JSON inválido, usando regex recovery...
+
+⏱️ Tiempo de generación: 292.20 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] Imagen de la fuente: https://cdn.decrypt.co/wp-content/uploads/2025/06/crime_jail-handcuffs-gID_7.png...
+🔍 [QA Fuente RSS] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...
+✅ Gemini (gemini-2.5-flash):
+{
+  "coherente": true,
+  "razon_coherencia": "La imagen de unas manos esposadas es una representación visual directa y simbólica de un arresto y cargos criminales, lo cual es el tema central del artículo sobre el fundador de 'Believe'.",
+  "descripcion": "La imagen muestra a una persona esposada por la espalda, vestida con un uniforme o ropa sencilla, con un fondo degradado que incluye un patrón y el logo de Decrypt.",
+  "calidad_aceptable": false,
+  "problemas_detectados": [
+    "marca de agua de Decrypt detectada"
+  ],
+  "caption_mejorado": "Representación simbólica de un arresto, en relación con los cargos criminales presentados contra Benjamin Pasternak, fundador del launchpad 'Believe' de Solana."
+}
+❌ [QA Fuente RSS] Imagen RECHAZADA: calidad baja, marca de agua — La imagen de unas manos esposadas es una representación visual directa y simbólica de un arresto y cargos criminales, lo cual es el tema central del artículo sobre el fundador de 'Believe'.
+
+🎨 [Paso 2] Generación con AI Horde (intento 1)
+
+🎨 [AI Horde #1] Generando imagen...
+   Prompt: A stylized image depicting a blockchain network with a silhouette of a person being apprehended, set...
+[AI HORDE] Generando imagen para: fundador-de-believe-el-launchpad-de-solana-arrestado-por-cargos-de-agresi-n-y-estrangulaci-n-1776960606785
+[AI HORDE] Prompt (382 chars): A stylized image depicting a blockchain network with a silhouette of a person be...
+[AI HORDE] Job creado: e27f61f8-e733-46fb-a0f7-9f5d45def9b3
+[AI HORDE] Esperando... (1/60)
+[AI HORDE] Esperando... (2/60)
+[AI HORDE] Esperando... (3/60)
+[AI HORDE] Esperando... (4/60)
+[AI HORDE] Esperando... (5/60)
+[AI HORDE] Esperando... (6/60)
+[AI HORDE] Kudos usados: 136
+✅ [AI Horde #1] URL generada: https://a223539ccf6caa2d76459c9727d276e6.r2.cloudflarestorage.com/stable-horde/9...
+🖼️ ═══ RESULTADO: AI Horde intento 1 usada (sin QA) ═══
+
+✅ Imagen final (ai_horde): https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/fundador-de-believe...
+   Pasos: Paso 1: Imagen de fuente RSS → Paso 2: AI Horde intento 1
+   Errores recuperados: Imagen de fuente RSS no pasó QA
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: Fundador de 'Believe', el launchpad de Solana, arrestado por cargos de agresión y estrangulación
+- Sentimiento: Neutral ➡️
+- Categoría: Mercados
+- URL Imagen: https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/fundador-de-believe-el-launchpad-de-solana-arrestado-por-cargos-de-agresi-n-y-estrangulaci-n-1776960606785-1776960659050.webp
+- Resumen: Benjamin Pasternak, la figura detrás del launchpad de tokens 'Believe' en Solana, ha sido arrestado y enfrenta cargos criminales serios, sumándose a una demanda colectiva previa y acusaciones de incumplimiento de acuerdos OTC.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+[2️⃣] Enviando a Binance Square...
+2026-04-23 18:11:05,397 [INFO] [debug] Binance Square response: status=200 body={"code":"000000","message":null,"messageDetail":null,"data":{"id":315676529619505,"shareLink":"https://app.binance.com/uni-qr/cpos/315676529619505?r=E7ZNWACG&l=es"},"success":true}
+2026-04-23 18:11:05,397 [INFO] [debug] Binance Square response: status=200 body={"code":"000000","message":null,"messageDetail":null,"data":{"id":315676529619505,"shareLink":"https://app.binance.com/uni-qr/cpos/315676529619505?r=E7ZNWACG&l=es"},"success":true}
+2026-04-23 18:11:05,399 [INFO] [ok] Publicado en Binance Square: Fundador de 'Believe', el launchpad de Solana, arrestado por cargos de agresión y estrangulación
+2026-04-23 18:11:05,399 [INFO] [ok] Publicado en Binance Square: Fundador de 'Believe', el launchpad de Solana, arrestado por cargos de agresión y estrangulación
+
+[3️⃣] Enviando a Telegram...
+2026-04-23 18:11:12,211 [INFO] [telegram/HTML] Enviando mensaje: BTC: $78.428 | ETH: $2.332
+📊 Miedo/Codicia: ⚪ (46/100)
+──────────────
+📰 <b>Fundador de &#x27;Believe&#x27;, el launchpad de Solana, arrestado por cargos de agresión y estrangulación</b>
+
+¡Atención, comunidad EmeDotEme! 📢 Noticia bomba que sacude el ecosistema Solana:
+
+Sentimiento del mercado: Neutral ➡️
+
+<i>DYOR: No es consejo financiero.</i>
+<b>EmeDotEme</b>
+
+#Criptomonedas #Web3 #EmeDotEme
+2026-04-23 18:11:12,211 [INFO] [telegram/HTML] Enviando mensaje: BTC: $78.428 | ETH: $2.332
+📊 Miedo/Codicia: ⚪ (46/100)
+──────────────
+📰 <b>Fundador de &#x27;Believe&#x27;, el launchpad de Solana, arrestado por cargos de agresión y estrangulación</b>
+
+¡Atención, comunidad EmeDotEme! 📢 Noticia bomba que sacude el ecosistema Solana:
+
+Sentimiento del mercado: Neutral ➡️
+
+<i>DYOR: No es consejo financiero.</i>
+<b>EmeDotEme</b>
+
+#Criptomonedas #Web3 #EmeDotEme
+2026-04-23 18:11:13,679 [INFO] [telegram/HTML] Status: 200, response: {"ok":true,"result":{"message_id":639,"sender_chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"date":1776960673,"photo":[{"file_id":"AgACAgQAAyEGAATUO2SWAAICf2nqRKHdmfaJDCi57Nc8_sAIaUENAAIjDWsbr3VVUxE2w1FEKTK-AQADAgADcwADOwQ","file_unique_id":"AQADIw1rG691VVN4","file_size":1963,"width":90,"height":90},{"file_id":"AgACAgQAAyEGAATUO2SWAAICf2nqRKHdmfaJDCi57Nc8_sAIaUENAAIjDWsbr3VVUxE2w1FEKTK-AQADAgADbQADOwQ","file_unique_id":"AQADIw1rG691VVNy","file_size":32215,"width":320,"height":320},{"file_id":"AgACAgQAAyEGAATUO2SWAAICf2nqRKHdmfaJDCi57Nc8_sAIaUENAAIjDWsbr3VVUxE2w1FEKTK-AQADAgADeAADOwQ","file_unique_id":"AQADIw1rG691VVN9","file_size":143892,"width":800,"height":800},{"file_id":"AgACAgQAAyEGAATUO2SWAAICf2nqRKHdmfaJDCi57Nc8_sAIaUENAAIjDWsbr3VVUxE2w1FEKTK-AQADAgADeQADOwQ","file_unique_id":"AQADIw1rG691VVN-","file_size":208601,"width":1024,"height":1024}],"caption":"BTC: $78.428 | ETH: $2.332\n\ud83d\udcca Miedo/Codicia: \u26aa (46/100)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udcf0 Fundador de 'Believe', el launchpad de Solana, arrestado por cargos de agresi\u00f3n y estrangulaci\u00f3n\n\n\u00a1Atenci\u00f3n, comunidad EmeDotEme! \ud83d\udce2 Noticia bomba que sacude el ecosistema Solana:\n\nSentimiento del mercado: Neutral \u27a1\ufe0f\n\nDYOR: No es consejo financiero.\nEmeDotEme\n\n#Criptomonedas #Web3 #EmeDotEme","caption_entities":[{"offset":74,"length":96,"type":"bold"},{"offset":292,"length":31,"type":"italic"},{"offset":324,"length":9,"type":"bold"},{"offset":335,"length":14,"type":"hashtag"},{"offset":350,"length":5,"type":"hashtag"},{"offset":356,"length":10,"type":"hashtag"}],"reply_markup":{"inline_keyboard":[[{"text":"Leer en EmeDotEme.es","url":"https://www.emedoteme.es/articulo/fundador-de-believe-el-launchpad-de-solana-arrestado-por-cargos-de-agresi-n-y-estrangulaci-n-1776960606785"}],[{"text":"\ud83c\udf81 RECLAMAR HASTA 100$","url":"https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA"}],[{"text":"\ud83d\udce2 Compartir","url":"https://t.me/share/url?url=https://www.emedoteme.es/articulo/fundador-de-believe-el-launchpad-de-solana-arrestado-por-cargos-de-agresi-n-y-estrangulaci-n-1776960606785"}]]}}}
+2026-04-23 18:11:13,679 [INFO] [telegram/HTML] Status: 200, response: {"ok":true,"result":{"message_id":639,"sender_chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"date":1776960673,"photo":[{"file_id":"AgACAgQAAyEGAATUO2SWAAICf2nqRKHdmfaJDCi57Nc8_sAIaUENAAIjDWsbr3VVUxE2w1FEKTK-AQADAgADcwADOwQ","file_unique_id":"AQADIw1rG691VVN4","file_size":1963,"width":90,"height":90},{"file_id":"AgACAgQAAyEGAATUO2SWAAICf2nqRKHdmfaJDCi57Nc8_sAIaUENAAIjDWsbr3VVUxE2w1FEKTK-AQADAgADbQADOwQ","file_unique_id":"AQADIw1rG691VVNy","file_size":32215,"width":320,"height":320},{"file_id":"AgACAgQAAyEGAATUO2SWAAICf2nqRKHdmfaJDCi57Nc8_sAIaUENAAIjDWsbr3VVUxE2w1FEKTK-AQADAgADeAADOwQ","file_unique_id":"AQADIw1rG691VVN9","file_size":143892,"width":800,"height":800},{"file_id":"AgACAgQAAyEGAATUO2SWAAICf2nqRKHdmfaJDCi57Nc8_sAIaUENAAIjDWsbr3VVUxE2w1FEKTK-AQADAgADeQADOwQ","file_unique_id":"AQADIw1rG691VVN-","file_size":208601,"width":1024,"height":1024}],"caption":"BTC: $78.428 | ETH: $2.332\n\ud83d\udcca Miedo/Codicia: \u26aa (46/100)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udcf0 Fundador de 'Believe', el launchpad de Solana, arrestado por cargos de agresi\u00f3n y estrangulaci\u00f3n\n\n\u00a1Atenci\u00f3n, comunidad EmeDotEme! \ud83d\udce2 Noticia bomba que sacude el ecosistema Solana:\n\nSentimiento del mercado: Neutral \u27a1\ufe0f\n\nDYOR: No es consejo financiero.\nEmeDotEme\n\n#Criptomonedas #Web3 #EmeDotEme","caption_entities":[{"offset":74,"length":96,"type":"bold"},{"offset":292,"length":31,"type":"italic"},{"offset":324,"length":9,"type":"bold"},{"offset":335,"length":14,"type":"hashtag"},{"offset":350,"length":5,"type":"hashtag"},{"offset":356,"length":10,"type":"hashtag"}],"reply_markup":{"inline_keyboard":[[{"text":"Leer en EmeDotEme.es","url":"https://www.emedoteme.es/articulo/fundador-de-believe-el-launchpad-de-solana-arrestado-por-cargos-de-agresi-n-y-estrangulaci-n-1776960606785"}],[{"text":"\ud83c\udf81 RECLAMAR HASTA 100$","url":"https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA"}],[{"text":"\ud83d\udce2 Compartir","url":"https://t.me/share/url?url=https://www.emedoteme.es/articulo/fundador-de-believe-el-launchpad-de-solana-arrestado-por-cargos-de-agresi-n-y-estrangulaci-n-1776960606785"}]]}}}
+2026-04-23 18:11:13,682 [INFO] [ok] Publicado en Telegram: Fundador de 'Believe', el launchpad de Solana, arrestado por cargos de agresión y estrangulación
+2026-04-23 18:11:13,682 [INFO] [ok] Publicado en Telegram: Fundador de 'Believe', el launchpad de Solana, arrestado por cargos de agresión y estrangulación
+
+[4️⃣] Enviando a Bluesky...
+2026-04-23 18:11:17,878 [INFO] HTTP Request: POST https://bsky.social/xrpc/com.atproto.server.createSession "HTTP/1.1 200 OK"
+2026-04-23 18:11:17,878 [INFO] HTTP Request: POST https://bsky.social/xrpc/com.atproto.server.createSession "HTTP/1.1 200 OK"
+2026-04-23 18:11:18,273 [INFO] HTTP Request: GET https://jellybaby.us-east.host.bsky.network/xrpc/app.bsky.actor.getProfile?actor=emedoteme.bsky.social "HTTP/1.1 200 OK"
+2026-04-23 18:11:18,273 [INFO] HTTP Request: GET https://jellybaby.us-east.host.bsky.network/xrpc/app.bsky.actor.getProfile?actor=emedoteme.bsky.social "HTTP/1.1 200 OK"
+2026-04-23 18:11:19,282 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.uploadBlob "HTTP/1.1 200 OK"
+2026-04-23 18:11:19,282 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.uploadBlob "HTTP/1.1 200 OK"
+2026-04-23 18:11:19,913 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.createRecord "HTTP/1.1 200 OK"
+2026-04-23 18:11:19,913 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.createRecord "HTTP/1.1 200 OK"
+2026-04-23 18:11:19,914 [INFO] [ok] Publicado en Bluesky: Fundador de 'Believe', el launchpad de Solana, arrestado por cargos de agresión y estrangulación
+2026-04-23 18:11:19,914 [INFO] [ok] Publicado en Bluesky: Fundador de 'Believe', el launchpad de Solana, arrestado por cargos de agresión y estrangulación
+
+✅ Proceso completado. Revisa tus redes sociales. (2026-04-23 18:05:11)
+
+===============================================================
+
+================== 📰 PUBLICAR.sh (2026-04-23 18:19:27) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365292/founder-solana-token-launchpad-believe-arrested"
+  🔄 Saltando (URL ya cubierta): "https://www.coindesk.com/policy/2026/04/23/sam-bankman-fried-withdraws-retrial-motion-he-believes-he-would-not-get-a-fair-trial"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 49 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "White House Accuses China of 'Industrial-Scale' Theft From A..." (1 fuentes)
+  📌 Cluster 2: "Sam Bankman-Fried Withdraws Motion for New Trial, Denies Gho..." (1 fuentes)
+  📌 Cluster 3: "Crypto for Advisors: AI Agents Using Crypto..." (1 fuentes)
+  📌 Cluster 4: "French Weather Agency Alerts Police to Sensor ‘Interference’..." (1 fuentes)
+  📌 Cluster 5: "Tether freezes $344 million in USDT on Tron tied to 'illicit..." (1 fuentes)
+
+🎯 Cluster seleccionado: "White House Accuses China of 'Industrial-Scale' Theft From A..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "La Casa Blanca Denuncia un 'Robo a Escala Industrial' de Modelos de IA Estadounidenses...
+📝 Gemini raw response length: 4889 chars
+📝 First 800 chars: {
+  "title": "La Casa Blanca Denuncia un 'Robo a Escala Industrial' de Modelos de IA Estadounidenses por Parte de China",
+  "summary": "La administración del presidente Trump ha acusado formalmente a actores extranjeros, específicamente a China, de emplear tácticas sofisticadas como el 'jailbreaking' y cuentas falsas para sustraer capacidades de inteligencia artificial de modelos estadounidenses.",
+  "content": "<p>En una declaración contundente que subraya la creciente tensión en la carrera tecnológica global, la Casa Blanca, bajo la administración del presidente Trump, ha lanzado una seria acusación contra China, señalándola de estar involucrada en un 'robo a escala industrial' de modelos de inteligencia artificial (IA) estadounidenses. Esta denuncia pone de manifiesto una preocupación p...
+🔍 JSON extraído: {
+  "title": "La Casa Blanca Denuncia un 'Robo a Escala Industrial' de Modelos de IA Estadounidenses por Parte de China",
+  "summary": "La administración del presidente Trump ha acusado formalmente a ...
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "White House Alleges 'Industrial-Scale Theft' of US AI Models by China",
+  "summaryEn...
+
+✅ Generación bilingüe completada en 24.54 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: A digital representation of a secure AI model being breached by shadowy figures, with a background h...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+
+⏱️ Tiempo de generación: 900.48 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] Imagen de la fuente: https://cdn.decrypt.co/wp-content/uploads/2025/07/white-house-podium-decrypt-sty...
+🔍 [QA Fuente RSS] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...
+✅ Gemini (gemini-2.5-flash):
+{
+  "coherente": true,
+  "razon_coherencia": "La imagen muestra un podio con la inscripción 'THE WHITE HOUSE WASHINGTON', que representa directamente a la entidad central mencionada en el artículo periodístico.",
+  "descripcion": "La imagen muestra un podio con la inscripción 'THE WHITE HOUSE WASHINGTON' y dos banderas estadounidenses, con un fondo en escala de grises y superposiciones de color abstracto.",
+  "calidad_aceptable": false,
+  "problemas_detectados": [
+    "Marca de agua o logo superpuesto de 'decrypt' detectado."
+  ],
+  "caption_mejorado": "Un podio de la Casa Blanca, símbolo de la administración estadounidense, en el contexto de las acusaciones de robo de modelos de IA por parte de China."
+}
+❌ [QA Fuente RSS] Imagen RECHAZADA: calidad baja, marca de agua — La imagen muestra un podio con la inscripción 'THE WHITE HOUSE WASHINGTON', que representa directamente a la entidad central mencionada en el artículo periodístico.
+
+🎨 [Paso 2] Generación con AI Horde (intento 1)
+
+🎨 [AI Horde #1] Generando imagen...
+   Prompt: A digital representation of a secure AI model being breached by shadowy figures, with a background h...
+[AI HORDE] Generando imagen para: la-casa-blanca-denuncia-un-robo-a-escala-industrial-de-modelos-de-ia-estadounidenses-por-parte-de-china-1776962070755
+[AI HORDE] Prompt (357 chars): A digital representation of a secure AI model being breached by shadowy figures,...
+❌ [AI HORDE] Error HTTP 400: {"errors":{"params.sampler_name":"'k_dpmpp_2m_sde' is not one of ['k_dpm_adaptive', 'k_euler_a', 'k_dpm_2', 'k_euler', 'k_lms', 'k_heun', 'dpmsolver', 'k_dpm_fast', 'k_dpmpp_2s_a', 'DDIM', 'k_dpmpp_sde', 'lcm', 'k_dpm_2_a', 'k_dpmpp_2m']"},"message":"Input payload validation failed"}
+
+❌ [AI Horde #1] URL inválida o vacía
+
+🎨 [Paso 3] Generación con AI Horde (intento 2)
+
+🎨 [AI Horde #2] Generando imagen...
+   Prompt: A digital representation of a secure AI model being breached by shadowy figures, with a background h...
+[AI HORDE] Generando imagen para: la-casa-blanca-denuncia-un-robo-a-escala-industrial-de-modelos-de-ia-estadounidenses-por-parte-de-china-1776962070755-retry
+[AI HORDE] Prompt (357 chars): A digital representation of a secure AI model being breached by shadowy figures,...
+❌ [AI HORDE] Error HTTP 400: {"errors":{"params.sampler_name":"'k_dpmpp_2m_sde' is not one of ['k_dpm_2_a', 'k_lms', 'k_euler', 'k_dpmpp_2m', 'k_dpm_fast', 'DDIM', 'k_heun', 'k_dpmpp_2s_a', 'k_euler_a', 'lcm', 'dpmsolver', 'k_dpmpp_sde', 'k_dpm_adaptive', 'k_dpm_2']"},"message":"Input payload validation failed"}
+
+❌ [AI Horde #2] URL inválida o vacía
+
+⚠️ [Paso 4] FALLBACK: Usando imagen de stock Unsplash
+📷 Stock seleccionado: https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop
+🖼️ ═══ RESULTADO: Usando imagen de stock ═══
+
+✅ Imagen final (unsplash_stock): https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop...
+   Pasos: Paso 1: Imagen de fuente RSS → Paso 2: AI Horde intento 1 → Paso 3: AI Horde intento 2 → Paso 4: Fallback Unsplash
+   Errores recuperados: Imagen de fuente RSS no pasó QA, AI Horde #1 falló al generar, AI Horde #2 falló al generar
+
+❌ AI Horde fallió. Abortando publicación - no se usa imagen de stock.
+❌ Error al generar el artículo. Abortando publicación en redes.
+
+================== 📰 PUBLICAR.sh (2026-04-23 18:38:04) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365292/founder-solana-token-launchpad-believe-arrested"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 50 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "The market repriced DeFi in just 48 hours..." (1 fuentes)
+  📌 Cluster 2: "White House Accuses China of 'Industrial-Scale' Theft From A..." (1 fuentes)
+  📌 Cluster 3: "Sam Bankman-Fried Withdraws Motion for New Trial, Denies Gho..." (1 fuentes)
+  📌 Cluster 4: "Crypto for Advisors: AI Agents Using Crypto..." (1 fuentes)
+  📌 Cluster 5: "French Weather Agency Alerts Police to Sensor ‘Interference’..." (1 fuentes)
+
+🎯 Cluster seleccionado: "The market repriced DeFi in just 48 hours..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo...
+📝 Gemini raw response length: 5179 chars
+📝 First 800 chars: {
+  "title": "El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo 48 Horas",
+  "summary": "Un reciente análisis destaca cómo el mercado de finanzas descentralizadas (DeFi) logró una repricing significativa en apenas 48 horas, demostrando una eficiencia y agilidad sin precedentes que supera a los mecanismos de control tradicionales.",
+  "content": "<p>El ecosistema de las finanzas descentralizadas (DeFi) ha vuelto a ser el centro de atención tras un evento que, según el analista Mauricio Di Bartolomeo, representa una hazaña notable. Durante el pasado fin de semana, el mercado de DeFi logró una repricing de sus activos en un lapso extraordinariamente corto de solo 48 horas. Este fenómeno subraya la capacidad inherente de los mercados descentralizados para a...
+🔍 JSON extraído: {
+  "title": "El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo 48 Horas",
+  "summary": "Un reciente análisis destaca cómo el mercado de finanzas descentralizadas ...
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "Decentralized Digital Asset Ecosystem Shows Unprecedented Agility in 48-Hour Asset R...
+
+✅ Generación bilingüe completada en 50.48 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: Digital representation of a dynamic, rapidly shifting DeFi market with abstract financial graphs and...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+
+⏱️ Tiempo de generación: 404.78 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] Imagen de la fuente: https://cdn.sanity.io/images/s3y3vcno/production/0bc3f2bbd979f1ce05d3e6112175299...
+🔍 [QA Fuente RSS] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...
+✅ Gemini (gemini-2.5-flash):
+{
+  "coherente": true,
+  "razon_coherencia": "La imagen muestra una superposición de gráficos financieros y números sobre billetes de dólar, lo cual es una representación visual genérica de mercados financieros, valoración de activos y movimientos de precios, conceptos centrales del artículo sobre la repricing de activos en el mercado DeFi.",
+  "descripcion": "La imagen muestra un collage digital de billetes de cien dólares superpuestos con gráficos de líneas y barras, junto con números y datos financieros, en tonos azules y rojizos.",
+  "calidad_aceptable": true,
+  "problemas_detectados": [],
+  "caption_mejorado": "Gráficos financieros y billetes de dólar ilustran la agilidad del mercado DeFi en la repricing de activos."
+}
+✅ [QA Fuente RSS] Imagen APROBADA: La imagen muestra una superposición de gráficos financieros y números sobre billetes de dólar, lo cual es una representación visual genérica de mercados financieros, valoración de activos y movimientos de precios, conceptos centrales del artículo sobre la repricing de activos en el mercado DeFi.
+🖼️ ═══ RESULTADO: Imagen de fuente RSS aprobada ═══
+
+✅ Imagen final (rss_source): https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/el-mercado-de-defi-...
+   Pasos: Paso 1: Imagen de fuente RSS
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo 48 Horas
+- Sentimiento: Neutral ➡️
+- Categoría: Mercados
+- URL Imagen: https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/el-mercado-de-defi-demuestra-una-agilidad-sin-precedentes-al-repreciar-activos-en-solo-48-horas-1776962692763-1776962696742.jpeg
+- Resumen: Un reciente análisis destaca cómo el mercado de finanzas descentralizadas (DeFi) logró una repricing significativa en apenas 48 horas, demostrando una eficiencia y agilidad sin precedentes que supera a los mecanismos de control tradicionales.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+[2️⃣] Enviando a Binance Square...
+2026-04-23 18:45:07,805 [INFO] [debug] Binance Square response: status=200 body={"code":"000000","message":null,"messageDetail":null,"data":{"id":315684895282353,"shareLink":"https://app.binance.com/uni-qr/cpos/315684895282353?r=E7ZNWACG&l=es"},"success":true}
+2026-04-23 18:45:07,805 [INFO] [debug] Binance Square response: status=200 body={"code":"000000","message":null,"messageDetail":null,"data":{"id":315684895282353,"shareLink":"https://app.binance.com/uni-qr/cpos/315684895282353?r=E7ZNWACG&l=es"},"success":true}
+2026-04-23 18:45:07,806 [INFO] [ok] Publicado en Binance Square: El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo 48 Horas
+2026-04-23 18:45:07,806 [INFO] [ok] Publicado en Binance Square: El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo 48 Horas
+
+[3️⃣] Enviando a Telegram...
+2026-04-23 18:45:08,576 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 18:45:08,576 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 18:45:10,561 [WARNING] [warn] Gemini SECUNDARIA error 503, probando siguiente...
+2026-04-23 18:45:10,561 [WARNING] [warn] Gemini SECUNDARIA error 503, probando siguiente...
+2026-04-23 18:45:14,220 [INFO] [telegram/HTML] Enviando mensaje: BTC: $78.353 | ETH: $2.331
+📊 Miedo/Codicia: ⚪ (46/100)
+──────────────
+📰 <b>El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo 48 Horas</b>
+
+¡Atención, EmeDotEme! Noticia 🔥 en el mundo cripto:
+
+*
+
+Sentimiento del mercado: Neutral ➡️
+
+<i>DYOR: No es consejo financiero.</i>
+<b>EmeDotEme</b>
+
+#Criptomonedas #Web3 #EmeDotEme
+2026-04-23 18:45:14,220 [INFO] [telegram/HTML] Enviando mensaje: BTC: $78.353 | ETH: $2.331
+📊 Miedo/Codicia: ⚪ (46/100)
+──────────────
+📰 <b>El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo 48 Horas</b>
+
+¡Atención, EmeDotEme! Noticia 🔥 en el mundo cripto:
+
+*
+
+Sentimiento del mercado: Neutral ➡️
+
+<i>DYOR: No es consejo financiero.</i>
+<b>EmeDotEme</b>
+
+#Criptomonedas #Web3 #EmeDotEme
+2026-04-23 18:45:15,259 [INFO] [telegram/HTML] Status: 200, response: {"ok":true,"result":{"message_id":640,"sender_chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"date":1776962715,"photo":[{"file_id":"AgACAgQAAyEGAATUO2SWAAICgGnqTJuAgHPXlqOGSirnBWHBbxSjAAIFDWsb7Y1VU6Ec5x17A03mAQADAgADcwADOwQ","file_unique_id":"AQADBQ1rG-2NVVN4","file_size":1477,"width":90,"height":60},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgGnqTJuAgHPXlqOGSirnBWHBbxSjAAIFDWsb7Y1VU6Ec5x17A03mAQADAgADbQADOwQ","file_unique_id":"AQADBQ1rG-2NVVNy","file_size":24999,"width":320,"height":213},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgGnqTJuAgHPXlqOGSirnBWHBbxSjAAIFDWsb7Y1VU6Ec5x17A03mAQADAgADeAADOwQ","file_unique_id":"AQADBQ1rG-2NVVN9","file_size":114748,"width":800,"height":533},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgGnqTJuAgHPXlqOGSirnBWHBbxSjAAIFDWsb7Y1VU6Ec5x17A03mAQADAgADeQADOwQ","file_unique_id":"AQADBQ1rG-2NVVN-","file_size":240736,"width":1280,"height":853},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgGnqTJuAgHPXlqOGSirnBWHBbxSjAAIFDWsb7Y1VU6Ec5x17A03mAQADAgADdwADOwQ","file_unique_id":"AQADBQ1rG-2NVVN8","file_size":242751,"width":1620,"height":1080}],"caption":"BTC: $78.353 | ETH: $2.331\n\ud83d\udcca Miedo/Codicia: \u26aa (46/100)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udcf0 El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo 48 Horas\n\n\u00a1Atenci\u00f3n, EmeDotEme! Noticia \ud83d\udd25 en el mundo cripto:\n\n*\n\nSentimiento del mercado: Neutral \u27a1\ufe0f\n\nDYOR: No es consejo financiero.\nEmeDotEme\n\n#Criptomonedas #Web3 #EmeDotEme","caption_entities":[{"offset":74,"length":95,"type":"bold"},{"offset":265,"length":31,"type":"italic"},{"offset":297,"length":9,"type":"bold"},{"offset":308,"length":14,"type":"hashtag"},{"offset":323,"length":5,"type":"hashtag"},{"offset":329,"length":10,"type":"hashtag"}],"reply_markup":{"inline_keyboard":[[{"text":"Leer en EmeDotEme.es","url":"https://www.emedoteme.es/articulo/el-mercado-de-defi-demuestra-una-agilidad-sin-precedentes-al-repreciar-activos-en-solo-48-horas-1776962692763"}],[{"text":"\ud83c\udf81 RECLAMAR HASTA 100$","url":"https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA"}],[{"text":"\ud83d\udce2 Compartir","url":"https://t.me/share/url?url=https://www.emedoteme.es/articulo/el-mercado-de-defi-demuestra-una-agilidad-sin-precedentes-al-repreciar-activos-en-solo-48-horas-1776962692763"}]]}}}
+2026-04-23 18:45:15,259 [INFO] [telegram/HTML] Status: 200, response: {"ok":true,"result":{"message_id":640,"sender_chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"date":1776962715,"photo":[{"file_id":"AgACAgQAAyEGAATUO2SWAAICgGnqTJuAgHPXlqOGSirnBWHBbxSjAAIFDWsb7Y1VU6Ec5x17A03mAQADAgADcwADOwQ","file_unique_id":"AQADBQ1rG-2NVVN4","file_size":1477,"width":90,"height":60},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgGnqTJuAgHPXlqOGSirnBWHBbxSjAAIFDWsb7Y1VU6Ec5x17A03mAQADAgADbQADOwQ","file_unique_id":"AQADBQ1rG-2NVVNy","file_size":24999,"width":320,"height":213},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgGnqTJuAgHPXlqOGSirnBWHBbxSjAAIFDWsb7Y1VU6Ec5x17A03mAQADAgADeAADOwQ","file_unique_id":"AQADBQ1rG-2NVVN9","file_size":114748,"width":800,"height":533},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgGnqTJuAgHPXlqOGSirnBWHBbxSjAAIFDWsb7Y1VU6Ec5x17A03mAQADAgADeQADOwQ","file_unique_id":"AQADBQ1rG-2NVVN-","file_size":240736,"width":1280,"height":853},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgGnqTJuAgHPXlqOGSirnBWHBbxSjAAIFDWsb7Y1VU6Ec5x17A03mAQADAgADdwADOwQ","file_unique_id":"AQADBQ1rG-2NVVN8","file_size":242751,"width":1620,"height":1080}],"caption":"BTC: $78.353 | ETH: $2.331\n\ud83d\udcca Miedo/Codicia: \u26aa (46/100)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udcf0 El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo 48 Horas\n\n\u00a1Atenci\u00f3n, EmeDotEme! Noticia \ud83d\udd25 en el mundo cripto:\n\n*\n\nSentimiento del mercado: Neutral \u27a1\ufe0f\n\nDYOR: No es consejo financiero.\nEmeDotEme\n\n#Criptomonedas #Web3 #EmeDotEme","caption_entities":[{"offset":74,"length":95,"type":"bold"},{"offset":265,"length":31,"type":"italic"},{"offset":297,"length":9,"type":"bold"},{"offset":308,"length":14,"type":"hashtag"},{"offset":323,"length":5,"type":"hashtag"},{"offset":329,"length":10,"type":"hashtag"}],"reply_markup":{"inline_keyboard":[[{"text":"Leer en EmeDotEme.es","url":"https://www.emedoteme.es/articulo/el-mercado-de-defi-demuestra-una-agilidad-sin-precedentes-al-repreciar-activos-en-solo-48-horas-1776962692763"}],[{"text":"\ud83c\udf81 RECLAMAR HASTA 100$","url":"https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA"}],[{"text":"\ud83d\udce2 Compartir","url":"https://t.me/share/url?url=https://www.emedoteme.es/articulo/el-mercado-de-defi-demuestra-una-agilidad-sin-precedentes-al-repreciar-activos-en-solo-48-horas-1776962692763"}]]}}}
+2026-04-23 18:45:15,262 [INFO] [ok] Publicado en Telegram: El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo 48 Horas
+2026-04-23 18:45:15,262 [INFO] [ok] Publicado en Telegram: El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo 48 Horas
+
+[4️⃣] Enviando a Bluesky...
+2026-04-23 18:45:17,371 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 18:45:17,371 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 18:45:19,747 [INFO] HTTP Request: POST https://bsky.social/xrpc/com.atproto.server.createSession "HTTP/1.1 200 OK"
+2026-04-23 18:45:19,747 [INFO] HTTP Request: POST https://bsky.social/xrpc/com.atproto.server.createSession "HTTP/1.1 200 OK"
+2026-04-23 18:45:20,138 [INFO] HTTP Request: GET https://jellybaby.us-east.host.bsky.network/xrpc/app.bsky.actor.getProfile?actor=emedoteme.bsky.social "HTTP/1.1 200 OK"
+2026-04-23 18:45:20,138 [INFO] HTTP Request: GET https://jellybaby.us-east.host.bsky.network/xrpc/app.bsky.actor.getProfile?actor=emedoteme.bsky.social "HTTP/1.1 200 OK"
+2026-04-23 18:45:21,152 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.uploadBlob "HTTP/1.1 200 OK"
+2026-04-23 18:45:21,152 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.uploadBlob "HTTP/1.1 200 OK"
+2026-04-23 18:45:21,808 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.createRecord "HTTP/1.1 200 OK"
+2026-04-23 18:45:21,808 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.createRecord "HTTP/1.1 200 OK"
+2026-04-23 18:45:21,809 [INFO] [ok] Publicado en Bluesky: El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo 48 Horas
+2026-04-23 18:45:21,809 [INFO] [ok] Publicado en Bluesky: El Mercado de DeFi Demuestra una Agilidad Sin Precedentes al Repreciar Activos en Solo 48 Horas
+
+✅ Proceso completado. Revisa tus redes sociales. (2026-04-23 18:38:04)
+
+===============================================================
+
+================== 📰 PUBLICAR.sh (2026-04-23 18:49:40) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://www.coindesk.com/opinion/2026/04/23/the-market-repriced-defi-in-just-48-hours"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365292/founder-solana-token-launchpad-believe-arrested"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 49 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "White House Accuses China of 'Industrial-Scale' Theft From A..." (1 fuentes)
+  📌 Cluster 2: "Sam Bankman-Fried Withdraws Motion for New Trial, Denies Gho..." (1 fuentes)
+  📌 Cluster 3: "Crypto for Advisors: AI Agents Using Crypto..." (1 fuentes)
+  📌 Cluster 4: "French Weather Agency Alerts Police to Sensor ‘Interference’..." (1 fuentes)
+  📌 Cluster 5: "Tether freezes $344 million in USDT on Tron tied to 'illicit..." (1 fuentes)
+
+🎯 Cluster seleccionado: "White House Accuses China of 'Industrial-Scale' Theft From A..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "'Robo a Escala Industrial': La Casa Blanca Acusa a China de Sustraer Modelos de IA Est...
+📝 Gemini raw response length: 6007 chars
+📝 First 800 chars: {
+  "title": "'Robo a Escala Industrial': La Casa Blanca Acusa a China de Sustraer Modelos de IA Estadounidenses",
+  "summary": "La administración Trump ha denunciado que actores extranjeros, con China a la cabeza, están utilizando tácticas sofisticadas como el jailbreaking y cuentas falsas para robar capacidades de inteligencia artificial de Estados Unidos a una escala sin precedentes.",
+  "content": "<p>La administración del Presidente Trump ha lanzado una grave acusación contra actores extranjeros, señalando a China como el principal perpetrador de un “robo a escala industrial” de modelos de inteligencia artificial (IA) desarrollados en Estados Unidos. Esta denuncia subraya una escalada significativa en las tensiones tecnológicas y de ciberseguridad entre las potencias globales, poniend...
+🔍 JSON extraído: {
+  "title": "'Robo a Escala Industrial': La Casa Blanca Acusa a China de Sustraer Modelos de IA Estadounidenses",
+  "summary": "La administración Trump ha denunciado que actores extranjeros, con Chin...
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "White House Alleges 'Industrial-Scale' Theft of US AI Models by China",
+  "summaryEn...
+
+✅ Generación bilingüe completada en 39.85 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: A digital illustration depicting a stylized map of the US and China, with glowing data streams or li...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+
+================== 📰 PUBLICAR.sh (2026-04-23 18:55:53) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://www.coindesk.com/opinion/2026/04/23/the-market-repriced-defi-in-just-48-hours"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365292/founder-solana-token-launchpad-believe-arrested"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 49 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "White House Accuses China of 'Industrial-Scale' Theft From A..." (1 fuentes)
+  📌 Cluster 2: "Sam Bankman-Fried Withdraws Motion for New Trial, Denies Gho..." (1 fuentes)
+  📌 Cluster 3: "Crypto for Advisors: AI Agents Using Crypto..." (1 fuentes)
+  📌 Cluster 4: "French Weather Agency Alerts Police to Sensor ‘Interference’..." (1 fuentes)
+  📌 Cluster 5: "Tether freezes $344 million in USDT on Tron tied to 'illicit..." (1 fuentes)
+
+🎯 Cluster seleccionado: "White House Accuses China of 'Industrial-Scale' Theft From A..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounid...
+📝 Gemini raw response length: 6148 chars
+📝 First 800 chars: {
+  "title": "La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses",
+  "summary": "La administración Trump ha denunciado públicamente a China por supuestos robos masivos de modelos de Inteligencia Artificial de EE. UU., utilizando tácticas sofisticadas como el 'jailbreaking' y cuentas falsas para extraer información valiosa.",
+  "content": "<p>En un desarrollo que subraya la creciente tensión en la carrera tecnológica global, la Casa Blanca, bajo la administración del Presidente Trump, ha lanzado una dura acusación contra China, señalando al país asiático de perpetrar un robo 'a escala industrial' de modelos de Inteligencia Artificial (IA) desarrollados en Estados Unidos. Esta grave denuncia pone de manifiesto una preocupación profunda por la segurida...
+🔍 JSON extraído: {
+  "title": "La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses",
+  "summary": "La administración Trump ha denunciado públicamente a China por supuestos robos...
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "Escalating Tech Tensions: White House Accuses China of 'Industrial-Scale' AI Model T...
+
+✅ Generación bilingüe completada en 28.08 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: Digital illustration depicting a secure server room with a ghostly figure or a shadowy hand reaching...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+
+================== 📰 PUBLICAR.sh (2026-04-23 19:01:16) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://www.coindesk.com/opinion/2026/04/23/the-market-repriced-defi-in-just-48-hours"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365292/founder-solana-token-launchpad-believe-arrested"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 49 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "White House Accuses China of 'Industrial-Scale' Theft From A..." (1 fuentes)
+  📌 Cluster 2: "Sam Bankman-Fried Withdraws Motion for New Trial, Denies Gho..." (1 fuentes)
+  📌 Cluster 3: "Crypto for Advisors: AI Agents Using Crypto..." (1 fuentes)
+  📌 Cluster 4: "French Weather Agency Alerts Police to Sensor ‘Interference’..." (1 fuentes)
+  📌 Cluster 5: "Tether freezes $344 million in USDT on Tron tied to 'illicit..." (1 fuentes)
+
+🎯 Cluster seleccionado: "White House Accuses China of 'Industrial-Scale' Theft From A..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini secundaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini terciaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+⚠️ Gemini falló, intentando con Ollama local...
+
+⏱️ Tiempo de generación: 369.11 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] Imagen de la fuente: https://cdn.decrypt.co/wp-content/uploads/2025/07/white-house-podium-decrypt-sty...
+🔍 [QA Fuente RSS] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...
+⚠️ Cuota Gemini Vision PRIMARIA excedida, intentando siguiente...
+🔍 Analizando imagen con Gemini Vision (SECUNDARIA)...
+✅ Gemini (gemini-2.5-flash):
+{
+  "coherente": true,
+  "razon_coherencia": "La imagen muestra un podio con la inscripción 'THE WHITE HOUSE WASHINGTON', que es la entidad central mencionada en el artículo periodístico.",
+  "descripcion": "La imagen presenta un podio con la inscripción 'THE WHITE HOUSE WASHINGTON' y dos micrófonos, flanqueado por banderas estadounidenses, con un filtro en escala de grises y elementos gráficos abstractos en tonos rojos y azules.",
+  "calidad_aceptable": false,
+  "problemas_detectados": [
+    "marca de agua de decrypt detectada"
+  ],
+  "caption_mejorado": "El podio de la Casa Blanca, símbolo de la administración estadounidense, en medio de las acusaciones de robo de modelos de IA por parte de China."
+}
+❌ [QA Fuente RSS] Imagen RECHAZADA: calidad baja, marca de agua — La imagen muestra un podio con la inscripción 'THE WHITE HOUSE WASHINGTON', que es la entidad central mencionada en el artículo periodístico.
+
+🎨 [Paso 2] Generación con AI Horde (intento 1)
+
+🎨 [AI Horde #1] Generando imagen...
+   Prompt: Digital illustration depicting a secure server room with a ghostly figure or a shadowy hand reaching...
+[AI HORDE] Generando imagen para: la-casa-blanca-acusa-a-china-de-robo-a-escala-industrial-de-modelos-de-ia-estadounidenses-1776963725147
+[AI HORDE] Prompt (451 chars): Digital illustration depicting a secure server room with a ghostly figure or a s...
+❌ [AI HORDE] Error HTTP 400: {"errors":{"params.sampler_name":"'k_dpmpp_2m_sde' is not one of ['k_dpmpp_2s_a', 'k_dpm_fast', 'k_dpmpp_sde', 'k_lms', 'DDIM', 'k_dpm_2_a', 'k_dpm_2', 'k_heun', 'k_dpmpp_2m', 'k_euler', 'lcm', 'k_euler_a', 'k_dpm_adaptive', 'dpmsolver']"},"message":"Input payload validation failed"}
+
+❌ [AI Horde #1] URL inválida o vacía
+
+🎨 [Paso 3] Generación con AI Horde (intento 2)
+
+🎨 [AI Horde #2] Generando imagen...
+   Prompt: Digital illustration depicting a secure server room with a ghostly figure or a shadowy hand reaching...
+[AI HORDE] Generando imagen para: la-casa-blanca-acusa-a-china-de-robo-a-escala-industrial-de-modelos-de-ia-estadounidenses-1776963725147-retry
+[AI HORDE] Prompt (451 chars): Digital illustration depicting a secure server room with a ghostly figure or a s...
+❌ [AI HORDE] Error HTTP 400: {"errors":{"params.sampler_name":"'k_dpmpp_2m_sde' is not one of ['k_dpm_fast', 'lcm', 'k_dpm_2', 'k_heun', 'k_dpmpp_sde', 'k_dpmpp_2s_a', 'k_euler', 'k_dpm_2_a', 'k_dpmpp_2m', 'k_euler_a', 'k_dpm_adaptive', 'k_lms', 'dpmsolver', 'DDIM']"},"message":"Input payload validation failed"}
+
+❌ [AI Horde #2] URL inválida o vacía
+
+⚠️ [Paso 4] FALLBACK: Usando imagen de stock Unsplash
+📷 Stock seleccionado: https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop
+🖼️ ═══ RESULTADO: Usando imagen de stock ═══
+
+✅ Imagen final (unsplash_stock): https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop...
+   Pasos: Paso 1: Imagen de fuente RSS → Paso 2: AI Horde intento 1 → Paso 3: AI Horde intento 2 → Paso 4: Fallback Unsplash
+   Errores recuperados: Imagen de fuente RSS no pasó QA, AI Horde #1 falló al generar, AI Horde #2 falló al generar
+
+❌ AI Horde fallió. Abortando publicación - no se usa imagen de stock.
+❌ Error al generar el artículo. Abortando publicación en redes.
+
+================== 📰 PUBLICAR.sh (2026-04-23 19:04:38) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://www.coindesk.com/opinion/2026/04/23/the-market-repriced-defi-in-just-48-hours"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365292/founder-solana-token-launchpad-believe-arrested"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 49 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "White House Accuses China of 'Industrial-Scale' Theft From A..." (1 fuentes)
+  📌 Cluster 2: "Sam Bankman-Fried Withdraws Motion for New Trial, Denies Gho..." (1 fuentes)
+  📌 Cluster 3: "Crypto for Advisors: AI Agents Using Crypto..." (1 fuentes)
+  📌 Cluster 4: "French Weather Agency Alerts Police to Sensor ‘Interference’..." (1 fuentes)
+  📌 Cluster 5: "Tether freezes $344 million in USDT on Tron tied to 'illicit..." (1 fuentes)
+
+🎯 Cluster seleccionado: "White House Accuses China of 'Industrial-Scale' Theft From A..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini secundaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounid...
+📝 Gemini raw response length: 5192 chars
+📝 First 800 chars: {
+  "title": "La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses",
+  "summary": "La administración del Presidente Trump ha lanzado una grave acusación contra actores extranjeros, señalando a China por el presunto robo a gran escala de capacidades de inteligencia artificial de origen estadounidense, utilizando técnicas de jailbreaking y cuentas falsas.",
+  "content": "<p>En un desarrollo que subraya la creciente tensión geopolítica en el ámbito tecnológico, la administración del Presidente Trump ha emitido una contundente acusación contra China, señalando al gigante asiático por un presunto robo 'a escala industrial' de modelos de inteligencia artificial (IA) desarrollados en Estados Unidos. Esta denuncia, que ha resonado en los pasillos de Washingto...
+🔍 JSON extraído: {
+  "title": "La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses",
+  "summary": "La administración del Presidente Trump ha lanzado una grave acusación contra a...
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+📝 Gemini raw response length: 5160 chars
+📝 First 800 chars: {
+  "title": "Casa Blanca acusa a China de robo industrial a modelos de IA estadounidenses",
+  "summary": "La administración del presidente Trump denuncia el uso de técnicas de jailbreaking y cuentas falsas para extraer capacidades de inteligencia artificial de Estados Unidos.",
+  "content": "<p>La administración del presidente Donald Trump ha lanzado una acusación formal contra la República Popular China, señalando una operación de robo a gran escala dirigida a los modelos de inteligencia artificial de Estados Unidos. Según los informes, el gobierno federal estadounidense ha identificado una amenaza significativa que proviene de actores extranjeros, quienes están aprovechando vulnerabilidades en la infraestructura tecnológica para obtener información sensible. Esta revelación marca un pun...
+🔍 JSON extraído: {
+  "title": "Casa Blanca acusa a China de robo industrial a modelos de IA estadounidenses",
+  "summary": "La administración del presidente Trump denuncia el uso de técnicas de jailbreaking y cuentas ...
+⚠️ Campo 'tags' ausente o no es array, inicializando vacío
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "White House Accuses China of 'Industrial-Scale' Theft of US AI Models",
+  "summaryEn...
+
+✅ Generación bilingüe completada en 35.73 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: Stylized image depicting a digital brain or AI model being siphoned or extracted by shadowy figures ...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+✅ Texto generado con Gemini: {
+  "titleEn": "White House Accuses China of Industrial-Scale AI Theft Targeting US Models",
+  "summ...
+
+✅ Generación bilingüe completada en 257.23 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: White House building with digital security overlay and AI chip concept...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+❌ Error al generar el artículo. Abortando publicación en redes.
+❌ Error al generar el artículo. Abortando publicación en redes.
+
+================== 📰 PUBLICAR.sh (2026-04-23 19:08:01) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://www.coindesk.com/opinion/2026/04/23/the-market-repriced-defi-in-just-48-hours"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365292/founder-solana-token-launchpad-believe-arrested"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 49 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "White House Accuses China of 'Industrial-Scale' Theft From A..." (1 fuentes)
+  📌 Cluster 2: "Sam Bankman-Fried Withdraws Motion for New Trial, Denies Gho..." (1 fuentes)
+  📌 Cluster 3: "Crypto for Advisors: AI Agents Using Crypto..." (1 fuentes)
+  📌 Cluster 4: "French Weather Agency Alerts Police to Sensor ‘Interference’..." (1 fuentes)
+  📌 Cluster 5: "Tether freezes $344 million in USDT on Tron tied to 'illicit..." (1 fuentes)
+
+🎯 Cluster seleccionado: "White House Accuses China of 'Industrial-Scale' Theft From A..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounid...
+📝 Gemini raw response length: 4978 chars
+📝 First 800 chars: {
+  "title": "La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses",
+  "summary": "La administración Trump ha lanzado una fuerte acusación contra China, señalándola de llevar a cabo un robo 'a escala industrial' de capacidades de inteligencia artificial estadounidenses mediante sofisticadas técnicas de intrusión.",
+  "content": "<p>En un desarrollo que subraya las crecientes tensiones tecnológicas y geopolíticas, la Casa Blanca, bajo la administración del presidente Trump, ha emitido una contundente acusación contra actores extranjeros, específicamente China, por lo que describe como un robo 'a escala industrial' de modelos de inteligencia artificial (IA) estadounidenses. Esta denuncia pone de manifiesto una preocupación profunda por la seguridad de l...
+🔍 JSON extraído: {
+  "title": "La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses",
+  "summary": "La administración Trump ha lanzado una fuerte acusación contra China, señalánd...
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "White House Accuses China of 'Industrial-Scale' Theft of U.S. AI Models",
+  "summary...
+
+✅ Generación bilingüe completada en 30.95 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: A digital representation of two national flags, USA and China, intertwined with circuit boards and d...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+
+⏱️ Tiempo de generación: 429.73 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] Imagen de la fuente: https://cdn.decrypt.co/wp-content/uploads/2025/07/white-house-podium-decrypt-sty...
+🔍 [QA Fuente RSS] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...
+⚠️ Cuota Gemini Vision PRIMARIA excedida, intentando siguiente...
+🔍 Analizando imagen con Gemini Vision (SECUNDARIA)...
+❌ Error Gemini Vision SECUNDARIA: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔍 Analizando imagen con Gemini Vision (TERCIARIA)...
+❌ Error Gemini Vision TERCIARIA: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+⚠️ [QA Fuente RSS] Gemini Vision falló, intentando fallback con Ollama local... (Error: Todas las keys de Gemini Vision fallaron: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.)
+🔍 Analizando imagen con Ollama (llama3.2-vision:11b)...
+❌ Error Ollama Vision: Ollama API Error: Not Found
+❌ [QA Fuente RSS] Error de análisis (ambos modelos fallaron): Ollama Vision falló: Ollama API Error: Not Found
+
+🎨 [Paso 2] Generación con AI Horde (intento 1)
+
+🎨 [AI Horde #1] Generando imagen...
+   Prompt: A digital representation of two national flags, USA and China, intertwined with circuit boards and d...
+[AI HORDE] Generando imagen para: la-casa-blanca-acusa-a-china-de-robo-a-escala-industrial-de-modelos-de-ia-estadounidenses-1776964514357
+[AI HORDE] Prompt (462 chars): A digital representation of two national flags, USA and China, intertwined with ...
+[AI HORDE] Job creado: e3311fea-5ef7-46f2-9289-ec80f76f5392
+[AI HORDE] Esperando... (1/60)
+[AI HORDE] Esperando... (2/60)
+[AI HORDE] Esperando... (3/60)
+[AI HORDE] Esperando... (4/60)
+[AI HORDE] Esperando... (5/60)
+[AI HORDE] Esperando... (6/60)
+[AI HORDE] Esperando... (7/60)
+[AI HORDE] Esperando... (8/60)
+[AI HORDE] Esperando... (9/60)
+⚠️ [AI HORDE] Kudos insuficientes (3), descartando imagen
+❌ [AI HORDE] Timeout después de 360s
+❌ [AI Horde #1] URL inválida o vacía
+
+🎨 [Paso 3] Generación con AI Horde (intento 2)
+
+🎨 [AI Horde #2] Generando imagen...
+   Prompt: A digital representation of two national flags, USA and China, intertwined with circuit boards and d...
+[AI HORDE] Generando imagen para: la-casa-blanca-acusa-a-china-de-robo-a-escala-industrial-de-modelos-de-ia-estadounidenses-1776964514357-retry
+[AI HORDE] Prompt (462 chars): A digital representation of two national flags, USA and China, intertwined with ...
+[AI HORDE] Job creado: 26a7407a-a5db-4c4d-a3ec-796180d9171e
+[AI HORDE] Esperando... (1/60)
+[AI HORDE] Esperando... (2/60)
+[AI HORDE] Esperando... (3/60)
+[AI HORDE] Esperando... (4/60)
+[AI HORDE] Esperando... (5/60)
+[AI HORDE] Esperando... (6/60)
+[AI HORDE] Esperando... (7/60)
+[AI HORDE] Esperando... (8/60)
+[AI HORDE] Esperando... (9/60)
+[AI HORDE] Esperando... (10/60)
+[AI HORDE] Esperando... (11/60)
+[AI HORDE] Esperando... (12/60)
+[AI HORDE] Esperando... (13/60)
+[AI HORDE] Esperando... (14/60)
+[AI HORDE] Kudos usados: 87
+✅ [AI Horde #2] URL generada: https://a223539ccf6caa2d76459c9727d276e6.r2.cloudflarestorage.com/stable-horde/6...
+🖼️ ═══ RESULTADO: AI Horde intento 2 usada (sin QA) ═══
+
+✅ Imagen final (ai_horde): https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/la-casa-blanca-acus...
+   Pasos: Paso 1: Imagen de fuente RSS → Paso 2: AI Horde intento 1 → Paso 3: AI Horde intento 2
+   Errores recuperados: Imagen de fuente RSS no pasó QA, AI Horde #1 falló al generar
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses
+- Sentimiento: Neutral ➡️
+- Categoría: Mercados
+- URL Imagen: https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/la-casa-blanca-acusa-a-china-de-robo-a-escala-industrial-de-modelos-de-ia-estadounidenses-1776964514357-1776964685796.webp
+- Resumen: La administración Trump ha lanzado una fuerte acusación contra China, señalándola de llevar a cabo un robo 'a escala industrial' de capacidades de inteligencia artificial estadounidenses mediante sofisticadas técnicas de intrusión.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+[2️⃣] Enviando a Binance Square...
+2026-04-23 19:18:08,040 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 19:18:08,040 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 19:18:11,745 [INFO] [debug] Binance Square response: status=200 body={"code":"000000","message":null,"messageDetail":null,"data":{"id":315693021478161,"shareLink":"https://app.binance.com/uni-qr/cpos/315693021478161?r=E7ZNWACG&l=es"},"success":true}
+2026-04-23 19:18:11,745 [INFO] [debug] Binance Square response: status=200 body={"code":"000000","message":null,"messageDetail":null,"data":{"id":315693021478161,"shareLink":"https://app.binance.com/uni-qr/cpos/315693021478161?r=E7ZNWACG&l=es"},"success":true}
+2026-04-23 19:18:11,748 [INFO] [ok] Publicado en Binance Square: La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses
+2026-04-23 19:18:11,748 [INFO] [ok] Publicado en Binance Square: La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses
+
+[3️⃣] Enviando a Telegram...
+2026-04-23 19:18:12,522 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 19:18:12,522 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 19:18:16,222 [INFO] [telegram/HTML] Enviando mensaje: BTC: $77.783 | ETH: $2.316
+📊 Miedo/Codicia: ⚪ (46/100)
+──────────────
+📰 <b>La Casa Blanca Acusa a China de Robo &#x27;a Escala Industrial&#x27; de Modelos de IA Estadounidenses</b>
+
+¡Atención, EmeDotEme! 🚨 Noticia de última hora que agita el panorama tech
+
+Sentimiento del mercado: Neutral ➡️
+
+<i>DYOR: No es consejo financiero.</i>
+<b>EmeDotEme</b>
+
+#Criptomonedas #Web3 #EmeDotEme
+2026-04-23 19:18:16,222 [INFO] [telegram/HTML] Enviando mensaje: BTC: $77.783 | ETH: $2.316
+📊 Miedo/Codicia: ⚪ (46/100)
+──────────────
+📰 <b>La Casa Blanca Acusa a China de Robo &#x27;a Escala Industrial&#x27; de Modelos de IA Estadounidenses</b>
+
+¡Atención, EmeDotEme! 🚨 Noticia de última hora que agita el panorama tech
+
+Sentimiento del mercado: Neutral ➡️
+
+<i>DYOR: No es consejo financiero.</i>
+<b>EmeDotEme</b>
+
+#Criptomonedas #Web3 #EmeDotEme
+2026-04-23 19:18:17,758 [INFO] [telegram/HTML] Status: 200, response: {"ok":true,"result":{"message_id":641,"sender_chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"date":1776964697,"photo":[{"file_id":"AgACAgQAAyEGAATUO2SWAAICgWnqVFnMfv0KtZKQxOs2t8lOgSTVAALdDGsbXSNUUwQZuCYgRWmmAQADAgADcwADOwQ","file_unique_id":"AQAD3QxrG10jVFN4","file_size":2011,"width":90,"height":90},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgWnqVFnMfv0KtZKQxOs2t8lOgSTVAALdDGsbXSNUUwQZuCYgRWmmAQADAgADbQADOwQ","file_unique_id":"AQAD3QxrG10jVFNy","file_size":31207,"width":320,"height":320},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgWnqVFnMfv0KtZKQxOs2t8lOgSTVAALdDGsbXSNUUwQZuCYgRWmmAQADAgADeAADOwQ","file_unique_id":"AQAD3QxrG10jVFN9","file_size":127217,"width":800,"height":800},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgWnqVFnMfv0KtZKQxOs2t8lOgSTVAALdDGsbXSNUUwQZuCYgRWmmAQADAgADeQADOwQ","file_unique_id":"AQAD3QxrG10jVFN-","file_size":177780,"width":1024,"height":1024}],"caption":"BTC: $77.783 | ETH: $2.316\n\ud83d\udcca Miedo/Codicia: \u26aa (46/100)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udcf0 La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses\n\n\u00a1Atenci\u00f3n, EmeDotEme! \ud83d\udea8 Noticia de \u00faltima hora que agita el panorama tech\n\nSentimiento del mercado: Neutral \u27a1\ufe0f\n\nDYOR: No es consejo financiero.\nEmeDotEme\n\n#Criptomonedas #Web3 #EmeDotEme","caption_entities":[{"offset":74,"length":91,"type":"bold"},{"offset":280,"length":31,"type":"italic"},{"offset":312,"length":9,"type":"bold"},{"offset":323,"length":14,"type":"hashtag"},{"offset":338,"length":5,"type":"hashtag"},{"offset":344,"length":10,"type":"hashtag"}],"reply_markup":{"inline_keyboard":[[{"text":"Leer en EmeDotEme.es","url":"https://www.emedoteme.es/articulo/la-casa-blanca-acusa-a-china-de-robo-a-escala-industrial-de-modelos-de-ia-estadounidenses-1776964514357"}],[{"text":"\ud83c\udf81 RECLAMAR HASTA 100$","url":"https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA"}],[{"text":"\ud83d\udce2 Compartir","url":"https://t.me/share/url?url=https://www.emedoteme.es/articulo/la-casa-blanca-acusa-a-china-de-robo-a-escala-industrial-de-modelos-de-ia-estadounidenses-1776964514357"}]]}}}
+2026-04-23 19:18:17,758 [INFO] [telegram/HTML] Status: 200, response: {"ok":true,"result":{"message_id":641,"sender_chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"date":1776964697,"photo":[{"file_id":"AgACAgQAAyEGAATUO2SWAAICgWnqVFnMfv0KtZKQxOs2t8lOgSTVAALdDGsbXSNUUwQZuCYgRWmmAQADAgADcwADOwQ","file_unique_id":"AQAD3QxrG10jVFN4","file_size":2011,"width":90,"height":90},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgWnqVFnMfv0KtZKQxOs2t8lOgSTVAALdDGsbXSNUUwQZuCYgRWmmAQADAgADbQADOwQ","file_unique_id":"AQAD3QxrG10jVFNy","file_size":31207,"width":320,"height":320},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgWnqVFnMfv0KtZKQxOs2t8lOgSTVAALdDGsbXSNUUwQZuCYgRWmmAQADAgADeAADOwQ","file_unique_id":"AQAD3QxrG10jVFN9","file_size":127217,"width":800,"height":800},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgWnqVFnMfv0KtZKQxOs2t8lOgSTVAALdDGsbXSNUUwQZuCYgRWmmAQADAgADeQADOwQ","file_unique_id":"AQAD3QxrG10jVFN-","file_size":177780,"width":1024,"height":1024}],"caption":"BTC: $77.783 | ETH: $2.316\n\ud83d\udcca Miedo/Codicia: \u26aa (46/100)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udcf0 La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses\n\n\u00a1Atenci\u00f3n, EmeDotEme! \ud83d\udea8 Noticia de \u00faltima hora que agita el panorama tech\n\nSentimiento del mercado: Neutral \u27a1\ufe0f\n\nDYOR: No es consejo financiero.\nEmeDotEme\n\n#Criptomonedas #Web3 #EmeDotEme","caption_entities":[{"offset":74,"length":91,"type":"bold"},{"offset":280,"length":31,"type":"italic"},{"offset":312,"length":9,"type":"bold"},{"offset":323,"length":14,"type":"hashtag"},{"offset":338,"length":5,"type":"hashtag"},{"offset":344,"length":10,"type":"hashtag"}],"reply_markup":{"inline_keyboard":[[{"text":"Leer en EmeDotEme.es","url":"https://www.emedoteme.es/articulo/la-casa-blanca-acusa-a-china-de-robo-a-escala-industrial-de-modelos-de-ia-estadounidenses-1776964514357"}],[{"text":"\ud83c\udf81 RECLAMAR HASTA 100$","url":"https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA"}],[{"text":"\ud83d\udce2 Compartir","url":"https://t.me/share/url?url=https://www.emedoteme.es/articulo/la-casa-blanca-acusa-a-china-de-robo-a-escala-industrial-de-modelos-de-ia-estadounidenses-1776964514357"}]]}}}
+2026-04-23 19:18:17,760 [INFO] [ok] Publicado en Telegram: La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses
+2026-04-23 19:18:17,760 [INFO] [ok] Publicado en Telegram: La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses
+
+[4️⃣] Enviando a Bluesky...
+2026-04-23 19:18:19,707 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 19:18:19,707 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 19:18:19,891 [WARNING] [warn] Gemini SECUNDARIA cuota excedida (429), probando siguiente...
+2026-04-23 19:18:19,891 [WARNING] [warn] Gemini SECUNDARIA cuota excedida (429), probando siguiente...
+2026-04-23 19:18:22,212 [INFO] HTTP Request: POST https://bsky.social/xrpc/com.atproto.server.createSession "HTTP/1.1 200 OK"
+2026-04-23 19:18:22,212 [INFO] HTTP Request: POST https://bsky.social/xrpc/com.atproto.server.createSession "HTTP/1.1 200 OK"
+2026-04-23 19:18:22,573 [INFO] HTTP Request: GET https://jellybaby.us-east.host.bsky.network/xrpc/app.bsky.actor.getProfile?actor=emedoteme.bsky.social "HTTP/1.1 200 OK"
+2026-04-23 19:18:22,573 [INFO] HTTP Request: GET https://jellybaby.us-east.host.bsky.network/xrpc/app.bsky.actor.getProfile?actor=emedoteme.bsky.social "HTTP/1.1 200 OK"
+2026-04-23 19:18:23,594 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.uploadBlob "HTTP/1.1 200 OK"
+2026-04-23 19:18:23,594 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.uploadBlob "HTTP/1.1 200 OK"
+2026-04-23 19:18:24,147 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.createRecord "HTTP/1.1 200 OK"
+2026-04-23 19:18:24,147 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.createRecord "HTTP/1.1 200 OK"
+2026-04-23 19:18:24,148 [INFO] [ok] Publicado en Bluesky: La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses
+2026-04-23 19:18:24,148 [INFO] [ok] Publicado en Bluesky: La Casa Blanca Acusa a China de Robo 'a Escala Industrial' de Modelos de IA Estadounidenses
+
+✅ Proceso completado. Revisa tus redes sociales. (2026-04-23 19:08:01)
+
+===============================================================
+
+================== 📰 PUBLICAR.sh (2026-04-23 21:00:58) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://www.coindesk.com/opinion/2026/04/23/the-market-repriced-defi-in-just-48-hours"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365292/founder-solana-token-launchpad-believe-arrested"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365285/white-house-accuses-china-industrial-scale-theft-american-ai-models"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 48 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "Inside the $71 million freeze on Arbitrum that has the crypt..." (1 fuentes)
+  📌 Cluster 2: "OpenAI Says Its New ChatGPT for Doctors Outperforms Humans i..." (1 fuentes)
+  📌 Cluster 3: "Tencent's New Hy3 AI Model Is the Most Efficient Chinese LLM..." (1 fuentes)
+  📌 Cluster 4: "UNC6692 Impersonates IT Helpdesk via Microsoft Teams to Depl..." (1 fuentes)
+  📌 Cluster 5: "Fold Launches 'Bitcoin Bonus' Program for Employers Followin..." (1 fuentes)
+
+🎯 Cluster seleccionado: "Inside the $71 million freeze on Arbitrum that has the crypt..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini primaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini secundaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini terciaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+⚠️ Gemini falló, intentando con Ollama local...
+❌ Ollama también falló. Devolviendo ejemplo estático.
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini secundaria excedida, intentando siguiente...
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "Bitcoin ETFs Spark New Era of Institutional Adoption and Market Maturation",
+  "summ...
+
+✅ Generación bilingüe completada en 280.82 segundos
+
+❌ Ollama falló y devolvió el artículo de ejemplo. Abortando publicación...
+✅ Aviso de error enviado al Telegram privado.
+❌ Error al generar el artículo. Abortando publicación en redes.
+
+================== 📰 PUBLICAR.sh (2026-04-23 21:08:34) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://www.coindesk.com/opinion/2026/04/23/the-market-repriced-defi-in-just-48-hours"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365292/founder-solana-token-launchpad-believe-arrested"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365285/white-house-accuses-china-industrial-scale-theft-american-ai-models"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 48 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "Inside the $71 million freeze on Arbitrum that has the crypt..." (1 fuentes)
+  📌 Cluster 2: "OpenAI Says Its New ChatGPT for Doctors Outperforms Humans i..." (1 fuentes)
+  📌 Cluster 3: "Tencent's New Hy3 AI Model Is the Most Efficient Chinese LLM..." (1 fuentes)
+  📌 Cluster 4: "UNC6692 Impersonates IT Helpdesk via Microsoft Teams to Depl..." (1 fuentes)
+  📌 Cluster 5: "Fold Launches 'Bitcoin Bonus' Program for Employers Followin..." (1 fuentes)
+
+🎯 Cluster seleccionado: "Inside the $71 million freeze on Arbitrum that has the crypt..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini secundaria excedida, intentando siguiente...
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "La Congelación de $71 Millones en Arbitrum Reabre el Debate sobre la Verdadera Descent...
+📝 Gemini raw response length: 5637 chars
+📝 First 800 chars: {
+  "title": "La Congelación de $71 Millones en Arbitrum Reabre el Debate sobre la Verdadera Descentralización",
+  "summary": "Una acción de emergencia en Arbitrum para asegurar fondos robados ha provocado una profunda discusión en el ecosistema cripto sobre los límites de la descentralización y el control en las soluciones de Capa 2.",
+  "content": "<p class='intro'>El mundo de las criptomonedas y la tecnología blockchain se ha visto sacudido por un incidente significativo en la red Arbitrum, donde una respuesta de emergencia logró congelar 71 millones de dólares en fondos. Si bien la acción impidió el movimiento de capitales robados, este evento ha encendido un acalorado debate que resuena en toda la comunidad: ¿Qué significa realmente la descentralización en el contexto actual de las re...
+🔍 JSON extraído: {
+  "title": "La Congelación de $71 Millones en Arbitrum Reabre el Debate sobre la Verdadera Descentralización",
+  "summary": "Una acción de emergencia en Arbitrum para asegurar fondos robados ha prov...
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini secundaria excedida, intentando siguiente...
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "Arbitrum's $71 Million Fund Freeze: Unpacking the Decentralization Dilemma on Layer ...
+
+✅ Generación bilingüe completada en 30.17 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: A conceptual image showing a digital lock or a frozen block of data on a network, with a debate happ...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+
+================== 📰 PUBLICAR.sh (2026-04-23 21:15:44) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://www.coindesk.com/opinion/2026/04/23/the-market-repriced-defi-in-just-48-hours"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365292/founder-solana-token-launchpad-believe-arrested"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365285/white-house-accuses-china-industrial-scale-theft-american-ai-models"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 48 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "US Treasury Sanctions Powerful Cambodian Politician Allegedl..." (1 fuentes)
+  📌 Cluster 2: "Inside the $71 million freeze on Arbitrum that has the crypt..." (1 fuentes)
+  📌 Cluster 3: "OpenAI Says Its New ChatGPT for Doctors Outperforms Humans i..." (1 fuentes)
+  📌 Cluster 4: "Tencent's New Hy3 AI Model Is the Most Efficient Chinese LLM..." (1 fuentes)
+  📌 Cluster 5: "UNC6692 Impersonates IT Helpdesk via Microsoft Teams to Depl..." (1 fuentes)
+
+🎯 Cluster seleccionado: "US Treasury Sanctions Powerful Cambodian Politician Allegedl..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "Sanciones de EE. UU. Golpean a Senador Camboyano por Presunta Red de Estafas Criptográ...
+📝 Gemini raw response length: 5804 chars
+📝 First 800 chars: {
+  "title": "Sanciones de EE. UU. Golpean a Senador Camboyano por Presunta Red de Estafas Criptográficas",
+  "summary": "El Departamento del Tesoro de Estados Unidos ha impuesto sanciones a Kok An, un influyente senador camboyano, acusado de liderar una vasta red de estafas de criptomonedas operando a través de sus numerosos resorts y casinos.",
+  "content": "<p>En un movimiento significativo que subraya la creciente vigilancia global sobre el espacio de las criptomonedas, el Departamento del Tesoro de Estados Unidos ha impuesto sanciones contra Kok An, un influyente senador camboyano. La acusación es grave: se le señala como el presunto líder de una vasta red de estafas criptográficas, cuyas operaciones se habrían orquestado a través de su extenso portafolio de resorts y casinos. Esta ac...
+🔍 JSON extraído: {
+  "title": "Sanciones de EE. UU. Golpean a Senador Camboyano por Presunta Red de Estafas Criptográficas",
+  "summary": "El Departamento del Tesoro de Estados Unidos ha impuesto sanciones a Kok An, u...
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini secundaria excedida, intentando siguiente...
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "US Treasury Sanctions Cambodian Senator Over Alleged Crypto Scam Empire",
+  "summary...
+
+✅ Generación bilingüe completada en 37.39 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: A serious, authoritative image depicting the US Treasury building with a subtle overlay or backgroun...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+❌ Error al generar el artículo. Abortando publicación en redes.
+
+================== 📰 PUBLICAR.sh (2026-04-23 21:21:12) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ El País Tecnología: 4 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+✅ The Hacker News: 16 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 52 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://www.coindesk.com/opinion/2026/04/23/the-market-repriced-defi-in-just-48-hours"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365292/founder-solana-token-launchpad-believe-arrested"
+  🔄 Saltando (URL ya cubierta): "https://decrypt.co/365285/white-house-accuses-china-industrial-scale-theft-american-ai-models"
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 48 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "US Treasury Sanctions Powerful Cambodian Politician Allegedl..." (1 fuentes)
+  📌 Cluster 2: "Inside the $71 million freeze on Arbitrum that has the crypt..." (1 fuentes)
+  📌 Cluster 3: "OpenAI Says Its New ChatGPT for Doctors Outperforms Humans i..." (1 fuentes)
+  📌 Cluster 4: "Tencent's New Hy3 AI Model Is the Most Efficient Chinese LLM..." (1 fuentes)
+  📌 Cluster 5: "UNC6692 Impersonates IT Helpdesk via Microsoft Teams to Depl..." (1 fuentes)
+
+🎯 Cluster seleccionado: "US Treasury Sanctions Powerful Cambodian Politician Allegedl..." con 1 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 1 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "title": "Senador Camboyano Sancionado por EE. UU. por Vínculos con Red de Estafas Cripto",
+  "s...
+📝 Gemini raw response length: 6388 chars
+📝 First 800 chars: {
+  "title": "Senador Camboyano Sancionado por EE. UU. por Vínculos con Red de Estafas Cripto",
+  "summary": "El Tesoro de EE. UU. ha sancionado a Kok An, un influyente senador camboyano, por su presunta implicación en una vasta red de operaciones delictivas relacionadas con criptomonedas, utilizando sus complejos turísticos y casinos como fachada.",
+  "content": "<p>En un movimiento significativo que subraya la creciente atención de las autoridades globales sobre el uso ilícito de las criptomonedas, el Departamento del Tesoro de Estados Unidos ha impuesto sanciones a Kok An, un prominente senador de Camboya. Las acusaciones contra An son graves: se le señala como el presunto cerebro detrás de una masiva operación de delitos relacionados con criptoactivos, que supuestamente se orquestaba a...
+🔍 JSON extraído: {
+  "title": "Senador Camboyano Sancionado por EE. UU. por Vínculos con Red de Estafas Cripto",
+  "summary": "El Tesoro de EE. UU. ha sancionado a Kok An, un influyente senador camboyano, por su presu...
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini primaria excedida, intentando siguiente...
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+⚠️ Cuota de Gemini secundaria excedida, intentando siguiente...
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+✅ Texto generado con Gemini: {
+  "titleEn": "U.S. Sanctions Cambodian Senator Amid Allegations of Massive Digital Asset Crime Rin...
+
+✅ Generación bilingüe completada en 46.00 segundos
+📝 ImagePrompt presente: SÍ
+   Prompt: A shadowy figure in a suit, possibly a politician, standing in front of a neon-lit casino entrance, ...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+⚠️ Timeout de Ollama. Continuando...
+
+⏱️ Tiempo de generación: 166.06 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] Imagen de la fuente: https://cdn.decrypt.co/wp-content/uploads/2026/01/amnesty-cambodia-scam-compound...
+🔍 [QA Fuente RSS] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...
+⚠️ Cuota Gemini Vision PRIMARIA excedida, intentando siguiente...
+🔍 Analizando imagen con Gemini Vision (SECUNDARIA)...
+⚠️ Cuota Gemini Vision SECUNDARIA excedida, intentando siguiente...
+🔍 Analizando imagen con Gemini Vision (TERCIARIA)...
+❌ JSON inválido/truncado de Gemini Vision: {
+  "coherente": true,
+  "razon_coherencia": "La imagen muestra una vista aérea de un gran complejo de edificios en un entorno rural o semiurbano, lo cual es coherente con la descripción de 'complejos...
+⚠️ Aplicando recuperación de emergencia (extrayendo variables directamente del string)
+✅ Gemini (gemini-2.5-flash):
+{
+  "coherente": true,
+  "razon_coherencia": "Recuperación automática de JSON truncado",
+  "descripcion": "Descripción parcial recuperada mecánicamente.",
+  "calidad_aceptable": false,
+  "problemas_detectados": []
+}
+❌ [QA Fuente RSS] Imagen RECHAZADA: calidad baja — Recuperación automática de JSON truncado
+
+🎨 [Paso 2] Generación con AI Horde (intento 1)
+
+🎨 [AI Horde #1] Generando imagen...
+   Prompt: A shadowy figure in a suit, possibly a politician, standing in front of a neon-lit casino entrance, ...
+[AI HORDE] Generando imagen para: senador-camboyano-sancionado-por-ee-uu-por-v-nculos-con-red-de-estafas-cripto-1776972241201
+[AI HORDE] Prompt (437 chars): A shadowy figure in a suit, possibly a politician, standing in front of a neon-l...
+[AI HORDE] Job creado: 74a0f6b7-657b-4d95-9bf0-c1e85d9827f3
+[AI HORDE] Esperando... (1/60)
+[AI HORDE] Esperando... (2/60)
+[AI HORDE] Esperando... (3/60)
+[AI HORDE] Esperando... (4/60)
+[AI HORDE] Esperando... (5/60)
+[AI HORDE] Esperando... (6/60)
+[AI HORDE] Esperando... (7/60)
+[AI HORDE] Esperando... (8/60)
+[AI HORDE] Esperando... (9/60)
+[AI HORDE] Esperando... (10/60)
+[AI HORDE] Kudos usados: 46
+✅ [AI Horde #1] URL generada: https://a223539ccf6caa2d76459c9727d276e6.r2.cloudflarestorage.com/stable-horde/4...
+🖼️ ═══ RESULTADO: AI Horde intento 1 usada (sin QA) ═══
+
+✅ Imagen final (ai_horde): https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/senador-camboyano-s...
+   Pasos: Paso 1: Imagen de fuente RSS → Paso 2: AI Horde intento 1
+   Errores recuperados: Imagen de fuente RSS no pasó QA
+
+💾 Guardando en la Base de Datos...
+
+✅ ARTÍCULO PUBLICADO CON ÉXITO:
+- Título: Senador Camboyano Sancionado por EE. UU. por Vínculos con Red de Estafas Cripto
+- Sentimiento: Neutral ➡️
+- Categoría: Mercados
+- URL Imagen: https://elfglqkqprwlenwjtfgj.supabase.co/storage/v1/object/public/article-images/senador-camboyano-sancionado-por-ee-uu-por-v-nculos-con-red-de-estafas-cripto-1776972241201-1776972328563.webp
+- Resumen: El Tesoro de EE. UU. ha sancionado a Kok An, un influyente senador camboyano, por su presunta implicación en una vasta red de operaciones delictivas relacionadas con criptomonedas, utilizando sus complejos turísticos y casinos como fachada.
+
+💾 Datos guardados en /home/emerito/emedoteme/tmp/latest_article.json para Binance Square.
+
+[2️⃣] Enviando a Binance Square...
+2026-04-23 21:25:32,403 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 21:25:32,403 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 21:25:32,876 [WARNING] [warn] Gemini SECUNDARIA cuota excedida (429), probando siguiente...
+2026-04-23 21:25:32,876 [WARNING] [warn] Gemini SECUNDARIA cuota excedida (429), probando siguiente...
+2026-04-23 21:25:47,154 [INFO] [debug] Binance Square response: status=200 body={"code":"000000","message":null,"messageDetail":null,"data":{"id":315724378036498,"shareLink":"https://app.binance.com/uni-qr/cpos/315724378036498?r=E7ZNWACG&l=es"},"success":true}
+2026-04-23 21:25:47,154 [INFO] [debug] Binance Square response: status=200 body={"code":"000000","message":null,"messageDetail":null,"data":{"id":315724378036498,"shareLink":"https://app.binance.com/uni-qr/cpos/315724378036498?r=E7ZNWACG&l=es"},"success":true}
+2026-04-23 21:25:47,156 [INFO] [ok] Publicado en Binance Square: Senador Camboyano Sancionado por EE. UU. por Vínculos con Red de Estafas Cripto
+2026-04-23 21:25:47,156 [INFO] [ok] Publicado en Binance Square: Senador Camboyano Sancionado por EE. UU. por Vínculos con Red de Estafas Cripto
+
+[3️⃣] Enviando a Telegram...
+2026-04-23 21:25:49,481 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 21:25:49,481 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 21:25:50,028 [WARNING] [warn] Gemini SECUNDARIA cuota excedida (429), probando siguiente...
+2026-04-23 21:25:50,028 [WARNING] [warn] Gemini SECUNDARIA cuota excedida (429), probando siguiente...
+2026-04-23 21:25:53,632 [INFO] [telegram/HTML] Enviando mensaje: BTC: $77.839 | ETH: $2.313
+📊 Miedo/Codicia: ⚪ (46/100)
+──────────────
+📰 <b>Senador Camboyano Sancionado por EE. UU. por Vínculos con Red de Estafas Cripto</b>
+
+¡Aquí la última de EmeDotEme! 👇
+
+*   ¡Alerta! 🚨 EE
+
+Sentimiento del mercado: Neutral ➡️
+
+<i>DYOR: No es consejo financiero.</i>
+<b>EmeDotEme</b>
+
+#Criptomonedas #Web3 #EmeDotEme
+2026-04-23 21:25:53,632 [INFO] [telegram/HTML] Enviando mensaje: BTC: $77.839 | ETH: $2.313
+📊 Miedo/Codicia: ⚪ (46/100)
+──────────────
+📰 <b>Senador Camboyano Sancionado por EE. UU. por Vínculos con Red de Estafas Cripto</b>
+
+¡Aquí la última de EmeDotEme! 👇
+
+*   ¡Alerta! 🚨 EE
+
+Sentimiento del mercado: Neutral ➡️
+
+<i>DYOR: No es consejo financiero.</i>
+<b>EmeDotEme</b>
+
+#Criptomonedas #Web3 #EmeDotEme
+2026-04-23 21:25:55,946 [INFO] [telegram/HTML] Status: 200, response: {"ok":true,"result":{"message_id":642,"sender_chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"date":1776972355,"photo":[{"file_id":"AgACAgQAAyEGAATUO2SWAAICgmnqckMqBICZBpH3Ou2Hkf7jQnoTAAJQDWsb2lFVU0Q2U7fQQ9rTAQADAgADcwADOwQ","file_unique_id":"AQADUA1rG9pRVVN4","file_size":2241,"width":90,"height":90},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgmnqckMqBICZBpH3Ou2Hkf7jQnoTAAJQDWsb2lFVU0Q2U7fQQ9rTAQADAgADbQADOwQ","file_unique_id":"AQADUA1rG9pRVVNy","file_size":28626,"width":320,"height":320},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgmnqckMqBICZBpH3Ou2Hkf7jQnoTAAJQDWsb2lFVU0Q2U7fQQ9rTAQADAgADeAADOwQ","file_unique_id":"AQADUA1rG9pRVVN9","file_size":128934,"width":800,"height":800},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgmnqckMqBICZBpH3Ou2Hkf7jQnoTAAJQDWsb2lFVU0Q2U7fQQ9rTAQADAgADeQADOwQ","file_unique_id":"AQADUA1rG9pRVVN-","file_size":192686,"width":1024,"height":1024}],"caption":"BTC: $77.839 | ETH: $2.313\n\ud83d\udcca Miedo/Codicia: \u26aa (46/100)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udcf0 Senador Camboyano Sancionado por EE. UU. por V\u00ednculos con Red de Estafas Cripto\n\n\u00a1Aqu\u00ed la \u00faltima de EmeDotEme! \ud83d\udc47\n\n*   \u00a1Alerta! \ud83d\udea8 EE\n\nSentimiento del mercado: Neutral \u27a1\ufe0f\n\nDYOR: No es consejo financiero.\nEmeDotEme\n\n#Criptomonedas #Web3 #EmeDotEme","caption_entities":[{"offset":74,"length":79,"type":"bold"},{"offset":246,"length":31,"type":"italic"},{"offset":278,"length":9,"type":"bold"},{"offset":289,"length":14,"type":"hashtag"},{"offset":304,"length":5,"type":"hashtag"},{"offset":310,"length":10,"type":"hashtag"}],"reply_markup":{"inline_keyboard":[[{"text":"Leer en EmeDotEme.es","url":"https://www.emedoteme.es/articulo/senador-camboyano-sancionado-por-ee-uu-por-v-nculos-con-red-de-estafas-cripto-1776972241201"}],[{"text":"\ud83c\udf81 RECLAMAR HASTA 100$","url":"https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA"}],[{"text":"\ud83d\udce2 Compartir","url":"https://t.me/share/url?url=https://www.emedoteme.es/articulo/senador-camboyano-sancionado-por-ee-uu-por-v-nculos-con-red-de-estafas-cripto-1776972241201"}]]}}}
+2026-04-23 21:25:55,946 [INFO] [telegram/HTML] Status: 200, response: {"ok":true,"result":{"message_id":642,"sender_chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"chat":{"id":-1003560662166,"title":"EmeDotEme: Crypto-News en Espa\u00f1ol","username":"EmeDotEmeNews","type":"channel"},"date":1776972355,"photo":[{"file_id":"AgACAgQAAyEGAATUO2SWAAICgmnqckMqBICZBpH3Ou2Hkf7jQnoTAAJQDWsb2lFVU0Q2U7fQQ9rTAQADAgADcwADOwQ","file_unique_id":"AQADUA1rG9pRVVN4","file_size":2241,"width":90,"height":90},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgmnqckMqBICZBpH3Ou2Hkf7jQnoTAAJQDWsb2lFVU0Q2U7fQQ9rTAQADAgADbQADOwQ","file_unique_id":"AQADUA1rG9pRVVNy","file_size":28626,"width":320,"height":320},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgmnqckMqBICZBpH3Ou2Hkf7jQnoTAAJQDWsb2lFVU0Q2U7fQQ9rTAQADAgADeAADOwQ","file_unique_id":"AQADUA1rG9pRVVN9","file_size":128934,"width":800,"height":800},{"file_id":"AgACAgQAAyEGAATUO2SWAAICgmnqckMqBICZBpH3Ou2Hkf7jQnoTAAJQDWsb2lFVU0Q2U7fQQ9rTAQADAgADeQADOwQ","file_unique_id":"AQADUA1rG9pRVVN-","file_size":192686,"width":1024,"height":1024}],"caption":"BTC: $77.839 | ETH: $2.313\n\ud83d\udcca Miedo/Codicia: \u26aa (46/100)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ud83d\udcf0 Senador Camboyano Sancionado por EE. UU. por V\u00ednculos con Red de Estafas Cripto\n\n\u00a1Aqu\u00ed la \u00faltima de EmeDotEme! \ud83d\udc47\n\n*   \u00a1Alerta! \ud83d\udea8 EE\n\nSentimiento del mercado: Neutral \u27a1\ufe0f\n\nDYOR: No es consejo financiero.\nEmeDotEme\n\n#Criptomonedas #Web3 #EmeDotEme","caption_entities":[{"offset":74,"length":79,"type":"bold"},{"offset":246,"length":31,"type":"italic"},{"offset":278,"length":9,"type":"bold"},{"offset":289,"length":14,"type":"hashtag"},{"offset":304,"length":5,"type":"hashtag"},{"offset":310,"length":10,"type":"hashtag"}],"reply_markup":{"inline_keyboard":[[{"text":"Leer en EmeDotEme.es","url":"https://www.emedoteme.es/articulo/senador-camboyano-sancionado-por-ee-uu-por-v-nculos-con-red-de-estafas-cripto-1776972241201"}],[{"text":"\ud83c\udf81 RECLAMAR HASTA 100$","url":"https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA"}],[{"text":"\ud83d\udce2 Compartir","url":"https://t.me/share/url?url=https://www.emedoteme.es/articulo/senador-camboyano-sancionado-por-ee-uu-por-v-nculos-con-red-de-estafas-cripto-1776972241201"}]]}}}
+2026-04-23 21:25:55,949 [INFO] [ok] Publicado en Telegram: Senador Camboyano Sancionado por EE. UU. por Vínculos con Red de Estafas Cripto
+2026-04-23 21:25:55,949 [INFO] [ok] Publicado en Telegram: Senador Camboyano Sancionado por EE. UU. por Vínculos con Red de Estafas Cripto
+
+[4️⃣] Enviando a Bluesky...
+2026-04-23 21:25:58,068 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 21:25:58,068 [WARNING] [warn] Gemini PRIMARIA cuota excedida (429), probando siguiente...
+2026-04-23 21:25:58,325 [WARNING] [warn] Gemini SECUNDARIA cuota excedida (429), probando siguiente...
+2026-04-23 21:25:58,325 [WARNING] [warn] Gemini SECUNDARIA cuota excedida (429), probando siguiente...
+2026-04-23 21:26:10,710 [INFO] HTTP Request: POST https://bsky.social/xrpc/com.atproto.server.createSession "HTTP/1.1 200 OK"
+2026-04-23 21:26:10,710 [INFO] HTTP Request: POST https://bsky.social/xrpc/com.atproto.server.createSession "HTTP/1.1 200 OK"
+2026-04-23 21:26:11,234 [INFO] HTTP Request: GET https://jellybaby.us-east.host.bsky.network/xrpc/app.bsky.actor.getProfile?actor=emedoteme.bsky.social "HTTP/1.1 200 OK"
+2026-04-23 21:26:11,234 [INFO] HTTP Request: GET https://jellybaby.us-east.host.bsky.network/xrpc/app.bsky.actor.getProfile?actor=emedoteme.bsky.social "HTTP/1.1 200 OK"
+2026-04-23 21:26:12,714 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.uploadBlob "HTTP/1.1 200 OK"
+2026-04-23 21:26:12,714 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.uploadBlob "HTTP/1.1 200 OK"
+2026-04-23 21:26:13,263 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.createRecord "HTTP/1.1 200 OK"
+2026-04-23 21:26:13,263 [INFO] HTTP Request: POST https://jellybaby.us-east.host.bsky.network/xrpc/com.atproto.repo.createRecord "HTTP/1.1 200 OK"
+2026-04-23 21:26:13,264 [INFO] [ok] Publicado en Bluesky: Senador Camboyano Sancionado por EE. UU. por Vínculos con Red de Estafas Cripto
+2026-04-23 21:26:13,264 [INFO] [ok] Publicado en Bluesky: Senador Camboyano Sancionado por EE. UU. por Vínculos con Red de Estafas Cripto
+
+✅ Proceso completado. Revisa tus redes sociales. (2026-04-23 21:21:12)
+
+===============================================================

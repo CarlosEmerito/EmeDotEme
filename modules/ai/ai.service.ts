@@ -1,20 +1,17 @@
+import { OLLAMA_TEXT_MODEL_DEFAULT, OLLAMA_URL } from './constants';
+
 // --- Generación vía Ollama local (standalone) ---
 export async function generateTextWithOllama({ systemPrompt, userPrompt }: { systemPrompt: string; userPrompt: string; }): Promise<string | null> {
-  const model = process.env.OLLAMA_MODEL;
-  if (!model) {
-    console.error('❌ OLLAMA_MODEL no está configurado en .env');
-    return null;
-  }
+  const model = process.env.OLLAMA_MODEL || OLLAMA_TEXT_MODEL_DEFAULT;
   
   try {
-    const url = 'http://127.0.0.1:11434/api/generate';
     const prompt = `${systemPrompt}\n\n${userPrompt}`;
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 900000); // 15 min timeout
 
     const fetchNode = (await import('node-fetch')).default;
-    const response = await fetchNode(url, {
+    const response = await fetchNode(OLLAMA_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -22,11 +19,10 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
         prompt,
         stream: false,
         options: {
-          num_gpu: -1,
-          num_thread: 16,
           temperature: 0.1,
           num_ctx: 8192
-        }
+        },
+        keep_alive: "5m"
       }),
       signal: controller.signal as any
     });

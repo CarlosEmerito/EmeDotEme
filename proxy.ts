@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { verifySession } from './lib/session'
 
-export function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const expectedPwd = process.env.ADMIN_PASSWORD
 
   // Check for session cookie if ADMIN_PASSWORD is set
   if (expectedPwd) {
     const sessionCookie = req.cookies.get('admin_session')
-    const expectedCookieValue = btoa(`admin:${expectedPwd}`)
 
-    if (sessionCookie && sessionCookie.value === expectedCookieValue) {
+    if (sessionCookie && await verifySession(sessionCookie.value)) {
       return NextResponse.next()
     }
   }

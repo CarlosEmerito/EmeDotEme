@@ -3,7 +3,7 @@
 ## Núcleo
 
 - **Runtime**: Node.js v22
-- **Framework**: Next.js 14 (App Router)
+- **Framework**: Next.js 16.2.2 (App Router)
 - **Lenguaje**: TypeScript
 - **Base de datos**: PostgreSQL
 

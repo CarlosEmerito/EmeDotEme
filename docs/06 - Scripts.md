@@ -11,6 +11,20 @@
 
 ---
 
+## Scripts de Publicación en Redes Sociales (Python)
+
+Ubicados en `scripts/python/`, estos scripts publican el contenido generado en diversas plataformas. Se integran con el pipeline de Node.js a través de scripts de shell.
+
+| Script                | Descripción                        |
+|-----------------------|------------------------------------|
+| `publish_telegram.py` | Publica en el canal de Telegram    |
+| `publish_twitter.py`  | Publica en X (Twitter)             |
+| `publish_bluesky.py`  | Publica en Bluesky                 |
+| `publish_direct.py`   | Publicación directa general        |
+| `send_private_test.py`| Envía al grupo de Telegram privado |
+
+---
+
 ## publish.ts
 
 **Ubicación**: `scripts/publish.ts`
@@ -138,6 +152,54 @@ Verifica imágenes expiradas.
 
 ```bash
 npx tsx scripts/check-expired-images.ts
+```
+
+### delete-fallbacks.ts
+
+Elimina imágenes de fallback almacenadas.
+
+```bash
+npx tsx scripts/delete-fallbacks.ts
+```
+
+### test-env.ts
+
+Verifica la configuración del entorno.
+
+```bash
+npx tsx scripts/test-env.ts
+```
+
+### test-upload.ts
+
+Prueba la carga de imágenes.
+
+```bash
+npx tsx scripts/test-upload.ts
+```
+
+### diagnose-json-errors.ts
+
+Ayuda a diagnosticar errores en el parseo JSON de las IA.
+
+```bash
+npx tsx scripts/diagnose-json-errors.ts
+```
+
+### migrate-images.ts
+
+Script para migrar imágenes a Supabase Storage.
+
+```bash
+npx tsx scripts/migrate-images.ts
+```
+
+### ensure-bucket.ts
+
+Asegura que el bucket de almacenamiento exista y esté configurado.
+
+```bash
+npx tsx scripts/ensure-bucket.ts
 ```
 
 ---

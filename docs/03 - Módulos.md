@@ -105,11 +105,20 @@ generateArticleContent(
   newsContext: NewsItem[]
 ): Promise<GeneratedArticle>
 
+// Generar artículo en inglés
+generateEnglishContent(
+  esArticle: GeneratedArticle,
+  newsContext: NewsItem[]
+): Promise<Partial<GeneratedArticle>>
+
 // Interfaz de respuesta
 interface GeneratedArticle {
   title: string
+  titleEn?: string
   summary: string
+  summaryEn?: string
   content: string
+  contentEn?: string
   imagePrompt: string
   tags: string[]
   sourceUrl?: string
@@ -167,32 +176,48 @@ simpleSearchArticles(query, limit)
 
 ```typescript
 interface Article {
-  id: string
+  id: string          // uuid()
   title: string
-  titleEn: string | null
+  titleEn?: string
   slug: string
-  summary: string
-  summaryEn: string | null
+  summary?: string
+  summaryEn?: string
   content: string
-  contentEn: string | null
-  tags: string[]
-  imageUrl: string
-  imageCaption: string | null
-  sourceUrl: string | null
-  isOriginal: boolean
-  sentiment: string
-  categoryId: string
-  category: Category
+  contentEn?: string
+  imageUrl?: string
+  imageCaption?: string
+  sourceUrl?: string
   author: string
   published: boolean
+  isOriginal: boolean
+  tags: string[]      // defaults to []
+  sentiment: string   // defaults to "Neutral ⚖️"
+  categoryId: string
+  category: Category
   createdAt: Date
   updatedAt: Date
 }
 
 interface Category {
-  id: string
+  id: string          // uuid()
   name: string
   slug: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+interface Subscriber {
+  id: string          // uuid()
+  email: string
+  active: boolean     // defaults to true
+  createdAt: Date
+}
+
+interface Setting {
+  id: string
+  key: string
+  value: string
+  updatedAt: Date
 }
 ```
 

@@ -73,7 +73,7 @@ El pipeline de publicación es el flujo principal que genera y publica automáti
 +-------------------------------------------------------------+
 | 4. TRADUCCIÓN Y POSTPROCESADO                              |
 |    +---------------------------------------------------+    |
-|    | translateArticleContent()                          |    |
+|    | generateEnglishContent()                           |    |
 |    |   - Añade campos *_en (titleEn, summaryEn, ...)    |    |
 |    +---------------------------------------------------+    |
 |                           |                               |
@@ -82,6 +82,7 @@ El pipeline de publicación es el flujo principal que genera y publica automáti
 |    | postprocessWithOllama()                            |    |
 |    |   - Corrige mayúsculas                             |    |
 |    |   - Nombres propios, siglas                        |    |
+|    |   - Fallback: Regex recovery si falla JSON         |    |
 |    +---------------------------------------------------+    |
 +-------------------------------+-----------------------------+
                               |
@@ -308,6 +309,13 @@ const result = await generateArticleImageAndAnalyzeQA(
 | OLLAMA LOCAL: postprocessWithOllama                         |
 |    System: "Eres un corrector ortográfico experto..."        |
 |    User: JSON.stringify(article)                            |
++-------------------------------+-----------------------------+
+                              |
+                              v
++-------------------------------------------------------------+
+| FALLBACK (Si falla parseo JSON de Ollama)                   |
+|    - Usa expresiones regulares para extraer                 |
+|      title, summary y content de la respuesta.              |
 +-------------------------------+-----------------------------+
                               |
                               v

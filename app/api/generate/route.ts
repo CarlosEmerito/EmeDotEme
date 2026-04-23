@@ -18,16 +18,18 @@ export async function GET(req: Request) {
     // 1. Asegurar que existan categorías base
     const categories = ["Mercados", "Tecnología", "Web3"];
     
-    for (const name of categories) {
-      await prisma.category.upsert({
-        where: { name },
-        update: {},
-        create: {
-          name,
-          slug: name.toLowerCase().replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i').replace(/ó/g, 'o').replace(/ú/g, 'u').replace(/\s+/g, '-'),
-        },
-      });
-    }
+    await Promise.all(
+      categories.map(name =>
+        prisma.category.upsert({
+          where: { name },
+          update: {},
+          create: {
+            name,
+            slug: generateSlug(name, false),
+          },
+        })
+      )
+    );
 
     const allCategories = await prisma.category.findMany();
     const randomCategory = allCategories[Math.floor(Math.random() * allCategories.length)];

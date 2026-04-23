@@ -16041,3 +16041,67 @@ text, watermark, logo, signature, words, handwriting, captions, subtitles, label
 2026-04-22 22:58:03,423 [INFO] [debug] Binance Square response: status=200 body={"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
 2026-04-22 22:58:03,425 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
 2026-04-22 22:58:03,425 [ERROR] [ERROR] Falló Binance Square: API rechazó: {"code":"220003","message":"API key not found","messageDetail":null,"data":null,"success":false}
+
+================== 📰 PUBLICAR.sh (2026-04-23 14:23:00) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 40
+📰 URLs recientes para evitar: 20
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Krebs on Security: 1 noticias recientes (últimas 48h)
+✅ Decrypt: 39 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 10 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ The Hacker News: 18 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ El País Tecnología: 3 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 54
+📊 Fuentes que respondieron: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 53 noticias únicas
+  🔄 Saltando (URL ya cubierta): "https://securityaffairs.com/191144/cyber-crime/ddos-wave-continues-as-mastodon-hit-after-bluesky-incident.html"
+📊 Tras filtrar cubiertas: 52 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "The Download: introducing the Nature issue..." (2 fuentes)
+  📌 Cluster 2: "Morning Minute: Bitcoin Clears $79,000, Then Reverses..." (1 fuentes)
+  📌 Cluster 3: "[Webinar] Mythos Reality Check: Beating Automated Exploitati..." (1 fuentes)
+  📌 Cluster 4: "Anthropic Using ‘Fear-Based Marketing’ to Promote Claude Myt..." (1 fuentes)
+  📌 Cluster 5: "U.S. military runs Bitcoin node, sees crypto as power projec..." (1 fuentes)
+
+🎯 Cluster seleccionado: "The Download: introducing the Nature issue..." con 2 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 2 de The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+📋 Evitando temas recientes: 40 artículos
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini primaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini secundaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini terciaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+⚠️ Gemini falló, intentando con Ollama local...

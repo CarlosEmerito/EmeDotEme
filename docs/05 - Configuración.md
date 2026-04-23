@@ -95,7 +95,7 @@ GEMINI_API_KEY_3=""
 # ===========================================
 # OLLAMA (IA Local - Fallback)
 # ===========================================
-OLLAMA_MODEL="qwen3.5:9b"
+OLLAMA_MODEL="gemma4:26b"
 
 # ===========================================
 # AI HORDE (Imágenes)

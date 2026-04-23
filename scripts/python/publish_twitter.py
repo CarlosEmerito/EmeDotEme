@@ -16,7 +16,7 @@ API_KEY = get_env("TWITTER_API_KEY", "").strip()
 API_SECRET = get_env("TWITTER_API_SECRET", "").strip()
 ACCESS_TOKEN = get_env("TWITTER_ACCESS_TOKEN", "").strip()
 ACCESS_TOKEN_SECRET = get_env("TWITTER_ACCESS_TOKEN_SECRET", "").strip()
-OLLAMA_MODEL = get_env("OLLAMA_MODEL", "qwen3.5:9b").strip()
+OLLAMA_MODEL = get_env("OLLAMA_MODEL", "gemma4:26b").strip()
 
 
 def resumir_tweet(titulo, desc):

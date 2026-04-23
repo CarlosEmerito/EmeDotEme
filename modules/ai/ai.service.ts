@@ -31,7 +31,6 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
     }
     const data = (await response.json()) as any;
     if (!data || !data.response) {
-      console.error('❌ Respuesta inesperada desde Ollama:', data);
       return null;
     }
     console.log('✅ Texto generado con Ollama:', data.response.substring(0, 100), '...');

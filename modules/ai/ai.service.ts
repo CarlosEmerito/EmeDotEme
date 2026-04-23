@@ -68,8 +68,7 @@ export async function postprocessWithOllama(article: any): Promise<any> {
     let jsonStr = cleaned.substring(jsonStart, jsonEnd + 1);
     
     // Sanitizar
-    jsonStr = jsonStr.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
-    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\n/g, '\\n');
+    jsonStr = sanitizeJsonString(jsonStr);
     
     const parsed = JSON.parse(jsonStr);
     console.log('✅ postprocess corregido');
@@ -99,6 +98,7 @@ export async function postprocessWithOllama(article: any): Promise<any> {
 import { generateTextWithGemini } from './gemini-text.service';
 import type { NewsItem } from '../news/news-sources.service';
 import { formatNewsForPrompt } from '../news/news-sources.service';
+import { sanitizeJsonString } from '../../lib/json-sanitizer';
 
 /**
  * Placeholder para generación de newsletter semanal
@@ -249,13 +249,7 @@ REGLAS IMPORTANTES:
     console.log(`🔍 JSON extraído: ${jsonStr.substring(0, 200)}...`);
     
     // Sanitizar JSON: fix bad escape sequences comunes de Ollama
-    // 1. Reemplazar backslash seguido de carácter no válido en JSON  
-    //    (válidos: " \ / b f n r t u)
-    jsonStr = jsonStr.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
-    // 2. Reemplazar saltos de línea literales dentro de strings JSON
-    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\n/g, '\\n');
-    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\r/g, '\\r');
-    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\t/g, '\\t');
+    jsonStr = sanitizeJsonString(jsonStr);
     
     let parsed: any;
     try {
@@ -483,10 +477,7 @@ Return ONLY valid JSON: {titleEn, summaryEn, contentEn, imagePrompt}.${avoidance
     let jsonStr = cleaned.substring(jsonStart, jsonEnd + 1);
     
     // Sanitize JSON
-    jsonStr = jsonStr.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
-    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\n/g, '\\n');
-    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\r/g, '\\r');
-    jsonStr = jsonStr.replace(/(?<=:\s*"[^"]*)\t/g, '\\t');
+    jsonStr = sanitizeJsonString(jsonStr);
 
     const parsed = JSON.parse(jsonStr);
     

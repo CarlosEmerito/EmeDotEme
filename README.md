@@ -22,42 +22,35 @@ Para una comprensión profunda del sistema, consulta nuestra documentación téc
 
 ## 🚀 Características Principales
 
--   **Pipeline de IA Multicanal**: Generación de texto con Gemini (Google) y fallback local con Ollama.
+-   **Pipeline de IA Multicanal**: Generación de texto bilingüe (ES/EN) con Gemini (Google) y fallback local con Ollama.
 -   **Curación Inteligente**: Obtención y filtrado automático de noticias desde fuentes RSS de alta fiabilidad.
--   **Generación de Imágenes**: Creación de visuales únicos mediante AI Horde (Stable Diffusion) con QA mediante visión artificial.
+-   **Generación de Imágenes de Alta Calidad**: Motor local **Flux.1 [dev]** optimizado para 8GB VRAM, con fallback automático a AI Horde.
 -   **Publicación Unificada**: Distribución automática en Binance Square, Telegram, Bluesky y Web.
+-   **Automatización Total**: Scripts de gestión para encendido/apagado unificado de bots y motores de IA.
 -   **Newsletter Semanal**: Generación y envío automático de boletines informativos a suscriptores.
 
 ---
 
-## 🛠️ Instalación Rápida
+## 🛠️ Servidor de IA Local (Flux.1)
 
-### Requisitos
-- Node.js v22
-- Python 3.10+
-- PostgreSQL
+El sistema ahora soporta generación de imágenes local para máxima calidad sin depender de servicios externos.
 
-### Pasos
-1.  **Clonar el repositorio**:
-    ```bash
-    git clone https://github.com/usuario/emedoteme.git
-    cd emedoteme
-    ```
-2.  **Instalar dependencias**:
-    ```bash
-    npm install
-    pip install -r requirements.txt
-    ```
-3.  **Configurar entorno**:
-    Copia `.env.example` a `.env` y añade tus credenciales.
-4.  **Inicializar base de datos**:
-    ```bash
-    npx prisma migrate dev
-    ```
-5.  **Iniciar en desarrollo**:
-    ```bash
-    npm run dev
-    ```
+### Requisitos de Hardware
+- GPU NVIDIA con al menos 8GB VRAM (optimizado para RTX 4060).
+- Docker instalado.
+
+### Puesta en marcha
+1. **Iniciar IA y Bot**:
+   ```bash
+   ./iniciar-bot.sh
+   ```
+   *Este comando levanta tanto el servicio de imágenes Flux.1 como el bot de publicación automática.*
+
+2. **Detener todo**:
+   ```bash
+   ./detener-bot.sh
+   ```
+   *Apaga el bot y libera la VRAM de la tarjeta gráfica.*
 
 ---
 

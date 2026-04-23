@@ -71,14 +71,15 @@ interface FetchedNewsContext {
 
 ### Submódulos
 
-| Servicio      | Archivo                    | Función                  |
+| Submódulo    | Archivo                    | Función                  |
 |--------------|----------------------------|--------------------------|
 | AI Service   | `ai.service.ts`            | Orquestación principal   |
 | Gemini Text  | `gemini-text.service.ts`   | Generación de texto (API)|
 | Gemini Vision| `gemini-vision.service.ts` | QA de imágenes           |
-| Ollama       | `ai.service.ts`            | Fallback local           |
+| Ollama       | `ai.service.ts`            | Fallback local texto     |
 | Ollama Vision| `ollama-vision.service.ts` | QA fallback              |
-| AI Horde     | `aihorde-image.service.ts` | Generación de imágenes   |
+| Flux Local   | `flux-image.service.ts`    | Gen. imágenes (Local)    |
+| AI Horde     | `aihorde-image.service.ts` | Gen. imágenes (Fallback) |
 
 ### Flujo de generación
 
@@ -131,7 +132,7 @@ interface GeneratedArticle {
 ### Estrategias de fallback
 
 1. **Texto**: Gemini → Ollama local → Artículo estático de ejemplo.
-2. **Imágenes**: RSS Source → AI Horde x2 → Unsplash Stock.
+2. **Imágenes**: RSS Source → Flux Local → AI Horde → Unsplash Stock.
 3. **QA**: Gemini Vision → Ollama Vision.
 
 ### Dependencias
@@ -244,18 +245,23 @@ interface Setting {
    |
    +-> Rechazada → Paso 2
 
-2. AI Horde (intento 1)
+2. Flux Local (PRIORIDAD ALTA)
+   |
+   +-> Comprobar si servidor está online
+   +-> Generar imagen (Flux.1 [dev])
+   +-> QA con Gemini Vision
+   |     +-> Aprobada → Subir a Supabase → USAR
+   |
+   +-> Fallo o Servidor Offline → Paso 3
+
+3. AI Horde (FALLBACK EXTERNO)
    |
    +-> Generar imagen
    |     +-> Subir a Supabase → USAR
    |
-   +-> Fallo → Paso 3
-
-3. AI Horde (intento 2)
-   |
    +-> Fallo → Paso 4
 
-4. Unsplash Stock (FALLBACK)
+4. Unsplash Stock (FALLBACK FINAL)
 ```
 
 ### API
@@ -275,7 +281,7 @@ interface ImagePipelineResult {
   imageUrl: string
   caption: string
   qaResult: ImageAnalysisResult | null
-  source: 'rss_source' | 'ai_horde' | 'unsplash_stock'
+  source: 'rss_source' | 'flux_local' | 'ai_horde' | 'unsplash_stock'
   attempts: string[]
   errors: string[]
 }

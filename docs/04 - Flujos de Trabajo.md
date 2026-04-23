@@ -94,9 +94,10 @@ El pipeline de publicación es el flujo principal que genera y publica automáti
 |    +----------------------------------------+               |
 |                           |                                 |
 |              +------------+-----------+                     |
-|              v                        v                    |
-|       RSS SOURCE              AI HORDE + QA                 |
-|              |                        |                     |
+|              v            v           v                     |
+|       RSS SOURCE     FLUX LOCAL   AI HORDE                  |
+|              |       (PRIORITY)   (FALLBACK)                |
+|              |            |           |                     |
 |              +-- FALLBACK: UNSPLASH -+                      |
 |                                            |
 |    Resultado: {imageUrl, caption}                           |
@@ -166,15 +167,17 @@ SUPABASE_SERVICE_ROLE_KEY=
 graph TD
     A[Inicio: Datos del Artículo] --> B{¿Hay Imagen RSS?}
     B -- Sí --> C[QA Gemini Vision]
-    B -- No --> D[AI Horde Intento 1]
+    B -- No --> D{¿Flux Local Online?}
     C -- Aprobada --> E[Subir a Supabase]
     C -- Rechazada --> D
-    D -- Éxito --> E
-    D -- Fallo --> F[AI Horde Intento 2]
+    D -- Sí --> F[Generar con Flux.1]
+    D -- No --> G[AI Horde Fallback]
     F -- Éxito --> E
-    F -- Fallo --> G[Unsplash Stock Fallback]
-    G --> H[Imagen Final]
-    E --> H
+    F -- Fallo --> G
+    G -- Éxito --> E
+    G -- Fallo --> H[Unsplash Stock Fallback]
+    H --> I[Imagen Final]
+    E --> I
 ```
 
 ### Código

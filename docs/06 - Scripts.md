@@ -8,8 +8,9 @@ Estos scripts actúan como orquestadores de alto nivel para facilitar la ejecuci
 |-----------------------|-----------------------------------------------------------------------------|
 | `publicar.sh`         | **Pipeline Principal**: Genera el artículo y lo publica en todas las redes sociales configuradas. |
 | `publicarprueba.sh`   | **Modo Test**: Simula la generación de un artículo y muestra previsualizaciones sin afectar a producción. |
-| `iniciar-bot.sh`      | Levanta un proceso en segundo plano que publica artículos automáticamente cada 3-5 horas. |
-| `detener-bot.sh`      | Detiene el proceso del bot automático de forma segura.                      |
+| `iniciar-imagen.sh`   | Levanta el motor de IA local **Flux.1 [dev]** en Docker con optimización de VRAM. |
+| `iniciar-bot.sh`      | Orquestador completo: Asegura que la IA esté encendida y levanta el bot automático (3-5h). |
+| `detener-bot.sh`      | Apaga el bot y el servidor de imágenes de forma segura, liberando la VRAM de la GPU. |
 | `enviar_newsletter.sh`| Ejecuta el proceso de envío de la newsletter semanal.                       |
 | `pruebaia.sh`         | Script rápido para probar todas las funciones de IA.                        |
 
@@ -25,13 +26,39 @@ Es el script principal de producción. Carga el entorno, ejecuta el pipeline de 
 Ideal para servidores donde se desea una publicación constante sin depender de servicios externos de Cron.
 - Genera esperas aleatorias entre ejecuciones para humanizar el ritmo de publicación.
 - Crea un archivo `bot.pid` para control de procesos y un log dedicado en `bot.log`.
+- **Nuevo**: Lanza automáticamente `./iniciar-imagen.sh` para asegurar que el motor gráfico esté listo.
+
+### iniciar-imagen.sh
+Gestiona el ciclo de vida del contenedor Docker de la IA Flux.1.
+- Levanta el servicio en el puerto 8000.
+- Aplica optimizaciones de VRAM secuenciales para tarjetas de 8GB.
+- Configura persistencia mediante `--restart unless-stopped`.
 
 ### publicarprueba.sh
 Utiliza la variable de entorno `DRY_RUN=true`. Es la herramienta principal para validar cambios en el formato de los artículos o en la generación de imágenes antes de salir a producción.
-
 ---
 
 ## 🚀 Scripts de Node.js (TSX)
+
+---
+
+## Scripts de Diagnóstico
+
+### test-flux.ts
+Verifica la conexión con el servidor local de Flux y genera una imagen de prueba.
+
+```bash
+npx tsx scripts/test-flux.ts
+```
+
+### check-articles.ts
+Muestra los últimos 5 artículos en la base de datos con todos sus campos (útil para verificar slugs y traducciones).
+
+```bash
+npx tsx scripts/check-articles.ts
+```
+
+---
 
 ## Scripts de Publicación en Redes Sociales (Python)
 

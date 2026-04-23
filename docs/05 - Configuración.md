@@ -128,52 +128,67 @@ RESEND_API_KEY=""
 ### Modelos
 
 ```prisma
-model Article {
-  id          String   @id @default(cuid())
-  title       String
-  titleEn     String?
-  slug        String   @unique
-  summary     String
-  summaryEn   String?
-  content     String
-  contentEn   String?
-  tags        String[]
-  imageUrl    String
-  imageCaption String?
-  sourceUrl   String?
-  isOriginal  Boolean  @default(false)
-  sentiment   String   @default("Neutral ➡️")
-  categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id])
-  author      String   @default("Carlos 'Emérito' López Lovera")
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-  @@index([slug])
-  @@index([categoryId])
-  @@index([published])
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Category {
-  id        String    @id @default(cuid())
+  id        String    @id @default(uuid())
   name      String    @unique
   slug      String    @unique
   articles  Article[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Article {
+  id          String   @id @default(uuid())
+  title       String
+  titleEn     String?
+  slug        String   @unique
+  summary     String?
+  summaryEn   String?
+  content     String
+  contentEn   String?
+  imageUrl    String?
+  imageCaption String?
+  sourceUrl   String?
+  author      String   @default("EmeDotEme AI")
+  published   Boolean  @default(false)
+  isOriginal  Boolean  @default(false)
+  tags        String[] @default([])
+  sentiment   String   @default("Neutral ⚖️")
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([published, createdAt(sort: Desc)])
+  @@index([categoryId])
+  @@index([isOriginal])
 }
 
 model Subscriber {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   email     String   @unique
-  confirmed Boolean  @default(false)
+  active    Boolean  @default(true)
   createdAt DateTime @default(now())
 }
 
-model Analytic {
-  id        String   @id @default(cuid())
-  articleId String
-  views     Int      @default(0)
-  date      DateTime @default(now())
+model Setting {
+  id        String   @id @default("global") // We only need one record, or we can use keys
+  key       String   @unique
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
 }
 ```
 

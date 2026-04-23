@@ -34,7 +34,6 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
       console.error('❌ Respuesta inesperada desde Ollama:', data);
       return null;
     }
-    console.log('✅ Texto generado con Ollama:', data.response.substring(0, 100), '...');
     return data.response;
   } catch (err: any) {
     if (err.name === 'AbortError' || err.type === 'aborted') {

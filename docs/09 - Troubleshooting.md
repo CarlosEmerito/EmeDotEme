@@ -26,7 +26,16 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 
 ## 🖼️ Problemas con las Imágenes
 
-### 1. AI Horde tarda demasiado o falla
+### 1. Flux.1 Local: Error de Memoria (CUDA Out of Memory)
+**Síntoma**: El log de Docker muestra `CUDA out of memory` y la generación falla.
+**Causas**: 
+- Ollama está reteniendo memoria de la GPU tras generar texto.
+- Otra aplicación está usando la VRAM.
+**Solución**:
+- El sistema ya está configurado con `keep_alive: 0` en `ai.service.ts` para que Ollama libere la GPU rápido. Asegúrate de no haberlo cambiado.
+- Si persiste, reinicia el motor de imagen: `./detener-bot.sh && ./iniciar-bot.sh`.
+
+### 2. AI Horde tarda demasiado o falla
 **Síntoma**: El script se queda esperando o devuelve errores de servidor.
 **Solución**:
 - Es un servicio comunitario; a veces hay mucha carga. El sistema intentará automáticamente usar una imagen de stock (Unsplash) tras fallar los intentos por IA.

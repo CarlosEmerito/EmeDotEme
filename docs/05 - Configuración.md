@@ -60,7 +60,7 @@
 |--------------------|---------------------------------------------|-----------|
 | `NEXTAUTH_URL`     | URL de la app (ej: https://emedoteme.es)    | ✅        |
 | `NEXTAUTH_SECRET`  | Secret para NextAuth                        | ✅        |
-| `ADMIN_PASSWORD`   | Contraseña admin                            | ✅        |
+| `ADMIN_PASSWORD`   | Hash bcrypt de la contraseña admin          | ✅        |
 
 ### Newsletter
 
@@ -113,7 +113,8 @@ TELEGRAM_CHAT_ID=""
 # ===========================================
 NEXTAUTH_URL="https://www.emedoteme.es"
 NEXTAUTH_SECRET="random-secret-min-32-chars"
-ADMIN_PASSWORD="change-me"
+# Generate a bcrypt hash for the admin password, e.g., using `npx tsx scripts/generate-hash.ts`
+ADMIN_PASSWORD="$2b$10$..."
 
 # ===========================================
 # NEWSLETTER

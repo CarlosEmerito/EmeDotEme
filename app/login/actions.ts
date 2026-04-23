@@ -2,11 +2,12 @@
 
 import { cookies } from 'next/headers'
 import { createSession } from '@/lib/session'
+import bcrypt from 'bcrypt'
 
 export async function loginAction(password: string) {
   const expectedPwd = process.env.ADMIN_PASSWORD
   
-  if (expectedPwd && password === expectedPwd) {
+  if (expectedPwd && await bcrypt.compare(password, expectedPwd)) {
     const cookieStore = await cookies()
     const value = await createSession()
     

@@ -24,6 +24,7 @@
     "@tiptap/starter-kit": "^3.22.1",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.4.0",
     "lucide-react": "^1.7.0",
     "next": "16.2.2",
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/bcrypt": "^6.0.0",
     "@types/node": "^20.19.39",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -40,8 +40,7 @@ Ubicados en `scripts/python/`, estos scripts publican el contenido generado en d
 | Script                | Descripción                        |
 |-----------------------|------------------------------------|
 | `publish_telegram.py` | Publica en el canal de Telegram    |
-| `publish_twitter.py`  | Publica en X (Twitter)             |
-| `publish_bluesky.py`  | Publica en Bluesky                 |
+| `publish_bluesky.py` | Publica en Bluesky                 |
 | `publish_direct.py`   | Publicación directa general        |
 | `send_private_test.py`| Envía al grupo de Telegram privado |
 

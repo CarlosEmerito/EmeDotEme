@@ -17,7 +17,6 @@ export async function togglePublishStatus(id: string, newStatus: boolean) {
     
     return { success: true };
   } catch (error) {
-    console.error("Error cambiando estado:", error);
     return { success: false, error: "No se pudo actualizar el estado." };
   }
 }
@@ -35,7 +34,6 @@ export async function deleteArticle(id: string) {
     
     return { success: true };
   } catch (error) {
-    console.error("Error borrando artículo:", error);
     return { success: false, error: "No se pudo borrar el artículo." };
   }
 }
@@ -70,7 +68,6 @@ export async function updateArticle(id: string, data: {
 
     return { success: true, article: updated };
   } catch (error) {
-    console.error("Error actualizando artículo:", error);
     return { success: false, error: "Error al guardar los cambios del artículo." };
   }
 }
@@ -109,7 +106,6 @@ export async function createArticle(data: {
 
     return { success: true, article: newArticle };
   } catch (error) {
-    console.error("Error creando artículo:", error);
     return { success: false, error: "Error al publicar la noticia. Asegúrate de que el Slug sea único." };
   }
 }

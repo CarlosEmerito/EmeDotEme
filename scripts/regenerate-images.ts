@@ -1,39 +1,32 @@
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
-import { generateImageWithAIHorde } from '../modules/ai/aihorde-image.service.ts';
-import { saveImageToSupabase } from '../modules/images/image.service.ts';
+import { generateArticleImageAndAnalyzeQA } from '../modules/images/image.service';
 
 const prisma = new PrismaClient();
 
 async function regenerateImageForArticle(article: any) {
-  const { title, slug, category } = article;
+  const { title, slug, summary } = article;
+  const topic = article.category?.name;
   console.log(`Regenerating image for: ${title}`);
   
-  // Create a simple prompt based on title and category
-  const prompt = `${title}. Ilustración profesional, alta calidad, sin texto, sin marcas de agua, estilo realista.`;
-  console.log(`Prompt: ${prompt}`);
-  
   try {
-    const tempUrl = await generateImageWithAIHorde(prompt, slug);
-    if (!tempUrl) {
-      throw new Error('AI Horde returned no image URL');
-    }
-    console.log(`AI Horde temporary URL: ${tempUrl.substring(0, 100)}...`);
-    
-    // Upload to Supabase for permanence
-    const permanentUrl = await saveImageToSupabase(tempUrl, slug);
-    if (!permanentUrl.includes('supabase')) {
-      console.warn(`Upload may have failed, using temporary URL: ${permanentUrl}`);
+    const result = await generateArticleImageAndAnalyzeQA(
+      { title, slug, summary, topic },
+      null // No hay imagen de fuente original
+    );
+
+    if (!result || !result.imageUrl) {
+      throw new Error('Image pipeline returned no image URL');
     }
     
     // Update the article
     await prisma.article.update({
       where: { id: article.id },
-      data: { imageUrl: permanentUrl },
+      data: { imageUrl: result.imageUrl },
     });
     
-    console.log(`✅ Updated article with new image URL: ${permanentUrl}`);
-    return permanentUrl;
+    console.log(`✅ Updated article with new image URL: ${result.imageUrl} (Source: ${result.source})`);
+    return result.imageUrl;
   } catch (error) {
     console.error(`❌ Failed to regenerate image for ${slug}:`, error);
     return null;

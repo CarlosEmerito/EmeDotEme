@@ -1,0 +1,89 @@
+import 'dotenv/config';
+import fs from 'fs';
+import path from 'path';
+
+const FLUX_API_URL = process.env.FLUX_API_URL || 'http://127.0.0.1:8000';
+
+export interface FluxImageOptions {
+  width?: number;
+  height?: number;
+  num_inference_steps?: number;
+  guidance_scale?: number;
+}
+
+/**
+ * Genera una imagen utilizando la API local de Flux.1
+ */
+export async function generateImageWithFlux(
+  prompt: string,
+  articleSlug: string,
+  options: FluxImageOptions = {}
+): Promise<string | null> {
+  console.log(`[FLUX LOCAL] Generando imagen para: ${articleSlug}`);
+  
+  const payload = {
+    prompt,
+    width: options.width || 1024,
+    height: options.height || 1024,
+    num_inference_steps: options.num_inference_steps || 28,
+    guidance_scale: options.guidance_scale || 3.5,
+  };
+
+  try {
+    // Flux [dev] en 8GB puede tardar bastante, ponemos un timeout generoso (20 min)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1200000);
+
+    const response = await fetch(`${FLUX_API_URL}/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal as any,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`❌ [FLUX LOCAL] Error HTTP ${response.status}: ${errorText}`);
+      return null;
+    }
+
+    const data = await response.json() as { image_b64: string; format: string };
+    
+    if (!data.image_b64) {
+      console.error('❌ [FLUX LOCAL] No se recibió la imagen en base64');
+      return null;
+    }
+
+    // Guardar temporalmente para que el pipeline pueda procesarla (o devolver el base64 data URI)
+    const dataUri = `data:image/${data.format};base64,${data.image_b64}`;
+    
+    console.log(`✅ [FLUX LOCAL] Imagen generada con éxito.`);
+    return dataUri;
+
+  } catch (err: any) {
+    if (err.name === 'AbortError') {
+      console.error('❌ [FLUX LOCAL] Timeout alcanzado durante la generación.');
+    } else {
+      console.error('❌ [FLUX LOCAL] Error llamando a la API local:', err);
+    }
+    return null;
+  }
+}
+
+/**
+ * Verifica si el servicio local de Flux está disponible
+ */
+export async function checkFluxStatus(): Promise<boolean> {
+  try {
+    const response = await fetch(`${FLUX_API_URL}/health`, {
+      signal: AbortSignal.timeout(5000) as any
+    });
+    return response.ok;
+  } catch (err) {
+    return false;
+  }
+}

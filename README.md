@@ -1,7 +1,9 @@
 
 # EMEDOTEME – Portal de Noticias y Publicación Unificada
 
-Este proyecto centraliza la generación, publicación y visualización de artículos en redes sociales y web para EMEDOTEME, con enfoque en mantenibilidad, logs y robustez. Ahora incluye noticias de Criptomonedas, Web3, Tecnología y, desde 2026, Inteligencia Artificial (IA).
+Este proyecto centraliza la generación, publicación y visualización de artículos en redes sociales y web para EMEDOTEME, con enfoque en mantenibilidad, logs y robustez. Ahora incluye noticias de Criptomonedas, Web3, Tecnología e Inteligencia Artificial (IA).
+
+Para ver la documentación completa, consulta el índice en [[docs/00 - Índice]].
 
 ---
 
@@ -17,7 +19,7 @@ Este proyecto centraliza la generación, publicación y visualización de artíc
    ```bash
    pip install -r requirements.txt
    ```
-   Y asegúrate de tener Node.js y las dependencias npm:
+   Y asegúrate de tener Node.js (v22) y las dependencias npm (usa Next.js 16.2.2):
    ```bash
    npm install
    ```

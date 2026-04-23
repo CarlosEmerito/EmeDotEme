@@ -8,7 +8,7 @@ EmeDotEme es un sistema automatizado para la generación y publicación de artí
 
 ```
 +-------------------------------------------------------------+
-|                        FRONTEND (Next.js)                  |
+|                        FRONTEND (Next.js 16)               |
 |  +------------+  +------------+  +------------+  +--------+|
 |  |  Página    |  |   Admin    |  |    API     |  |  RSS/  ||
 |  | Principal  |  |   Panel    |  |  Routes    |  |  Feeds ||

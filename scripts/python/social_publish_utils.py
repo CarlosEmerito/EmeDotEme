@@ -63,7 +63,7 @@ def log_historial(red, status, title, extra=None):
 # IA: RESUMEN UNIFICADO ------------------------------------------------------
 def resumen_ai(
     prompt,
-    ollama_model="gemma4:26b",
+    ollama_model="llama3.1:8b",
     gemini_api_key=None,
     gemini_api_key_2=None,
     gemini_api_key_3=None,

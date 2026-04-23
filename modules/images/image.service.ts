@@ -10,8 +10,7 @@
  *    - Si no pasa QA → paso 3
  * 3. Generar con AI Horde (Fallback) → QA con Gemini Vision
  *    - Si pasa QA → subir a Supabase → usar
- *    - Si no pasa QA → paso 4
- * 4. FALLBACK: imagen de stock Unsplash
+ *    - Si no pasa QA → FAIL
  */
 
 import { analyzeImageWithGemini, type ImageAnalysisResult } from '../ai/gemini-vision.service';
@@ -37,7 +36,7 @@ export interface ImagePipelineResult {
   imageUrl: string;
   caption: string;
   qaResult: ImageAnalysisResult | null;
-  source: 'rss_source' | 'flux_local' | 'ai_horde' | 'unsplash_stock';
+  source: 'rss_source' | 'flux_local' | 'ai_horde';
   attempts: string[];
   errors: string[];
 }
@@ -352,25 +351,9 @@ export async function generateArticleImageAndAnalyzeQA(
   }
 
   // ────────────────────────────────────────────────────────────
-  // PASO 5: FALLBACK — Imagen de stock Unsplash
+  // FINAL: Error si nada ha funcionado
   // ────────────────────────────────────────────────────────────
-  console.log('\n⚠️ [Paso 5] FALLBACK: Usando imagen de stock Unsplash');
-  attempts.push('Paso 5: Fallback Unsplash');
-
-  const category = imageData.topic || "Empresa";
-  const options = FALLBACK_IMAGES[category] || FALLBACK_IMAGES["Empresa"];
-  const stockUrl = options[Math.floor(Math.random() * options.length)];
-  const stockCaption = `Imagen ilustrativa sobre ${category}`;
-
-  console.log(`📷 Stock seleccionado: ${stockUrl}`);
-  console.log('🖼️ ═══ RESULTADO: Usando imagen de stock ═══\n');
-
-  return {
-    imageUrl: stockUrl,
-    caption: stockCaption,
-    qaResult: null,
-    source: 'unsplash_stock',
-    attempts,
-    errors,
-  };
+  const errorSummary = errors.join(' | ');
+  console.error(`\n❌ [PIPELINE IMAGEN] Fallo total: No se pudo obtener ninguna imagen válida. Errores: ${errorSummary}`);
+  throw new Error(`Fallo total en pipeline de imagen: ${errorSummary}`);
 }

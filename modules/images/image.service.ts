@@ -121,7 +121,6 @@ export async function saveImageToSupabase(url: string, slug: string): Promise<st
       .from(bucketName)
       .getPublicUrl(data.path);
 
-    console.log(`✅ [Supabase] Imagen subida: ${fileName}`);
     return publicUrl;
   } catch (error) {
     console.error('[Supabase] Error:', error);

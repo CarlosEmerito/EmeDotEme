@@ -19,7 +19,7 @@ BINANCE_SQUARE_API_KEY = get_env("BINANCE_SQUARE_API_KEY", "").strip()
 GEMINI_API_KEY = get_env("GEMINI_API_KEY", "").strip()
 GEMINI_API_KEY_2 = get_env("GEMINI_API_KEY_2", "").strip()
 GEMINI_API_KEY_3 = get_env("GEMINI_API_KEY_3", "").strip()
-OLLAMA_MODEL = get_env("OLLAMA_MODEL", "gemma4:26b").strip()
+OLLAMA_MODEL = get_env("OLLAMA_MODEL", "qwen3.5:9b").strip()
 MAX_POST_CHARS = int(get_env("MAX_POST_CHARS", "900"))
 def recortar_texto(texto, limite):
     texto = texto.strip()
@@ -70,7 +70,7 @@ def publicar_en_square(post, sentimiento, imagen_url):
         return False, "Falta BINANCE_SQUARE_API_KEY"
     payload = {
         "categoryId": 8,
-        "content": post,
+        "bodyTextOnly": post,
         "images": [imagen_url] if imagen_url else [],
         "title": "EmeDotEme",
         "sourceUrl": "https://www.emedoteme.es",
@@ -78,7 +78,8 @@ def publicar_en_square(post, sentimiento, imagen_url):
     }
     headers = {
         "Content-Type": "application/json",
-        "X-Wallet-Id": BINANCE_SQUARE_API_KEY,
+        "X-Square-OpenAPI-Key": BINANCE_SQUARE_API_KEY,
+        "clienttype": "binanceSkill",
     }
     try:
         r = requests.post(SQUARE_API_URL, json=payload, headers=headers, timeout=15)

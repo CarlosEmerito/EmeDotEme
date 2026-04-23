@@ -28,16 +28,19 @@ export async function generateImageWithAIHorde(
   }
 
   const negativePrompt = options.negative_prompt ||
-    'letter, text, watermark, logo, signature, words, handwriting, calligraphy, Chinese characters, captions, subtitles, labels, numbers, English characters, nsfw, lowres, bad anatomy, bad hands, missing fingers, extra digits, cropped, worst quality, low quality, jpeg artifacts';
+    '(worst quality, low quality, normal quality, lowres, low details, grayscale), text, watermark, logo, signature, words, handwriting, calligraphy, Chinese characters, captions, subtitles, labels, numbers, English characters, nsfw, bad anatomy, bad hands, missing fingers, extra digits, cropped, jpeg artifacts, blurry';
 
   const width = options.width || 1024;
   const height = options.height || 1024;
-  const steps = options.steps || 100;
+  const steps = options.steps || 50;
   const sampler = options.sampler_name || 'k_dpmpp_2m';
 
+  // AI Horde v2 uses '###' delimiter in the prompt for negative guidance
+  // Prepend quality keywords to the positive prompt
+  const qualityPrompt = `masterpiece, best quality, highly detailed, 8k resolution, cinematic lighting, ${prompt} ### ${negativePrompt}`;
+
   const payload = {
-    prompt,
-    negative_prompt: negativePrompt,
+    prompt: qualityPrompt,
     params: {
       width,
       height,

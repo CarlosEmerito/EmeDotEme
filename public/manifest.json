@@ -1,7 +1,7 @@
 {
-  "name": "EmeDotEme - Noticias Cripto",
+  "name": "EmeDotEme - Noticias de Cripto, Empresa y Tecnología",
   "short_name": "EmeDotEme",
-  "description": "Tu fuente principal de noticias sobre Bitcoin, Web3 y tecnología blockchain.",
+  "description": "EmeDotEme es tu fuente principal de noticias sobre Criptomonedas, Negocios, Inteligencia Artificial y Ciberseguridad.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",

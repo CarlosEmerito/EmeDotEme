@@ -25,7 +25,7 @@ def generate_og_image():
     
     # Draw logo/text
     title = "EmeDotEme"
-    subtitle = "Noticias Cripto • Bitcoin • Web3"
+    subtitle = "Cripto • Empresa • IA • Ciberseguridad"
     
     # Calculate text positions
     title_bbox = draw.textbbox((0, 0), title, font=title_font)

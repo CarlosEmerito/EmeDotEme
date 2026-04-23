@@ -1,15 +1,37 @@
 # Scripts de EmeDotEme
 
-## Índice de scripts
+## 🐚 Scripts de Shell (Raíz)
 
-| Script                | Descripción                        |
-|-----------------------|------------------------------------|
-| `publish.ts`          | Pipeline principal                 |
-| `force-generate.ts`   | Forzar generación                  |
-| `publish_test.ts`     | Modo prueba                        |
-| `send_newsletter.ts`  | Newsletter                         |
+Estos scripts actúan como orquestadores de alto nivel para facilitar la ejecución de tareas comunes y la gestión del bot automático.
+
+| Script                | Descripción                                                                 |
+|-----------------------|-----------------------------------------------------------------------------|
+| `publicar.sh`         | **Pipeline Principal**: Genera el artículo y lo publica en todas las redes sociales configuradas. |
+| `publicarprueba.sh`   | **Modo Test**: Simula la generación de un artículo y muestra previsualizaciones sin afectar a producción. |
+| `iniciar-bot.sh`      | Levanta un proceso en segundo plano que publica artículos automáticamente cada 3-5 horas. |
+| `detener-bot.sh`      | Detiene el proceso del bot automático de forma segura.                      |
+| `enviar_newsletter.sh`| Ejecuta el proceso de envío de la newsletter semanal.                       |
+| `pruebaia.sh`         | Script rápido para probar todas las funciones de IA.                        |
 
 ---
+
+## 🛠️ Detalles de Scripts de Shell
+
+### publicar.sh
+Es el script principal de producción. Carga el entorno, ejecuta el pipeline de Node.js (`publish.ts`) y, si tiene éxito, dispara los scripts de publicación en Python para Binance Square, Telegram y Bluesky.
+- **Logs**: Centralizados en `logs/emedoteme.log`.
+
+### iniciar-bot.sh
+Ideal para servidores donde se desea una publicación constante sin depender de servicios externos de Cron.
+- Genera esperas aleatorias entre ejecuciones para humanizar el ritmo de publicación.
+- Crea un archivo `bot.pid` para control de procesos y un log dedicado en `bot.log`.
+
+### publicarprueba.sh
+Utiliza la variable de entorno `DRY_RUN=true`. Es la herramienta principal para validar cambios en el formato de los artículos o en la generación de imágenes antes de salir a producción.
+
+---
+
+## 🚀 Scripts de Node.js (TSX)
 
 ## Scripts de Publicación en Redes Sociales (Python)
 

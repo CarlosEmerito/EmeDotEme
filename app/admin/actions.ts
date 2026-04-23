@@ -33,8 +33,7 @@ export async function deleteArticle(id: string) {
     revalidatePath('/admin');
     
     return { success: true };
-  } catch (error) {
-    console.error("Error borrando artículo:", error);
+  } catch {
     return { success: false, error: "No se pudo borrar el artículo." };
   }
 }
@@ -68,8 +67,7 @@ export async function updateArticle(id: string, data: {
     revalidatePath(`/articulo/${updated.slug}`);
 
     return { success: true, article: updated };
-  } catch (error) {
-    console.error("Error actualizando artículo:", error);
+  } catch {
     return { success: false, error: "Error al guardar los cambios del artículo." };
   }
 }
@@ -107,8 +105,7 @@ export async function createArticle(data: {
     revalidatePath(`/articulo/${newArticle.slug}`);
 
     return { success: true, article: newArticle };
-  } catch (error) {
-    console.error("Error creando artículo:", error);
+  } catch {
     return { success: false, error: "Error al publicar la noticia. Asegúrate de que el Slug sea único." };
   }
 }

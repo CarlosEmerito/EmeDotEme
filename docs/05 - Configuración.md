@@ -10,34 +10,40 @@
 
 ### IA - Gemini
 
-| Variable           | Descripción                                 | Requerido    |
-|--------------------|---------------------------------------------|--------------|
-| `GEMINI_API_KEY`   | Clave API de Gemini (primaria)              | ✅           |
-| `GEMINI_API_KEY_2` | Clave secundaria (fallback)                 | Recomendado  |
-| `GEMINI_API_KEY_3` | Clave terciaria (fallback)                  | Recomendado  |
-| `GEMINI_MODEL`     | Modelo a usar (por defecto: gemini-2.5-flash)| Opcional     |
+| Variable           | Descripción                                 | Requerido    | Obtención |
+|--------------------|---------------------------------------------|--------------|-----------|
+| `GEMINI_API_KEY`   | Clave API de Gemini (primaria)              | ✅           | [Google AI Studio](https://aistudio.google.com/) |
+| `GEMINI_API_KEY_2` | Clave secundaria (fallback)                 | Recomendado  | |
+| `GEMINI_API_KEY_3` | Clave terciaria (fallback)                  | Recomendado  | |
+| `GEMINI_MODEL`     | Modelo a usar (por defecto: gemini-2.5-flash)| Opcional     | |
 
 ### IA - Ollama (Local)
 
-| Variable           | Descripción                                 | Requerido |
-|--------------------|---------------------------------------------|-----------|
-| `OLLAMA_MODEL`     | Modelo (por defecto: qwen3.5:9b)            | Opcional  |
-| `OLLAMA_BASE_URL`  | URL base (por defecto: http://localhost:11434)| Opcional  |
-| `OLLAMA_TIMEOUT`   | Timeout en ms (por defecto: 600000)         | Opcional  |
+Para ejecución local. Requiere tener el software instalado de [ollama.com](https://ollama.com/).
+
+| Variable           | Descripción                                 | Requerido | Default |
+|--------------------|---------------------------------------------|-----------|---------|
+| `OLLAMA_MODEL`     | Modelo (por defecto: qwen3.5:9b)            | Opcional  | `qwen3.5:9b` |
+| `OLLAMA_BASE_URL`  | URL base                                    | Opcional  | `http://localhost:11434` |
 
 ### Imágenes - AI Horde
 
-| Variable             | Descripción                                | Requerido   |
-|----------------------|--------------------------------------------|-------------|
-| `AI_HORDE_API_KEY`   | Clave API de AI Horde                      | Recomendado |
-| `AI_HORDE_ENDPOINT`  | Endpoint (por defecto: https://aihorde.net)| Opcional    |
+| Variable             | Descripción                                | Requerido   | Obtención |
+|----------------------|--------------------------------------------|-------------|-----------|
+| `AI_HORDE_API_KEY`   | Clave API de AI Horde                      | Recomendado | [AI Horde](https://aihorde.net/register) |
 
 ### Imágenes - Supabase Storage
 
-| Variable                   | Descripción                  | Requerido   |
-|----------------------------|------------------------------|-------------|
-| `SUPABASE_URL`             | URL del proyecto Supabase    | Recomendado |
-| `SUPABASE_SERVICE_ROLE_KEY`| Clave de servicio (admin)    | Recomendado |
+| Variable                   | Descripción                  | Requerido   | Obtención |
+|----------------------------|------------------------------|-------------|-----------|
+| `SUPABASE_URL`             | URL del proyecto             | Recomendado | [Supabase Console](https://supabase.com/dashboard/) |
+| `SUPABASE_SERVICE_ROLE_KEY`| Clave de servicio (admin)    | Recomendado | |
+
+### Newsletter - Resend
+
+| Variable           | Descripción                                 | Requerido | Obtención |
+|--------------------|---------------------------------------------|-----------|-----------|
+| `RESEND_API_KEY`   | API Key para envío de emails                | Opcional  | [Resend.com](https://resend.com/overview) |
 
 ### Telegram (Notificaciones)
 

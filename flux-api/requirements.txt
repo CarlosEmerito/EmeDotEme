@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+python-multipart
+torch
+torchvision
+torchaudio
+diffusers
+transformers
+accelerate
+sentencepiece
+protobuf
+pillow
+huggingface_hub

@@ -5,10 +5,10 @@
  * 1. Intentar usar imagen de la fuente RSS → QA con Gemini Vision
  *    - Si pasa QA → subir a Supabase → usar
  *    - Si no pasa QA → paso 2
- * 2. Generar con AI Horde (intento 1) → QA con Gemini Vision
+ * 2. Generar con Flux.1 Local → QA con Gemini Vision
  *    - Si pasa QA → subir a Supabase → usar
  *    - Si no pasa QA → paso 3
- * 3. Generar con AI Horde (intento 2) → QA con Gemini Vision
+ * 3. Generar con AI Horde (Fallback) → QA con Gemini Vision
  *    - Si pasa QA → subir a Supabase → usar
  *    - Si no pasa QA → paso 4
  * 4. FALLBACK: imagen de stock Unsplash
@@ -17,6 +17,7 @@
 import { analyzeImageWithGemini, type ImageAnalysisResult } from '../ai/gemini-vision.service';
 import { analyzeImageWithOllama } from '../ai/ollama-vision.service';
 import { generateImageWithAIHorde } from '../ai/aihorde-image.service';
+import { generateImageWithFlux, checkFluxStatus } from '../ai/flux-image.service';
 import { createClient } from '@supabase/supabase-js';
 import { FALLBACK_IMAGES } from '../../config/constants';
 
@@ -36,7 +37,7 @@ export interface ImagePipelineResult {
   imageUrl: string;
   caption: string;
   qaResult: ImageAnalysisResult | null;
-  source: 'rss_source' | 'ai_horde' | 'unsplash_stock';
+  source: 'rss_source' | 'flux_local' | 'ai_horde' | 'unsplash_stock';
   attempts: string[];
   errors: string[];
 }
@@ -269,10 +270,48 @@ export async function generateArticleImageAndAnalyzeQA(
   }
 
   // ────────────────────────────────────────────────────────────
-  // PASO 2: Generar con AI Horde (intento 1)
+  // PASO 2: Generar con Flux.1 Local
   // ────────────────────────────────────────────────────────────
-  console.log('\n🎨 [Paso 2] Generación con AI Horde (intento 1)');
-  attempts.push('Paso 2: AI Horde intento 1');
+  const isFluxAvailable = await checkFluxStatus();
+  if (isFluxAvailable) {
+    console.log('\n🎨 [Paso 2] Generación con Flux.1 Local');
+    attempts.push('Paso 2: Flux.1 Local');
+
+    const fluxUrl = await generateImageWithFlux(hordePrompt, imageData.slug);
+    if (fluxUrl) {
+      const { valid, qa } = await isImageValid(
+        fluxUrl, imageData.title, imageData.summary || '', caption, 'Flux.1 Local'
+      );
+
+      if (valid) {
+        const permanentUrl = await saveImageToSupabase(fluxUrl, imageData.slug);
+        const finalCaption = qa?.caption_mejorado || caption;
+
+        console.log('🖼️ ═══ RESULTADO: Flux.1 Local aprobada ═══\n');
+        return {
+          imageUrl: permanentUrl,
+          caption: finalCaption,
+          qaResult: qa,
+          source: 'flux_local',
+          attempts,
+          errors,
+        };
+      } else {
+        errors.push('Imagen de Flux.1 Local no pasó QA');
+      }
+    } else {
+      errors.push('Flux.1 Local falló al generar');
+    }
+  } else {
+    console.log('\n⚠️ [Paso 2] Flux.1 Local no disponible (offline)');
+    attempts.push('Paso 2: Flux Local Offline');
+  }
+
+  // ────────────────────────────────────────────────────────────
+  // PASO 3: Generar con AI Horde (intento 1)
+  // ────────────────────────────────────────────────────────────
+  console.log('\n🎨 [Paso 3] Generación con AI Horde (intento 1)');
+  attempts.push('Paso 3: AI Horde intento 1');
 
   const hordeUrl1 = await generateWithAIHorde(hordePrompt, imageData.slug, 1);
   if (hordeUrl1) {
@@ -291,10 +330,10 @@ export async function generateArticleImageAndAnalyzeQA(
   }
 
   // ────────────────────────────────────────────────────────────
-  // PASO 3: Generar con AI Horde (intento 2)
+  // PASO 4: Generar con AI Horde (intento 2)
   // ────────────────────────────────────────────────────────────
-  console.log('\n🎨 [Paso 3] Generación con AI Horde (intento 2)');
-  attempts.push('Paso 3: AI Horde intento 2');
+  console.log('\n🎨 [Paso 4] Generación con AI Horde (intento 2)');
+  attempts.push('Paso 4: AI Horde intento 2');
 
   const hordeUrl2 = await generateWithAIHorde(hordePrompt, `${imageData.slug}-retry`, 2);
   if (hordeUrl2) {
@@ -313,10 +352,10 @@ export async function generateArticleImageAndAnalyzeQA(
   }
 
   // ────────────────────────────────────────────────────────────
-  // PASO 4: FALLBACK — Imagen de stock Unsplash
+  // PASO 5: FALLBACK — Imagen de stock Unsplash
   // ────────────────────────────────────────────────────────────
-  console.log('\n⚠️ [Paso 4] FALLBACK: Usando imagen de stock Unsplash');
-  attempts.push('Paso 4: Fallback Unsplash');
+  console.log('\n⚠️ [Paso 5] FALLBACK: Usando imagen de stock Unsplash');
+  attempts.push('Paso 5: Fallback Unsplash');
 
   const category = imageData.topic || "Empresa";
   const options = FALLBACK_IMAGES[category] || FALLBACK_IMAGES["Empresa"];

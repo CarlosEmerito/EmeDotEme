@@ -22,7 +22,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
           temperature: 0.1,
           num_ctx: 8192
         },
-        keep_alive: "5m"
+        keep_alive: 0
       }),
       signal: controller.signal as any
     });

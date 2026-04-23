@@ -16,8 +16,7 @@ export async function togglePublishStatus(id: string, newStatus: boolean) {
     revalidatePath('/admin');
     
     return { success: true };
-  } catch (error) {
-    console.error("Error cambiando estado:", error);
+  } catch {
     return { success: false, error: "No se pudo actualizar el estado." };
   }
 }

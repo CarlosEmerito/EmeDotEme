@@ -61,35 +61,6 @@ async function main() {
     const t0 = Date.now();
     let aiResponse: any = await generateBilingualContent(recentTitles, newsContext.newsItems);
     
-    // Si la IA devolvió el título de fallback estático, abortamos la ejecución
-    // y enviamos un aviso al Telegram privado del administrador.
-    if (aiResponse.title === 'Artículo de ejemplo') {
-      console.error("\n❌ Ollama falló y devolvió el artículo de ejemplo. Abortando publicación...");
-      const tgToken = process.env.TELEGRAM_TOKEN;
-      const tgChatId = process.env.TELEGRAM_CHAT_ID;
-      
-      if (tgToken && tgChatId) {
-        try {
-          const fetchNode = (await import('node-fetch')).default;
-          await fetchNode(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              chat_id: tgChatId,
-              text: `❌ <b>ERROR CRÍTICO (EmeDotEme Bot):</b>\n\nGemini excedió la cuota y Ollama local falló o hizo timeout de nuevo.\nLa publicación automática fue <b>ABORTADA</b> para evitar generar artículos falsos de ejemplo.\n\nRevisa los logs del servidor para más detalles.`,
-              parse_mode: 'HTML'
-            })
-          });
-          console.log("✅ Aviso de error enviado al Telegram privado.");
-        } catch (tgErr) {
-          console.error("❌ No se pudo avisar por Telegram:", tgErr);
-        }
-      } else {
-          console.warn("⚠️ No hay credenciales de Telegram para enviar el aviso privado.");
-      }
-      process.exit(1);
-    }
-
     console.log('📝 ImagePrompt presente:', aiResponse.imagePrompt ? 'SÍ' : 'NO');
     if (aiResponse.imagePrompt) {
       console.log('   Prompt:', aiResponse.imagePrompt.substring(0, 100) + '...');
@@ -106,7 +77,7 @@ async function main() {
 
     const slug = generateSlug(aiResponse.title, true);
 
-    // Procesar imagen con el pipeline: fuente RSS → AI Horde × 2 → Unsplash
+    // Procesar imagen con el pipeline: fuente RSS → Flux Local → AI Horde
     // Priorizar imagen de la fuente RSS sobre sourceImageUrl del AI
     const rssImageUrl = newsContext.newsItems[0]?.imageUrl || aiResponse.sourceImageUrl;
     
@@ -130,45 +101,13 @@ async function main() {
     let imageUrl: string;
     let imageCaption: string;
     
-    try {
-      const imageResult = await generateArticleImageAndAnalyzeQA(imageData, rssImageUrl);
-      imageUrl = imageResult.imageUrl;
-      imageCaption = imageResult.caption || aiResponse.imageCaption || `Ilustración sobre ${selectedCategory.name}`;
-      console.log(`✅ Imagen final (${imageResult.source}): ${imageUrl.substring(0, 100)}...`);
-      console.log(`   Pasos: ${imageResult.attempts.join(' → ')}`);
-      if (imageResult.errors.length > 0) {
-        console.log(`   Errores recuperados: ${imageResult.errors.join(', ')}`);
-      }
-      
-      // Si la imagen es de fallback Unsplash, abortar - no publicamos sin imagen generada por IA
-      if (imageResult.source === 'unsplash_stock') {
-        console.error("\n❌ AI Horde fallió. Abortando publicación - no se usa imagen de stock.");
-        
-        // Notificar por Telegram
-        const tgToken = process.env.TELEGRAM_TOKEN;
-        const tgChatId = process.env.TELEGRAM_CHAT_ID;
-        if (tgToken && tgChatId) {
-          try {
-            const fetchNode = (await import('node-fetch')).default;
-            await fetchNode(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                chat_id: tgChatId,
-                text: `⚠️ <b>Publicación abortada:</b>\n\nEl artículo "${aiResponse.title}" no se publicó porque AI Horde falló al generar imagen.\n\nSe intentará en la siguiente ejecución.`,
-                parse_mode: 'HTML'
-              })
-            });
-          } catch (tgErr) {
-            console.error("❌ No se pudo notificar por Telegram:", tgErr);
-          }
-        }
-        
-        process.exit(1);
-      }
-    } catch (error) {
-      console.error("❌ Error crítico en pipeline de imagen:", error);
-      process.exit(1);
+    const imageResult = await generateArticleImageAndAnalyzeQA(imageData, rssImageUrl);
+    imageUrl = imageResult.imageUrl;
+    imageCaption = imageResult.caption || aiResponse.imageCaption || `Ilustración sobre ${selectedCategory.name}`;
+    console.log(`✅ Imagen final (${imageResult.source}): ${imageUrl.substring(0, 100)}...`);
+    console.log(`   Pasos: ${imageResult.attempts.join(' → ')}`);
+    if (imageResult.errors.length > 0) {
+      console.log(`   Errores recuperados: ${imageResult.errors.join(', ')}`);
     }
 
     console.log("\n💾 Guardando en la Base de Datos...");
@@ -221,8 +160,29 @@ async function main() {
     fs.writeFileSync(jsonPath, JSON.stringify(articleData, null, 2));
     console.log(`\n💾 Datos guardados en ${jsonPath} para Binance Square.`);
     
-  } catch (error) {
+  } catch (error: any) {
     console.error("\n❌ ERROR DURANTE EL PROCESO:", error);
+    
+    // Notificar error por Telegram
+    const tgToken = process.env.TELEGRAM_TOKEN;
+    const tgChatId = process.env.TELEGRAM_CHAT_ID;
+    if (tgToken && tgChatId) {
+      try {
+        const fetchNode = (await import('node-fetch')).default;
+        await fetchNode(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: tgChatId,
+            text: `❌ <b>ERROR CRÍTICO (EmeDotEme Bot):</b>\n\nEl proceso de publicación falló y fue abortado para preservar la calidad.\n\n<b>Error:</b> ${error.message || error}`,
+            parse_mode: 'HTML'
+          })
+        });
+        console.log("✅ Notificación de error enviada a Telegram.");
+      } catch (tgErr) {
+        console.error("❌ No se pudo notificar el error por Telegram:", tgErr);
+      }
+    }
     process.exit(1);
   } finally {
     await prisma.$disconnect();

@@ -218,16 +218,7 @@ REGLAS IMPORTANTES:
     console.warn('⚠️ Gemini falló, intentando con Ollama local...');
     result = await generateTextWithOllama({ systemPrompt, userPrompt });
     if (!result) {
-      console.error('❌ Ollama también falló. Devolviendo ejemplo estático.');
-      return {
-        title: 'Artículo de ejemplo',
-        summary: 'Resumen de ejemplo',
-        content: '<p>Contenido de ejemplo generado por IA.</p>',
-        imagePrompt: 'cryptocurrency, blockchain, digital assets',
-        tags: [],
-        sourceUrl: newsContext[0]?.link,
-        sources: newsContext.map(n => n.link),
-      };
+      throw new Error('❌ Error crítico: Ni Gemini ni Ollama pudieron generar el contenido del artículo.');
     }
   }
   try {
@@ -346,15 +337,7 @@ REGLAS IMPORTANTES:
       console.error(`❌ Falló recuperación parcial: ${recoveryError}`);
     }
     
-    return {
-      title: 'Artículo de ejemplo',
-      summary: 'Resumen de ejemplo',
-      content: '<p>Contenido de ejemplo generado por IA.</p>',
-      imagePrompt: 'cryptocurrency, blockchain, digital assets',
-      tags: [],
-      sourceUrl: newsContext[0]?.link,
-      sources: newsContext.map(n => n.link),
-    };
+    throw new Error('❌ Error crítico: Falló el parseo del JSON y la recuperación por Regex tras agotar intentos.');
   }
 }
 
@@ -461,12 +444,7 @@ Return ONLY valid JSON: {titleEn, summaryEn, contentEn, imagePrompt}.${avoidance
     console.warn('⚠️ Gemini falló para EN, intentando con Ollama...');
     result = await generateTextWithOllama({ systemPrompt, userPrompt });
     if (!result) {
-      // Fallback: return Spanish
-      return {
-        titleEn: esArticle.title,
-        summaryEn: esArticle.summary,
-        contentEn: esArticle.content
-      };
+      throw new Error('❌ Error crítico: Falló la generación del contenido en inglés (Gemini y Ollama fallaron).');
     }
   }
 
@@ -514,12 +492,8 @@ Return ONLY valid JSON: {titleEn, summaryEn, contentEn, imagePrompt}.${avoidance
       console.error('❌ Falló recovery regex EN:', regexError);
     }
     
-    // Fallback final
-    return {
-      titleEn: esArticle.title,
-      summaryEn: esArticle.summary,
-      contentEn: esArticle.content
-    };
+    // Fallback final: No permitir publicación sin traducción real
+    throw new Error('❌ Error crítico: Falló el parseo de la versión en inglés y la recuperación por regex.');
   }
 }
 

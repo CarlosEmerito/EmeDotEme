@@ -12,17 +12,17 @@
  * obtener ni generar una imagen para un artículo.
  */
 export const FALLBACK_IMAGES: Record<string, string[]> = {
-  "Mercados": [
+  "Criptomonedas": [
     "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1605792657660-596af9009e82?q=80&w=1200&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1641337424160-5a3d7d745fcd?q=80&w=1200&auto=format&fit=crop",
   ],
-  "Tecnología": [
+  "Empresa": [
     "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=1200&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop",
   ],
-  "Web3": [
+  "IA": [
     "https://images.unsplash.com/photo-1639762681485-074b7f4f039a?q=80&w=1200&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=1200&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?q=80&w=1200&auto=format&fit=crop",
@@ -111,4 +111,4 @@ export const TERMS_TO_CAPITALIZE: Record<string, string> = {
 // CATEGORÍAS BASE
 // ============================================================
 
-export const BASE_CATEGORIES = ["Mercados", "Tecnología", "Web3"] as const;
+export const BASE_CATEGORIES = ["Criptomonedas", "Empresa", "IA", "Ciberseguridad"] as const;

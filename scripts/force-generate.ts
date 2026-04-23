@@ -36,7 +36,7 @@ async function main() {
     
     let imageUrl = aiResponse.sourceImageUrl;
     if (!imageUrl) {
-      const options = FALLBACK_IMAGES[randomCategory.name] || FALLBACK_IMAGES["Tecnología"];
+      const options = FALLBACK_IMAGES[randomCategory.name] || FALLBACK_IMAGES["Empresa"];
       imageUrl = options[0];
     }
 

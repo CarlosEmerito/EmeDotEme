@@ -16,7 +16,7 @@ export async function GET(req: Request) {
 
   try {
     // 1. Asegurar que existan categorías base
-    const categories = ["Mercados", "Tecnología", "Web3"];
+    const categories = ["Criptomonedas", "Empresa", "IA", "Ciberseguridad"];
     
     for (const name of categories) {
       await prisma.category.upsert({
@@ -53,7 +53,7 @@ export async function GET(req: Request) {
 
     let imageUrl = aiResponse.sourceImageUrl;
     if (!imageUrl) {
-      const options = FALLBACK_IMAGES[randomCategory.name] || FALLBACK_IMAGES["Tecnología"];
+      const options = FALLBACK_IMAGES[randomCategory.name] || FALLBACK_IMAGES["Empresa"];
       imageUrl = options[Math.floor(Math.random() * options.length)];
     }
 

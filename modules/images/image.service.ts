@@ -320,8 +320,8 @@ export async function generateArticleImageAndAnalyzeQA(
   console.log('\n⚠️ [Paso 4] FALLBACK: Usando imagen de stock Unsplash');
   attempts.push('Paso 4: Fallback Unsplash');
 
-  const category = imageData.topic || "Tecnología";
-  const options = FALLBACK_IMAGES[category] || FALLBACK_IMAGES["Tecnología"];
+  const category = imageData.topic || "Empresa";
+  const options = FALLBACK_IMAGES[category] || FALLBACK_IMAGES["Empresa"];
   const stockUrl = options[Math.floor(Math.random() * options.length)];
   const stockCaption = `Imagen ilustrativa sobre ${category}`;
 

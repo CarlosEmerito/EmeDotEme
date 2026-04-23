@@ -36,15 +36,13 @@ export function Header() {
           
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-            <Link className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" href="/categoria/mercados">
-              Mercados
+            <Link className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" href="/categoria/criptomonedas">
+              Criptomonedas
             </Link>
-            <Link className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" href="/categoria/tecnologia">
-              Tecnología
+            <Link className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" href="/categoria/empresa">
+              Empresa
             </Link>
-            <Link className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" href="/categoria/web3">
-              Web3
-            </Link>
+
             <Link className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" href="/categoria/ia">
               IA
             </Link>
@@ -65,25 +63,19 @@ export function Header() {
         <div className="md:hidden absolute top-14 left-0 w-full bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 shadow-lg px-4 py-6 flex flex-col space-y-4">
           <Link 
             className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-900 pb-3" 
-            href="/categoria/mercados"
+            href="/categoria/criptomonedas"
             onClick={() => setIsMenuOpen(false)}
           >
-            Mercados
+            Criptomonedas
           </Link>
           <Link 
             className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-900 pb-3" 
-            href="/categoria/tecnologia"
+            href="/categoria/empresa"
             onClick={() => setIsMenuOpen(false)}
           >
-            Tecnología
+            Empresa
           </Link>
-          <Link 
-            className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-900 pb-3" 
-            href="/categoria/web3"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Web3
-          </Link>
+
           <Link 
             className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-900 pb-3" 
             href="/categoria/ia"

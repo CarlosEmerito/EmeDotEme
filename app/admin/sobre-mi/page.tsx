@@ -9,7 +9,7 @@ export default async function SobreMiPage() {
   });
 
   const defaultContent = `<p>
-  Soy Carlos "Emérito" López Lovera, periodista financiero y analista de mercados especializado en criptomonedas, tecnología Web3 y macroeconomía global. Con años de experiencia cubriendo los mercados digitales, mi objetivo es desmitificar el ecosistema blockchain y proporcionar análisis claros y accionables.
+  Soy Carlos "Emérito" López Lovera, periodista financiero y analista de mercados especializado en criptomonedas, tecnología empresarial, inteligencia artificial y ciberseguridad. Con años de experiencia cubriendo los mercados digitales, mi objetivo es desmitificar el ecosistema blockchain y proporcionar análisis claros y accionables.
 </p>
 
 <h2>Nuestra Misión en EmeDotEme</h2>
@@ -19,7 +19,7 @@ export default async function SobreMiPage() {
 
 <h2>Trayectoria</h2>
 <p>
-  A lo largo de mi carrera he colaborado en diversos proyectos editoriales, siempre buscando la intersección entre las finanzas tradicionales y la nueva frontera de las finanzas descentralizadas (DeFi). Creo firmemente que la adopción de las criptomonedas requiere educación de calidad y periodismo honesto.
+  A lo largo de mi carrera he colaborado en diversos proyectos editoriales, siempre buscando la intersección entre las finanzas tradicionales y la nueva frontera tecnológica. Creo firmemente que la adopción de las criptomonedas, la IA y la ciberseguridad requieren educación de calidad y periodismo honesto.
 </p>`;
 
   const content = setting?.value || defaultContent;

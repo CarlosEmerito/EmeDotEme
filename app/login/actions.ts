@@ -1,13 +1,14 @@
 'use server'
 
 import { cookies } from 'next/headers'
+import { createSession } from '@/lib/session'
 
 export async function loginAction(password: string) {
   const expectedPwd = process.env.ADMIN_PASSWORD
   
   if (expectedPwd && password === expectedPwd) {
     const cookieStore = await cookies()
-    const value = btoa(`admin:${expectedPwd}`)
+    const value = await createSession()
     
     // Set secure HttpOnly cookie valid for 7 days
     cookieStore.set('admin_session', value, {

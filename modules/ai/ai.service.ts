@@ -307,17 +307,6 @@ REGLAS IMPORTANTES:
       }
     }
     
-    console.log(`✅ JSON parseado correctamente: "${parsed.title.substring(0, 60)}..."`);
-    console.log(`✅ Tags: ${JSON.stringify(parsed.tags)}`);
-    console.log(`✅ Summary length: ${parsed.summary.length} chars`);
-    console.log(`✅ Content length: ${parsed.content.length} chars`);
-    if (parsed.sourceUrl) {
-      console.log(`✅ Fuente principal: ${parsed.sourceUrl}`);
-    }
-    if (parsed.sources?.length) {
-      console.log(`✅ Total fuentes citadas: ${parsed.sources.length}`);
-    }
-    
     return parsed as GeneratedArticle;
   } catch (error) {
     console.error(`❌ CRITICAL: Error parseando JSON de Gemini:`);

@@ -35,12 +35,12 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
         throw new Error(`Error HTTP ${response.status}: ${await response.text()}`);
       }
 
+      console.log(`\n🤖 [Ollama ${model}] Generando texto en streaming...`);
+
       // --- PROCESAMIENTO DE STREAMING ---
       let fullResponse = "";
       const body = response.body;
       if (!body) throw new Error('No se pudo obtener el cuerpo de la respuesta');
-
-      console.log(`\n🤖 [Ollama ${model}] Generando texto en streaming...`);
       
       for await (const chunk of body) {
         const lines = chunk.toString().split('\n');

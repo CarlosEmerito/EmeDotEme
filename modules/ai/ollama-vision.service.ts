@@ -77,6 +77,7 @@ Devuelve SOLO el JSON de análisis, nada más.`;
         throw new Error(`Ollama API Error: ${response.statusText}`);
       }
 
+      process.stdout.write('🧠 [Pensando]: ');
       let text = "";
       const body = response.body;
       if (!body) throw new Error('No se pudo obtener el cuerpo de la respuesta de visión');
@@ -100,7 +101,7 @@ Devuelve SOLO el JSON de análisis, nada más.`;
           } catch (e) {}
         }
       }
-      console.log('\n');
+      console.log('\n[Fin del razonamiento]');
 
       if (!text || text.trim().length === 0) {
         throw new Error('Respuesta de Ollama Vision vacía');

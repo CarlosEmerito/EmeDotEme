@@ -19,7 +19,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
         body: JSON.stringify({
           model,
           prompt,
-          stream: false,
+          stream: true,
           options: {
             temperature: 0.1,
             num_ctx: 8192
@@ -35,12 +35,32 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
         throw new Error(`Error HTTP ${response.status}: ${await response.text()}`);
       }
 
-      const data = (await response.json()) as any;
-      if (!data || !data.response) {
-        throw new Error('Respuesta de Ollama vacía');
-      }
+      // --- PROCESAMIENTO DE STREAMING ---
+      let fullResponse = "";
+      const body = response.body;
+      if (!body) throw new Error('No se pudo obtener el cuerpo de la respuesta');
 
-      return data.response;
+      console.log(`\n🤖 [Ollama ${model}] Generando texto en streaming...`);
+      
+      for await (const chunk of body) {
+        const lines = chunk.toString().split('\n');
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const data = JSON.parse(line);
+            if (data.response) {
+              fullResponse += data.response;
+              // Escribir directamente en stdout para que se vea en el log en tiempo real
+              process.stdout.write(data.response);
+            }
+            if (data.done) break;
+          } catch (e) {
+            // Ignorar fragmentos JSON incompletos
+          }
+        }
+      }
+      console.log('\n\n✅ [Ollama] Generación completada.\n');
+      return fullResponse;
 
     } catch (err: any) {
       attempt++;

@@ -108,19 +108,30 @@ def resumen_ai(
                 log_event(f"[warn] Gemini {kname} fallo: {e}", logging.WARNING)
                 continue
 
-    # Fallback Ollama con REINTENTOS
-    log_event(f"🔄 Usando Ollama ({ollama_model}) como fallback para redes sociales...")
+    # Fallback Ollama con REINTENTOS y STREAMING
+    log_event(f"🔄 Usando Ollama ({ollama_model}) como fallback para redes sociales (streaming)...")
     max_retries = 2
     for attempt in range(max_retries + 1):
         try:
-            payload = {"model": ollama_model, "prompt": prompt, "stream": False, "keep_alive": 0}
+            payload = {"model": ollama_model, "prompt": prompt, "stream": True, "keep_alive": 0}
             r = requests.post(
-                "http://localhost:11434/api/generate", json=payload, timeout=240
+                "http://localhost:11434/api/generate", json=payload, timeout=240, stream=True
             )
             r.raise_for_status()
-            texto = r.json().get("response", "").strip()
-            if texto:
-                return clean_control_chars(texto)
+            
+            full_text = ""
+            for line in r.iter_lines():
+                if line:
+                    chunk = json.loads(line.decode('utf-8'))
+                    texto_fragmento = chunk.get("response", "")
+                    full_text += texto_fragmento
+                    print(texto_fragmento, end="", flush=True)
+                    if chunk.get("done"):
+                        break
+            
+            print("\n") # Salto de línea final
+            if full_text.strip():
+                return clean_control_chars(full_text)
             raise Exception("Respuesta vacía de Ollama")
         except Exception as e:
             if attempt < max_retries:

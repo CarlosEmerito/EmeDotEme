@@ -130,7 +130,11 @@ def resumen_ai(
             for line in r.iter_lines():
                 if line:
                     chunk = json.loads(line.decode('utf-8'))
-                    texto_fragmento = chunk.get("response", "") or chunk.get("thinking", "")
+                    thinking = chunk.get("thinking", "")
+                    if thinking:
+                        print(thinking, end="", flush=True)
+                    
+                    texto_fragmento = chunk.get("response", "") or thinking
                     full_text += texto_fragmento
                     if chunk.get("done"):
                         break

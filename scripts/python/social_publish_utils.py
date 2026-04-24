@@ -73,7 +73,7 @@ def resumen_ai(
 ):
     # Detectar modelo de Ollama
     if not ollama_model:
-        ollama_model = os.environ.get("OLLAMA_MODEL", "llama3.1:8b")
+        ollama_model = os.environ.get("OLLAMA_MODEL", "qwen3.5:9b")
 
     # Gemini primero si se quiere — prueba las 3 keys en orden
     if prefer_gemini:

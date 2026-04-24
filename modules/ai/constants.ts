@@ -11,7 +11,7 @@ export const GEMINI_MODEL_NAME = "gemini-2.5-flash";
 export const OLLAMA_URL = "http://127.0.0.1:11434/api/generate";
 
 /** Modelo por defecto para Ollama (texto) */
-export const OLLAMA_TEXT_MODEL_DEFAULT = "llama3.1:8b";
+export const OLLAMA_TEXT_MODEL_DEFAULT = "qwen3.5:9b";
 
 /** Modelo de visión para Ollama */
 export const OLLAMA_VISION_MODEL = "gemma4:e4b";

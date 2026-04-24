@@ -18,7 +18,7 @@ BLUESKY_PASSWORD = get_env("BLUESKY_PASSWORD", "").strip()
 GEMINI_API_KEY = get_env("GEMINI_API_KEY", "")
 GEMINI_API_KEY_2 = get_env("GEMINI_API_KEY_2", "")
 GEMINI_API_KEY_3 = get_env("GEMINI_API_KEY_3", "")
-OLLAMA_MODEL = get_env("OLLAMA_MODEL", "llama3.1:8b").strip()
+OLLAMA_MODEL = get_env("OLLAMA_MODEL", "qwen3.5:9b").strip()
 
 # --- Helpers
 

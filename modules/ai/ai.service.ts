@@ -58,6 +58,32 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
   }
   return null;
 }
+
+/**
+ * Fuerza a Ollama a descargar todos los modelos de la VRAM.
+ * Útil antes de lanzar procesos pesados como Flux.1.
+ */
+export async function unloadOllamaModels(): Promise<void> {
+  try {
+    const fetchNode = (await import('node-fetch')).default;
+    // En Ollama, enviar una petición con keep_alive: 0 descarga el modelo
+    const model = process.env.OLLAMA_MODEL || OLLAMA_TEXT_MODEL_DEFAULT;
+    
+    await fetchNode(OLLAMA_URL.replace('/generate', '/load'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model,
+        keep_alive: 0
+      })
+    });
+    
+    console.log('🧹 [VRAM] Petición de descarga enviada a Ollama.');
+  } catch (err) {
+    console.warn('⚠️ No se pudo forzar la descarga de Ollama:', err);
+  }
+}
+
 // --- Post-procesado ortográfico vía Ollama local ---
 export async function postprocessWithOllama(article: any): Promise<any> {
   const systemPrompt = `Eres un corrector ortográfico experto en español. Corrige SOLO las mayúsculas de nombres propios, siglas y títulos. No modifiques el contenido. Devuelve el resultado en formato JSON con los mismos campos.`;

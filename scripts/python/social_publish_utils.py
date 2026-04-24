@@ -63,7 +63,7 @@ def log_historial(red, status, title, extra=None):
 # IA: RESUMEN UNIFICADO ------------------------------------------------------
 def resumen_ai(
     prompt,
-    ollama_model="llama3.1:8b",
+    ollama_model=None,
     gemini_api_key=None,
     gemini_api_key_2=None,
     gemini_api_key_3=None,
@@ -71,6 +71,10 @@ def resumen_ai(
     max_output_tokens=600,
     **kwargs,
 ):
+    # Detectar modelo de Ollama
+    if not ollama_model:
+        ollama_model = os.environ.get("OLLAMA_MODEL", "llama3.1:8b")
+
     # Gemini primero si se quiere — prueba las 3 keys en orden
     if prefer_gemini:
         gemini_keys = [k for k in [gemini_api_key, gemini_api_key_2, gemini_api_key_3] if k]
@@ -78,6 +82,7 @@ def resumen_ai(
         for idx, key in enumerate(gemini_keys):
             kname = key_names[idx] if idx < len(key_names) else f"EXTRA_{idx+1}"
             try:
+                # Actualizado a gemini-2.5-flash
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
                 payload = {
                     "contents": [{"parts": [{"text": prompt}]}],
@@ -102,17 +107,31 @@ def resumen_ai(
             except Exception as e:
                 log_event(f"[warn] Gemini {kname} fallo: {e}", logging.WARNING)
                 continue
-    # Fallback Ollama
-    try:
-        payload = {"model": ollama_model, "prompt": prompt, "stream": False}
-        r = requests.post(
-            "http://localhost:11434/api/generate", json=payload, timeout=240
-        )
-        r.raise_for_status()
-        texto = r.json().get("response", "").strip()
-        return clean_control_chars(texto)
-    except Exception as e:
-        log_event(f"[warn] Ollama fallo: {e}", logging.WARNING)
+
+    # Fallback Ollama con REINTENTOS
+    log_event(f"🔄 Usando Ollama ({ollama_model}) como fallback para redes sociales...")
+    max_retries = 2
+    for attempt in range(max_retries + 1):
+        try:
+            payload = {"model": ollama_model, "prompt": prompt, "stream": False, "keep_alive": 0}
+            r = requests.post(
+                "http://localhost:11434/api/generate", json=payload, timeout=240
+            )
+            r.raise_for_status()
+            texto = r.json().get("response", "").strip()
+            if texto:
+                return clean_control_chars(texto)
+            raise Exception("Respuesta vacía de Ollama")
+        except Exception as e:
+            if attempt < max_retries:
+                log_event(f"[warn] Ollama intento {attempt+1} fallido: {e}. Reintentando en 10s...", logging.WARNING)
+                import time
+                # Intentar descargar modelos para liberar VRAM si el error es de memoria
+                try: requests.post("http://localhost:11434/api/load", json={"model": ollama_model, "keep_alive": 0}, timeout=10)
+                except: pass
+                time.sleep(10)
+            else:
+                log_event(f"[error] Todos los intentos con Ollama han fallado: {e}", logging.ERROR)
     return None
 
 

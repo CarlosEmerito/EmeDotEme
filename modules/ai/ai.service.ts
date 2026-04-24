@@ -254,7 +254,8 @@ REGLAS IMPORTANTES:
   
   let result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
   if (!result) {
-    console.warn('⚠️ Gemini falló, intentando con Ollama local...');
+    console.warn('⚠️ Gemini falló, limpiando VRAM e intentando con Ollama local...');
+    await unloadOllamaModels(); // Asegurar GPU limpia para Ollama
     result = await generateTextWithOllama({ systemPrompt, userPrompt });
     if (!result) {
       throw new Error('❌ Error crítico: Ni Gemini ni Ollama pudieron generar el contenido del artículo.');

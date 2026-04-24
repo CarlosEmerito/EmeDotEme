@@ -17,6 +17,7 @@ import { analyzeImageWithGemini, type ImageAnalysisResult } from '../ai/gemini-v
 import { analyzeImageWithOllama } from '../ai/ollama-vision.service';
 import { generateImageWithAIHorde } from '../ai/aihorde-image.service';
 import { generateImageWithFlux, checkFluxStatus } from '../ai/flux-image.service';
+import { unloadOllamaModels } from '../ai/ai.service';
 import { createClient } from '@supabase/supabase-js';
 import { FALLBACK_IMAGES } from '../../config/constants';
 
@@ -273,6 +274,12 @@ export async function generateArticleImageAndAnalyzeQA(
   // ────────────────────────────────────────────────────────────
   const isFluxAvailable = await checkFluxStatus();
   if (isFluxAvailable) {
+    // 🧹 Limpieza de VRAM antes de Flux
+    console.log('\n🧹 Liberando VRAM de Ollama...');
+    await unloadOllamaModels();
+    console.log('⏱️ Esperando 5s para estabilidad de GPU...');
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
     console.log('\n🎨 [Paso 2] Generación con Flux.1 Local');
     attempts.push('Paso 2: Flux.1 Local');
 

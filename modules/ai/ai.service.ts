@@ -1,5 +1,13 @@
 import { OLLAMA_TEXT_MODEL_DEFAULT, OLLAMA_URL } from './constants';
 
+function getTime(): string {
+  return new Date().toISOString().replace('T', ' ').substring(0, 19);
+}
+
+function logWithTime(msg: string) {
+  console.log(`[${getTime()}] ${msg}`);
+}
+
 // --- Generación vía Ollama local (standalone) ---
 export async function generateTextWithOllama({ systemPrompt, userPrompt }: { systemPrompt: string; userPrompt: string; }): Promise<string | null> {
   const model = process.env.OLLAMA_MODEL || OLLAMA_TEXT_MODEL_DEFAULT;
@@ -35,7 +43,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
         throw new Error(`Error HTTP ${response.status}: ${await response.text()}`);
       }
 
-      console.log(`\n🤖 [Ollama ${model}] Generando texto en streaming...`);
+      logWithTime(`🤖 [Ollama ${model}] Generando texto en streaming...`);
 
       // --- PROCESAMIENTO DE STREAMING ---
       let fullResponse = "";
@@ -59,7 +67,8 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
           }
         }
       }
-      console.log('\n\n✅ [Ollama] Generación completada.\n');
+      console.log('\n');
+      logWithTime('✅ [Ollama] Generación completada.');
       return fullResponse;
 
     } catch (err: any) {
@@ -68,10 +77,10 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
       
       if (attempt <= maxRetries) {
         const waitTime = 10000; // 10 segundos
-        console.warn(`⚠️ Intento ${attempt} fallido con Ollama (${isTimeout ? 'Timeout' : err.message}). Reintentando en ${waitTime/1000}s...`);
+        logWithTime(`⚠️ Intento ${attempt} fallido (${isTimeout ? 'Timeout' : err.message}). Reintentando en ${waitTime/1000}s...`);
         await new Promise(resolve => setTimeout(resolve, waitTime));
       } else {
-        console.error('❌ Todos los intentos con Ollama han fallado:', err);
+        logWithTime(`❌ Todos los intentos con Ollama han fallado: ${err.message}`);
         return null;
       }
     }
@@ -98,9 +107,9 @@ export async function unloadOllamaModels(): Promise<void> {
       })
     });
     
-    console.log('🧹 [VRAM] Petición de descarga enviada a Ollama.');
+    logWithTime('🧹 [VRAM] Petición de descarga enviada a Ollama.');
   } catch (err) {
-    console.warn('⚠️ No se pudo forzar la descarga de Ollama:', err);
+    logWithTime(`⚠️ No se pudo forzar la descarga de Ollama: ${err}`);
   }
 }
 

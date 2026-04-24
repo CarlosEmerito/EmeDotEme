@@ -10,11 +10,18 @@ LOG_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
 LOG_FILE = os.path.join(LOG_DIR, "emedoteme.log")
 
+# Configuración de logging: solo INFO para nuestro código, WARNING para librerías
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[logging.FileHandler(LOG_FILE, encoding="utf-8"), logging.StreamHandler()],
 )
+
+# Silenciar logs verbosos de librerías de terceros
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpcore").setLevel(logging.WARNING)
+logging.getLogger("atproto").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 HISTORIAL_FILE = os.path.join(LOG_DIR, "historial_publicaciones.csv")
 
@@ -125,11 +132,9 @@ def resumen_ai(
                     chunk = json.loads(line.decode('utf-8'))
                     texto_fragmento = chunk.get("response", "") or chunk.get("thinking", "")
                     full_text += texto_fragmento
-                    print(texto_fragmento, end="", flush=True)
                     if chunk.get("done"):
                         break
             
-            print("\n") # Salto de línea final
             if full_text.strip():
                 return clean_control_chars(full_text)
             raise Exception("Respuesta vacía de Ollama")

@@ -81,16 +81,14 @@ def enviar_telegram(texto, imagen_url, link_noticia):
         endpoint = "/sendPhoto"
     else:
         payload["text"] = texto[:4096]
-    log_event(
-        f"[telegram/HTML] Enviando mensaje: {payload.get('caption', payload.get('text', ''))}"
-    )
+    
     try:
         r = requests.post(
             f"https://api.telegram.org/bot{TOKEN}{endpoint}", data=payload, timeout=20
         )
-        log_event(f"[telegram/HTML] Status: {r.status_code}, response: {r.text}")
         if r.status_code == 200:
             return True, "Publicado correctamente"
+        log_event(f"[telegram/HTML] Status: {r.status_code}, response: {r.text}", 40)
         return False, f"API err: {r.status_code} - {r.text}"
     except Exception as e:
         log_event(f"[telegram/HTML] Excepción al enviar: {e}", 40)

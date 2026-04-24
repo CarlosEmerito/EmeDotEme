@@ -96,9 +96,9 @@ El pipeline de publicación es el flujo principal que genera y publica automáti
 |              +------------+-----------+                     |
 |              v            v           v                     |
 |       RSS SOURCE     FLUX LOCAL   AI HORDE                  |
-|              |       (PRIORITY)   (FALLBACK)                |
+|     (No Decrypt)     (PRIORITY)   (FALLBACK)                |
 |              |            |           |                     |
-|              +-- FALLBACK: UNSPLASH -+                      |
+|              +-- GESTIÓN VRAM: UNLOAD OLLAMA (13s) --+      |
 |                                            |
 |    Resultado: {imageUrl, caption}                           |
 +-------------------------------+------------+
@@ -109,9 +109,12 @@ El pipeline de publicación es el flujo principal que genera y publica automáti
 |    +-------------------------------------------+            |
 |    | prisma.article.create({                    |            |
 |    |   title, titleEn, slug, summary, ...       |            |
-|    |   published: true                          |            |
+|    |   published: true,                         |            |
+|    |   publishedAt: new Date()                  |            |
 |    | })                                         |            |
 |    +-------------------------------------------+            |
+|    *Nota: El Ranking Engine priorizará este         |
+|    artículo según su fecha y peso.                  |
 +-------------------------------+------------+----------------+
                               |
                               v
@@ -166,19 +169,34 @@ SUPABASE_SERVICE_ROLE_KEY=
 ```mermaid
 graph TD
     A[Inicio: Datos del Artículo] --> B{¿Hay Imagen RSS?}
-    B -- Sí --> C[QA Gemini Vision]
-    B -- No --> D{¿Flux Local Online?}
-    C -- Aprobada --> E[Subir a Supabase]
-    C -- Rechazada --> D
-    D -- Sí --> F[Generar con Flux.1]
-    D -- No --> G[AI Horde Fallback]
-    F -- Éxito --> E
-    F -- Fallo --> G
-    G -- Éxito --> E
-    G -- Fallo --> H[Unsplash Stock Fallback]
-    H --> I[Imagen Final]
-    E --> I
+    B -- Sí --> C{¿Es de Decrypt?}
+    C -- Sí --> D[Rechazar automáticamente]
+    C -- No --> E[QA Gemini/Ollama Vision]
+    B -- No --> D
+    E -- Aprobada --> F[Subir a Supabase]
+    E -- Rechazada --> D
+    D --> G{¿Flux Local Online?}
+    G -- Sí --> H[Gestión VRAM: Unload Ollama]
+    H --> I[Generar con Flux.1]
+    G -- No --> J[AI Horde Fallback]
+    I -- Éxito --> F
+    I -- Fallo --> J
+    J -- Éxito --> F
+    J -- Fallo --> K[Unsplash Stock Fallback]
+    K --> L[Imagen Final]
+    F --> L
 ```
+
+### Handoff de Memoria (VRAM)
+
+Dada la limitación de 8GB de VRAM en entornos locales comunes, el sistema implementa un flujo de "entrega" de memoria entre Ollama (texto) y Flux (imagen):
+
+1. **Keep Alive**: Todas las peticiones a Ollama se realizan con `keep_alive: 0`, solicitando a Ollama que libere el modelo inmediatamente tras la respuesta.
+2. **Health Check**: El pipeline verifica si el servidor de Flux (`flux-api-server`) está listo para recibir peticiones.
+3. **Descarga Explícita**: Se invoca `unloadOllamaModels()` para asegurar que cualquier modelo residual sea purgado.
+4. **Pausa de Purga (8s)**: Espera obligatoria de 8 segundos para que el driver de NVIDIA libere físicamente los recursos.
+5. **Estabilización (5s)**: Pausa de 5 segundos adicionales antes de que Flux comience a cargar sus tensores en la GPU.
+6. **Optimización Flux**: El servidor Flux utiliza `sequential_cpu_offload` y `VAE tiling` para mantener el uso de memoria bajo el límite de 8GB durante toda la generación.
 
 ### Código
 

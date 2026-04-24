@@ -149,6 +149,7 @@ async function main() {
     }
 
     console.log("\n💾 Guardando en la Base de Datos...");
+    const tagsArray = aiResponse.tags || [];
     const newArticle = await prisma.article.create({
       data: {
         title: aiResponse.title,
@@ -158,7 +159,16 @@ async function main() {
         summaryEn: aiResponse.summaryEn,
         content: aiResponse.content,
         contentEn: aiResponse.contentEn,
-        tags: aiResponse.tags || [],
+        tags: tagsArray,
+        articleTags: {
+          connectOrCreate: tagsArray.map((tag: string) => ({
+            where: { name: tag },
+            create: { 
+              name: tag, 
+              slug: tag.toLowerCase().replace(/\s+/g, '-') 
+            }
+          }))
+        },
         imageUrl: imageUrl,
         imageCaption: imageCaption,
         sourceUrl: aiResponse.sourceUrl || null,
@@ -167,6 +177,7 @@ async function main() {
         categoryId: selectedCategory.id,
         author: 'Carlos "Emérito" López Lovera',
         published: true,
+        publishedAt: new Date(),
       },
       include: {
         category: true,

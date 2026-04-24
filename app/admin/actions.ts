@@ -5,9 +5,15 @@ import { revalidatePath } from "next/cache";
 
 export async function togglePublishStatus(id: string, newStatus: boolean) {
   try {
+    const article = await prisma.article.findUnique({ where: { id }, select: { publishedAt: true } });
+    
     await prisma.article.update({
       where: { id },
-      data: { published: newStatus }
+      data: { 
+        published: newStatus,
+        // Si se publica por primera vez, guardar la fecha
+        publishedAt: newStatus && !article?.publishedAt ? new Date() : undefined
+      }
     });
     
     // Invalidar cachés para que la web principal muestre los cambios
@@ -46,8 +52,11 @@ export async function updateArticle(id: string, data: {
   imageUrl: string;
   imageCaption: string;
   tags?: string[];
+  isPinned?: boolean;
+  priority?: number;
 }) {
   try {
+    const tagsArray = data.tags || [];
     const updated = await prisma.article.update({
       where: { id },
       data: {
@@ -57,7 +66,19 @@ export async function updateArticle(id: string, data: {
         content: data.content,
         imageUrl: data.imageUrl,
         imageCaption: data.imageCaption,
-        tags: data.tags,
+        tags: tagsArray,
+        isPinned: data.isPinned,
+        priority: data.priority,
+        articleTags: {
+          set: [], // Limpiar relaciones actuales
+          connectOrCreate: tagsArray.map(tag => ({
+            where: { name: tag },
+            create: { 
+              name: tag, 
+              slug: tag.toLowerCase().replace(/\s+/g, '-') 
+            }
+          }))
+        }
       }
     });
 
@@ -82,8 +103,11 @@ export async function createArticle(data: {
   tags?: string[];
   categoryId: string;
   published: boolean;
+  isPinned?: boolean;
+  priority?: number;
 }) {
   try {
+    const tagsArray = data.tags || [];
     const newArticle = await prisma.article.create({
       data: {
         title: data.title,
@@ -92,7 +116,19 @@ export async function createArticle(data: {
         content: data.content,
         imageUrl: data.imageUrl,
         imageCaption: data.imageCaption,
-        tags: data.tags || [],
+        tags: tagsArray,
+        isPinned: data.isPinned || false,
+        priority: data.priority || 0,
+        publishedAt: data.published ? new Date() : null,
+        articleTags: {
+          connectOrCreate: tagsArray.map(tag => ({
+            where: { name: tag },
+            create: { 
+              name: tag, 
+              slug: tag.toLowerCase().replace(/\s+/g, '-') 
+            }
+          }))
+        },
         categoryId: data.categoryId,
         published: data.published,
         author: 'Carlos "Emérito" López Lovera' // Autor humano por defecto para los artículos manuales

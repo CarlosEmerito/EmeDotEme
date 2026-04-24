@@ -61,8 +61,9 @@ export function Footer() {
             <h3 className="text-sm font-bold uppercase tracking-wider text-black dark:text-white mb-4">Secciones</h3>
             <ul className="space-y-3 text-sm text-zinc-600 dark:text-zinc-400">
               <li><Link href="/categoria/criptomonedas" className="hover:text-[color:var(--color-brand)] transition-colors">Criptomonedas</Link></li>
-              <li><Link href="/categoria/empresa" className="hover:text-[color:var(--color-brand)] transition-colors">Empresa</Link></li>
+              <li><Link href="/categoria/mercados" className="hover:text-[color:var(--color-brand)] transition-colors">Mercados</Link></li>
               <li><Link href="/categoria/ia" className="hover:text-[color:var(--color-brand)] transition-colors">IA</Link></li>
+              <li><Link href="/categoria/tecnologia" className="hover:text-[color:var(--color-brand)] transition-colors">Tecnología</Link></li>
               <li><Link href="/categoria/ciberseguridad" className="hover:text-[color:var(--color-brand)] transition-colors">Ciberseguridad</Link></li>
             </ul>
           </div>

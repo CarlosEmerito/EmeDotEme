@@ -249,6 +249,7 @@ export async function generateArticleContent(
   3. Cuerpo extenso con subtítulos HTML (p, h2, h3).
   4. Lista de 3 etiquetas.
   5. Idea para una imagen en inglés (imagePrompt).
+  6. Categoría (category): Elige estrictamente una de estas: Mercados, Tecnología, IA, Ciberseguridad, Criptomonedas.
   
   Responde ÚNICAMENTE en formato JSON:
   {
@@ -257,16 +258,22 @@ export async function generateArticleContent(
     "content": "...",
     "tags": ["...", "..."],
     "imagePrompt": "...",
+    "category": "...",
     "sourceUrl": "${newsContext[0]?.link || ''}",
     "sources": ["${newsContext[0]?.link || ''}"]
   }.${avoidanceClause}`;
   } else {
-    userPrompt = `Escribe un artículo sobre tecnología en español. Responde SOLO en JSON:
+    userPrompt = `Escribe un artículo sobre tecnología en español.
+  
+  Categoría (category): Elige estrictamente una de estas: Mercados, Tecnología, IA, Ciberseguridad, Criptomonedas.
+  
+  Responde SOLO en JSON:
   {
     "title": "...",
     "summary": "...",
     "content": "...",
     "tags": ["..."],
+    "category": "...",
     "imagePrompt": "..."
   }.${avoidanceClause}`;
   }

@@ -17,7 +17,7 @@ async function main() {
   console.log("🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀");
   console.log("=====================================================\n");
 
-  const categories = ["Criptomonedas", "Empresa", "IA", "Ciberseguridad"];
+  const categories = ["Criptomonedas", "IA", "Mercados", "Tecnología", "Ciberseguridad"];
   for (const name of categories) {
     await prisma.category.upsert({
       where: { name },

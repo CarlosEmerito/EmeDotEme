@@ -6,8 +6,13 @@ if [ -f "$PID_FILE" ]; then
     PID=$(cat "$PID_FILE")
     echo "Deteniendo el bot automático de EmeDotEme (PID: $PID)..."
     
-    # Detener el proceso
+    # Detener el proceso principal
     kill $PID 2>/dev/null
+    
+    # Limpieza agresiva de procesos colgados
+    echo "Limpiando procesos zombis del bot..."
+    pkill -f "scripts/publish.ts" 2>/dev/null
+    pkill -f "tsx scripts/publish.ts" 2>/dev/null
     
     # Detener el servidor de imágenes local
     echo "Apagando el servidor de imágenes Flux.1..."
@@ -20,7 +25,7 @@ if [ -f "$PID_FILE" ]; then
     
     # Eliminar el archivo de ID
     rm "$PID_FILE"
-    echo "✅ Bot, Flux y Ollama liberados correctamente."
+    echo "✅ Sistema totalmente liberado (Bot, Flux, Ollama y Procesos)."
 else
     echo "❌ No se encontró ningún bot en ejecución."
 fi

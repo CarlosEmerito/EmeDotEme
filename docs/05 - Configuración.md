@@ -23,7 +23,7 @@ Para ejecución local. Requiere tener el software instalado de [ollama.com](http
 
 | Variable           | Descripción                                 | Requerido | Default |
 |--------------------|---------------------------------------------|-----------|---------|
-| `OLLAMA_MODEL`     | Modelo (por defecto: llama3.1:8b)            | Opcional  | `llama3.1:8b` |
+| `OLLAMA_MODEL`     | Modelo (por defecto: qwen3.5:9b)            | Opcional  | `qwen3.5:9b` |
 | `OLLAMA_BASE_URL`  | URL base                                    | Opcional  | `http://localhost:11434` |
 
 ### Imágenes - Flux.1 Local
@@ -101,8 +101,8 @@ GEMINI_API_KEY_3=""
 # ===========================================
 # OLLAMA (IA Local - Fallback)
 # ===========================================
-# Modelo llama3.1:8b es el recomendado por su velocidad y balance
-OLLAMA_MODEL="llama3.1:8b"
+# Modelo qwen3.5:9b es el recomendado por su velocidad y balance
+OLLAMA_MODEL="qwen3.5:9b"
 
 # ===========================================
 # AI HORDE (Imágenes)

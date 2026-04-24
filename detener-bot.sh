@@ -19,8 +19,8 @@ if [ -f "$PID_FILE" ]; then
     docker stop flux-api-server 2>/dev/null || echo "⚠️ El servidor de imágenes ya estaba apagado."
 
     # Limpiar Ollama de la VRAM usando el modelo configurado
-    echo "Liberando VRAM de Ollama (${OLLAMA_MODEL:-llama3.1:8b})..."
-    curl -s -X POST http://localhost:11434/api/generate -d "{\"model\": \"${OLLAMA_MODEL:-llama3.1:8b}\", \"keep_alive\": 0}" > /dev/null
+    echo "Liberando VRAM de Ollama (${OLLAMA_MODEL:-qwen3.5:9b})..."
+    curl -s -X POST http://localhost:11434/api/generate -d "{\"model\": \"${OLLAMA_MODEL:-qwen3.5:9b}\", \"keep_alive\": 0}" > /dev/null
     curl -s -X POST http://localhost:11434/api/generate -d '{"model": "gemma4:e4b", "keep_alive": 0}' > /dev/null
     
     # Eliminar el archivo de ID

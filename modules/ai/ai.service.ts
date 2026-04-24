@@ -44,12 +44,14 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
       }
 
       logWithTime(`🤖 [Ollama ${model}] Generando texto en streaming...`);
+      process.stdout.write('🧠 [Pensando]: ');
 
       // --- PROCESAMIENTO DE STREAMING ---
       let fullResponse = "";
       const body = response.body;
       if (!body) throw new Error('No se pudo obtener el cuerpo de la respuesta');
       
+      // @ts-ignore - ReadableStream iterator
       for await (const chunk of body) {
         const lines = chunk.toString().split('\n');
         for (const line of lines) {
@@ -60,7 +62,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
             const responseText = data.response || "";
             
             if (thinking) {
-              // Solo el thinking va a consola
+              // Solo el thinking va a consola, forzando la salida inmediata
               process.stdout.write(thinking);
             }
             
@@ -74,7 +76,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
           }
         }
       }
-      console.log('\n');
+      console.log('\n[Fin del razonamiento]');
       logWithTime('✅ [Ollama] Generación completada.');
       return fullResponse;
 

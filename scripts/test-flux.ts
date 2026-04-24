@@ -1,15 +1,22 @@
 import { generateImageWithFlux, checkFluxStatus } from '../modules/ai/flux-image.service';
+import { unloadOllamaModels } from '../modules/ai/ai.service';
 
 async function main() {
   console.log('🔍 Comprobando estado de Flux Local...');
   const available = await checkFluxStatus();
-  
+
   if (!available) {
-    console.warn('⚠️ El servidor de Flux Local no parece estar corriendo (http://127.0.0.1:8000).');
+    console.log('❌ El servidor Flux Local no responde en http://127.0.0.1:8000');
     console.log('Esto es normal si aún no has levantado el contenedor Docker.');
   } else {
     console.log('✅ Servidor Flux Local detectado.');
-    
+
+    // Limpiar VRAM para asegurar éxito en el test
+    console.log('🧹 Limpiando VRAM de Ollama antes del test...');
+    await unloadOllamaModels();
+    console.log('⏱️ Esperando 5s...');
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
     console.log('🎨 Intentando generar una imagen de prueba...');
     const result = await generateImageWithFlux(
       'A futuristic city with flying cars, cyber punk style, high quality',

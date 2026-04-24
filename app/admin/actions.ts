@@ -66,7 +66,6 @@ export async function updateArticle(id: string, data: {
         content: data.content,
         imageUrl: data.imageUrl,
         imageCaption: data.imageCaption,
-        tags: tagsArray,
         isPinned: data.isPinned,
         priority: data.priority,
         articleTags: {
@@ -116,7 +115,6 @@ export async function createArticle(data: {
         content: data.content,
         imageUrl: data.imageUrl,
         imageCaption: data.imageCaption,
-        tags: tagsArray,
         isPinned: data.isPinned || false,
         priority: data.priority || 0,
         publishedAt: data.published ? new Date() : null,

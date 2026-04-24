@@ -14,7 +14,7 @@ async function main() {
   console.log("🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀");
   console.log("=====================================================\n");
 
-  const categories = ["Criptomonedas", "Empresa", "IA", "Ciberseguridad"];
+  const categories = ["Criptomonedas", "IA", "Mercados", "Tecnología", "Ciberseguridad"];
   for (const name of categories) {
     await prisma.category.upsert({
       where: { name },
@@ -77,7 +77,7 @@ async function main() {
       summaryEn: aiResponse.summaryEn,
       content: aiResponse.content,
       contentEn: aiResponse.contentEn,
-      tags: aiResponse.tags || [],
+      articleTags: aiResponse.tags ? aiResponse.tags.map((t: string) => ({ name: t })) : [],
       imageUrl: imageResult.imageUrl,
       imageCaption: imageResult.caption,
       sourceUrl: aiResponse.sourceUrl,

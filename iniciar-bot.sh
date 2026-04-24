@@ -2,15 +2,18 @@
 
 # Archivo donde guardaremos el identificador del proceso para poder detenerlo luego
 PID_FILE="/home/emerito/emedoteme/bot.pid"
-LOG_FILE="/home/emerito/emedoteme/bot.log"
+LOG_FILE="/home/emerito/emedoteme/logs/bot.log"
 DIR="/home/emerito/emedoteme"
+
+# Asegurar que el directorio de logs existe
+mkdir -p "$DIR/logs"
 
 if [ -f "$PID_FILE" ]; then
     PID=$(cat "$PID_FILE")
     if kill -0 "$PID" 2>/dev/null; then
         echo "⚠️ El bot automático ya está en ejecución (PID: $PID)."
         echo "Si deseas reiniciarlo, ejecuta ./detener-bot.sh primero."
-        echo "Para ver la actividad actual usa: tail -f bot.log"
+        echo "Para ver la actividad actual usa: tail -f logs/bot.log"
         exit 1
     else
         echo "⚠️ Archivo PID encontrado pero proceso no está activo. Limpiando..."

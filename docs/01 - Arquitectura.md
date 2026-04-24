@@ -54,9 +54,9 @@ graph TB
 - Tablas: Articles, Categories, Subscribers, Analytics.
 
 ### Pipeline de contenido
-- Servicio de fuentes de noticias: Fetch de RSS.
-- Servicio de IA: Generación de artículos.
-- Servicio de imágenes: Pipeline de imágenes.
+- **Servicio de fuentes de noticias**: Fetch y normalización de fuentes RSS (CoinDesk, Decrypt, etc.).
+- **Servicio de IA**: Generación bilingüe con Gemini y fallback a Ollama (llama3.1:8b). Soporta modelos de razonamiento.
+- **Servicio de imágenes**: Pipeline jerárquico (RSS -> Flux.1 Local -> AI Horde) con gestión dinámica de VRAM para descargar modelos de Ollama antes de activar la GPU para Flux.
 
 ## Referencias
 

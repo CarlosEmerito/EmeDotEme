@@ -207,8 +207,7 @@ interface Article {
   author: string
   published: boolean
   isOriginal: boolean
-  tags: string[]      // Legacy: Array de strings (para compatibilidad)
-  articleTags: Tag[]  // Nueva relación normalizada
+  articleTags: Tag[]  // Relación normalizada
   isPinned: boolean   // Para fijar noticias arriba
   priority: number    // Peso para el ranking
   viewCount: number   // Contador de visitas

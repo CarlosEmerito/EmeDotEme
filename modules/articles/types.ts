@@ -10,7 +10,9 @@ export interface ArticleDTO {
   author: string;
   published: boolean;
   isOriginal: boolean;
-  tags: string[];
+  articleTags?: { name: string; slug: string }[];
+  isPinned: boolean;
+  priority: number;
   sentiment: string;
   categoryId: string;
   createdAt: Date;

@@ -16,7 +16,7 @@ interface EditArticleProps {
     content: string;
     imageUrl: string | null;
     imageCaption: string | null;
-    tags: string[];
+    articleTags?: { name: string }[];
   };
 }
 
@@ -29,7 +29,7 @@ export default function EditArticleForm({ article }: EditArticleProps) {
     summary: article.summary || "",
     imageUrl: article.imageUrl || "",
     imageCaption: article.imageCaption || "",
-    tags: article.tags ? article.tags.join(", ") : "",
+    tags: article.articleTags ? article.articleTags.map(t => t.name).join(", ") : "",
     content: article.content || "",
   });
 

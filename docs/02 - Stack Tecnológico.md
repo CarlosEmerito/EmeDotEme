@@ -14,19 +14,21 @@
 
 ## IA y Machine Learning
 
-| Servicio         | Uso                        | API/Local                |
-|------------------|---------------------------|--------------------------|
-| Gemini (Google)  | Generación de texto       | API externa              |
-| Ollama           | Fallback y post-procesado | Local (localhost:11434)  |
-| Gemini Vision    | QA de imágenes            | API externa              |
-| Ollama Vision    | QA de imágenes fallback   | Local                    |
-| AI Horde         | Generación de imágenes    | API externa              |
+| Servicio         | Uso                        | API/Local                | Notas |
+|------------------|---------------------------|--------------------------|-------|
+| Gemini (Google)  | Generación de texto       | API externa              | gemini-2.5-flash |
+| Ollama           | Fallback y post-procesado | Local (localhost:11434)  | llama3.1:8b (soporta tokens 'thinking') |
+| Gemini Vision    | QA de imágenes            | API externa              | gemini-2.5-flash |
+| Ollama Vision    | QA de imágenes fallback   | Local                    | gemma4:e4b |
+| Flux.1 Local     | Generación de imágenes    | Local (Docker/Python)    | Flux.1-dev optimizado (8GB VRAM) |
+| AI Horde         | Generación fallback       | API externa              | Stable Diffusion |
 
 ## Imágenes y almacenamiento
 
-- **AI Horde**: Generación de imágenes (Stable Diffusion).
-- **Supabase Storage**: Almacenamiento de imágenes.
-- **Unsplash**: Imágenes de stock (fallback).
+- **Flux.1 Local**: Generador principal de imágenes (vía `flux-api` Docker).
+- **AI Horde**: Generación de imágenes de respaldo.
+- **Supabase Storage**: Almacenamiento permanente de imágenes analizadas y aprobadas.
+- **Unsplash**: Imágenes de stock (fallback inicial).
 
 ## RSS y Feeds
 

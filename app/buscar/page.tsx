@@ -73,7 +73,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   // Extract popular tags from articles
   const allTags = new Set<string>();
   searchResult.articles.forEach(article => {
-    article.tags.forEach(tag => allTags.add(tag));
+    article.articleTags?.forEach(tag => allTags.add(tag.name));
   });
   const popularTags = Array.from(allTags).slice(0, 20);
 

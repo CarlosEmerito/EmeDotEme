@@ -10,18 +10,13 @@ export default async function CategoriesPage() {
     include: { _count: { select: { articles: true } } }
   });
 
-  // Get unique tags from all articles
-  const articles = await prisma.article.findMany({ select: { tags: true } });
-  const tagCounts: Record<string, number> = {};
-  
-  articles.forEach(article => {
-    article.tags.forEach(tag => {
-      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-    });
+  // Get tags from the Tag model
+  const tagsFromDb = await prisma.tag.findMany({
+    include: { _count: { select: { articles: true } } }
   });
 
-  const tags = Object.entries(tagCounts)
-    .map(([name, count]) => ({ name, count }))
+  const tags = tagsFromDb
+    .map(tag => ({ name: tag.name, count: tag._count.articles }))
     .sort((a, b) => b.count - a.count);
 
   return (

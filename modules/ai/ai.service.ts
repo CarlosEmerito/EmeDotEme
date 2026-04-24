@@ -372,31 +372,39 @@ REGLAS IMPORTANTES:
     
     // Intentar recuperación parcial con JSON incompleto o usando Regex
     try {
-      const titleMatch = result.match(/"title"\s*:\s*"([^"]+)"/);
-      const summaryMatch = result.match(/"summary"\s*:\s*"([^"]+)"/);
-      
-      // Para content es más complejo por los saltos de línea y el HTML
-      // Buscamos todo lo que hay entre "content": " y el siguiente campo ", "imagePrompt" o "tags"
-      let contentMatch = '';
-      const contentRegex = /"content"\s*:\s*"([\s\S]*?)",\s*"/;
-      const cMatch = result.match(contentRegex);
-      if (cMatch && cMatch[1]) {
-        contentMatch = cMatch[1];
+      // 1. Intentar buscar claves JSON estándar
+      let titleMatch = result.match(/"title"\s*:\s*"([^"]+)"/);
+      let summaryMatch = result.match(/"summary"\s*:\s*"([^"]+)"/);
+      let contentMatch = result.match(/"content"\s*:\s*"([\s\S]*?)"(?=,\s*"|\s*})/);
+
+      // 2. Si falla lo anterior, intentar buscar etiquetas "humanas" (Título:, Resumen:, etc.)
+      if (!titleMatch) {
+        const hTitle = result.match(/(?:\*\*|#)?\s*Título\s*:\s*(?:\*\*)?\s*([^\n]+)/i);
+        if (hTitle) titleMatch = [null, hTitle[1]];
+      }
+      if (!summaryMatch) {
+        const hSummary = result.match(/(?:\*\*|#)?\s*Resumen\s*:\s*(?:\*\*)?\s*([^\n]+)/i);
+        if (hSummary) summaryMatch = [null, hSummary[1]];
+      }
+      if (!contentMatch) {
+        const hContent = result.match(/(?:\*\*|#)?\s*Contenido\s*:\s*(?:\*\*)?\s*([\s\S]+)/i);
+        if (hContent) contentMatch = [null, hContent[1]];
       }
 
       if (titleMatch && titleMatch[1]) {
-        console.log(`🔄 Recuperado usando Regex: "${titleMatch[1].substring(0,60)}"`);
+        logWithTime(`🔄 Recuperado usando Regex (Formato: ${jsonStart === -1 ? 'Texto' : 'JSON Dañado'}): "${titleMatch[1].substring(0, 60)}"`);
         
-        const cleanContent = contentMatch
+        const cleanContent = (contentMatch ? contentMatch[1] : '')
           .replace(/\\n/g, '\n')
           .replace(/\\"/g, '"')
-          .replace(/\\\\/g, '\\');
+          .replace(/\\\\/g, '\\')
+          .trim();
 
         return {
-          title: titleMatch[1],
-          summary: summaryMatch ? summaryMatch[1] : 'Resumen de la noticia',
+          title: titleMatch[1].trim(),
+          summary: summaryMatch ? summaryMatch[1].trim() : 'Resumen de la noticia',
           content: cleanContent.length > 50 ? cleanContent : '<p>Contenido recuperado de emergencia.</p>',
-          imagePrompt: 'cryptocurrency, blockchain',
+          imagePrompt: result.match(/imagePrompt"\s*:\s*"([^"]+)"/)?.[1] || 'cryptocurrency, blockchain',
           tags: [],
           sourceUrl: newsContext[0]?.link || '',
           sources: newsContext.map(n => n.link),

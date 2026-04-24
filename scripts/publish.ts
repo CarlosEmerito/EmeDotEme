@@ -104,12 +104,6 @@ async function main() {
       console.log('   Prompt:', aiResponse.imagePrompt.substring(0, 100) + '...');
     }
     
-    // Post-procesado ortográfico por IA local (Ollama) - solo español
-
-    console.log("\n🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...");
-    const { postprocessWithOllama } = await import("../modules/ai/ai.service");
-    aiResponse = await postprocessWithOllama(aiResponse);
-    
     const t1 = Date.now();
     console.log(`\n⏱️ Tiempo de generación: ${((t1 - t0) / 1000).toFixed(2)} segundos`);
 

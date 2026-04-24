@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { siteConfig } from "@/config/site";
-import { generateArticleContent } from "@/modules/ai/ai.service";
+import { generateBilingualContent } from "@/modules/ai/ai.service";
 import { fetchLatestNews } from "@/modules/news/news-sources.service";
 import { generateSlug } from "@/lib/utils";
 import { FALLBACK_IMAGES } from "@/config/constants";
@@ -49,7 +49,7 @@ export async function GET(req: Request) {
     console.log(`📰 Noticias obtenidas: ${newsContext.newsItems.length} de ${newsContext.sourcesResponded.join(', ') || 'ninguna fuente'}`);
 
     // 3. Llamada al servicio de IA con contexto de noticias reales
-    const aiResponse = await generateArticleContent(recentTitles, newsContext.newsItems);
+    const aiResponse = await generateBilingualContent(recentTitles, newsContext.newsItems);
     
     const slug = generateSlug(aiResponse.title, false);
 
@@ -65,9 +65,12 @@ export async function GET(req: Request) {
     const newArticle = await prisma.article.create({
       data: {
         title: aiResponse.title,
+        titleEn: aiResponse.titleEn,
         slug: slug + '-' + Date.now(),
         summary: aiResponse.summary,
+        summaryEn: aiResponse.summaryEn,
         content: aiResponse.content,
+        contentEn: aiResponse.contentEn,
         imageUrl: imageUrl,
         imageCaption: aiResponse.imageCaption,
         sourceUrl: aiResponse.sourceUrl || null,

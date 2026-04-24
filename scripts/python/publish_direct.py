@@ -83,17 +83,19 @@ def publicar_en_square(post, sentimiento, imagen_url):
     }
     try:
         r = requests.post(SQUARE_API_URL, json=payload, headers=headers, timeout=15)
-        body = r.text[:500]
-        log_event(f"[debug] Binance Square response: status={r.status_code} body={body}")
         if r.status_code in [200, 201]:
             # Verificar si la API devolvió éxito real en el body
             try:
                 resp_json = r.json()
                 if resp_json.get("success") is False or resp_json.get("code") not in [None, 0, "000000"]:
+                    body = r.text[:500]
                     return False, f"API rechazó: {body}"
             except Exception:
                 pass
             return True, "Publicado en Binance Square"
+        
+        body = r.text[:500]
+        log_event(f"[error] Binance Square error: status={r.status_code} body={body}", 40)
         return False, f"API err: {r.status_code} - {body}"
     except Exception as e:
         return False, f"Excepción: {e}"

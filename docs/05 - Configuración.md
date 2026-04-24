@@ -26,6 +26,12 @@ Para ejecución local. Requiere tener el software instalado de [ollama.com](http
 | `OLLAMA_MODEL`     | Modelo (por defecto: llama3.1:8b)            | Opcional  | `llama3.1:8b` |
 | `OLLAMA_BASE_URL`  | URL base                                    | Opcional  | `http://localhost:11434` |
 
+### Imágenes - Flux.1 Local
+
+| Variable           | Descripción                                 | Requerido | Default |
+|--------------------|---------------------------------------------|-----------|---------|
+| `FLUX_API_URL`     | URL de la API local de Flux                 | Opcional  | `http://localhost:8000` |
+
 ### Imágenes - AI Horde
 
 | Variable             | Descripción                                | Requerido   | Obtención |

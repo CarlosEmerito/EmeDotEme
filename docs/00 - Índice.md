@@ -21,13 +21,16 @@ Bienvenido a la documentación oficial de **EmeDotEme**, el sistema automatizado
 
 ## 🚀 Inicio Rápido
 
-Para poner en marcha el proyecto localmente en menos de 5 minutos:
+Para poner en marcha el proyecto localmente:
 
 1.  **Instalar dependencias:** `npm install` y `pip install -r requirements.txt`.
-2.  **Configurar entorno:** Copia `.env.example` a `.env` y rellena las claves mínimas (DATABASE_URL, GEMINI_API_KEY).
-3.  **Base de datos:** `npx prisma migrate dev`.
-4.  **Ejecutar dev:** `npm run dev`.
-5.  **Probar pipeline:** `npx tsx scripts/publish_test.ts`.
+2.  **Preparar IA Local:**
+    -   Instala Ollama y descarga el modelo: `ollama run llama3.1:8b`.
+    -   Inicia el servidor de imágenes: `./iniciar-imagen.sh` (requiere Docker y GPU NVIDIA).
+3.  **Configurar entorno:** Copia `.env.example` a `.env` y rellena las claves mínimas (DATABASE_URL, GEMINI_API_KEY).
+4.  **Base de datos:** `npx prisma migrate dev`.
+5.  **Ejecutar dev:** `npm run dev`.
+6.  **Probar pipeline:** `npx tsx scripts/publish_test.ts`.
 
 ---
 

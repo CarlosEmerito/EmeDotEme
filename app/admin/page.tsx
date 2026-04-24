@@ -12,7 +12,7 @@ export default async function AdminPage({
 }) {
   const allArticles = await prisma.article.findMany({
     orderBy: { createdAt: "desc" },
-    include: { category: true }
+    include: { category: true, articleTags: true }
   });
   
   const searchQuery = searchParams?.search?.toLowerCase() || "";
@@ -21,7 +21,7 @@ export default async function AdminPage({
         article.title.toLowerCase().includes(searchQuery) ||
         article.summary?.toLowerCase().includes(searchQuery) ||
         article.content.toLowerCase().includes(searchQuery) ||
-        article.tags.some(tag => tag.toLowerCase().includes(searchQuery)) ||
+        article.articleTags.some(tag => tag.name.toLowerCase().includes(searchQuery)) ||
         article.category.name.toLowerCase().includes(searchQuery)
       )
     : allArticles;

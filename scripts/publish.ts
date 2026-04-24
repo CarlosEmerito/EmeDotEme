@@ -159,7 +159,6 @@ async function main() {
         summaryEn: aiResponse.summaryEn,
         content: aiResponse.content,
         contentEn: aiResponse.contentEn,
-        tags: tagsArray,
         articleTags: {
           connectOrCreate: tagsArray.map((tag: string) => ({
             where: { name: tag },

@@ -16,7 +16,7 @@ export async function GET(req: Request) {
 
   try {
     // 1. Asegurar que existan categorías base
-    const categories = ["Criptomonedas", "Empresa", "IA", "Ciberseguridad"];
+    const categories = ["Criptomonedas", "IA", "Mercados", "Tecnología", "Ciberseguridad"];
     
     await Promise.all(
       categories.map(name =>
@@ -55,12 +55,13 @@ export async function GET(req: Request) {
 
     let imageUrl = aiResponse.sourceImageUrl;
     if (!imageUrl) {
-      const options = FALLBACK_IMAGES[randomCategory.name] || FALLBACK_IMAGES["Empresa"];
+      const options = FALLBACK_IMAGES[randomCategory.name] || FALLBACK_IMAGES["Mercados"];
       imageUrl = options[Math.floor(Math.random() * options.length)];
     }
 
     // 4. Guardar el artículo generado con fuentes
     const hasRealSources = newsContext.newsItems.length > 0;
+    const tagsArray = aiResponse.tags || [];
     const newArticle = await prisma.article.create({
       data: {
         title: aiResponse.title,
@@ -73,8 +74,17 @@ export async function GET(req: Request) {
         categoryId: randomCategory.id,
         author: siteConfig.author,
         published: true,
+        publishedAt: new Date(),
         isOriginal: !hasRealSources, // false si se basa en fuentes externas
-        tags: aiResponse.tags || [],
+        articleTags: {
+          connectOrCreate: tagsArray.map((tag: string) => ({
+            where: { name: tag },
+            create: { 
+              name: tag, 
+              slug: tag.toLowerCase().replace(/\s+/g, '-') 
+            }
+          }))
+        },
       },
       include: {
         category: true,

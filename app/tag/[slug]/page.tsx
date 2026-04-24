@@ -37,18 +37,9 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
     prisma.article.findMany({
       where: {
         published: true,
-        OR: [
-          {
-            articleTags: {
-              some: { slug: decodedTag.toLowerCase() }
-            }
-          },
-          {
-            tags: {
-              has: decodedTag // Fallback for legacy tags until migrated
-            }
-          }
-        ]
+        articleTags: {
+          some: { slug: decodedTag.toLowerCase() }
+        }
       },
       include: { category: true, articleTags: true },
       orderBy: [
@@ -63,18 +54,9 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
     prisma.article.count({
       where: {
         published: true,
-        OR: [
-          {
-            articleTags: {
-              some: { slug: decodedTag.toLowerCase() }
-            }
-          },
-          {
-            tags: {
-              has: decodedTag // Fallback for legacy tags until migrated
-            }
-          }
-        ]
+        articleTags: {
+          some: { slug: decodedTag.toLowerCase() }
+        }
       }
     })
   ]);

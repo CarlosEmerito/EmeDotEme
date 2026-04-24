@@ -36,11 +36,12 @@ async function main() {
     
     let imageUrl = aiResponse.sourceImageUrl;
     if (!imageUrl) {
-      const options = FALLBACK_IMAGES[randomCategory.name] || FALLBACK_IMAGES["Empresa"];
+      const options = FALLBACK_IMAGES[randomCategory.name] || FALLBACK_IMAGES["Mercados"];
       imageUrl = options[0];
     }
 
     const hasRealSources = newsContext.newsItems.length > 0;
+    const tagsArray = aiResponse.tags || [];
     const newArticle = await prisma.article.create({
       data: {
         title: aiResponse.title,
@@ -53,11 +54,21 @@ async function main() {
         categoryId: randomCategory.id,
         author: siteConfig.author,
         published: true,
+        publishedAt: new Date(),
         isOriginal: !hasRealSources,
-        tags: aiResponse.tags || [],
+        articleTags: {
+          connectOrCreate: tagsArray.map((tag: string) => ({
+            where: { name: tag },
+            create: { 
+              name: tag, 
+              slug: tag.toLowerCase().replace(/\s+/g, '-') 
+            }
+          }))
+        },
       },
       include: {
         category: true,
+        articleTags: true,
       }
     });
 
@@ -71,7 +82,7 @@ async function main() {
       console.log("Fuente principal:", newArticle.sourceUrl);
     }
     console.log("Basado en fuentes reales:", !newArticle.isOriginal);
-    console.log("Tags:", newArticle.tags);
+    console.log("Tags:", newArticle.articleTags.map(t => t.name));
     
   } catch (error) {
     console.error("Error:", error);

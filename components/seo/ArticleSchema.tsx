@@ -2,13 +2,17 @@ import { Article } from "@prisma/client";
 import { Category } from "@prisma/client";
 
 interface ArticleSchemaProps {
-  article: Article & { category: Category };
+  article: any; // Using any to avoid type complexity with includes
   siteUrl: string;
 }
 
 export function ArticleSchema({ article, siteUrl }: ArticleSchemaProps) {
   const articleUrl = `${siteUrl}/articulo/${article.slug}`;
   const imageUrl = article.imageUrl || `${siteUrl}/og.jpg`;
+
+  const keywords = article.articleTags 
+    ? article.articleTags.map((t: any) => t.name).join(", ") 
+    : "";
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -38,8 +42,8 @@ export function ArticleSchema({ article, siteUrl }: ArticleSchemaProps) {
       "@type": "WebPage",
       "@id": articleUrl,
     },
-    "articleSection": article.category.name,
-    "keywords": article.tags.join(", "),
+    "articleSection": article.category?.name || "Tecnología",
+    "keywords": keywords,
     "wordCount": article.content.split(/\s+/).length,
     "inLanguage": "es-ES",
     "potentialAction": {

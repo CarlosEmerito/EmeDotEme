@@ -163,15 +163,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         {/* Footer info (Tags & Sentiment) */}
         <div className="mt-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-t border-zinc-100 dark:border-zinc-800 pt-8">
           {/* Tags */}
-          {article.tags && article.tags.length > 0 && (
+          {article.articleTags && article.articleTags.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {article.tags.map((tag) => (
+              {article.articleTags.map((tag) => (
                 <Link 
-                  href={`/tag/${tag.toLowerCase()}`}
-                  key={tag} 
+                  href={`/en/tag/${tag.slug}`}
+                  key={tag.id} 
                   className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-[color:var(--color-brand)] hover:text-white dark:hover:bg-[color:var(--color-brand)] transition-colors text-xs font-bold uppercase tracking-wider rounded-full"
                 >
-                  #{tag}
+                  #{tag.name}
                 </Link>
               ))}
             </div>

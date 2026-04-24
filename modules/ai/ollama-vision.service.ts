@@ -79,7 +79,7 @@ Devuelve SOLO el JSON de análisis, nada más.`;
       }
 
       const data = await response.json();
-      const text = data.response;
+      const text = data.response || data.thinking;
 
       if (!text || text.trim().length === 0) {
         throw new Error('Respuesta de Ollama vacía');

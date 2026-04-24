@@ -26,19 +26,26 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 
 ## 🖼️ Problemas con las Imágenes
 
-### 1. Flux.1 Local: Error de Memoria (CUDA Out of Memory)
+### 1. Flux.1 Local: Cómo monitorizar el progreso
+**Síntoma**: El pipeline parece congelado durante la generación de imagen.
+**Explicación**: La generación de Flux en GPUs de 8GB es intensiva y puede tardar varios minutos (hasta 15-20 min en casos extremos).
+**Solución**: 
+- Abre una nueva terminal y ejecuta: `docker logs -f flux-api-server`.
+- Verás el progreso paso a paso (ej: `Paso 4/28 (14.3%)`).
+
+### 2. Flux.1 Local: Error de Memoria (CUDA Out of Memory)
 **Síntoma**: El log de Docker muestra `CUDA out of memory` y la generación falla.
 **Causas**: 
-- Ollama está reteniendo memoria de la GPU tras generar texto.
-- Otra aplicación está usando la VRAM.
+- Ollama o Gemini Vision están reteniendo memoria de la GPU.
+- El handoff de memoria no ha tenido tiempo suficiente para limpiar los buffers.
 **Solución**:
-- El sistema ya está configurado con `keep_alive: 0` en `ai.service.ts` para que Ollama libere la GPU rápido. Asegúrate de no haberlo cambiado.
-- Si persiste, reinicia el motor de imagen: `./detener-bot.sh && ./iniciar-bot.sh`.
+- El sistema utiliza `unloadOllamaModels()` con una pausa de 13 segundos antes de iniciar Flux. Si sigue fallando, prueba a limpiar manualmente la VRAM ejecutando `./detener-bot.sh`.
+- Verifica que el contenedor de Flux se haya iniciado con `PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"` (lo hace automáticamente `iniciar-imagen.sh`).
 
-### 2. AI Horde tarda demasiado o falla
+### 3. AI Horde tarda demasiado o falla
 **Síntoma**: El script se queda esperando o devuelve errores de servidor.
 **Solución**:
-- Es un servicio comunitario; a veces hay mucha carga. El sistema intentará automáticamente usar una imagen de stock (Unsplash) tras fallar los intentos por IA.
+- Es un servicio comunitario; a veces hay mucha carga. El sistema intentará automáticamente usar una imagen de stock (Unsplash) tras fallar los intentos locales por IA.
 - Verifica si tu `AI_HORDE_API_KEY` tiene puntos de prioridad.
 
 ### 2. Imágenes no se cargan en la web

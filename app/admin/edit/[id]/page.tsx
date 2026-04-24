@@ -13,7 +13,8 @@ export default async function EditArticlePage({ params }: PageProps) {
   const { id } = await params;
   
   const article = await prisma.article.findUnique({
-    where: { id }
+    where: { id },
+    include: { articleTags: true }
   });
 
   if (!article) {

@@ -9,7 +9,9 @@ export default async function StatsPage() {
       id: true,
       published: true, 
       categoryId: true, 
-      tags: true, 
+      articleTags: {
+        select: { name: true }
+      }, 
       createdAt: true,
       sentiment: true,
       isOriginal: true
@@ -34,8 +36,8 @@ export default async function StatsPage() {
   // Tag analysis
   const tagFrequency: Record<string, number> = {};
   articles.forEach(article => {
-    article.tags.forEach(tag => {
-      tagFrequency[tag] = (tagFrequency[tag] || 0) + 1;
+    article.articleTags.forEach(tag => {
+      tagFrequency[tag.name] = (tagFrequency[tag.name] || 0) + 1;
     });
   });
   const topTags = Object.entries(tagFrequency)

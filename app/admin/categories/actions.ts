@@ -76,21 +76,23 @@ export async function deleteCategory(id: string) {
   }
 }
 
-export async function renameTag(oldTag: string, newTag: string) {
-  if (!newTag || oldTag === newTag) return { success: false, error: "Nombre inválido o igual al anterior" };
+export async function renameTag(oldTagName: string, newTagName: string) {
+  if (!newTagName || oldTagName === newTagName) return { success: false, error: "Nombre inválido o igual al anterior" };
 
   try {
-    const articles = await prisma.article.findMany({
-      where: { tags: { has: oldTag } }
+    const tag = await prisma.tag.findUnique({
+      where: { name: oldTagName }
     });
 
-    for (const article of articles) {
-      const updatedTags = article.tags.map(t => t === oldTag ? newTag : t);
-      await prisma.article.update({
-        where: { id: article.id },
-        data: { tags: Array.from(new Set(updatedTags)) }
-      });
-    }
+    if (!tag) return { success: false, error: "La etiqueta no existe" };
+
+    await prisma.tag.update({
+      where: { id: tag.id },
+      data: { 
+        name: newTagName,
+        slug: newTagName.toLowerCase().replace(/\s+/g, '-')
+      }
+    });
 
     revalidatePath("/admin/categories");
     return { success: true };
@@ -100,19 +102,17 @@ export async function renameTag(oldTag: string, newTag: string) {
   }
 }
 
-export async function deleteTag(tag: string) {
+export async function deleteTag(tagName: string) {
   try {
-    const articles = await prisma.article.findMany({
-      where: { tags: { has: tag } }
+    const tag = await prisma.tag.findUnique({
+      where: { name: tagName }
     });
 
-    for (const article of articles) {
-      const updatedTags = article.tags.filter(t => t !== tag);
-      await prisma.article.update({
-        where: { id: article.id },
-        data: { tags: updatedTags }
-      });
-    }
+    if (!tag) return { success: false, error: "La etiqueta no existe" };
+
+    await prisma.tag.delete({
+      where: { id: tag.id }
+    });
 
     revalidatePath("/admin/categories");
     return { success: true };

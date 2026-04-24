@@ -43,7 +43,6 @@ model Article {
   author      String   @default("EmeDotEme AI")
   published   Boolean  @default(false)
   isOriginal  Boolean  @default(false)
-  tags        String[] @default([]) // Legacy tags, to be migrated
   articleTags Tag[]
   isPinned    Boolean  @default(false)
   priority    Int      @default(0)

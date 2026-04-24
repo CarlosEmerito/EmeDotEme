@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
-import { saveImageToSupabase } from '../modules/images/image.service.ts';
+import { saveImageToSupabase } from '../modules/storage/supabase.service';
 
 const prisma = new PrismaClient();
 

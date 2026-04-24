@@ -10,12 +10,6 @@ export const GEMINI_MODEL_NAME = "gemini-2.5-flash";
 /** URL base de Ollama */
 export const OLLAMA_URL = "http://127.0.0.1:11434/api/generate";
 
-/** Modelo por defecto para Ollama (texto) */
-export const OLLAMA_TEXT_MODEL_DEFAULT = "gemma4:26b";
-
-/** Modelo de visión para Ollama */
-export const OLLAMA_VISION_MODEL = "gemma4:e4b";
-
 /**
  * Prompt del sistema para análisis de imágenes.
  * Usado tanto por Gemini Vision como por Ollama Vision.

@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { saveImageToSupabase } from '../modules/images/image.service.ts';
+import { saveImageToSupabase } from '../modules/storage/supabase.service';
 
 async function test() {
   // Use a recent Cloudflare R2 temporary URL from logs

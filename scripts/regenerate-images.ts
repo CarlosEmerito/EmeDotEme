@@ -12,7 +12,7 @@ async function regenerateImageForArticle(article: any) {
   try {
     const result = await generateArticleImageAndAnalyzeQA(
       { title, slug, summary, topic },
-      null // No hay imagen de fuente original
+      undefined // No hay imagen de fuente original
     );
 
     if (!result || !result.imageUrl) {

@@ -1,5 +1,5 @@
 import { generateImageWithFlux, checkFluxStatus } from '../modules/ai/flux-image.service';
-import { unloadOllamaModels } from '../modules/ai/ai.service';
+import { unloadOllamaModels } from '../modules/vram/vram-manager';
 
 async function main() {
   console.log('🔍 Comprobando estado de Flux Local...');

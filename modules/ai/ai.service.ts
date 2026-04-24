@@ -202,6 +202,7 @@ export interface GeneratedArticle {
   sourceImageUrl?: string;
   imageCaption?: string;
   category?: string;
+  sentiment?: string;
 }
 
 // ============================================================
@@ -367,7 +368,11 @@ export async function generateBilingualContent(
   
   // === Paso 1: Generar en Español ===
   console.log('\n🇪🇸 [1/2] Generando artículo en español...');
-  const esArticle = await generateArticleContent(recentTitles, newsContext);
+  let esArticle = await generateArticleContent(recentTitles, newsContext);
+  
+  // Post-procesado ortográfico por IA local (Ollama)
+  console.log("\n🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...");
+  esArticle = await postprocessWithOllama(esArticle);
   
   // === Paso 2: Generar en Inglés ===
   console.log('\n🇬🇧 [2/2] Generando artículo en inglés...');

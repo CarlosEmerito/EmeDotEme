@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { generateArticleContent, translateArticleContent } from "../modules/ai/ai.service";
+import { generateBilingualContent } from "../modules/ai/ai.service";
 import { fetchLatestNews } from "../modules/news/news-sources.service";
 import { generateArticleImageAndAnalyzeQA } from "../modules/images/image.service";
 import { PrismaClient } from "@prisma/client";
@@ -45,8 +45,7 @@ async function main() {
     console.log(`📰 Noticias obtenidas: ${newsContext.newsItems.length} de ${newsContext.sourcesResponded.join(', ') || 'ninguna fuente'}`);
     
     const t0 = Date.now();
-    let aiResponse: any = await generateArticleContent(recentTitles, newsContext.newsItems);
-    aiResponse = await translateArticleContent(aiResponse);
+    const aiResponse = await generateBilingualContent(recentTitles, newsContext.newsItems);
     const t1 = Date.now();
     console.log(`\n⏱️ Tiempo de generación: ${((t1 - t0) / 1000).toFixed(2)} segundos`);
 

@@ -23162,3 +23162,156 @@ Sentimiento del mercado: Neutral ➡️
 ✅ Proceso completado. Revisa tus redes sociales. (2026-04-24 11:35:00)
 
 ===============================================================
+
+================== 📰 PUBLICAR.sh (2026-04-24 14:07:04) ==================
+[1️⃣] Generando artículo principal...
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+🚀 INICIANDO GENERACIÓN DE ARTÍCULO LOCAL (DEBUG) 🚀
+=====================================================
+
+📰 Títulos recientes para evitar: 0
+📰 URLs recientes para evitar: 0
+
+📰 ═══════════════════════════════════════════════════════
+📰 FETCHING NOTICIAS DE FUENTES FIABLES
+📰 ═══════════════════════════════════════════════════════
+
+📡 Fuentes habilitadas: The Hacker News, Krebs on Security, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, VentureBeat AI, El País Tecnología
+📡 Fetching noticias de The Hacker News...
+📡 Fetching noticias de Krebs on Security...
+📡 Fetching noticias de Security Affairs...
+📡 Fetching noticias de CoinDesk...
+📡 Fetching noticias de MIT Technology Review AI...
+📡 Fetching noticias de Decrypt...
+📡 Fetching noticias de VentureBeat AI...
+📡 Fetching noticias de El País Tecnología...
+✅ Krebs on Security: 0 noticias recientes (últimas 48h)
+✅ MIT Technology Review AI: 4 noticias recientes (últimas 48h)
+✅ Decrypt: 36 noticias recientes (últimas 48h)
+✅ El País Tecnología: 5 noticias recientes (últimas 48h)
+✅ CoinDesk: 25 noticias recientes (últimas 48h)
+✅ The Hacker News: 15 noticias recientes (últimas 48h)
+✅ Security Affairs: 10 noticias recientes (últimas 48h)
+✅ VentureBeat AI: 0 noticias recientes (últimas 48h)
+
+📊 Total noticias fetched: 49
+📊 Fuentes que respondieron: The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+📊 Tras deduplicar: 49 noticias únicas
+📊 Tras filtrar cubiertas: 49 noticias nuevas
+📊 Clusters de temas: 5
+  📌 Cluster 1: "Bridging the AI Agent Authority Gap: Continuous Observabilit..." (1 fuentes)
+  📌 Cluster 2: "26 FakeWallet Apps Found on Apple App Store Targeting Crypto..." (1 fuentes)
+  📌 Cluster 3: "Morning Minute: Soldier Arrested for $400K Polymarket Inside..." (2 fuentes)
+  📌 Cluster 4: "Aave Leads ‘DeFi United’ Push to Contain $292M KelpDAO Fallo..." (1 fuentes)
+  📌 Cluster 5: "Bitcoin, dollar move in near-perfect opposition. It hasn't b..." (1 fuentes)
+
+🎯 Cluster seleccionado: "Morning Minute: Soldier Arrested for $400K Polymarket Inside..." con 2 fuente(s)
+📰 ═══════════════════════════════════════════════════════
+
+📰 Noticias obtenidas: 2 de The Hacker News, Security Affairs, CoinDesk, MIT Technology Review AI, Decrypt, El País Tecnología
+
+🎯 Intentando con Cluster 1/5: "Morning Minute: Soldier Arrested for $400K Polymarket Inside..."
+
+🌍 INICIANDO GENERACIÓN BILINGÜE
+
+🇪🇸 [1/2] Generando artículo en español...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini primaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini secundaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini terciaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+⚠️ Intentando con Ollama local...
+[2026-04-24 12:07:11] 🧹 [VRAM] Orden de descarga enviada a Ollama. Esperando limpieza física...
+[2026-04-24 12:07:19] 🧹 [VRAM] Limpieza completada.
+[2026-04-24 12:07:20] 🤖 [Ollama llama3.1:8b] Generando texto en streaming...
+{
+  "title": "Soldado estadounidense arrestado por supuesto fraude de información privilegiada en Polymarket",
+  "summary": "Un soldado del ejército de los Estados Unidos ha sido acusado de haber ganado más de $400.000 mediante apuestas en Polymarket utilizando inteligencia clasificada sobre la remoción de Maduro.",
+  "content": "<p>El caso destaca las preocupaciones sobre el uso de información privilegiada en mercados financieros y los riesgos asociados con la participación de militares en actividades de juego.</p>
+
+<h2>Detalles del caso</h2>
+<p>Según informes, el soldado utilizó inteligencia clasificada para hacer apuestas en Polymarket sobre resultados relacionados con Venezuela, incluyendo la remoción de Nicolás Maduro. El gobierno federal ha acusado al soldado de fraude de información privilegiada y de haber ganado más de $400.000 mediante sus apuestas.</p>
+
+<h2>Consecuencias del caso</h2>
+<p>El caso del soldado estadounidense en Polymarket destaca las preocupaciones sobre el uso de información privilegiada en mercados financieros y los riesgos asociados con la participación de militares en actividades de juego. La acusación también subraya la importancia de mantener la integridad de los mercados financieros y prevenir el fraude.</p>",
+  "tags": ["Polymarket", "Fraude de información privilegiada", "Mercado financiero"],
+  "imagePrompt": "Un soldado estadounidense sentado frente a una computadora con un fondo de código en la pantalla, rodeado de símbolos de criptomonedas.",
+  "category": "Criptomonedas",
+  "sourceUrl": "https://decrypt.co/365436/morning-minute-soldier-arrested-for-400k-polymarket-insider-bet-on-maduro-raid",
+  "sources": ["https://decrypt.co/365436/morning-minute-soldier-arrested-for-400k-polymarket-insider-bet-on-maduro-raid"]
+}
+
+[2026-04-24 12:07:30] ✅ [Ollama] Generación completada.
+
+🇬🇧 [2/2] Generando artículo en inglés...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini primaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini secundaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini terciaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+⚠️ Gemini falló para EN, intentando con Ollama...
+[2026-04-24 12:07:37] 🤖 [Ollama llama3.1:8b] Generando texto en streaming...
+Here is the rewritten article in English:
+
+```json
+{
+  "titleEn": "US Soldier Arrested for Alleged Insider Trading on Venezuelan Regime Change",
+  "summaryEn": "A US Army soldier has been accused of using classified intelligence to make over $400,000 in bets on Venezuela-related outcomes, including the removal of President Nicolás Maduro. The case highlights concerns about insider trading and the risks associated with military personnel engaging in gaming activities.",
+  "contentEn": 
+    "<p>A US Army soldier has been arrested and charged with allegedly using classified intelligence to make over $400,000 in bets on Venezuela-related outcomes, including the removal of President Nicolás Maduro.</p>
+    
+    <h2>Details of the Case</h2>
+    <p>According to reports, the soldier used classified information to place bets on Polymarket, a platform that allows users to bet on various outcomes. The government has accused the soldier of using insider trading and making over $400,000 in profits.</p>
+    
+    <h2>Consequences of the Case</h2>
+    <p>The case highlights concerns about the use of classified information for personal gain and the risks associated with military personnel engaging in gaming activities. The incident also underscores the importance of maintaining the integrity of sensitive information and preventing its misuse.</p>"
+}
+```
+
+[2026-04-24 12:07:43] ✅ [Ollama] Generación completada.
+
+✅ Generación bilingüe completada en 35.61 segundos
+✅ Generación exitosa con Cluster 1
+📝 ImagePrompt presente: SÍ
+   Prompt: Un soldado estadounidense sentado frente a una computadora con un fondo de código en la pantalla, ro...
+
+🔍 Post-procesando texto con Ollama para mejorar ortografía y estilo...
+[2026-04-24 12:07:44] 🤖 [Ollama llama3.1:8b] Generando texto en streaming...
+{
+  "title": "Soldado estadounidense arrestado por supuesto fraude de información privilegiada en Polymarket",
+  "summary": "Un soldado del ejército de los Estados Unidos ha sido acusado de haber ganado más de $400.000 mediante apuestas en Polymarket utilizando inteligencia clasificada sobre la remoción de Maduro.",
+  "content": "<p>El caso destaca las preocupaciones sobre el uso de información privilegiada en mercados financieros y los riesgos asociados con la participación de militares en actividades de juego.</p>\n\n<h2>Detalles del caso</h2>\n<p>Según informes, el soldado utilizó inteligencia clasificada para hacer apuestas en Polymarket sobre resultados relacionados con Venezuela, incluyendo la remoción de Nicolás Maduro. El gobierno federal ha acusado al soldado de fraude de información privilegiada y de haber ganado más de $400.000 mediante sus apuestas.</p>\n\n<h2>Consecuencias del caso</h2>\n<p>El caso del soldado estadounidense en Polymarket destaca las preocupaciones sobre el uso de información privilegiada en mercados financieros y los riesgos asociados con la participación de militares en actividades de juego. La acusación también subraya la importancia de mantener la integridad de los mercados financieros y prevenir el fraude.</p>"
+}
+
+[2026-04-24 12:07:51] ✅ [Ollama] Generación completada.
+✅ postprocess corregido
+
+⏱️ Tiempo de generación: 43.81 segundos
+
+🖼️ ═══════════════════════════════════════════════════════
+🖼️  PIPELINE DE IMAGEN
+🖼️ ═══════════════════════════════════════════════════════
+
+
+📸 [Paso 1] No hay imagen de fuente RSS, saltando al paso 2
+
+🧹 Liberando VRAM de Ollama...
+[2026-04-24 12:07:51] 🧹 [VRAM] Orden de descarga enviada a Ollama. Esperando limpieza física...
+[2026-04-24 12:07:59] 🧹 [VRAM] Limpieza completada.
+⏱️ Esperando 5s para estabilidad de GPU...
+
+🎨 [Paso 2] Generación con Flux.1 Local
+[FLUX LOCAL] Generando imagen para: soldado-estadounidense-arrestado-por-supuesto-fraude-de-informaci-n-privilegiada-en-polymarket-1777032471339
+   💡 Puedes seguir el progreso con: docker logs -f flux-api-server
+✅ [FLUX LOCAL] Imagen generada con éxito.
+🔍 [QA Flux.1 Local] Analizando imagen...
+🔍 Analizando imagen con Gemini Vision (PRIMARIA)...

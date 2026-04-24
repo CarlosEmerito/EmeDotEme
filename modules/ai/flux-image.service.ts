@@ -20,6 +20,7 @@ export async function generateImageWithFlux(
   options: FluxImageOptions = {}
 ): Promise<string | null> {
   console.log(`[FLUX LOCAL] Generando imagen para: ${articleSlug}`);
+  console.log(`   💡 Puedes seguir el progreso con: docker logs -f flux-api-server`);
   
   const payload = {
     prompt,
@@ -75,15 +76,28 @@ export async function generateImageWithFlux(
 }
 
 /**
- * Verifica si el servicio local de Flux está disponible
+ * Verifica si el servicio local de Flux está disponible.
+ * Si el contenedor está corriendo pero no responde, espera hasta 60s.
  */
 export async function checkFluxStatus(): Promise<boolean> {
-  try {
-    const response = await fetch(`${FLUX_API_URL}/health`, {
-      signal: AbortSignal.timeout(5000) as any
-    });
-    return response.ok;
-  } catch (err) {
-    return false;
+  const maxWaitMs = 60000;
+  const intervalMs = 5000;
+  let elapsedMs = 0;
+
+  while (elapsedMs < maxWaitMs) {
+    try {
+      const response = await fetch(`${FLUX_API_URL}/health`, {
+        signal: AbortSignal.timeout(3000) as any
+      });
+      if (response.ok) return true;
+    } catch (err) {
+      // Si el error es de conexión, comprobamos si es que aún está arrancando
+      console.log(`[FLUX] Esperando respuesta del servidor (${elapsedMs/1000}s)...`);
+    }
+    
+    await new Promise(resolve => setTimeout(resolve, intervalMs));
+    elapsedMs += intervalMs;
   }
+  
+  return false;
 }

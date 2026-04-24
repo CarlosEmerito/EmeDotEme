@@ -89,25 +89,26 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
 }
 
 /**
- * Fuerza a Ollama a descargar todos los modelos de la VRAM.
- * Útil antes de lanzar procesos pesados como Flux.1.
+ * Fuerza a Ollama a descargar todos los modelos de la VRAM y espera a que sea efectivo.
  */
 export async function unloadOllamaModels(): Promise<void> {
   try {
     const fetchNode = (await import('node-fetch')).default;
-    // En Ollama, enviar una petición con keep_alive: 0 descarga el modelo
     const model = process.env.OLLAMA_MODEL || OLLAMA_TEXT_MODEL_DEFAULT;
     
+    // 1. Enviar orden de descarga
     await fetchNode(OLLAMA_URL.replace('/generate', '/load'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model,
-        keep_alive: 0
-      })
+      body: JSON.stringify({ model, keep_alive: 0 })
     });
     
-    logWithTime('🧹 [VRAM] Petición de descarga enviada a Ollama.');
+    logWithTime('🧹 [VRAM] Orden de descarga enviada a Ollama. Esperando limpieza física...');
+    
+    // 2. Pausa obligatoria de 8 segundos para que el driver de NVIDIA limpie los buffers
+    await new Promise(resolve => setTimeout(resolve, 8000));
+    
+    logWithTime('🧹 [VRAM] Limpieza completada.');
   } catch (err) {
     logWithTime(`⚠️ No se pudo forzar la descarga de Ollama: ${err}`);
   }

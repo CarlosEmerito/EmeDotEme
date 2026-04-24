@@ -23,8 +23,8 @@ export async function generateImageWithFlux(
   
   const payload = {
     prompt,
-    width: options.width || 1024,
-    height: options.height || 1024,
+    width: options.width || 896,
+    height: options.height || 896,
     num_inference_steps: options.num_inference_steps || 28,
     guidance_scale: options.guidance_scale || 3.5,
   };

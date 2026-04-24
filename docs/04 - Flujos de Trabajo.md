@@ -2,9 +2,10 @@
 
 ## Índice
 
-- Pipeline de publicación
+- Pipeline de publicación (Publisher Service)
 - Flujo de imágenes
 - Flujo de IA
+- Gestión de Memoria (VRAM)
 - Cron jobs
 
 ---
@@ -13,152 +14,72 @@
 
 ### Descripción general
 
-El pipeline de publicación es el flujo principal que genera y publica automáticamente un artículo cada día.
+El pipeline de publicación es el flujo principal que genera y publica automáticamente un artículo cada día. Ha sido refactorizado en un **Publisher Service** para mejorar la modularidad y resiliencia.
 
-### Diagrama
+### Diagrama del Pipeline
 
 ```
 +-------------------------------------------------------------+
-|                 PIPELINE DE PUBLICACIÓN                    |
+|                 PUBLISHER SERVICE PIPELINE                 |
 +-------------------------------------------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| 1. INICIALIZACIÓN                                            |
-|    - Cargar categorías desde la BD                           |
-|    - Obtener títulos recientes                               |
-|    - Obtener URLs recientes                                  |
+| 1. INICIALIZACIÓN (ensureCategories)                         |
+|    - Asegurar que las categorías base existen en la BD       |
+|    - Obtener contexto reciente (títulos y URLs) para evitar  |
+|      duplicidad.                                             |
 +-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
 | 2. FETCH NOTICIAS (NewsSources Service)                     |
-|    +---------------------------------------------------+    |
-|    | - Fetch RSS de fuentes fiables                     |    |
-|    | - Parsear y filtrar noticias (últimas 48h)         |    |
-|    | - Deduplicar por similitud de títulos              |    |
-|    | - Filtrar artículos ya cubiertos                   |    |
-|    | - Clustering por tema                              |    |
-|    +---------------------------------------------------+    |
-|    Resultado: newsItems[]                                   |
+|    - Fetch RSS y agrupamiento en temas (ClusteringEngine)   |
 +-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
 | 3. GENERACIÓN IA (AI Service)                               |
-|    +---------------------------------------------------+    |
-|    | SYSTEM PROMPT: "Eres periodista profesional..."    |    |
-|    | USER PROMPT: Noticias + instrucciones               |    |
-|    +---------------------------------------------------+    |
-|                           |                               |
-|              +------------+-----------+                   |
-|              v                        v                  |
-|         GEMINI API            OLLAMA LOCAL                |
-|              |                        |                  |
-|              +-> OK -> JSON válido  +-> JSON válido      |
-|              |                        |                  |
-|              +-- FAIL --+          +-- FAIL --+          |
-|              v                        v                  |
-|         Try Ollama         Artículo de ejemplo            |
-|              |                        |                  |
-|              +-- FAIL --+          +-- (ERROR)           |
-|                         v                        v       |
-|                     Artículo de ejemplo                  |
-|                     (notifica Telegram)                  |
-|                                                          |
-|    Resultado: {title, summary, content, tags, ...}        |
+|    - Lógica de Clusters: Intenta con cada tema hasta el éxito|
+|    - Generación Bilingüe (ES -> Post-procesado -> EN)       |
 +-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| 4. TRADUCCIÓN Y POSTPROCESADO                              |
-|    +---------------------------------------------------+    |
-|    | generateEnglishContent()                           |    |
-|    |   - Añade campos *_en (titleEn, summaryEn, ...)    |    |
-|    +---------------------------------------------------+    |
-|                           |                               |
-|                           v                               |
-|    +---------------------------------------------------+    |
-|    | postprocessWithOllama()                            |    |
-|    |   - Corrige mayúsculas                             |    |
-|    |   - Nombres propios, siglas                        |    |
-|    |   - Fallback: Regex recovery si falla JSON         |    |
-|    +---------------------------------------------------+    |
+| 4. PROCESO DE IMAGEN (Image Service)                        |
+|    - Fuente RSS -> Flux Local -> AI Horde -> Unsplash       |
+|    - Gestión VRAM: descarga Ollama antes de Flux            |
 +-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| 5. PROCESO DE IMAGEN (Image Service)                        |
-|    +----------------------------------------+               |
-|    | generateArticleImageAndAnalyzeQA()      |               |
-|    +----------------------------------------+               |
-|                           |                                 |
-|              +------------+-----------+                     |
-|              v            v           v                     |
-|       RSS SOURCE     FLUX LOCAL   AI HORDE                  |
-|     (No Decrypt)     (PRIORITY)   (FALLBACK)                |
-|              |            |           |                     |
-|              +-- GESTIÓN VRAM: UNLOAD OLLAMA (13s) --+      |
-|                                            |
-|    Resultado: {imageUrl, caption}                           |
-+-------------------------------+------------+
+| 5. PERSISTENCIA (Base de Datos)                             |
+|    - Guardar artículo, etiquetas y relación con categoría   |
++-------------------------------+-----------------------------+
                               |
                               v
 +-------------------------------------------------------------+
-| 6. GUARDAR EN BASE DE DATOS                                 |
-|    +-------------------------------------------+            |
-|    | prisma.article.create({                    |            |
-|    |   title, titleEn, slug, summary, ...       |            |
-|    |   published: true,                         |            |
-|    |   publishedAt: new Date()                  |            |
-|    | })                                         |            |
-|    +-------------------------------------------+            |
-|    *Nota: El Ranking Engine priorizará este         |
-|    artículo según su fecha y peso.                  |
-+-------------------------------+------------+----------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 7. PUBLICAR EN REDES SOCIALES (opcional)                    |
-|    - Guardar latest_article.json para Binance Square         |
-|    - Notificar errores por Telegram                         |
+| 6. NOTIFICACIONES Y METADATOS                               |
+|    - Guardar JSON para Binance Square                       |
+|    - Notificar éxito/error vía Telegram (NotificationService)|
 +-------------------------------------------------------------+
 ```
 
 ### Código de ejecución
 
 ```bash
-# Manual
+# El script principal ahora es un simple wrapper del PublisherService
 npx tsx scripts/publish.ts
-
-# O automáticamente vía Cron Job (configurado en cron-job.org)
 ```
 
-### Variables de entorno requeridas
+### Variables de entorno CRÍTICAS
+
+A diferencia de versiones anteriores, **no existen modelos por defecto** para Ollama. Si no están en el `.env`, el sistema fallará explícitamente para garantizar el control del desarrollador.
 
 ```env
-# Base de datos
-DATABASE_URL=
-
-# Gemini
-GEMINI_API_KEY=
-
-# Ollama (local)
-OLLAMA_MODEL=gemma4:26b
-
-# Telegram (para notificaciones)
-TELEGRAM_TOKEN=
-TELEGRAM_CHAT_ID=
-
-# Supabase
-SUPABASE_URL=
-SUPABASE_SERVICE_ROLE_KEY=
+OLLAMA_MODEL="gemma4:26b"         # Para generación de texto y corrección
+OLLAMA_VISION_MODEL="gemma4:e4b"  # Para análisis visual (Vision)
 ```
-
-### Referencias
-
-- [[06 - Scripts]]
-- [[05 - Configuración]]
 
 ---
 
@@ -169,14 +90,12 @@ SUPABASE_SERVICE_ROLE_KEY=
 ```mermaid
 graph TD
     A[Inicio: Datos del Artículo] --> B{¿Hay Imagen RSS?}
-    B -- Sí --> C{¿Es de Decrypt?}
-    C -- Sí --> D[Rechazar automáticamente]
-    C -- No --> E[QA Gemini/Ollama Vision]
+    B -- Sí --> E[QA Gemini/Ollama Vision]
     B -- No --> D
     E -- Aprobada --> F[Subir a Supabase]
-    E -- Rechazada --> D
-    D --> G{¿Flux Local Online?}
-    G -- Sí --> H[Gestión VRAM: Unload Ollama]
+    E -- Rechazada --> D[Flux Local]
+    D --> G{¿Flux Online?}
+    G -- Sí --> H[VRAM: Unload Ollama]
     H --> I[Generar con Flux.1]
     G -- No --> J[AI Horde Fallback]
     I -- Éxito --> F
@@ -184,135 +103,39 @@ graph TD
     J -- Éxito --> F
     J -- Fallo --> K[Unsplash Stock Fallback]
     K --> L[Imagen Final]
-    F --> L
+    F --> L[URL Permanente en Supabase]
 ```
 
-### Handoff de Memoria (VRAM)
-
-Dada la limitación de 8GB de VRAM en entornos locales comunes, el sistema implementa un flujo de "entrega" de memoria entre Ollama (texto) y Flux (imagen):
-
-1. **Keep Alive**: Todas las peticiones a Ollama se realizan con `keep_alive: 0`, solicitando a Ollama que libere el modelo inmediatamente tras la respuesta.
-2. **Health Check**: El pipeline verifica si el servidor de Flux (`flux-api-server`) está listo para recibir peticiones.
-3. **Descarga Explícita**: Se invoca `unloadOllamaModels()` para asegurar que cualquier modelo residual sea purgado.
-4. **Pausa de Purga (8s)**: Espera obligatoria de 8 segundos para que el driver de NVIDIA libere físicamente los recursos.
-5. **Estabilización (5s)**: Pausa de 5 segundos adicionales antes de que Flux comience a cargar sus tensores en la GPU.
-6. **Optimización Flux**: El servidor Flux utiliza `sequential_cpu_offload` y `VAE tiling` para mantener el uso de memoria bajo el límite de 8GB durante toda la generación.
-
-### Código
-
-```typescript
-const result = await generateArticleImageAndAnalyzeQA(
-  { title, slug, topic, originalPrompt, summary },
-  rssImageUrl // de la noticia
-)
-```
-
-### Referencias
-
-- [[03 - Módulos]]
+### Gestión de Supabase (StorageService)
+Toda imagen aceptada o generada se sube automáticamente a Supabase Storage para evitar enlaces rotos de fuentes externas.
 
 ---
 
 ## Flujo de IA
 
-### Generación de texto
-
-```
-+-------------------------------------------------------------+
-|        FLUJO DE GENERACIÓN DE ARTÍCULO                      |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| INPUT: Contexto                                              |
-|    - recentTitles: string[]                                  |
-|    - newsItems: NewsItem[]                                   |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| SYSTEM PROMPT                                                |
-|    "Eres un periodista profesional de noticias               |
-|     sobre criptomonedas, blockchain y tecnología             |
-|     para el medio digital EmeDotEme..."                      |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| USER PROMPT                                                  |
-|    - Noticias formateadas                                    |
-|    - Instrucciones del artículo                              |
-|    - Cláusula de evitación                                   |
-+-------------------------------+-----------------------------+
-                              |
-              +-------------------+-------------------+
-              v                                   v
-          GEMINI API                            OLLAMA
-              |                                   |
-              +-> OK -> Parse JSON              +-> OK -> Parse JSON
-              |                                   |
-              +-- FAIL --+                      +-- FAIL --+
-              v                                   v
-          Try Ollama                       Ejemplo estático
-              |
-              +-- FAIL --+
-              v
-        Ejemplo estático
-```
+El flujo de IA ahora utiliza **AI_PROMPTS** centralizados en `config/prompts.ts`.
 
 ### Postprocesado
 
-```
-+-------------------------------------------------------------+
-|        POSTPROCESADO ORTOGRÁFICO                            |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| INPUT: Artículo generado                                    |
-|    {title, summary, content}                                |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| OLLAMA LOCAL: postprocessWithOllama                         |
-|    System: "Eres un corrector ortográfico experto..."        |
-|    User: JSON.stringify(article)                            |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| FALLBACK (Si falla parseo JSON de Ollama)                   |
-|    - Usa expresiones regulares para extraer                 |
-|      title, summary y content de la respuesta.              |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| OUTPUT: Artículo corregido                                  |
-|    {title: "...", summary: "...", content: "..."}           |
-+-------------------------------------------------------------+
-```
+El postprocesado ortográfico es obligatorio y se realiza mediante Ollama en local tras la generación del contenido en español, asegurando la calidad de nombres propios y siglas antes de proceder a la traducción al inglés.
 
-### Referencias
+---
 
-- [[03 - Módulos]]
+## Gestión de Memoria (VRAM)
+
+Dada la limitación de VRAM (ej. 8GB), el `VRAMManager` centraliza el control:
+
+1.  **Keep Alive 0**: Todas las llamadas a Ollama liberan memoria inmediatamente.
+2.  **Unload Explícito**: Antes de usar Flux, se fuerza la descarga de Ollama.
+3.  **Pausas de Estabilización**:
+    *   **8s**: Limpieza física de buffers del driver NVIDIA.
+    *   **5s**: Estabilización previa a la carga de Flux.
 
 ---
 
 ## Cron jobs
 
-### Programación
-
 | Job                 | Frecuencia         | Script                      |
 |---------------------|-------------------|-----------------------------|
 | Publicación diaria  | 1x día (8:00 UTC) | `scripts/publish.ts`        |
 | Newsletter semanal  | 1x semana         | `scripts/send_newsletter.ts`|
-
-### Configuración
-
-Los cron jobs se configuran en **cron-job.org** (cuenta gratuita).
-
-### Referencias
-
-- [[05 - Configuración]]

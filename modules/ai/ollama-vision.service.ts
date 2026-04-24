@@ -1,6 +1,6 @@
 import { ImageAnalysisResult } from './gemini-vision.service';
-import { OLLAMA_VISION_MODEL, OLLAMA_URL, IMAGE_ANALYSIS_SYSTEM_PROMPT } from './constants';
-import { unloadOllamaModels } from './ai.service';
+import { OLLAMA_URL, IMAGE_ANALYSIS_SYSTEM_PROMPT } from './constants';
+import { unloadOllamaModels } from '../vram/vram-manager';
 
 function getTime(): string {
   return new Date().toISOString().replace('T', ' ').substring(0, 19);
@@ -16,6 +16,11 @@ export async function analyzeImageWithOllama(
   articleSummary: string,
   currentCaption?: string
 ): Promise<ImageAnalysisResult> {
+  const visionModel = process.env.OLLAMA_VISION_MODEL;
+  if (!visionModel) {
+    throw new Error('❌ Error: La variable de entorno OLLAMA_VISION_MODEL no está configurada.');
+  }
+
   const userPrompt = `Analiza esta imagen para el siguiente artículo:
 
 Título: "${articleTitle}"
@@ -24,7 +29,7 @@ Pie de foto actual: "${currentCaption || 'No disponible'}"
 
 Devuelve SOLO el JSON de análisis, nada más.`;
 
-  logWithTime(`🔍 Analizando imagen con Ollama (${OLLAMA_VISION_MODEL})...`);
+  logWithTime(`🔍 Analizando imagen con Ollama (${visionModel})...`);
 
   // Descargar la imagen y convertirla a base64 (una sola vez)
   let base64Image: string;
@@ -57,7 +62,7 @@ Devuelve SOLO el JSON de análisis, nada más.`;
 
       // Petición a Ollama con Streaming habilitado
       const payload = {
-        model: OLLAMA_VISION_MODEL,
+        model: visionModel,
         prompt: `${IMAGE_ANALYSIS_SYSTEM_PROMPT}\n\n${userPrompt}`,
         images: [base64Image],
         stream: true,
@@ -122,7 +127,7 @@ Devuelve SOLO el JSON de análisis, nada más.`;
         throw new Error('Estructura JSON incompleta devuelta por Ollama');
       }
 
-      logWithTime(`✅ Ollama Vision completado (${OLLAMA_VISION_MODEL}).`);
+      logWithTime(`✅ Ollama Vision completado (${visionModel}).`);
       return parsed;
 
     } catch (error: any) {

@@ -117,7 +117,7 @@ export async function unloadOllamaModels(): Promise<void> {
 
 // --- Post-procesado ortográfico vía Ollama local ---
 export async function postprocessWithOllama(article: any): Promise<any> {
-  const systemPrompt = `Eres un corrector ortográfico experto en español. Corrige SOLO las mayúsculas de nombres propios, siglas y títulos. No modifiques el contenido. Devuelve el resultado en formato JSON con los mismos campos.`;
+  const systemPrompt = `Eres un corrector ortográfico experto en español. Corrige las mayúsculas de nombres propios, siglas y títulos. No modifiques el contenido. Devuelve el resultado en formato JSON con los mismos campos.`;
   const userPrompt = `Corrige las mayúsculas del siguiente artículo:\n\n${JSON.stringify({
     title: article.title,
     summary: article.summary,

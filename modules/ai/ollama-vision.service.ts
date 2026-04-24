@@ -55,13 +55,12 @@ Devuelve SOLO el JSON de análisis, nada más.`;
         await new Promise(resolve => setTimeout(resolve, 5000));
       }
 
-      // Petición a Ollama
+      // Petición a Ollama con Streaming habilitado
       const payload = {
         model: OLLAMA_VISION_MODEL,
         prompt: `${IMAGE_ANALYSIS_SYSTEM_PROMPT}\n\n${userPrompt}`,
         images: [base64Image],
-        stream: false,
-        format: "json",
+        stream: true,
         options: {
           temperature: 0.2
         },
@@ -78,11 +77,33 @@ Devuelve SOLO el JSON de análisis, nada más.`;
         throw new Error(`Ollama API Error: ${response.statusText}`);
       }
 
-      const data = await response.json();
-      const text = data.response || data.thinking;
+      let text = "";
+      const body = response.body;
+      if (!body) throw new Error('No se pudo obtener el cuerpo de la respuesta de visión');
+
+      // @ts-ignore - ReadableStream iterate support
+      for await (const chunk of body) {
+        const lines = chunk.toString().split('\n');
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const data = JSON.parse(line);
+            const thinking = data.thinking || "";
+            const responsePart = data.response || "";
+            
+            if (thinking) {
+              process.stdout.write(thinking);
+            }
+            
+            text += responsePart || thinking;
+            if (data.done) break;
+          } catch (e) {}
+        }
+      }
+      console.log('\n');
 
       if (!text || text.trim().length === 0) {
-        throw new Error('Respuesta de Ollama vacía');
+        throw new Error('Respuesta de Ollama Vision vacía');
       }
 
       // Parsear JSON

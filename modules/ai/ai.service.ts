@@ -56,11 +56,17 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
           if (!line.trim()) continue;
           try {
             const data = JSON.parse(line);
-            const content = data.response || data.thinking;
+            const thinking = data.thinking || "";
+            const responseText = data.response || "";
+            
+            if (thinking) {
+              // Solo el thinking va a consola
+              process.stdout.write(thinking);
+            }
+            
+            const content = responseText || thinking;
             if (content) {
               fullResponse += content;
-              // Escribir directamente en stdout para que se vea en el log en tiempo real
-              process.stdout.write(content);
             }
             if (data.done) break;
           } catch (e) {

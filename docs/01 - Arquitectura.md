@@ -55,7 +55,7 @@ graph TB
 
 ### Pipeline de contenido
 - **Servicio de fuentes de noticias**: Fetch y normalización de fuentes RSS (CoinDesk, Decrypt, etc.).
-- **Servicio de IA**: Generación bilingüe con Gemini y fallback a Ollama (qwen3.5:9b). Soporta modelos de razonamiento.
+- **Servicio de IA**: Generación bilingüe con Gemini y fallback a Ollama (gemma4:26b). Soporta modelos de razonamiento.
 - **Servicio de imágenes**: Pipeline jerárquico (RSS -> Flux.1 Local -> AI Horde) con gestión dinámica de VRAM para descargar modelos de Ollama antes de activar la GPU para Flux.
 
 ## Referencias

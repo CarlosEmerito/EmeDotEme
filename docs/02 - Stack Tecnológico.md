@@ -17,7 +17,7 @@
 | Servicio         | Uso                        | API/Local                | Notas |
 |------------------|---------------------------|--------------------------|-------|
 | Gemini (Google)  | Generación de texto       | API externa              | gemini-2.5-flash |
-| Ollama           | Fallback y post-procesado | Local (localhost:11434)  | qwen3.5:9b (soporta tokens 'thinking') |
+| Ollama           | Fallback y post-procesado | Local (localhost:11434)  | gemma4:26b (soporta tokens 'thinking') |
 | Gemini Vision    | QA de imágenes            | API externa              | gemini-2.5-flash |
 | Ollama Vision    | QA de imágenes fallback   | Local                    | gemma4:e4b |
 | Flux.1 Local     | Generación de imágenes    | Local (Docker/Python)    | Flux.1-dev optimizado (8GB VRAM) |

@@ -162,6 +162,11 @@ async function fetchFromSource(source: NewsSource): Promise<NewsItem[]> {
           imageUrl = enclosure.url;
         }
 
+        // BLOQUEO DE IMÁGENES DE DECRYPT: Tienen marcas de agua pequeñas molestas
+        if (source.slug === 'decrypt') {
+          imageUrl = undefined;
+        }
+
         // Extraer categorías
         const categories: string[] = [];
         if (item.categories) {

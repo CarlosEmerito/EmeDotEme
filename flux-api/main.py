@@ -54,6 +54,12 @@ async def generate(request: GenerateRequest):
     try:
         print(f"🎨 Generando: {request.prompt[:50]}...")
         
+        # Callback para ver el progreso en los logs de docker
+        def callback(pipe, step, timestep, callback_kwargs):
+            if step % 2 == 0:
+                print(f"   ⏳ Paso {step}/{request.num_inference_steps} ({(step/request.num_inference_steps)*100:.1f}%)")
+            return callback_kwargs
+
         # Generar imagen
         image = pipe(
             request.prompt,
@@ -61,6 +67,7 @@ async def generate(request: GenerateRequest):
             height=request.height,
             num_inference_steps=request.num_inference_steps,
             guidance_scale=request.guidance_scale,
+            callback_on_step_end=callback,
         ).images[0]
         
         # Convertir a Base64 para facilitar el envío vía JSON

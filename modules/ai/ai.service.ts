@@ -56,10 +56,11 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
           if (!line.trim()) continue;
           try {
             const data = JSON.parse(line);
-            if (data.response) {
-              fullResponse += data.response;
+            const content = data.response || data.thinking;
+            if (content) {
+              fullResponse += content;
               // Escribir directamente en stdout para que se vea en el log en tiempo real
-              process.stdout.write(data.response);
+              process.stdout.write(content);
             }
             if (data.done) break;
           } catch (e) {
@@ -127,7 +128,7 @@ export async function postprocessWithOllama(article: any): Promise<any> {
   if (!result) return article;
   
   try {
-    // Limpiar code blocks y parsear JSON
+    // Limpiar code blocks y parsea JSON
     const cleaned = result.replace(/```json\n?/g, '').replace(/```/g, '').trim();
     const jsonStart = cleaned.indexOf('{');
     const jsonEnd = cleaned.lastIndexOf('}');
@@ -223,103 +224,80 @@ export async function generateArticleContent(
 
   // ---- System Prompt ----
   const systemPrompt = hasRealNews
-    ? `Eres un periodista profesional de noticias sobre criptomonedas, blockchain y tecnología para el medio digital "EmeDotEme".
-
-REGLAS IMPORTANTES:
-1. BASA tu artículo ÚNICAMENTE en la información de las fuentes proporcionadas. NO inventes datos, cifras ni declaraciones.
-2. ESCRIBE en español, aunque las fuentes estén en inglés. Traduce y adapta el contenido.
-3. NO incluyas ninguna sección de "Fuentes" ni enlaces a las fuentes originales en el contenido HTML. La atribución se maneja por separado.
-4. El contenido debe ser informativo, bien estructurado y profesional.
-5. NO copies textualmente. Analiza, sintetiza y añade contexto editorial.
-6. Si hay varias fuentes sobre el mismo tema, cruza la información para dar un análisis más completo.`
-    : `Eres un generador de artículos de noticias sobre criptomonedas, blockchain y tecnología.`;
+    ? `Eres un periodista especializado en tecnología y economía para el medio "EmeDotEme". Tu objetivo es redactar artículos informativos y profesionales basados en fuentes reales.`
+    : `Eres un periodista especializado en tecnología y criptomonedas.`;
 
   // ---- Cláusula de evitación ----
   let avoidanceClause = '';
   if (recentTitles.length > 0) {
-    console.log(`📋 Evitando temas recientes: ${recentTitles.length} artículos`);
     const recentList = recentTitles.slice(0, 3).map(title => `- "${title}"`).join('\n');
-    avoidanceClause = `\n\nEVITA temas recientes como:\n${recentList}\n\nNO repitas temas similares.`;
+    avoidanceClause = `\n\nEvita tratar temas muy similares a estos títulos recientes:\n${recentList}`;
   }
 
   // ---- User Prompt ----
   let userPrompt: string;
 
   if (hasRealNews) {
-    const newsText = formatNewsForPrompt(newsContext);
-    const sourceUrls = newsContext.map(n => n.link);
-
-    userPrompt = `A continuación tienes noticias reales de fuentes verificadas. Usa esta información para generar UN artículo en español.
+    const newsText = formatNewsForPrompt(newsContext.slice(0, 3)); // Solo las 3 más relevantes
+    userPrompt = `Escribe un artículo periodístico en español basado en estas noticias:
 
   ${newsText}
 
-  INSTRUCCIONES:
-  - Título: claro, atractivo, en español
-  - Resumen: 1-2 líneas que capturen lo esencial
-  - Contenido: HTML con etiquetas p, h2, h3. El artículo DEBE SER LARGO, PROFUNDO Y DETALLADO. Escribe como en un periódico digital líder (al menos 5 a 6 párrafos extensos). OBLIGATORIO: Intercala al menos 2 o 3 subtítulos secundarios (<h2> o <h3>) en medio del texto para dinamizar la lectura y separar las ideas. NO incluyas enlaces a fuentes ni sección de fuentes.
-  - Tags: 3-5 palabras clave sin '#'
-  - imagePrompt: descripción en inglés para generar una imagen ilustrativa
-  - sourceUrl: la URL de la fuente principal (la más relevante)
-  - sources: array con TODAS las URLs de las fuentes consultadas
-  - Respeta las reglas ortográficas del español: usa mayúsculas en nombres propios y siglas.
-
-  EVITA: hashtags en el HTML, inventar datos no presentes en las fuentes, incluir enlaces o sección de fuentes en el contenido.
-  ATENCIÓN: Dado que la respuesta debe ser un JSON, NUNCA uses comillas dobles (") dentro del texto de los campos. Para el HTML, usa obligatoriamente comillas simples (ej: <h2 class='titulo'>) o escapa las comillas.
-
-  Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags, sourceUrl, sources}.${avoidanceClause}`;
+  REQUISITOS:
+  1. Título profesional.
+  2. Resumen de 2 frases.
+  3. Cuerpo extenso con subtítulos HTML (p, h2, h3).
+  4. Lista de 3 etiquetas.
+  5. Idea para una imagen en inglés (imagePrompt).
+  
+  Responde ÚNICAMENTE en formato JSON:
+  {
+    "title": "...",
+    "summary": "...",
+    "content": "...",
+    "tags": ["...", "..."],
+    "imagePrompt": "...",
+    "sourceUrl": "${newsContext[0]?.link || ''}",
+    "sources": ["${newsContext[0]?.link || ''}"]
+  }.${avoidanceClause}`;
   } else {
-    userPrompt = `Genera un artículo de noticias cripto en español.
-  - Título: claro y atractivo
-  - Resumen: 1-2 líneas
-  - Contenido: HTML con etiquetas p, h2, h3. El artículo DEBE SER LARGO, PROFUNDO Y DETALLADO. Extiéndete al menos 5 a 6 párrafos sustanciales. OBLIGATORIO: Intercala al menos 2 o 3 subtítulos secundarios (<h2> o <h3>) en medio del texto para dinamizar la lectura y dividir la introducción, desarrollo y conclusión técnica.
-  - Tags: 3-5 palabras clave sin '#'
-  - imagePrompt: descripción para generar imagen
-  - Respeta las reglas ortográficas del español: usa mayúsculas en nombres propios y siglas.
-
-  EVITA: hashtags en HTML, temas recientes listados arriba, contenido repetitivo.
-  ATENCIÓN: Usa obligatoriamente comillas simples (') para cualquier atributo HTML. NO uses comillas dobles (") dentro de los campos para evitar romper el JSON.
-
-  Devuelve SOLO JSON válido: {title, summary, content, imagePrompt, tags}.${avoidanceClause}`;
+    userPrompt = `Escribe un artículo sobre tecnología en español. Responde SOLO en JSON:
+  {
+    "title": "...",
+    "summary": "...",
+    "content": "...",
+    "tags": ["..."],
+    "imagePrompt": "..."
+  }.${avoidanceClause}`;
   }
   
   let result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
-  if (!result) {
-    console.warn('⚠️ Gemini falló, limpiando VRAM e intentando con Ollama local...');
-    await unloadOllamaModels(); // Asegurar GPU limpia para Ollama
+  if (!result || result.includes('Lo siento') || result.length < 200) {
+    if (result) console.warn(`⚠️ Gemini dio una respuesta no válida o rechazo: "${result.substring(0, 50)}..."`);
+    console.warn('⚠️ Intentando con Ollama local...');
+    await unloadOllamaModels();
     result = await generateTextWithOllama({ systemPrompt, userPrompt });
     if (!result) {
-      throw new Error('❌ Error crítico: Ni Gemini ni Ollama pudieron generar el contenido del artículo.');
+      throw new Error('❌ Error crítico: Ni Gemini ni Ollama pudieron generar el contenido.');
     }
   }
+
   try {
-    // Elimina posibles code blocks y parsea JSON
     const cleaned = result.replace(/```json\n?/g, '').replace(/```/g, '').trim();
-    console.log(`📝 Gemini raw response length: ${result.length} chars`);
-    console.log(`📝 First 800 chars: ${result.substring(0, 800)}${result.length > 800 ? '...' : ''}`);
-    
-    if (result.length < 100) {
-      console.warn(`⚠️ Respuesta muy corta (${result.length} chars), posiblemente truncada`);
-    }
-    
     const jsonStart = cleaned.indexOf('{');
     const jsonEnd = cleaned.lastIndexOf('}');
+    
     if (jsonStart === -1 || jsonEnd === -1 || jsonEnd <= jsonStart) {
-      console.error(`❌ Estructura JSON inválida. Start: ${jsonStart}, End: ${jsonEnd}`);
-      throw new Error('JSON incompleto o mal formado');
+      throw new Error('JSON no encontrado en la respuesta');
     }
     
     let jsonStr = cleaned.substring(jsonStart, jsonEnd + 1);
-    console.log(`🔍 JSON extraído: ${jsonStr.substring(0, 200)}...`);
-    
-    // Sanitizar JSON: fix bad escape sequences comunes de Ollama
     jsonStr = sanitizeJsonString(jsonStr);
     
     let parsed: any;
     try {
       parsed = JSON.parse(jsonStr);
     } catch (firstErr) {
-      console.warn(`⚠️ JSON.parse falló (${firstErr}), intentando sanitización agresiva...`);
-      // Sanitización agresiva: eliminar caracteres de control
       const aggressive = jsonStr.replace(/[\x00-\x1F\x7F]/g, (ch) => {
         if (ch === '\n') return '\\n';
         if (ch === '\r') return '\\r';
@@ -327,95 +305,42 @@ REGLAS IMPORTANTES:
         return '';
       });
       parsed = JSON.parse(aggressive);
-      console.log('✅ JSON parseado tras sanitización agresiva');
     }
     
-    // Validar estructura mínima
-    if (!parsed.title || typeof parsed.title !== 'string') {
-      console.error(`❌ Campo 'title' inválido o ausente: ${JSON.stringify(parsed.title)}`);
-      throw new Error('JSON inválido: falta título');
-    }
-    if (!parsed.content || typeof parsed.content !== 'string') {
-      console.warn(`⚠️ Campo 'content' ausente, usando placeholder`);
-      parsed.content = '<p>Contenido generado por IA.</p>';
-    }
-    if (!parsed.tags || !Array.isArray(parsed.tags)) {
-      console.warn(`⚠️ Campo 'tags' ausente o no es array, inicializando vacío`);
-      parsed.tags = [];
-    }
-    if (!parsed.imagePrompt || typeof parsed.imagePrompt !== 'string') {
-      console.warn(`⚠️ Campo 'imagePrompt' ausente, usando default`);
-      parsed.imagePrompt = 'cryptocurrency, blockchain, digital assets';
-    }
-    if (!parsed.summary || typeof parsed.summary !== 'string') {
-      console.warn(`⚠️ Campo 'summary' ausente, usando título como resumen`);
-      parsed.summary = parsed.title;
-    }
-
-    // Validar/rellenar campos de fuentes cuando hay contexto de noticias
-    if (hasRealNews) {
-      if (!parsed.sourceUrl || typeof parsed.sourceUrl !== 'string') {
-        console.warn(`⚠️ Campo 'sourceUrl' ausente, usando primera fuente del contexto`);
-        parsed.sourceUrl = newsContext[0]?.link || '';
-      }
-      if (!parsed.sources || !Array.isArray(parsed.sources)) {
-        console.warn(`⚠️ Campo 'sources' ausente, usando URLs del contexto`);
-        parsed.sources = newsContext.map(n => n.link);
-      }
-    }
+    if (!parsed.title) throw new Error('Falta título');
     
     return parsed as GeneratedArticle;
   } catch (error) {
-    console.error(`❌ CRITICAL: Error parseando JSON de Gemini:`);
-    console.error(`❌ Error: ${error}`);
-    console.error(`❌ Raw response length: ${result.length} chars`);
-    console.error(`❌ Raw response (first 1000 chars): ${result.substring(0, 1000)}${result.length > 1000 ? '...' : ''}`);
+    console.error(`❌ Error parseando JSON, intentando recuperación Regex...`);
     
-    // Intentar recuperación parcial con JSON incompleto o usando Regex
     try {
-      // 1. Intentar buscar claves JSON estándar
-      let titleMatch = result.match(/"title"\s*:\s*"([^"]+)"/);
-      let summaryMatch = result.match(/"summary"\s*:\s*"([^"]+)"/);
-      let contentMatch = result.match(/"content"\s*:\s*"([\s\S]*?)"(?=,\s*"|\s*})/);
-
-      // 2. Si falla lo anterior, intentar buscar etiquetas "humanas" (Título:, Resumen:, etc.)
-      if (!titleMatch) {
-        const hTitle = result.match(/(?:\*\*|#)?\s*Título\s*:\s*(?:\*\*)?\s*([^\n]+)/i);
-        if (hTitle) titleMatch = [null, hTitle[1]];
-      }
-      if (!summaryMatch) {
-        const hSummary = result.match(/(?:\*\*|#)?\s*Resumen\s*:\s*(?:\*\*)?\s*([^\n]+)/i);
-        if (hSummary) summaryMatch = [null, hSummary[1]];
-      }
-      if (!contentMatch) {
-        const hContent = result.match(/(?:\*\*|#)?\s*Contenido\s*:\s*(?:\*\*)?\s*([\s\S]+)/i);
-        if (hContent) contentMatch = [null, hContent[1]];
-      }
+      // Regex mejoradas para capturar campos incluso en Markdown
+      const titleMatch = result.match(/(?:"title"\s*:\s*"|Título\s*:\s*|\*\*\s*Título\s*:\s*\*\*\s*|#\s*)([^"}\n\n]+)/i);
+      const summaryMatch = result.match(/(?:"summary"\s*:\s*"|Resumen\s*:\s*|\*\*\s*Resumen\s*:\s*\*\*\s*)([^"}\n\n]+)/i);
+      const contentMatch = result.match(/(?:"content"\s*:\s*"|Contenido\s*:\s*|\*\*\s*Contenido\s*:\s*\*\*\s*)([\s\S]+?)(?=",\s*"|(?:"\s*})|\*\*|#|$)/i);
+      const imageMatch = result.match(/(?:"imagePrompt"\s*:\s*"|imagePrompt\s*:\s*|Imagen sugerida\s*:\s*|\*\*\s*imagePrompt\s*:\s*\*\*\s*)([^"}\n\n]+)/i);
 
       if (titleMatch && titleMatch[1]) {
-        logWithTime(`🔄 Recuperado usando Regex (Formato: ${jsonStart === -1 ? 'Texto' : 'JSON Dañado'}): "${titleMatch[1].substring(0, 60)}"`);
+        console.log(`🔄 Recuperado con Regex: "${titleMatch[1].substring(0, 50)}..."`);
         
-        const cleanContent = (contentMatch ? contentMatch[1] : '')
-          .replace(/\\n/g, '\n')
-          .replace(/\\"/g, '"')
-          .replace(/\\\\/g, '\\')
-          .trim();
-
+        let content = contentMatch ? contentMatch[1].trim() : '';
+        content = content.replace(/\\n/g, '\n').replace(/\\"/g, '"');
+        
         return {
-          title: titleMatch[1].trim(),
-          summary: summaryMatch ? summaryMatch[1].trim() : 'Resumen de la noticia',
-          content: cleanContent.length > 50 ? cleanContent : '<p>Contenido recuperado de emergencia.</p>',
-          imagePrompt: result.match(/imagePrompt"\s*:\s*"([^"]+)"/)?.[1] || 'cryptocurrency, blockchain',
+          title: titleMatch[1].trim().replace(/^"|"$/g, ''),
+          summary: summaryMatch ? summaryMatch[1].trim().replace(/^"|"$/g, '') : '',
+          content: content.length > 50 ? content : '<p>Contenido recuperado de emergencia.</p>',
+          imagePrompt: imageMatch ? imageMatch[1].trim().replace(/^"|"$/g, '') : 'technology, innovation',
           tags: [],
           sourceUrl: newsContext[0]?.link || '',
           sources: newsContext.map(n => n.link),
         };
       }
-    } catch (recoveryError) {
-      console.error(`❌ Falló recuperación parcial: ${recoveryError}`);
+    } catch (regErr) {
+      console.error('❌ Falló recuperación Regex');
     }
     
-    throw new Error('❌ Error crítico: Falló el parseo del JSON y la recuperación por Regex tras agotar intentos.');
+    throw new Error(`❌ Error crítico en generación: ${error}`);
   }
 }
 
@@ -462,27 +387,17 @@ async function generateEnglishContent(
 ): Promise<{ titleEn: string; summaryEn: string; contentEn: string }> {
   const hasRealNews = newsContext.length > 0;
   
-  const systemPrompt = `You are a professional news journalist for the digital media "EmeDotEme", specializing in cryptocurrency, blockchain, and technology news.
-
-IMPORTANT RULES:
-1. Write ONLY in English. This is an English-language article.
-2. Translate and adapt the Spanish content provided. Do NOT literally translate - write as a native English news piece.
-3. The content must be informative, well-structured, and professional for an English-speaking audience.
-4. NEVER invent data, figures, or statements not present in the source material.
-5. Use English capitalization rules and grammar.
-6. If there are multiple sources on the same topic, cross-reference for a more complete analysis.`;
+  const systemPrompt = `You are a professional journalist for the digital media "EmeDotEme". Your goal is to write informative and professional news articles in English.`;
 
   let avoidanceClause = '';
   if (esArticle.tags && esArticle.tags.length > 0) {
-    avoidanceClause = `\n\nAVOID articles with these topics: ${esArticle.tags.join(', ')}.`;
+    avoidanceClause = `\n\nAVOID topics related to: ${esArticle.tags.join(', ')}.`;
   }
 
   let userPrompt: string;
 
   if (hasRealNews) {
-    const newsText = formatNewsForPrompt(newsContext);
-    
-    userPrompt = `Below is a Spanish article that was written about verified news. Your task is to write an equivalent English version.
+    userPrompt = `Write an English version of this Spanish news article:
 
 SPANISH ORIGINAL:
 Title: ${esArticle.title}
@@ -490,39 +405,39 @@ Summary: ${esArticle.summary}
 Content: ${esArticle.content}
 
 INSTRUCTIONS:
-- Title: Clear, attractive, in English (different from direct translation)
-- Summary: 1-2 lines capturing the essence (in English)
-- Content: HTML with p, h2, h3 tags. Make it LONG, DETAILED and professional like a leading digital newspaper (at least 5-6 substantial paragraphs). MUST include 2-3 secondary subheadings (h2 or h3) in the middle to break up the text.
-- imagePrompt: Description in English for generating an illustrative image
-- Use English news style and conventions
-- ATENTION: NEVER use double quotes (") inside JSON string fields. Use single quotes (') for HTML attributes.
+- Write ONLY in English.
+- Use professional news style.
+- Include title, summary (2 sentences), and long content with HTML tags (p, h2, h3).
+- Return ONLY a valid JSON object.
 
-Return ONLY valid JSON: {titleEn, summaryEn, contentEn, imagePrompt}.${avoidanceClause}`;
+JSON Format:
+{
+  "titleEn": "...",
+  "summaryEn": "...",
+  "contentEn": "..."
+}.${avoidanceClause}`;
   } else {
-    userPrompt = `Translate and adapt this article for English readers.
+    userPrompt = `Translate and adapt this article for English readers. Return ONLY JSON.
 
 SPANISH ORIGINAL:
 Title: ${esArticle.title}
 Summary: ${esArticle.summary}
 Content: ${esArticle.content}
 
-INSTRUCTIONS:
-- Title: Clear, attractive, in English
-- Summary: 1-2 lines in English
-- Content: HTML with p, h2, h3 tags. LONG and DETAILED (at least 5-6 paragraphs). Include 2-3 subheadings.
-- imagePrompt: English description for image
-- Use English capitalization and grammar rules
-- ATENTION: Use single quotes (') for HTML attributes, never double quotes (") in JSON.
-
-Return ONLY valid JSON: {titleEn, summaryEn, contentEn, imagePrompt}.${avoidanceClause}`;
+JSON Format:
+{
+  "titleEn": "...",
+  "summaryEn": "...",
+  "contentEn": "..."
+}.${avoidanceClause}`;
   }
 
   let result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
-  if (!result) {
+  if (!result || result.includes('Sorry') || result.length < 200) {
     console.warn('⚠️ Gemini falló para EN, intentando con Ollama...');
     result = await generateTextWithOllama({ systemPrompt, userPrompt });
     if (!result) {
-      throw new Error('❌ Error crítico: Falló la generación del contenido en inglés (Gemini y Ollama fallaron).');
+      throw new Error('❌ Error crítico: Falló la generación en inglés.');
     }
   }
 
@@ -533,54 +448,42 @@ Return ONLY valid JSON: {titleEn, summaryEn, contentEn, imagePrompt}.${avoidance
     if (jsonStart === -1 || jsonEnd === -1) throw new Error('Invalid JSON structure');
 
     let jsonStr = cleaned.substring(jsonStart, jsonEnd + 1);
-    
-    // Sanitize JSON
     jsonStr = sanitizeJsonString(jsonStr);
 
     const parsed = JSON.parse(jsonStr);
     
     return {
-      titleEn: parsed.titleEn || esArticle.title,
-      summaryEn: parsed.summaryEn || esArticle.summary,
-      contentEn: parsed.contentEn || esArticle.content
+      titleEn: parsed.titleEn || parsed.title || esArticle.title,
+      summaryEn: parsed.summaryEn || parsed.summary || esArticle.summary,
+      contentEn: parsed.contentEn || parsed.content || esArticle.content
     };
   } catch (error) {
-    console.error('❌ Error parsing English content:', error);
+    console.error('❌ Error parsing English content, trying Regex...');
     
-    // Intentar recuperación con regex
     try {
-      const titleMatch = result.match(/"titleEn"\s*:\s*"([^"]+)"/);
-      const summaryMatch = result.match(/"summaryEn"\s*:\s*"([^"]+)"/);
-      let contentMatch = '';
-      const contentRegex = /"contentEn"\s*:\s*"([\s\S]*?)",\s*"/;
-      const cMatch = result.match(contentRegex);
-      if (cMatch && cMatch[1]) {
-        contentMatch = cMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"');
-      }
+      const titleMatch = result.match(/(?:"titleEn"\s*:\s*"|titleEn\s*:\s*|Title\s*:\s*|#\s*)([^"}\n\n]+)/i);
+      const summaryMatch = result.match(/(?:"summaryEn"\s*:\s*"|summaryEn\s*:\s*|Summary\s*:\s*)([^"}\n\n]+)/i);
+      const contentMatch = result.match(/(?:"contentEn"\s*:\s*"|contentEn\s*:\s*|Content\s*:\s*)([\s\S]+?)(?=",\s*"|(?:"\s*})|#|$)/i);
 
       if (titleMatch && titleMatch[1]) {
-        console.log('🔄 Recuperación EN exitosa por regex');
         return {
-          titleEn: titleMatch[1],
-          summaryEn: summaryMatch ? summaryMatch[1] : esArticle.summary,
-          contentEn: contentMatch.length > 50 ? contentMatch : esArticle.content
+          titleEn: titleMatch[1].trim().replace(/^"|"$/g, ''),
+          summaryEn: summaryMatch ? summaryMatch[1].trim().replace(/^"|"$/g, '') : esArticle.summary,
+          contentEn: contentMatch ? contentMatch[1].trim().replace(/\\n/g, '\n').replace(/\\"/g, '"') : esArticle.content
         };
       }
     } catch (regexError) {
-      console.error('❌ Falló recovery regex EN:', regexError);
+      console.error('❌ Falló recovery regex EN');
     }
     
-    // Fallback final: No permitir publicación sin traducción real
-    throw new Error('❌ Error crítico: Falló el parseo de la versión en inglés y la recuperación por regex.');
+    throw new Error('❌ Error crítico: Falló el parseo de la versión en inglés.');
   }
 }
 
 /**
  * Traduce el artículo generado al inglés (implementación mínima, solo copia los campos).
- * Personaliza para usar Gemini, OpenAI u otro servicio de traducción.
  */
 export async function translateArticleContent(article: any) {
-	// Implementación mínima: copia los campos y añade sufijo EN
 	return {
 		...article,
 		titleEn: article.title + ' (EN)',

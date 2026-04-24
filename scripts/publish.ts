@@ -58,8 +58,46 @@ async function main() {
     const newsContext = await fetchLatestNews(recentTitles, recentSourceUrls);
     console.log(`📰 Noticias obtenidas: ${newsContext.newsItems.length} de ${newsContext.sourcesResponded.join(', ') || 'ninguna fuente'}`);
     
+    if (newsContext.newsItems.length === 0) {
+      console.log('✅ No hay noticias nuevas para cubrir en este momento. Saliendo con éxito.');
+      process.exit(0);
+    }
+
     const t0 = Date.now();
-    let aiResponse: any = await generateBilingualContent(recentTitles, newsContext.newsItems);
+
+    // Agrupar por tema y ordenar por calidad (más fuentes primero)
+    const topicClusters = newsContext.topicClusters.sort((a, b) => {
+      if (b.length !== a.length) return b.length - a.length;
+      return b[0].pubDate.getTime() - a[0].pubDate.getTime();
+    });
+
+    let aiResponse: any = null;
+    let successfulCluster: any[] = [];
+
+    // Intentar con cada cluster hasta que uno funcione
+    for (let i = 0; i < topicClusters.length; i++) {
+      const currentCluster = topicClusters[i];
+      console.log(`\n🎯 Intentando con Cluster ${i + 1}/${topicClusters.length}: "${currentCluster[0].title.substring(0, 60)}..."`);
+      
+      try {
+        aiResponse = await generateBilingualContent(recentTitles, currentCluster);
+        if (aiResponse) {
+          successfulCluster = currentCluster;
+          console.log(`✅ Generación exitosa con Cluster ${i + 1}`);
+          break;
+        }
+      } catch (err: any) {
+        console.warn(`⚠️ Cluster ${i + 1} falló: ${err.message}`);
+        if (i === topicClusters.length - 1) {
+          throw new Error('❌ Todos los clusters fallaron la generación por IA.');
+        }
+        console.log('🔄 Intentando con el siguiente cluster disponible...');
+      }
+    }
+
+    if (!aiResponse) {
+      throw new Error('No se pudo generar contenido con ningún cluster de noticias.');
+    }
     
     console.log('📝 ImagePrompt presente:', aiResponse.imagePrompt ? 'SÍ' : 'NO');
     if (aiResponse.imagePrompt) {
@@ -79,7 +117,7 @@ async function main() {
 
     // Procesar imagen con el pipeline: fuente RSS → Flux Local → AI Horde
     // Priorizar imagen de la fuente RSS sobre sourceImageUrl del AI
-    const rssImageUrl = newsContext.newsItems[0]?.imageUrl || aiResponse.sourceImageUrl;
+    const rssImageUrl = successfulCluster[0]?.imageUrl || aiResponse.sourceImageUrl;
     
     // Determinar la categoría sugerida por la IA
     let selectedCategory = allCategories.find(

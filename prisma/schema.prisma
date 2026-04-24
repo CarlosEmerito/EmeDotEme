@@ -20,6 +20,14 @@ model Category {
   updatedAt DateTime  @updatedAt
 }
 
+model Tag {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  slug      String    @unique
+  articles  Article[]
+  createdAt DateTime  @default(now())
+}
+
 model Article {
   id          String   @id @default(uuid())
   title       String
@@ -35,7 +43,12 @@ model Article {
   author      String   @default("EmeDotEme AI")
   published   Boolean  @default(false)
   isOriginal  Boolean  @default(false)
-  tags        String[] @default([])
+  tags        String[] @default([]) // Legacy tags, to be migrated
+  articleTags Tag[]
+  isPinned    Boolean  @default(false)
+  priority    Int      @default(0)
+  viewCount   Int      @default(0)
+  publishedAt DateTime?
   sentiment   String   @default("Neutral ⚖️")
   categoryId  String
   category    Category @relation(fields: [categoryId], references: [id])
@@ -45,6 +58,8 @@ model Article {
   @@index([published, createdAt(sort: Desc)])
   @@index([categoryId])
   @@index([isOriginal])
+  @@index([publishedAt(sort: Desc)])
+  @@index([isPinned, priority(sort: Desc), publishedAt(sort: Desc)])
 }
 
 model Subscriber {

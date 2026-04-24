@@ -31,20 +31,55 @@ export default async function TagPage({ params, searchParams }: TagPageProps) {
 
   const decodedTag = decodeURIComponent(slug);
 
-  const allArticles = await prisma.article.findMany({
-    where: { published: true },
-    include: { category: true },
-    orderBy: { createdAt: 'desc' }
-  });
-
-  const matchingArticles = allArticles.filter(article => 
-    article.tags.some(t => t.toLowerCase() === decodedTag.toLowerCase())
-  );
-
-  const totalCount = matchingArticles.length;
-  const totalPages = Math.ceil(totalCount / limit);
   const skip = (page - 1) * limit;
-  const paginatedArticles = matchingArticles.slice(skip, skip + limit);
+
+  const [paginatedArticles, totalCount] = await Promise.all([
+    prisma.article.findMany({
+      where: {
+        published: true,
+        OR: [
+          {
+            articleTags: {
+              some: { slug: decodedTag.toLowerCase() }
+            }
+          },
+          {
+            tags: {
+              has: decodedTag // Fallback for legacy tags until migrated
+            }
+          }
+        ]
+      },
+      include: { category: true, articleTags: true },
+      orderBy: [
+        { isPinned: 'desc' },
+        { priority: 'desc' },
+        { publishedAt: 'desc' },
+        { createdAt: 'desc' }
+      ],
+      skip,
+      take: limit,
+    }),
+    prisma.article.count({
+      where: {
+        published: true,
+        OR: [
+          {
+            articleTags: {
+              some: { slug: decodedTag.toLowerCase() }
+            }
+          },
+          {
+            tags: {
+              has: decodedTag // Fallback for legacy tags until migrated
+            }
+          }
+        ]
+      }
+    })
+  ]);
+
+  const totalPages = Math.ceil(totalCount / limit);
 
   return (
     <div className="flex flex-col flex-1 bg-white dark:bg-zinc-950 font-sans">

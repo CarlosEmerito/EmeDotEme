@@ -1,15 +1,22 @@
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
+const defaultOrder: Prisma.ArticleOrderByWithRelationInput[] = [
+  { isPinned: "desc" },
+  { priority: "desc" },
+  { publishedAt: "desc" },
+  { createdAt: "desc" },
+];
+
 /**
- * Recupera los artículos publicados ordenados por fecha de creación (más recientes primero).
+ * Recupera los artículos publicados ordenados por nuestro motor de relevancia.
  * @param limit Número máximo de artículos a recuperar.
  */
 export async function getPublishedArticles(limit: number = 5, skip: number = 0) {
   return await prisma.article.findMany({
     where: { published: true },
-    orderBy: { createdAt: "desc" },
-    include: { category: true },
+    orderBy: defaultOrder,
+    include: { category: true, articleTags: true },
     take: limit,
     skip: skip,
   });
@@ -28,7 +35,7 @@ export async function getTotalPublishedArticlesCount() {
 export async function getArticleBySlug(slug: string) {
   return await prisma.article.findUnique({
     where: { slug },
-    include: { category: true },
+    include: { category: true, articleTags: true },
   });
 }
 
@@ -45,8 +52,8 @@ export async function getRelatedArticles(categoryId: string, currentArticleId: s
       categoryId,
       id: { not: currentArticleId }
     },
-    orderBy: { createdAt: "desc" },
-    include: { category: true },
+    orderBy: defaultOrder,
+    include: { category: true, articleTags: true },
     take: limit,
   });
 }
@@ -63,8 +70,8 @@ export async function getArticlesByCategorySlug(slug: string, limit: number = 10
         slug: slug
       }
     },
-    orderBy: { createdAt: "desc" },
-    include: { category: true },
+    orderBy: defaultOrder,
+    include: { category: true, articleTags: true },
     take: limit,
     skip: skip,
   });
@@ -107,7 +114,7 @@ export async function searchArticles(options: SearchOptions = {}) {
     dateFrom,
     dateTo,
     publishedOnly = true,
-    sortBy = 'newest',
+    sortBy = 'relevance',
     page = 1,
     limit = 10
   } = options;
@@ -158,8 +165,10 @@ export async function searchArticles(options: SearchOptions = {}) {
   }
 
   if (tags.length > 0) {
-    where.tags = {
-      hasSome: tags
+    where.articleTags = {
+      some: {
+        slug: { in: tags.map(t => t.toLowerCase()) }
+      }
     };
   }
 
@@ -177,16 +186,15 @@ export async function searchArticles(options: SearchOptions = {}) {
     }
   }
 
-  let orderBy: Prisma.ArticleOrderByWithRelationInput = {};
+  let orderBy: Prisma.ArticleOrderByWithRelationInput | Prisma.ArticleOrderByWithRelationInput[] = defaultOrder;
   switch (sortBy) {
     case 'relevance':
-      orderBy = { createdAt: 'desc' };
+      orderBy = defaultOrder;
       break;
     case 'oldest':
       orderBy = { createdAt: 'asc' };
       break;
     case 'newest':
-    default:
       orderBy = { createdAt: 'desc' };
       break;
   }
@@ -195,7 +203,7 @@ export async function searchArticles(options: SearchOptions = {}) {
     prisma.article.findMany({
       where,
       orderBy,
-      include: { category: true },
+      include: { category: true, articleTags: true },
       skip,
       take: limit,
     }),
@@ -216,5 +224,6 @@ export async function simpleSearchArticles(query: string, limit: number = 10) {
   const result = await searchArticles({ query, limit });
   return result.articles;
 }
+
 
 

@@ -144,7 +144,7 @@ DATABASE_URL=
 GEMINI_API_KEY=
 
 # Ollama (local)
-OLLAMA_MODEL=qwen3.5:9b
+OLLAMA_MODEL=gemma4:26b
 
 # Telegram (para notificaciones)
 TELEGRAM_TOKEN=

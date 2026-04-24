@@ -19,7 +19,7 @@ CHANNEL_ID = get_env("TELEGRAM_CHANNEL_ID", "").strip()  # Nuevo: id canal publi
 GEMINI_API_KEY = get_env("GEMINI_API_KEY", "").strip()
 GEMINI_API_KEY_2 = get_env("GEMINI_API_KEY_2", "").strip()
 GEMINI_API_KEY_3 = get_env("GEMINI_API_KEY_3", "").strip()
-OLLAMA_MODEL = get_env("OLLAMA_MODEL", "qwen3.5:9b").strip()
+OLLAMA_MODEL = get_env("OLLAMA_MODEL", "gemma4:26b").strip()
 LINK_AFILIADO = "https://www.binance.com/activity/referral-entry/CPA?ref=CPA_00RIF3NDUA"
 TEXTO_BOTON_DINERO = "🎁 RECLAMAR HASTA 100$"
 

@@ -65,9 +65,17 @@ interface FetchedNewsContext {
 
 ### Funcionalidad
 - Generación de artículos con IA (Gemini/Ollama).
-- Post-procesado ortográfico.
-- Análisis de imágenes (Vision).
-- Generación de imágenes (AI Horde).
+- Soporte para **modelos de razonamiento**: El streaming de Ollama captura tanto el campo `response` como el campo `thinking`.
+- **Gestión de VRAM**: Proceso de descarga explícita de modelos para evitar colisiones entre el modelo de texto (Ollama) y el modelo de imagen (Flux).
+- Post-procesado ortográfico y análisis de imágenes (Vision).
+
+### Gestión de VRAM (Handoff)
+Para GPUs de 8GB, el sistema orquesta la memoria de la siguiente forma:
+1. Las llamadas a Ollama usan `keep_alive: 0` para no retener el modelo tras la respuesta.
+2. Antes de iniciar Flux, se llama a `unloadOllamaModels()` que:
+   - Envía una petición de descarga a Ollama.
+   - Pausa **8 segundos** para que el driver NVIDIA limpie los buffers.
+   - Pausa adicional de **5 segundos** para estabilidad térmica/GPU.
 
 ### Submódulos
 
@@ -148,13 +156,21 @@ interface GeneratedArticle {
 
 ### Funcionalidad
 - Gestión de artículos en la base de datos.
-- Búsqueda y filtrado.
-- Categorías y etiquetas.
+- **Motor de Ranking**: Sistema de ordenamiento dinámico basado en relevancia, prioridad y estado "fijado".
+- Búsqueda y filtrado eficiente por categorías y etiquetas (tags).
+
+### Motor de Ranking (Ranking Engine)
+El sistema ha evolucionado de un orden puramente cronológico a uno basado en **Relevancia**. Todas las consultas principales (`getPublishedArticles`, `getArticlesByCategorySlug`, etc.) utilizan la siguiente cascada de prioridades:
+
+1.  **isPinned**: Los artículos marcados como "fijados" aparecen siempre primero.
+2.  **priority**: En caso de empate, se ordena por el peso numérico de prioridad (mayor es mejor).
+3.  **publishedAt**: Luego se considera la fecha de publicación efectiva (permite programar).
+4.  **createdAt**: Finalmente, se usa la fecha de creación técnica.
 
 ### API
 
 ```typescript
-// Obtener artículos publicados
+// Obtener artículos publicados (usa el Ranking Engine)
 getPublishedArticles(limit, skip): Promise<Article[]>
 
 // Por slug
@@ -163,7 +179,7 @@ getArticleBySlug(slug): Promise<Article>
 // Relacionados
 getRelatedArticles(categoryId, articleId, limit)
 
-// Por categoría
+// Por categoría (usa el Ranking Engine)
 getArticlesByCategorySlug(slug, limit, skip)
 
 // Búsqueda avanzada
@@ -191,7 +207,12 @@ interface Article {
   author: string
   published: boolean
   isOriginal: boolean
-  tags: string[]      // defaults to []
+  tags: string[]      // Legacy: Array de strings (para compatibilidad)
+  articleTags: Tag[]  // Nueva relación normalizada
+  isPinned: boolean   // Para fijar noticias arriba
+  priority: number    // Peso para el ranking
+  viewCount: number   // Contador de visitas
+  publishedAt?: Date  // Fecha de publicación efectiva
   sentiment: string   // defaults to "Neutral ⚖️"
   categoryId: string
   category: Category
@@ -199,13 +220,23 @@ interface Article {
   updatedAt: Date
 }
 
+interface Tag {
+  id: string
+  name: string
+  slug: string
+  articles: Article[]
+  createdAt: Date
+}
+
 interface Category {
   id: string          // uuid()
   name: string
   slug: string
+  articles: Article[]
   createdAt: Date
   updatedAt: Date
 }
+```
 
 interface Subscriber {
   id: string          // uuid()
@@ -232,23 +263,27 @@ interface Setting {
 **Ubicación**: `modules/images/`
 
 ### Funcionalidad
-- Pipeline de imágenes para artículos.
-- Generación, QA y almacenamiento.
+- Pipeline de imágenes jerárquico.
+- **Flux.1 Local**: Integrado como generador principal. Soporta monitoreo de progreso paso a paso (`docker logs -f flux-api-server`).
+- **Validación Estricta (QA)**:
+  - Rechazo total de imágenes de **Decrypt**.
+  - Detección de marcas de agua superpuestas (CoinDesk, Cointelegraph, etc.).
+  - Evaluación de coherencia contextual (ej. un edificio de oficinas es válido para noticias financieras aunque no haya logos de cripto).
 
 ### Pipeline de imagen
 
 ```
 1. Imagen RSS Source
    |
-   +-> QA con Gemini Vision
+   +-> QA con Gemini Vision (Regla: No Decrypt)
    |     +-> Aprobada → Subir a Supabase → USAR
    |
    +-> Rechazada → Paso 2
 
 2. Flux Local (PRIORIDAD ALTA)
    |
-   +-> Comprobar si servidor está online
-   +-> Generar imagen (Flux.1 [dev])
+   +-> Gestión VRAM: Descargar Ollama (13s pausa total)
+   +-> Generar imagen (Flux.1 [dev]) -> Progreso en logs
    +-> QA con Gemini Vision
    |     +-> Aprobada → Subir a Supabase → USAR
    |

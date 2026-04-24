@@ -23,11 +23,14 @@ try:
         token=HF_TOKEN
     )
     
-    # OPTIMIZACIÓN AGRESIVA PARA 8GB VRAM (RTX 4060)
-    # enable_sequential_cpu_offload() es más lento pero usa mucha menos VRAM
+    # enable_model_cpu_offload() es ideal para 8GB. 
+    # Si aun así falla, se puede usar pipe.enable_sequential_cpu_offload()
     pipe.enable_sequential_cpu_offload()
     
-    print("✅ Modelo cargado y optimizado con SEQUENTIAL CPU OFFLOAD para 8GB VRAM.")
+    # OPTIMIZACIÓN EXTRA PARA EL PASO FINAL (VAE)
+    pipe.vae.enable_tiling()
+    
+    print("✅ Modelo cargado y optimizado con SEQUENTIAL CPU OFFLOAD + VAE Tiling.")
 except Exception as e:
     print(f"❌ Error cargando el modelo: {e}")
     pipe = None

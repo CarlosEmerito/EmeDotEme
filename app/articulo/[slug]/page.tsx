@@ -11,8 +11,6 @@ import { Comments } from "@/components/articles/Comments";
 import { TextToSpeech } from "@/components/articles/TextToSpeech";
 import { ArticleSchema } from "@/components/seo/ArticleSchema";
 
-export const dynamic = 'force-dynamic';
-
 interface ArticlePageProps {
   params: Promise<{
     slug: string;

@@ -2,8 +2,6 @@ import { getPublishedArticles } from "@/modules/articles/article.service";
 import { HeroArticleCard } from "@/components/articles/HeroArticleCard";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
 
-export const dynamic = 'force-dynamic';
-
 export default async function Home() {
   const articles = await getPublishedArticles(5);
 

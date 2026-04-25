@@ -14,6 +14,39 @@ export type Coin = {
 };
 
 /**
+ * Obtiene los datos del mercado en vivo desde CoinGecko o CoinCap como respaldo.
+ */
+export async function getMarketData(): Promise<Coin[]> {
+  try {
+    const res = await fetch(
+      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=15&page=1&sparkline=false',
+      { next: { revalidate: 60 } }
+    );
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (error) {}
+  
+  try {
+    const fallbackRes = await fetch('https://api.coincap.io/v2/assets?limit=15', {
+      next: { revalidate: 60 }
+    });
+    if (fallbackRes.ok) {
+      const data = await fallbackRes.json();
+      return data.data.map((coin: any) => ({
+        id: coin.id,
+        symbol: coin.symbol,
+        name: coin.name,
+        current_price: parseFloat(coin.priceUsd),
+        price_change_percentage_24h: parseFloat(coin.changePercent24Hr)
+      }));
+    }
+  } catch (error) {}
+  
+  return [];
+}
+
+/**
  * Obtiene los datos detallados de una moneda específica por su símbolo (ej: BTC).
  */
 export async function getCoinDataBySymbol(symbol: string): Promise<Coin | null> {

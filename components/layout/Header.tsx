@@ -15,7 +15,7 @@ export function Header() {
         <div className="flex items-center">
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden mr-4 p-2 text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] transition-colors focus:outline-none"
+            className="md:hidden mr-4 p-2 text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950 rounded"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >

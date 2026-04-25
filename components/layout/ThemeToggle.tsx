@@ -41,7 +41,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(nextTheme())}
-      className="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center text-zinc-600 dark:text-zinc-400 focus:outline-none"
+      className="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center text-zinc-600 dark:text-zinc-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
       aria-label={`Cambiar a tema ${getThemeLabel()}`}
       title={`Tema actual: ${theme === "system" ? "Sistema" : theme === "dark" ? "Oscuro" : "Claro"}. Click para cambiar a ${getThemeLabel()}`}
     >

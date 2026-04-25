@@ -33,7 +33,7 @@ export function SearchBar() {
       />
       <button
         type="submit"
-        className="absolute right-3 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+        className="absolute right-3 p-1 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-full focus-visible:ring-offset-1 dark:focus-visible:ring-offset-zinc-900"
         aria-label={isEnglishPage ? "Search" : "Buscar"}
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">

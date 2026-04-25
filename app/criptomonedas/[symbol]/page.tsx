@@ -29,7 +29,7 @@ export default async function PricePage({ params }: PricePageProps) {
           <nav className="flex items-center text-xs uppercase tracking-widest font-bold text-zinc-400 dark:text-zinc-600 mb-8">
             <Link href="/" className="hover:text-[color:var(--color-brand)]">Inicio</Link>
             <span className="mx-3">•</span>
-            <Link href="/mercados" className="hover:text-[color:var(--color-brand)]">Mercados</Link>
+            <Link href="/noticias" className="hover:text-[color:var(--color-brand)]">Criptomonedas</Link>
             <span className="mx-3">•</span>
             <span className="text-zinc-900 dark:text-zinc-100">{coin.name}</span>
           </nav>
@@ -49,7 +49,7 @@ export default async function PricePage({ params }: PricePageProps) {
                   </span>
                 </h1>
                 <p className="text-zinc-500 dark:text-zinc-400 mt-2 font-medium">
-                  Datos de mercado en tiempo real actualizados hace minutos.
+                  Precio y estadísticas en tiempo real de {coin.name}.
                 </p>
               </div>
             </div>
@@ -83,7 +83,7 @@ export default async function PricePage({ params }: PricePageProps) {
             value={`$${(coin.total_volume || 0).toLocaleString('en-US', { notation: 'compact', compactDisplay: 'short' })}`} 
           />
           <StatCard 
-            label="Suministro Circulante" 
+            label="Suministro" 
             value={`${(coin.circulating_supply || 0).toLocaleString('en-US', { notation: 'compact' })} ${coin.symbol.toUpperCase()}`} 
           />
           <StatCard 
@@ -95,7 +95,7 @@ export default async function PricePage({ params }: PricePageProps) {
         {/* Noticias Relacionadas */}
         <div className="mt-24">
           <div className="flex items-center justify-between mb-12">
-            <h2 className="text-3xl font-bold text-black dark:text-white font-serif">Últimas noticias de {coin.name}</h2>
+            <h2 className="text-3xl font-bold text-black dark:text-white font-serif">Noticias de {coin.name}</h2>
             <div className="h-px flex-1 bg-zinc-100 dark:bg-zinc-900 mx-8"></div>
           </div>
 
@@ -122,16 +122,13 @@ export default async function PricePage({ params }: PricePageProps) {
                     <h3 className="text-xl font-bold text-black dark:text-white group-hover:text-[color:var(--color-brand)] transition-colors leading-tight font-serif">
                       {article.title}
                     </h3>
-                    <p className="text-zinc-500 dark:text-zinc-400 text-sm line-clamp-2 leading-relaxed">
-                      {article.summary}
-                    </p>
                   </div>
                 </Link>
               ))}
             </div>
           ) : (
             <div className="text-center py-20 bg-zinc-50 dark:bg-zinc-950/50 rounded-3xl border border-dashed border-zinc-200 dark:border-zinc-800">
-              <p className="text-zinc-500 dark:text-zinc-400 font-medium">No hay noticias recientes etiquetadas con ${coin.symbol.toUpperCase()}.</p>
+              <p className="text-zinc-500 dark:text-zinc-400 font-medium">Sin noticias recientes de ${coin.symbol.toUpperCase()}.</p>
             </div>
           )}
         </div>
@@ -142,7 +139,7 @@ export default async function PricePage({ params }: PricePageProps) {
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="p-6 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+    <div className="p-6 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl shadow-sm">
       <div className="text-xs uppercase tracking-widest font-bold text-zinc-400 dark:text-zinc-600 mb-3">{label}</div>
       <div className="text-xl font-black text-black dark:text-white tracking-tight">{value}</div>
     </div>

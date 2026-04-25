@@ -138,7 +138,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   <div className="flex items-center gap-2">
                     {article.tickers.map(ticker => (
                       <Link 
-                        href={`/mercados/${ticker.toUpperCase()}`}
+                        href={`/criptomonedas/${ticker.toUpperCase()}`}
                         key={ticker} 
                         className="text-[11px] font-bold text-zinc-400 dark:text-zinc-600 hover:text-[color:var(--color-brand)] transition-colors"
                       >

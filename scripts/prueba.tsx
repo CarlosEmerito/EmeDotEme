@@ -4,12 +4,11 @@
  * 
  * Funciones disponibles:
  *   ollama      - Probar generación con Ollama
- *   postprocess - Probar post-procesado ortográfico
  *   all         - Probar todas las funciones (solo Ollama)
  */
 
 import 'dotenv/config';
-import { generateTextWithOllama, postprocessWithOllama } from '../modules/ai/ai.service';
+import { generateTextWithOllama } from '../modules/ai/ai.service';
 
 const testArticle = {
   title: 'Bitcoin Supera los $100,000',
@@ -41,33 +40,12 @@ async function testOllama() {
   console.log(`⏱️ Tiempo: ${(elapsed / 1000).toFixed(2)}s`);
 }
 
-async function testPostprocess() {
-  const start = Date.now();
-  console.log('\n🧪 PROBANDO: postprocessWithOllama');
-  console.log('===============================');
-  
-  const result = await postprocessWithOllama(testArticle);
-  
-  const elapsed = Date.now() - start;
-  timings.postprocess = elapsed;
-  
-  if (result && result !== testArticle) {
-    console.log('✅ Resultado post-procesado:');
-    console.log('  Título:', result.title?.substring(0, 50), '...');
-    console.log('  Contenido:', result.content?.substring(0, 100), '...');
-  } else {
-    console.log('❌ Falló postprocessWithOllama o no hubo cambios');
-  }
-  console.log(`⏱️ Tiempo: ${(elapsed / 1000).toFixed(2)}s`);
-}
-
 async function testAll() {
   const totalStart = Date.now();
   console.log('🚀 PROBANDO FUNCIONES OLLAMA');
   console.log('========================\n');
   
   await testOllama();
-  await testPostprocess();
   
   const totalElapsed = Date.now() - totalStart;
   
@@ -75,15 +53,12 @@ async function testAll() {
   console.log('📊 RESUMEN DE TIEMPOS');
   console.log('='.repeat(50));
   
-  let totalTests = 0;
   for (const [test, time] of Object.entries(timings)) {
-    const testName = test === 'ollama' ? 'generateTextWithOllama' : 'postprocessWithOllama';
+    const testName = test === 'ollama' ? 'generateTextWithOllama' : test;
     console.log(`  ${testName}: ${(time / 1000).toFixed(2)}s`);
-    totalTests += time;
   }
   
   console.log('='.repeat(50));
-  console.log(`  TOTAL: ${(totalTests / 1000).toFixed(2)}s`);
   console.log(`  ⏱️ Total real: ${(totalElapsed / 1000).toFixed(2)}s`);
   console.log('='.repeat(50));
   
@@ -101,9 +76,6 @@ async function main() {
   switch (test) {
     case 'ollama':
       await testOllama();
-      break;
-    case 'postprocess':
-      await testPostprocess();
       break;
     case 'all':
     default:

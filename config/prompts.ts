@@ -21,7 +21,7 @@ REQUISITOS:
 5. Puntos clave (keyPoints): Una lista de exactamente 3 puntos clave (balas) que resuman lo más importante del artículo para una lectura rápida.
 6. Nivel de impacto (impactLevel): Evalúa el impacto de la noticia en el mercado o sociedad. Elige uno: "Alto Impacto 💥", "Impacto Moderado ⚡", "Informativo 📰".
 7. Nivel de complejidad (complexity): Evalúa la dificultad técnica. Elige uno: "Principiante 🟢", "Intermedio 🟡", "Avanzado 🔴".
-8. Activos afectados (tickers): Lista de hasta 3 símbolos de criptomonedas o empresas mencionadas (ej: ["BTC", "ETH", "NVDA"]).
+8. Activos afectados (tickers): Lista de símbolos reales de criptomonedas o empresas mencionadas (ej: ["BTC", "ETH"]). IMPORTANTE: Solo incluye símbolos de activos financieros reales, máximo 3, siempre en mayúsculas. Evita palabras comunes o nombres de personas.
 9. Glosario (glossary): Lista de 2-3 términos técnicos complejos usados en el texto y sus definiciones breves para principiantes.
 10. Preguntas Frecuentes (faqs): Lista de 2-3 preguntas y respuestas breves que el artículo resuelve (formato: [{"question": "...", "answer": "..."}]).
 11. Una descripción visual detallada en inglés para generar una imagen (imagePrompt).

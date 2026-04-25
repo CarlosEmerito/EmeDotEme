@@ -127,16 +127,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <span>{formatRelativeDate(article.createdAt)}</span>
               <span className="text-zinc-300 dark:text-zinc-700">•</span>
               <span>{calculateReadingTime(article.contentEn || article.content)} min read</span>
-
-              {(article.impactLevel || article.complexity) && (
-                <>
-                  <span className="text-zinc-300 dark:text-zinc-700">•</span>
-                  <div className="flex gap-3">
-                    {article.impactLevel && <span>{article.impactLevel.replace(/ .*/,'')}</span>}
-                    {article.complexity && <span className="opacity-80">{article.complexity.replace(/ .*/,'')}</span>}
-                  </div>
-                </>
-              )}
             </div>
 
             <div className="flex items-center justify-between">
@@ -144,9 +134,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 {article.tickers && article.tickers.length > 0 && (
                   <div className="flex items-center gap-2">
                     {article.tickers.map(ticker => (
-                      <span key={ticker} className="text-[11px] font-bold text-zinc-400 dark:text-zinc-600 hover:text-[color:var(--color-brand)] transition-colors cursor-default">
-                        ${ticker}
-                      </span>
+                      <Link 
+                        href={`/mercados/${ticker.toUpperCase()}`}
+                        key={ticker} 
+                        className="text-[11px] font-bold text-zinc-400 dark:text-zinc-600 hover:text-[color:var(--color-brand)] transition-colors"
+                      >
+                        ${ticker.toUpperCase()}
+                      </Link>
                     ))}
                   </div>
                 )}

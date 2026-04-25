@@ -220,6 +220,20 @@ export async function searchArticles(options: SearchOptions = {}) {
   };
 }
 
+export async function getArticlesByTicker(ticker: string, limit: number = 6) {
+  return await prisma.article.findMany({
+    where: {
+      published: true,
+      tickers: {
+        has: ticker.toUpperCase()
+      }
+    },
+    orderBy: defaultOrder,
+    include: { category: true, articleTags: true },
+    take: limit,
+  });
+}
+
 export async function simpleSearchArticles(query: string, limit: number = 10) {
   const result = await searchArticles({ query, limit });
   return result.articles;

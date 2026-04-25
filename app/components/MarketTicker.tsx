@@ -1,5 +1,6 @@
 import React from 'react';
 import { getMarketData } from '@/modules/market/market.service';
+import Link from 'next/link';
 
 export default async function MarketTicker() {
   const coins = await getMarketData();
@@ -9,11 +10,15 @@ export default async function MarketTicker() {
   }
 
   return (
-    <div className="w-full bg-zinc-100 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 overflow-hidden flex items-center h-10 text-sm">
-      <div className="flex animate-marquee whitespace-nowrap min-w-max">
+    <div className="w-full bg-zinc-100 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 overflow-hidden flex items-center h-10 text-sm group">
+      <div className="flex animate-marquee whitespace-nowrap min-w-max group-hover:[animation-play-state:paused]">
         {/* First set - visible to all users */}
         {coins.map((coin, i) => (
-          <div key={`${coin.id}-original-${i}`} className="flex items-center mx-6">
+          <Link 
+            href={`/criptomonedas/${coin.symbol.toUpperCase()}`}
+            key={`${coin.id}-original-${i}`} 
+            className="flex items-center mx-6 hover:text-[color:var(--color-brand)] transition-colors"
+          >
             <span className="font-bold text-zinc-800 dark:text-zinc-200 mr-2">
               {coin.symbol.toUpperCase()}
             </span>
@@ -30,11 +35,16 @@ export default async function MarketTicker() {
               {coin.price_change_percentage_24h > 0 ? '+' : ''}
               {coin.price_change_percentage_24h?.toFixed(2)}%
             </span>
-          </div>
+          </Link>
         ))}
         {/* Second set for seamless loop - hidden from screen readers */}
         {coins.map((coin, i) => (
-          <div key={`${coin.id}-duplicate-${i}`} className="flex items-center mx-6" aria-hidden="true">
+          <Link 
+            href={`/criptomonedas/${coin.symbol.toUpperCase()}`}
+            key={`${coin.id}-duplicate-${i}`} 
+            className="flex items-center mx-6 hover:text-[color:var(--color-brand)] transition-colors" 
+            aria-hidden="true"
+          >
             <span className="font-bold text-zinc-800 dark:text-zinc-200 mr-2">
               {coin.symbol.toUpperCase()}
             </span>
@@ -51,7 +61,7 @@ export default async function MarketTicker() {
               {coin.price_change_percentage_24h > 0 ? '+' : ''}
               {coin.price_change_percentage_24h?.toFixed(2)}%
             </span>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

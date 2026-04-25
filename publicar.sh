@@ -25,31 +25,38 @@ TIMESTAMP="$(date '+%Y-%m-%d %H:%M:%S')"
 JSON_PATH="tmp/latest_article.json"
 
 # === Logging de inicio ===
-echo -e "\n================== 📰 PUBLICAR.sh ($TIMESTAMP) ==================" | tee -a "$LOGFILE"
+echo -e "\n================== 📰 PUBLICAR.sh ($TIMESTAMP) =================="
 
 # === Paso 1: Generar artículo principal ===
-echo "[1️⃣] Generando artículo principal..." | tee -a "$LOGFILE"
-if npx tsx scripts/publish.ts 2>&1 | tee -a "$LOGFILE"; then
+echo "[1️⃣] Generando artículo principal con scripts/publish.ts..."
+if npx tsx scripts/publish.ts 2>&1; then
   
+  echo "[✅] Paso 1 completado exitosamente."
+
   # [Propuesta 3] Verificar si el JSON generado existe antes de publicar en redes
   if [ ! -f "$JSON_PATH" ]; then
-    echo "❌ Error: No se encontró $JSON_PATH tras la generación." | tee -a "$LOGFILE"
+    echo "❌ Error: No se encontró $JSON_PATH tras la generación."
     exit 1
   fi
 
+  echo "[📦] Metadata detectada en $JSON_PATH. Iniciando publicación en redes..."
+
   # [Propuesta 4] Ejecución de scripts con python3
-  echo -e "\n[2️⃣] Enviando a Binance Square..." | tee -a "$LOGFILE"
-  python3 scripts/python/publish_direct.py "$JSON_PATH" 2>&1 | tee -a "$LOGFILE"
+  echo -e "\n[2️⃣] Enviando a Binance Square (scripts/python/publish_direct.py)..."
+  python3 scripts/python/publish_direct.py "$JSON_PATH" 2>&1
+  echo "[✅] Fin del proceso de Binance Square."
 
-  echo -e "\n[3️⃣] Enviando a Telegram..." | tee -a "$LOGFILE"
-  python3 scripts/python/publish_telegram.py "$JSON_PATH" 2>&1 | tee -a "$LOGFILE"
+  echo -e "\n[3️⃣] Enviando a Telegram (scripts/python/publish_telegram.py)..."
+  python3 scripts/python/publish_telegram.py "$JSON_PATH" 2>&1
+  echo "[✅] Fin del proceso de Telegram."
 
-  echo -e "\n[4️⃣] Enviando a Bluesky..." | tee -a "$LOGFILE"
-  python3 scripts/python/publish_bluesky.py "$JSON_PATH" 2>&1 | tee -a "$LOGFILE"
+  echo -e "\n[4️⃣] Enviando a Bluesky (scripts/python/publish_bluesky.py)..."
+  python3 scripts/python/publish_bluesky.py "$JSON_PATH" 2>&1
+  echo "[✅] Fin del proceso de Bluesky."
 else
-  echo "❌ Error al generar el artículo. Abortando publicación en redes." | tee -a "$LOGFILE"
+  echo "❌ Error al generar el artículo. Abortando publicación en redes."
   exit 1
 fi
 
-echo -e "\n✅ Proceso completado. Revisa tus redes sociales. ($TIMESTAMP)\n" | tee -a "$LOGFILE"
-echo "===============================================================" | tee -a "$LOGFILE"
+echo -e "\n✅ Proceso completado. Revisa tus redes sociales. ($TIMESTAMP)\n"
+echo "==============================================================="

@@ -47,6 +47,7 @@ async function main() {
         title: aiResponse.title,
         slug: slug + '-' + Date.now(),
         summary: aiResponse.summary,
+        keyPoints: aiResponse.keyPoints || [],
         content: aiResponse.content,
         imageUrl: imageUrl,
         imageCaption: aiResponse.imageCaption,

@@ -2,7 +2,7 @@
 
 # Archivo donde guardaremos el identificador del proceso para poder detenerlo luego
 PID_FILE="/home/emerito/emedoteme/bot.pid"
-LOG_FILE="/home/emerito/emedoteme/logs/bot.log"
+LOG_FILE="/home/emerito/emedoteme/logs/emedoteme.log"
 DIR="/home/emerito/emedoteme"
 
 # Asegurar que el directorio de logs existe
@@ -41,22 +41,20 @@ echo "================================================="
 nohup bash -c "
 cd '$DIR' || exit 1
 while true; do
-    echo \"----------------------------------------\" >> '$LOG_FILE'
-    echo \"[\$(date '+%Y-%m-%d %H:%M:%S')] 🤖 Iniciando generación de nueva noticia local...\" >> '$LOG_FILE'
+    echo \"----------------------------------------\" | tee -a '$LOG_FILE'
+    echo \"[\$(date '+%Y-%m-%d %H:%M:%S')] 🤖 BOT: Iniciando ciclo de publicación...\" | tee -a '$LOG_FILE'
     
-    # Llamamos al script local (publish.ts)
-    ./publicar.sh >> '$LOG_FILE' 2>&1
-    
-    echo \"[\$(date '+%Y-%m-%d %H:%M:%S')] ✅ Publicación completada.\" >> '$LOG_FILE'
+    # Llamamos al script de publicación y lo registramos en el log
+    ./publicar.sh | tee -a "$LOG_FILE"
     
     # Generar espera aleatoria entre 10800 segundos (3h) y 18000 segundos (5h)
     ESPERA=\$(( (RANDOM % 7201) + 10800 ))
     
-    # Calcular horas y minutos para el log (sin depender de bc)
+    # Calcular horas y minutos para el log
     HORAS=\$(( ESPERA / 3600 ))
     MINUTOS=\$(( (ESPERA % 3600) / 60 ))
     
-    echo \"[\$(date '+%Y-%m-%d %H:%M:%S')] 💤 Bot durmiendo... Próxima publicación en \$HORAS horas y \$MINUTOS minutos.\" >> '$LOG_FILE'
+    echo \"[\$(date '+%Y-%m-%d %H:%M:%S')] 💤 BOT: Durmiendo... Próxima publicación en \$HORAS horas y \$MINUTOS minutos.\" | tee -a '$LOG_FILE'
     
     sleep \$ESPERA
 done

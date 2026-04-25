@@ -41,5 +41,5 @@ Debes responder ÚNICAMENTE con un objeto JSON con esta estructura exacta:
   "descripcion": "qué muestra la imagen en una frase",
   "calidad_aceptable": true/false,
   "problemas_detectados": ["lista de problemas si los hay (ej: 'marca de agua de decrypt detectada')"],
-  "caption_mejorado": "un pie de foto profesional y humano (solo si es coherente)"
+  "caption_mejorado": "Redacta un pie de foto periodístico, breve y descriptivo (1-2 líneas) que aporte contexto y valor al lector, explicando la escena o los elementos clave en relación con la noticia. Sé directo y natural, evita clichés como 'Imagen que muestra', 'Representación de' o 'Gráfico de'."
 }`;

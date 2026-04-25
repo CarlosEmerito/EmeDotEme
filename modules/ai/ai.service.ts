@@ -21,6 +21,7 @@ function logWithTime(msg: string) {
 export interface GeneratedArticle {
   title: string;
   summary: string;
+  keyPoints: string[];
   content: string;
   imagePrompt: string;
   tags: string[];
@@ -46,6 +47,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
 
   while (attempt <= maxRetries) {
     try {
+      logWithTime(`🤖 [Ollama ${model}] Intento ${attempt + 1}/${maxRetries + 1}...`);
       const prompt = `${systemPrompt}\n\n${userPrompt}`;
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 1200000); // 20 min
@@ -65,16 +67,20 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
       });
       
       clearTimeout(timeoutId);
-      if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
+      if (!response.ok) {
+        logWithTime(`❌ Ollama respondió con error HTTP ${response.status}`);
+        throw new Error(`Error HTTP ${response.status}`);
+      }
 
-      logWithTime(`🤖 [Ollama ${model}] Generando texto...`);
+      logWithTime(`🤖 [Ollama ${model}] Recibiendo stream de respuesta...`);
       let fullResponse = "";
       const body = response.body;
       if (!body) throw new Error('No body');
       
+      const decoder = new TextDecoder();
       // @ts-ignore
       for await (const chunk of body) {
-        const lines = chunk.toString().split('\n');
+        const lines = decoder.decode(chunk as BufferSource, { stream: true }).split('\n');
         for (const line of lines) {
           if (!line.trim()) continue;
           try {
@@ -85,14 +91,22 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
           } catch (e) {}
         }
       }
+      logWithTime(`✅ Ollama completó la generación (${fullResponse.length} caracteres).`);
       return fullResponse;
     } catch (err: any) {
+      logWithTime(`⚠️ Error en intento ${attempt + 1}: ${err.message}`);
       attempt++;
       if (attempt <= maxRetries) {
-        await new Promise(resolve => setTimeout(resolve, 5000));
-      } else return null;
+        const waitTime = 5000 * attempt;
+        logWithTime(`⏳ Esperando ${waitTime/1000}s antes de reintentar...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+      } else {
+        logWithTime('❌ Se agotaron los reintentos para Ollama.');
+        return null;
+      }
     }
   }
+
   return null;
 }
 
@@ -149,49 +163,46 @@ export async function generateArticleContent(
 export async function generateBilingualContent(
   recentTitles: string[] = [],
   newsContext: NewsItem[] = []
-): Promise<GeneratedArticle & { titleEn: string; summaryEn: string; contentEn: string }> {
-  let esArticle = await generateArticleContent(recentTitles, newsContext);
-  esArticle = await postprocessWithOllama(esArticle);
+): Promise<GeneratedArticle & { titleEn: string; summaryEn: string; keyPointsEn: string[]; contentEn: string }> {
+  logWithTime('🇪🇸 Iniciando generación en español...');
+  const esArticle = await generateArticleContent(recentTitles, newsContext);
   
+  logWithTime('🇬🇧 Iniciando traducción/generación en inglés...');
   const enArticle = await generateEnglishContent(esArticle);
   
+  logWithTime('✅ Contenido bilingüe listo.');
   return { ...esArticle, ...enArticle };
 }
 
-async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{ titleEn: string; summaryEn: string; contentEn: string }> {
+async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{ titleEn: string; summaryEn: string; keyPointsEn: string[]; contentEn: string }> {
   const systemPrompt = AI_PROMPTS.ENGLISH.SYSTEM;
   const userPrompt = AI_PROMPTS.ENGLISH.USER_TRANSLATE(esArticle, "");
 
+  logWithTime('📡 Solicitando traducción a Gemini...');
   let result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
   if (!result || result.length < 200) {
+    logWithTime('⚠️ Fallback a Ollama para inglés...');
     result = await generateTextWithOllama({ systemPrompt, userPrompt });
   }
   if (!result) throw new Error('Fallo generación en inglés');
 
   try {
     const parsed = JSON.parse(sanitizeJsonString(extractJson(result)));
+    logWithTime('✅ Traducción completada y parseada.');
     return {
       titleEn: parsed.titleEn || esArticle.title,
       summaryEn: parsed.summaryEn || esArticle.summary,
+      keyPointsEn: parsed.keyPointsEn || esArticle.keyPoints || [],
       contentEn: parsed.contentEn || esArticle.content
     };
   } catch {
-    return { titleEn: esArticle.title, summaryEn: esArticle.summary, contentEn: esArticle.content };
-  }
-}
-
-export async function postprocessWithOllama(article: any): Promise<any> {
-  const systemPrompt = AI_PROMPTS.CORRECTION.SYSTEM;
-  const userPrompt = AI_PROMPTS.CORRECTION.USER(article);
-  
-  const result = await generateTextWithOllama({ systemPrompt, userPrompt });
-  if (!result) return article;
-  
-  try {
-    const parsed = JSON.parse(sanitizeJsonString(extractJson(result)));
-    return { ...article, ...parsed };
-  } catch {
-    return article;
+    logWithTime('⚠️ Error parseando traducción, usando fallback de contenido original.');
+    return { 
+      titleEn: esArticle.title, 
+      summaryEn: esArticle.summary, 
+      keyPointsEn: esArticle.keyPoints || [],
+      contentEn: esArticle.content 
+    };
   }
 }
 
@@ -222,6 +233,7 @@ function parseAndRecoverJson(result: string, newsContext: NewsItem[]): Generated
     return {
       title: titleMatch?.[1].trim() || "Artículo sin título",
       summary: summaryMatch?.[1].trim() || "",
+      keyPoints: [],
       content: contentMatch?.[1].trim().replace(/\\n/g, '\n').replace(/\\"/g, '"') || "",
       imagePrompt: "technology, digital art",
       tags: [],

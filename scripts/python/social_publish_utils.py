@@ -10,12 +10,15 @@ LOG_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
 LOG_FILE = os.path.join(LOG_DIR, "emedoteme.log")
 
-# Configuración de logging: solo INFO para nuestro código, WARNING para librerías
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[logging.FileHandler(LOG_FILE, encoding="utf-8"), logging.StreamHandler()],
-)
+# Configuración de logging: solo INFO para nuestro código, WARNING para librerías.
+# Usamos solo StreamHandler porque el script de shell (publicar.sh) ya se encarga
+# de la persistencia usando 'tee -a' hacia el archivo de logs.
+if not logging.getLogger().hasHandlers():
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[logging.StreamHandler()],
+    )
 
 # Silenciar logs verbosos de librerías de terceros
 logging.getLogger("httpx").setLevel(logging.WARNING)

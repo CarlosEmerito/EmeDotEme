@@ -23,34 +23,46 @@ export class PublisherService {
 
     try {
       // 1. Asegurar categorías base
+      console.log("📁 [1/7] Asegurando categorías base...");
       await this.ensureCategories();
       const allCategories = await this.prisma.category.findMany();
 
       // 2. Obtener contexto de artículos recientes para evitar duplicados
+      console.log("🔍 [2/7] Obteniendo contexto de artículos recientes...");
       const { recentTitles, recentSourceUrls } = await this.getRecentContext();
       
       // 3. Obtener noticias de fuentes RSS
+      console.log("📡 [3/7] Buscando noticias en fuentes RSS...");
       const newsContext = await fetchLatestNews(recentTitles, recentSourceUrls);
       
       if (newsContext.newsItems.length === 0) {
         console.log('✅ No hay noticias nuevas para cubrir. Saliendo con éxito.');
         return;
       }
+      console.log(`🗞️ Detectadas ${newsContext.newsItems.length} noticias nuevas.`);
 
       // 4. Generación por IA con lógica de clusters
+      console.log("🧠 [4/7] Generando contenido con IA...");
       const { aiResponse, successfulCluster } = await this.generateContentWithClusters(
         newsContext.topicClusters,
         recentTitles
       );
+      console.log("✨ Contenido generado exitosamente.");
 
       // 5. Generación de Imagen
+      console.log("🎨 [5/7] Iniciando pipeline de imagen...");
       const imageUrls = await this.processImage(aiResponse, successfulCluster, allCategories);
+      console.log(`🖼️ Imagen lista: ${imageUrls.url}`);
 
       // 6. Guardar en Base de Datos
+      console.log("💾 [6/7] Guardando artículo en base de datos...");
       const newArticle = await this.saveToDatabase(aiResponse, imageUrls, newsContext.newsItems.length > 0);
+      console.log(`✅ Artículo guardado con ID: ${newArticle.id} y slug: ${newArticle.slug}`);
 
       // 7. Post-procesado (Binance Square, etc.)
+      console.log("📝 [7/7] Guardando metadata local para scripts externos...");
       await this.saveLocalMetadata(newArticle);
+
 
       console.log("\n✅ PROCESO COMPLETADO CON ÉXITO");
       return newArticle;
@@ -154,6 +166,8 @@ export class PublisherService {
         slug,
         summary: aiResponse.summary,
         summaryEn: aiResponse.summaryEn,
+        keyPoints: aiResponse.keyPoints || [],
+        keyPointsEn: aiResponse.keyPointsEn || [],
         content: aiResponse.content,
         contentEn: aiResponse.contentEn,
         articleTags: {

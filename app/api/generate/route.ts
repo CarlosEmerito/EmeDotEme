@@ -69,6 +69,8 @@ export async function GET(req: Request) {
         slug: slug + '-' + Date.now(),
         summary: aiResponse.summary,
         summaryEn: aiResponse.summaryEn,
+        keyPoints: aiResponse.keyPoints || [],
+        keyPointsEn: aiResponse.keyPointsEn || [],
         content: aiResponse.content,
         contentEn: aiResponse.contentEn,
         imageUrl: imageUrl,

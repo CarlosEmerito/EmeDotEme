@@ -87,9 +87,10 @@ Devuelve SOLO el JSON de análisis, nada más.`;
       const body = response.body;
       if (!body) throw new Error('No se pudo obtener el cuerpo de la respuesta de visión');
 
+      const decoder = new TextDecoder();
       // @ts-ignore - ReadableStream iterate support
       for await (const chunk of body) {
-        const lines = chunk.toString().split('\n');
+        const lines = decoder.decode(chunk, { stream: true }).split('\n');
         for (const line of lines) {
           if (!line.trim()) continue;
           try {

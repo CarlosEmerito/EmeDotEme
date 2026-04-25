@@ -37,6 +37,8 @@ model Article {
   summaryEn   String?
   content     String
   contentEn   String?
+  keyPoints   String[] @default([])
+  keyPointsEn String[] @default([])
   imageUrl    String?
   imageCaption String?
   sourceUrl   String?

@@ -49,6 +49,8 @@ export async function updateArticle(id: string, data: {
   slug: string;
   summary: string;
   content: string;
+  keyPoints?: string[];
+  keyPointsEn?: string[];
   imageUrl: string;
   imageCaption: string;
   tags?: string[];
@@ -63,6 +65,8 @@ export async function updateArticle(id: string, data: {
         title: data.title,
         slug: data.slug,
         summary: data.summary,
+        keyPoints: data.keyPoints || [],
+        keyPointsEn: data.keyPointsEn || [],
         content: data.content,
         imageUrl: data.imageUrl,
         imageCaption: data.imageCaption,
@@ -97,6 +101,8 @@ export async function createArticle(data: {
   slug: string;
   summary: string;
   content: string;
+  keyPoints?: string[];
+  keyPointsEn?: string[];
   imageUrl: string;
   imageCaption: string;
   tags?: string[];
@@ -112,6 +118,8 @@ export async function createArticle(data: {
         title: data.title,
         slug: data.slug,
         summary: data.summary,
+        keyPoints: data.keyPoints || [],
+        keyPointsEn: data.keyPointsEn || [],
         content: data.content,
         imageUrl: data.imageUrl,
         imageCaption: data.imageCaption,

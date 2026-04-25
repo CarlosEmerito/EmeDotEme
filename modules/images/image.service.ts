@@ -52,9 +52,9 @@ const AI_HORDE_OPTIONS = {
 
 function generateCaption(title: string, topic?: string): string {
   if (topic) {
-    return `Representación artística de «${title}» en el contexto de ${topic}.`;
+    return `Ilustración relacionada con la actualidad de ${topic}: «${title}».`;
   }
-  return `Escena representativa sobre «${title}».`;
+  return `Ilustración de actualidad periodística: «${title}».`;
 }
 
 // ============================================================
@@ -160,11 +160,9 @@ export async function generateArticleImageAndAnalyzeQA(
     errors.push(`Horde Exception: ${err.message}`);
   }
 
-  // --- FALLBACK FINAL: Unsplash ---
-  attempts.push('fallback_unsplash');
-  const fallbackKey = data.topic && FALLBACK_IMAGES[data.topic] ? data.topic : "Criptomonedas";
-  const images = FALLBACK_IMAGES[fallbackKey];
-  const fallbackUrl = images[Math.floor(Math.random() * images.length)];
-  
-  return { imageUrl: fallbackUrl, caption, qaResult: null, source: 'fallback_unsplash', attempts, errors };
+  // --- FALLBACK FINAL: Eliminado por petición del usuario ---
+  // Si llegamos aquí, es que todos los métodos han fallado.
+  const errorDetail = errors.join(' | ');
+  console.error(`❌ No se pudo obtener ninguna imagen válida tras agotar todos los métodos. Errores: ${errorDetail}`);
+  throw new Error(`Pipeline de imagen fallido: No se pudo generar o validar ninguna imagen coherente y de calidad. DETALLES: ${errorDetail}`);
 }

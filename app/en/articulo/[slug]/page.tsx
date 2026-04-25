@@ -155,6 +155,28 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           )}
         </header>
 
+        {/* Key Points */}
+        {article.keyPointsEn && article.keyPointsEn.length > 0 && (
+          <div className="mb-10 p-6 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm">
+            <h3 className="text-lg font-bold mb-4 text-black dark:text-white font-serif flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[color:var(--color-brand)]" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+              </svg>
+              Key Takeaways
+            </h3>
+            <ul className="grid grid-cols-1 gap-3">
+              {article.keyPointsEn.map((point, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[color:var(--color-brand)] mt-2.5" />
+                  <span className="text-zinc-700 dark:text-zinc-300 leading-relaxed font-medium">
+                    {point}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {/* Content */}
         <article className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
           <div dangerouslySetInnerHTML={{ __html: article.contentEn || article.content }} />

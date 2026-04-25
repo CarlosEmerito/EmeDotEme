@@ -17,6 +17,8 @@ export default function CreateArticleForm({ categories }: CreateArticleFormProps
     title: "",
     slug: "",
     summary: "",
+    keyPoints: "",
+    keyPointsEn: "",
     imageUrl: "",
     imageCaption: "",
     tags: "",
@@ -57,7 +59,9 @@ export default function CreateArticleForm({ categories }: CreateArticleFormProps
     
     const dataToSubmit = {
       ...formData,
-      tags: formData.tags.split(",").map(t => t.trim()).filter(t => t !== "")
+      tags: formData.tags.split(",").map(t => t.trim()).filter(t => t !== ""),
+      keyPoints: formData.keyPoints.split("\n").map(t => t.trim()).filter(t => t !== ""),
+      keyPointsEn: formData.keyPointsEn.split("\n").map(t => t.trim()).filter(t => t !== "")
     };
 
     const result = await createArticle(dataToSubmit);
@@ -157,6 +161,36 @@ export default function CreateArticleForm({ categories }: CreateArticleFormProps
             rows={3}
             className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
           />
+        </div>
+
+        {/* Key Points */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block text-sm font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">
+              Puntos Clave (Uno por línea)
+            </label>
+            <textarea
+              name="keyPoints"
+              value={formData.keyPoints}
+              onChange={handleChange}
+              rows={3}
+              className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
+              placeholder="Punto 1&#10;Punto 2&#10;Punto 3"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">
+              Key Takeaways (English - One per line)
+            </label>
+            <textarea
+              name="keyPointsEn"
+              value={formData.keyPointsEn}
+              onChange={handleChange}
+              rows={3}
+              className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
+              placeholder="Point 1&#10;Point 2&#10;Point 3"
+            />
+          </div>
         </div>
 
         {/* Image URL & Caption */}

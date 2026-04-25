@@ -123,39 +123,42 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             {article.summary}
           </p>
           
-          <div className="flex items-center justify-between border-t border-b border-zinc-200 dark:border-zinc-800 py-4 mb-8">
-            <div className="flex items-center text-sm text-zinc-700 dark:text-zinc-300 flex-wrap gap-y-2">
-              <span className="font-semibold text-[color:var(--color-brand)] mr-4">Por {article.author}</span>
+          <div className="flex flex-col gap-4 border-t border-b border-zinc-200 dark:border-zinc-800 py-6 mb-10">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[13px] uppercase tracking-widest font-medium text-zinc-500 dark:text-zinc-500">
+              <span className="text-[color:var(--color-brand)] font-bold">Por {article.author}</span>
+              <span className="text-zinc-300 dark:text-zinc-700">•</span>
               <span>{formatRelativeDate(article.createdAt)}</span>
-              <span className="mx-3 text-zinc-300 dark:text-zinc-700 hidden sm:inline">•</span>
-              <span className="mr-3">{calculateReadingTime(article.content)} min de lectura</span>
+              <span className="text-zinc-300 dark:text-zinc-700">•</span>
+              <span>{calculateReadingTime(article.content)} min lectura</span>
               
-              <div className="flex items-center gap-2 flex-wrap sm:ml-2">
-                {article.impactLevel && (
-                  <span className="px-2.5 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-xs font-bold border border-zinc-200 dark:border-zinc-700 whitespace-nowrap">
-                    {article.impactLevel}
-                  </span>
-                )}
-                {article.complexity && (
-                  <span className="px-2.5 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-xs font-bold border border-zinc-200 dark:border-zinc-700 whitespace-nowrap">
-                    {article.complexity}
-                  </span>
-                )}
+              {(article.impactLevel || article.complexity) && (
+                <>
+                  <span className="text-zinc-300 dark:text-zinc-700">•</span>
+                  <div className="flex gap-3">
+                    {article.impactLevel && <span>{article.impactLevel.replace(/ .*/,'')}</span>}
+                    {article.complexity && <span className="opacity-80">{article.complexity.replace(/ .*/,'')}</span>}
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
                 {article.tickers && article.tickers.length > 0 && (
-                  <div className="flex items-center gap-1.5 ml-1">
+                  <div className="flex items-center gap-2">
                     {article.tickers.map(ticker => (
-                      <span key={ticker} className="text-[10px] font-black bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-800 uppercase tracking-tighter">
+                      <span key={ticker} className="text-[11px] font-bold text-zinc-400 dark:text-zinc-600 hover:text-[color:var(--color-brand)] transition-colors cursor-default">
                         ${ticker}
                       </span>
                     ))}
                   </div>
                 )}
               </div>
-            </div>
-            
-            <div className="flex gap-2 items-center flex-wrap">
-              <TextToSpeech text={article.content} title={article.title} lang="es" />
-              <ShareButtons title={article.title} slug={article.slug} />
+              
+              <div className="flex gap-4 items-center">
+                <TextToSpeech text={article.content} title={article.title} lang="es" />
+                <ShareButtons title={article.title} slug={article.slug} />
+              </div>
             </div>
           </div>
 

@@ -128,7 +128,29 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <span className="font-semibold text-[color:var(--color-brand)] mr-4">Por {article.author}</span>
               <span>{formatRelativeDate(article.createdAt)}</span>
               <span className="mx-3 text-zinc-300 dark:text-zinc-700 hidden sm:inline">•</span>
-              <span>{calculateReadingTime(article.content)} min de lectura</span>
+              <span className="mr-3">{calculateReadingTime(article.content)} min de lectura</span>
+              
+              <div className="flex items-center gap-2 flex-wrap sm:ml-2">
+                {article.impactLevel && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-xs font-bold border border-zinc-200 dark:border-zinc-700 whitespace-nowrap">
+                    {article.impactLevel}
+                  </span>
+                )}
+                {article.complexity && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-xs font-bold border border-zinc-200 dark:border-zinc-700 whitespace-nowrap">
+                    {article.complexity}
+                  </span>
+                )}
+                {article.tickers && article.tickers.length > 0 && (
+                  <div className="flex items-center gap-1.5 ml-1">
+                    {article.tickers.map(ticker => (
+                      <span key={ticker} className="text-[10px] font-black bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-800 uppercase tracking-tighter">
+                        ${ticker}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
             
             <div className="flex gap-2 items-center flex-wrap">
@@ -184,6 +206,51 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <article className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
           <div dangerouslySetInnerHTML={{ __html: article.content }} />
         </article>
+
+        {/* Glossary Section */}
+        {article.glossary && Array.isArray(article.glossary) && article.glossary.length > 0 && (
+          <section className="mt-12 p-8 bg-zinc-50 dark:bg-zinc-900/30 border border-zinc-200 dark:border-zinc-800 rounded-3xl">
+            <h3 className="text-xl font-bold mb-6 text-black dark:text-white font-serif flex items-center gap-2">
+              <span className="text-2xl">📖</span> Glosario de términos
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {(article.glossary as any[]).map((item, i) => (
+                <div key={i} className="group">
+                  <dt className="text-sm font-black uppercase tracking-widest text-[color:var(--color-brand)] mb-1 group-hover:translate-x-1 transition-transform inline-block">
+                    {item.term}
+                  </dt>
+                  <dd className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed">
+                    {item.definition}
+                  </dd>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* FAQs Section */}
+        {article.faqs && Array.isArray(article.faqs) && article.faqs.length > 0 && (
+          <section className="mt-12 pt-10 border-t border-zinc-100 dark:border-zinc-800/50">
+            <h3 className="text-2xl font-bold mb-8 text-black dark:text-white font-serif flex items-center gap-2">
+              <span className="text-2xl">❓</span> Preguntas Frecuentes
+            </h3>
+            <div className="space-y-4">
+              {(article.faqs as any[]).map((faq, i) => (
+                <details key={i} className="group bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+                  <summary className="flex items-center justify-between p-5 cursor-pointer list-none font-bold text-zinc-900 dark:text-zinc-100 group-open:bg-zinc-50 dark:group-open:bg-zinc-800/50 transition-colors">
+                    <span>{faq.question}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-zinc-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </summary>
+                  <div className="p-5 text-zinc-600 dark:text-zinc-400 leading-relaxed border-t border-zinc-100 dark:border-zinc-800">
+                    {faq.answer}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
 
 
         {/* Footer info (Tags & Sentiment) */}

@@ -22,6 +22,11 @@ export interface GeneratedArticle {
   title: string;
   summary: string;
   keyPoints: string[];
+  impactLevel?: string;
+  complexity?: string;
+  tickers?: string[];
+  glossary?: { term: string; definition: string }[];
+  faqs?: { question: string; answer: string }[];
   content: string;
   imagePrompt: string;
   tags: string[];
@@ -163,7 +168,14 @@ export async function generateArticleContent(
 export async function generateBilingualContent(
   recentTitles: string[] = [],
   newsContext: NewsItem[] = []
-): Promise<GeneratedArticle & { titleEn: string; summaryEn: string; keyPointsEn: string[]; contentEn: string }> {
+): Promise<GeneratedArticle & { 
+  titleEn: string; 
+  summaryEn: string; 
+  keyPointsEn: string[]; 
+  contentEn: string;
+  glossaryEn?: { term: string; definition: string }[];
+  faqsEn?: { question: string; answer: string }[];
+}> {
   logWithTime('🇪🇸 Iniciando generación en español...');
   const esArticle = await generateArticleContent(recentTitles, newsContext);
   
@@ -174,7 +186,14 @@ export async function generateBilingualContent(
   return { ...esArticle, ...enArticle };
 }
 
-async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{ titleEn: string; summaryEn: string; keyPointsEn: string[]; contentEn: string }> {
+async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{ 
+  titleEn: string; 
+  summaryEn: string; 
+  keyPointsEn: string[]; 
+  contentEn: string;
+  glossaryEn?: { term: string; definition: string }[];
+  faqsEn?: { question: string; answer: string }[];
+}> {
   const systemPrompt = AI_PROMPTS.ENGLISH.SYSTEM;
   const userPrompt = AI_PROMPTS.ENGLISH.USER_TRANSLATE(esArticle, "");
 
@@ -193,6 +212,8 @@ async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{ ti
       titleEn: parsed.titleEn || esArticle.title,
       summaryEn: parsed.summaryEn || esArticle.summary,
       keyPointsEn: parsed.keyPointsEn || esArticle.keyPoints || [],
+      glossaryEn: parsed.glossaryEn || [],
+      faqsEn: parsed.faqsEn || [],
       contentEn: parsed.contentEn || esArticle.content
     };
   } catch {
@@ -201,6 +222,8 @@ async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{ ti
       titleEn: esArticle.title, 
       summaryEn: esArticle.summary, 
       keyPointsEn: esArticle.keyPoints || [],
+      glossaryEn: [],
+      faqsEn: [],
       contentEn: esArticle.content 
     };
   }
@@ -234,6 +257,11 @@ function parseAndRecoverJson(result: string, newsContext: NewsItem[]): Generated
       title: titleMatch?.[1].trim() || "Artículo sin título",
       summary: summaryMatch?.[1].trim() || "",
       keyPoints: [],
+      impactLevel: "Informativo 📰",
+      complexity: "Principiante 🟢",
+      tickers: [],
+      glossary: [],
+      faqs: [],
       content: contentMatch?.[1].trim().replace(/\\n/g, '\n').replace(/\\"/g, '"') || "",
       imagePrompt: "technology, digital art",
       tags: [],

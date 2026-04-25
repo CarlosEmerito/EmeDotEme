@@ -168,6 +168,13 @@ export class PublisherService {
         summaryEn: aiResponse.summaryEn,
         keyPoints: aiResponse.keyPoints || [],
         keyPointsEn: aiResponse.keyPointsEn || [],
+        impactLevel: aiResponse.impactLevel,
+        complexity: aiResponse.complexity,
+        tickers: aiResponse.tickers || [],
+        glossary: aiResponse.glossary || [],
+        glossaryEn: aiResponse.glossaryEn || [],
+        faqs: aiResponse.faqs || [],
+        faqsEn: aiResponse.faqsEn || [],
         content: aiResponse.content,
         contentEn: aiResponse.contentEn,
         articleTags: {

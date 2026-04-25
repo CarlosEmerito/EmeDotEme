@@ -51,6 +51,13 @@ export async function updateArticle(id: string, data: {
   content: string;
   keyPoints?: string[];
   keyPointsEn?: string[];
+  impactLevel?: string;
+  complexity?: string;
+  tickers?: string[];
+  glossary?: any;
+  glossaryEn?: any;
+  faqs?: any;
+  faqsEn?: any;
   imageUrl: string;
   imageCaption: string;
   tags?: string[];
@@ -67,6 +74,13 @@ export async function updateArticle(id: string, data: {
         summary: data.summary,
         keyPoints: data.keyPoints || [],
         keyPointsEn: data.keyPointsEn || [],
+        impactLevel: data.impactLevel,
+        complexity: data.complexity,
+        tickers: data.tickers || [],
+        glossary: data.glossary || [],
+        glossaryEn: data.glossaryEn || [],
+        faqs: data.faqs || [],
+        faqsEn: data.faqsEn || [],
         content: data.content,
         imageUrl: data.imageUrl,
         imageCaption: data.imageCaption,
@@ -103,6 +117,13 @@ export async function createArticle(data: {
   content: string;
   keyPoints?: string[];
   keyPointsEn?: string[];
+  impactLevel?: string;
+  complexity?: string;
+  tickers?: string[];
+  glossary?: any;
+  glossaryEn?: any;
+  faqs?: any;
+  faqsEn?: any;
   imageUrl: string;
   imageCaption: string;
   tags?: string[];
@@ -120,6 +141,13 @@ export async function createArticle(data: {
         summary: data.summary,
         keyPoints: data.keyPoints || [],
         keyPointsEn: data.keyPointsEn || [],
+        impactLevel: data.impactLevel,
+        complexity: data.complexity,
+        tickers: data.tickers || [],
+        glossary: data.glossary || [],
+        glossaryEn: data.glossaryEn || [],
+        faqs: data.faqs || [],
+        faqsEn: data.faqsEn || [],
         content: data.content,
         imageUrl: data.imageUrl,
         imageCaption: data.imageCaption,

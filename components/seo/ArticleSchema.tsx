@@ -52,10 +52,28 @@ export function ArticleSchema({ article, siteUrl }: ArticleSchemaProps) {
     }
   };
 
+  const schemas: any[] = [articleSchema];
+
+  // Add FAQ schema if present
+  if (article.faqs && Array.isArray(article.faqs) && article.faqs.length > 0) {
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": (article.faqs as any[]).map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    });
+  }
+
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas.length === 1 ? schemas[0] : schemas, null, 2) }}
     />
   );
 }

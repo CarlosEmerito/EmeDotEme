@@ -16,6 +16,9 @@ interface EditArticleProps {
     content: string;
     keyPoints?: string[];
     keyPointsEn?: string[];
+    impactLevel?: string | null;
+    complexity?: string | null;
+    tickers?: string[];
     imageUrl: string | null;
     imageCaption: string | null;
     articleTags?: { name: string }[];
@@ -31,13 +34,16 @@ export default function EditArticleForm({ article }: EditArticleProps) {
     summary: article.summary || "",
     keyPoints: article.keyPoints ? article.keyPoints.join("\n") : "",
     keyPointsEn: article.keyPointsEn ? article.keyPointsEn.join("\n") : "",
+    impactLevel: article.impactLevel || "Informativo 📰",
+    complexity: article.complexity || "Principiante 🟢",
+    tickers: article.tickers ? article.tickers.join(", ") : "",
     imageUrl: article.imageUrl || "",
     imageCaption: article.imageCaption || "",
     tags: article.articleTags ? article.articleTags.map(t => t.name).join(", ") : "",
     content: article.content || "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -50,7 +56,8 @@ export default function EditArticleForm({ article }: EditArticleProps) {
       ...formData,
       tags: formData.tags.split(",").map(t => t.trim()).filter(t => t !== ""),
       keyPoints: formData.keyPoints.split("\n").map(t => t.trim()).filter(t => t !== ""),
-      keyPointsEn: formData.keyPointsEn.split("\n").map(t => t.trim()).filter(t => t !== "")
+      keyPointsEn: formData.keyPointsEn.split("\n").map(t => t.trim()).filter(t => t !== ""),
+      tickers: formData.tickers.split(",").map(t => t.trim().toUpperCase()).filter(t => t !== "")
     };
 
     const result = await updateArticle(article.id, dataToSubmit);
@@ -97,6 +104,53 @@ export default function EditArticleForm({ article }: EditArticleProps) {
             required
             className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
           />
+        </div>
+
+        {/* Tickers, Impact & Complexity */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div>
+            <label className="block text-sm font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">
+              Tickers (Separados por coma)
+            </label>
+            <input
+              type="text"
+              name="tickers"
+              value={formData.tickers}
+              onChange={handleChange}
+              className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
+              placeholder="BTC, ETH, NVDA"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">
+              Impacto
+            </label>
+            <select
+              name="impactLevel"
+              value={formData.impactLevel}
+              onChange={handleChange}
+              className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
+            >
+              <option value="Alto Impacto 💥">Alto Impacto 💥</option>
+              <option value="Impacto Moderado ⚡">Impacto Moderado ⚡</option>
+              <option value="Informativo 📰">Informativo 📰</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">
+              Complejidad
+            </label>
+            <select
+              name="complexity"
+              value={formData.complexity}
+              onChange={handleChange}
+              className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
+            >
+              <option value="Principiante 🟢">Principiante 🟢</option>
+              <option value="Intermedio 🟡">Intermedio 🟡</option>
+              <option value="Avanzado 🔴">Avanzado 🔴</option>
+            </select>
+          </div>
         </div>
 
         {/* Summary */}

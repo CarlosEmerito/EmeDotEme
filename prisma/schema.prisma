@@ -39,6 +39,13 @@ model Article {
   contentEn   String?
   keyPoints   String[] @default([])
   keyPointsEn String[] @default([])
+  impactLevel String?
+  complexity  String?
+  tickers     String[] @default([])
+  glossary    Json?    // Array of { term: string, definition: string }
+  glossaryEn  Json?
+  faqs        Json?    // Array of { question: string, answer: string }
+  faqsEn      Json?
   imageUrl    String?
   imageCaption String?
   sourceUrl   String?

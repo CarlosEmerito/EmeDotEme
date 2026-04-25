@@ -25,6 +25,9 @@ export default function CreateArticleForm({ categories }: CreateArticleFormProps
     content: "",
     categoryId: categories[0]?.id || "",
     published: true,
+    impactLevel: "Informativo 📰",
+    complexity: "Principiante 🟢",
+    tickers: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -61,7 +64,8 @@ export default function CreateArticleForm({ categories }: CreateArticleFormProps
       ...formData,
       tags: formData.tags.split(",").map(t => t.trim()).filter(t => t !== ""),
       keyPoints: formData.keyPoints.split("\n").map(t => t.trim()).filter(t => t !== ""),
-      keyPointsEn: formData.keyPointsEn.split("\n").map(t => t.trim()).filter(t => t !== "")
+      keyPointsEn: formData.keyPointsEn.split("\n").map(t => t.trim()).filter(t => t !== ""),
+      tickers: formData.tickers.split(",").map(t => t.trim().toUpperCase()).filter(t => t !== "")
     };
 
     const result = await createArticle(dataToSubmit);
@@ -146,6 +150,53 @@ export default function CreateArticleForm({ categories }: CreateArticleFormProps
               />
               <span className="text-sm font-medium">{formData.published ? "Público (Visible)" : "Oculto (Borrador)"}</span>
             </label>
+          </div>
+        </div>
+
+        {/* Tickers, Impact & Complexity */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div>
+            <label className="block text-sm font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">
+              Tickers (Separados por coma)
+            </label>
+            <input
+              type="text"
+              name="tickers"
+              value={formData.tickers}
+              onChange={handleChange}
+              className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
+              placeholder="BTC, ETH, NVDA"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">
+              Impacto
+            </label>
+            <select
+              name="impactLevel"
+              value={formData.impactLevel}
+              onChange={handleChange}
+              className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
+            >
+              <option value="Alto Impacto 💥">Alto Impacto 💥</option>
+              <option value="Impacto Moderado ⚡">Impacto Moderado ⚡</option>
+              <option value="Informativo 📰">Informativo 📰</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 mb-2">
+              Complejidad
+            </label>
+            <select
+              name="complexity"
+              value={formData.complexity}
+              onChange={handleChange}
+              className="w-full bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-black dark:text-white rounded-md px-4 py-2"
+            >
+              <option value="Principiante 🟢">Principiante 🟢</option>
+              <option value="Intermedio 🟡">Intermedio 🟡</option>
+              <option value="Avanzado 🔴">Avanzado 🔴</option>
+            </select>
           </div>
         </div>
 

@@ -10,6 +10,8 @@ import { ShareButtons } from "@/components/articles/ShareButtons";
 import { Comments } from "@/components/articles/Comments";
 import { TextToSpeech } from "@/components/articles/TextToSpeech";
 
+export const dynamic = 'force-dynamic';
+
 interface ArticlePageProps {
   params: Promise<{
     slug: string;

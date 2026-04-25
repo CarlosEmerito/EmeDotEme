@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Eye, FileText, Users, BarChart3, Calendar, TrendingUp } from "lucide-react";
 
 export const metadata = { title: "Admin | EmeDotEme" };
+export const dynamic = 'force-dynamic';
 
 export default async function AdminPage({
   searchParams

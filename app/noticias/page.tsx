@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getPublishedArticles, getTotalPublishedArticlesCount } from "@/modules/articles/article.service";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
 import { Pagination } from "@/components/layout/Pagination";

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { Metadata, ResolvingMetadata } from "next";
 import { siteConfig } from "@/config/site";
 import { prisma } from "@/lib/prisma";

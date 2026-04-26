@@ -57,7 +57,7 @@ export default async function PricePage({ params }: PricePageProps) {
 
             <div className="flex flex-col items-start md:items-end">
               <div className="text-5xl font-black text-black dark:text-white tracking-tighter">
-                ${coin.current_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                ${coin.current_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
               </div>
               <div className={`mt-2 flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold border ${
                 isPositive 

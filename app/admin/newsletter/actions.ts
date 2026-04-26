@@ -2,6 +2,10 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { exec } from "child_process";
+import { promisify } from "util";
+
+const execPromise = promisify(exec);
 
 export async function addSubscriber(formData: FormData) {
   const email = formData.get("email")?.toString();
@@ -43,5 +47,20 @@ export async function deleteSubscriber(id: string) {
   } catch (error) {
     console.error("Delete subscriber error:", error);
     return { success: false, error: "Error al eliminar suscriptor" };
+  }
+}
+
+export async function sendNewsletterNow() {
+  try {
+    // Ejecutamos el script de envío
+    // npx tsx scripts/send_newsletter.ts
+    const { stdout, stderr } = await execPromise("npx tsx scripts/send_newsletter.ts");
+    console.log("Newsletter stdout:", stdout);
+    if (stderr) console.error("Newsletter stderr:", stderr);
+    
+    return { success: true, message: "Proceso de envío finalizado. Revisa los logs para detalles." };
+  } catch (error: any) {
+    console.error("Manual newsletter send error:", error);
+    return { success: false, error: `Error al ejecutar el envío: ${error.message}` };
   }
 }

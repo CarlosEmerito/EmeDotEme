@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import SubscriberList from "./components/SubscriberList";
+import SendNewsletterButton from "./components/SendNewsletterButton";
 
 export const metadata = { title: "Newsletter | Admin" };
 
@@ -23,18 +24,22 @@ export default async function NewsletterPage() {
           </p>
         </div>
         
-        <div className="flex space-x-3 text-sm">
-          <div className="bg-zinc-100 dark:bg-zinc-900 px-4 py-2 border border-zinc-200 dark:border-zinc-800 rounded flex flex-col items-center">
-            <span className="font-bold text-lg">{subscribers.length}</span>
-            <span className="text-zinc-500 text-xs uppercase tracking-wider font-bold">Total</span>
-          </div>
-          <div className="bg-green-50 dark:bg-green-900/10 text-green-700 dark:text-green-400 px-4 py-2 border border-green-200 dark:border-green-900/30 rounded flex flex-col items-center">
-            <span className="font-bold text-lg">{activeCount}</span>
-            <span className="text-xs uppercase tracking-wider font-bold">Activos</span>
-          </div>
-          <div className="bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400 px-4 py-2 border border-amber-200 dark:border-amber-900/30 rounded flex flex-col items-center">
-            <span className="font-bold text-lg">{inactiveCount}</span>
-            <span className="text-xs uppercase tracking-wider font-bold">Inactivos</span>
+        <div className="flex flex-col items-end gap-4">
+          <SendNewsletterButton />
+          
+          <div className="flex space-x-3 text-sm">
+            <div className="bg-zinc-100 dark:bg-zinc-900 px-4 py-2 border border-zinc-200 dark:border-zinc-800 rounded flex flex-col items-center">
+              <span className="font-bold text-lg">{subscribers.length}</span>
+              <span className="text-zinc-500 text-xs uppercase tracking-wider font-bold">Total</span>
+            </div>
+            <div className="bg-green-50 dark:bg-green-900/10 text-green-700 dark:text-green-400 px-4 py-2 border border-green-200 dark:border-green-900/30 rounded flex flex-col items-center">
+              <span className="font-bold text-lg">{activeCount}</span>
+              <span className="text-xs uppercase tracking-wider font-bold">Activos</span>
+            </div>
+            <div className="bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400 px-4 py-2 border border-amber-200 dark:border-amber-900/30 rounded flex flex-col items-center">
+              <span className="font-bold text-lg">{inactiveCount}</span>
+              <span className="text-xs uppercase tracking-wider font-bold">Inactivos</span>
+            </div>
           </div>
         </div>
       </div>

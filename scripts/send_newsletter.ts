@@ -40,6 +40,8 @@ async function main() {
       select: {
         title: true,
         summary: true,
+        keyPoints: true,
+        slug: true,
       },
       orderBy: { createdAt: 'desc' },
       take: 15, // Coger hasta 15 noticias como máximo para no volver loca a la IA
@@ -61,63 +63,82 @@ async function main() {
 
     // 4. Preparar el diseño visual del correo
     const emailHtml = `
-      <div style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: 0 auto; color: #333; background-color: #fafafa; padding: 20px;">
-        <div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eaeaea;">
-          
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="margin: 0; color: #111827; font-size: 28px; font-weight: 800;">EmeDotEme <span style="color: #2563eb;">News</span></h1>
-            <p style="margin: 5px 0 0; color: #6b7280; font-size: 14px;">Tu resumen cripto semanal 🗞️</p>
-          </div>
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: 0 auto; color: #1f2937; background-color: #ffffff; padding: 0;">
+        <div style="background-color: #000000; padding: 40px 20px; text-align: center;">
+          <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase;">
+            Eme<span style="color: #a78bfa;">Dot</span>Eme
+          </h1>
+          <p style="margin: 10px 0 0; color: #9ca3af; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: bold;">
+            Inteligencia Semanal Cripto
+          </p>
+        </div>
 
-          <div style="font-size: 16px;">
+        <div style="padding: 40px 30px; background-color: #ffffff;">
+          <div style="font-size: 16px; color: #374151;">
             ${htmlContent}
           </div>
           
-          <hr style="border: none; border-top: 1px solid #eaeaea; margin: 40px 0 20px;" />
-          
-          <div style="text-align: center; font-size: 12px; color: #9ca3af;">
-            <p>Has recibido este correo porque te suscribiste a <a href="https://www.emedoteme.es" style="color: #2563eb; text-decoration: none;">EmeDotEme</a>.</p>
-            <p>El ecosistema cripto es volátil. Este boletín no es consejo financiero (DYOR).</p>
+          <div style="margin-top: 40px; text-align: center;">
+            <a href="https://www.emedoteme.es" style="display: inline-block; background-color: #000000; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 9999px; font-weight: bold; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em;">
+              Leer todas las noticias
+            </a>
           </div>
+        </div>
+        
+        <div style="padding: 30px; background-color: #f9fafb; text-align: center; border-top: 1px solid #e5e7eb;">
+          <div style="margin-bottom: 20px;">
+            <a href="https://www.emedoteme.es" style="color: #6b7280; text-decoration: none; margin: 0 10px; font-size: 12px; font-weight: bold; text-transform: uppercase;">Web</a>
+            <a href="#" style="color: #6b7280; text-decoration: none; margin: 0 10px; font-size: 12px; font-weight: bold; text-transform: uppercase;">Twitter</a>
+            <a href="#" style="color: #6b7280; text-decoration: none; margin: 0 10px; font-size: 12px; font-weight: bold; text-transform: uppercase;">LinkedIn</a>
+          </div>
+          <p style="margin: 0; color: #9ca3af; font-size: 11px; line-height: 1.5;">
+            Has recibido este correo porque eres suscriptor de EmeDotEme.<br>
+            © ${new Date().getFullYear()} EmeDotEme. Todos los derechos reservados.<br>
+            <a href="{{UNSUBSCRIBE_LINK}}" style="color: #a78bfa; text-decoration: underline;">Darse de baja</a>
+          </p>
         </div>
       </div>
     `;
 
-    // 5. Enviar el correo
+    // 5. Enviar los correos
     console.log(`\n📧 Preparando envío de correos. Asunto: "${subject}"`);
 
     if (DRY_RUN) {
       console.log("\n⚠️ [DRY_RUN] Simulación. No se enviará ningún correo.");
       console.log("=== ASUNTO ===");
       console.log(subject);
-      console.log("\n=== CONTENIDO ===");
-      console.log(emailHtml);
+      console.log("\n=== CONTENIDO (MUESTRA) ===");
+      console.log(emailHtml.replace('{{UNSUBSCRIBE_LINK}}', 'https://www.emedoteme.es/api/unsubscribe?email=test@example.com'));
       console.log("=================\n");
     } else {
-      if (!RESEND_API_KEY) {
+      if (!RESEND_API_KEY || RESEND_API_KEY === "re_dummy") {
         console.error("❌ Faltan las credenciales de Resend (RESEND_API_KEY) para enviar el correo real.");
         process.exit(1);
       }
 
-      // Resend permite enviar lotes Bcc o de uno en uno (hasta un limite según el plan)
-      // Para este script básico, usamos send() a todos como Bcc o individualmente si la lista crece mucho.
-      // Usaremos Bcc para ocultar los correos entre sí
-      const toEmails = subscribers.map(s => s.email);
-      
-      const { data, error } = await resend.emails.send({
-        from: 'EmeDotEme News <newsletter@emedoteme.es>', // Necesitas verificar este dominio en Resend
-        to: ['newsletter@emedoteme.es'], // Email base
-        bcc: toEmails, // Copia oculta a todos los suscriptores
-        subject: subject,
-        html: emailHtml,
-      });
+      let successCount = 0;
+      let failCount = 0;
 
-      if (error) {
-        console.error("\n❌ Error enviando correo vía Resend:", error);
-      } else {
-        console.log(`\n✅ Newsletter enviada correctamente a ${toEmails.length} suscriptores!`);
-        console.log(`📧 Resend ID: ${data?.id}`);
+      for (const subscriber of subscribers) {
+        const unsubscribeLink = `https://www.emedoteme.es/api/unsubscribe?email=${encodeURIComponent(subscriber.email)}`;
+        const personalizedHtml = emailHtml.replace('{{UNSUBSCRIBE_LINK}}', unsubscribeLink);
+
+        const { error } = await resend.emails.send({
+          from: 'EmeDotEme News <newsletter@emedoteme.es>',
+          to: [subscriber.email],
+          subject: subject,
+          html: personalizedHtml,
+        });
+
+        if (error) {
+          console.error(`❌ Error enviando a ${subscriber.email}:`, error);
+          failCount++;
+        } else {
+          successCount++;
+        }
       }
+
+      console.log(`\n✅ Proceso completado: ${successCount} enviados, ${failCount} fallidos.`);
     }
 
   } catch (error) {

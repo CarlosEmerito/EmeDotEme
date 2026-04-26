@@ -97,5 +97,30 @@ JSON Format:
   "faqsEn": [{"question": "...", "answer": "..."}, ...],
   "contentEn": "..."
 }.${avoidanceClause}`
+  },
+
+  NEWSLETTER: {
+    SYSTEM: `Eres un editor jefe de un medio tecnológico premium. Tu tarea es redactar una newsletter semanal atractiva, informativa y concisa que resuma las noticias más importantes. Usa un tono profesional pero cercano, capaz de retener a la audiencia.`,
+
+    USER: (articles: any[]) => `Basándote en estas noticias de la última semana, redacta una newsletter semanal para EmeDotEme.
+    
+NOTICIAS:
+${articles.map((a, i) => `${i+1}. ${a.title}:
+   - Resumen: ${a.summary}
+   - Puntos clave: ${a.keyPoints?.join(', ') || 'No disponibles'}`).join('\n')}
+
+REQUISITOS:
+1. Escribe un asunto (subject) corto y con gancho.
+2. La newsletter debe tener una introducción breve (máximo 3 frases).
+3. Selecciona las 4 o 5 noticias más importantes y agrúpalas de forma lógica.
+4. Para cada noticia seleccionada, escribe un resumen muy breve y añade por qué es importante para el lector.
+5. Cierra con una conclusión o reflexión sobre el estado del mercado esta semana.
+6. El formato de salida debe ser HTML limpio (usa h2, p, ul, li). No incluyas <html> ni <body>, solo el contenido interior.
+
+Responde ÚNICAMENTE en JSON con este formato:
+{
+  "subject": "...",
+  "htmlContent": "..."
+}`
   }
 };

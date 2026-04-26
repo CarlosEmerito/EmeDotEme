@@ -120,15 +120,37 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
 // ============================================================
 
 /**
- * Placeholder para generación de newsletter semanal
+ * Genera el contenido de la newsletter semanal usando Gemini.
  */
-export async function generateWeeklyNewsletter(..._args: any[]) {
-  return {
-    subject: 'Newsletter semanal (placeholder)',
-    html: '<p>Contenido de ejemplo generado por IA.</p>',
-    htmlContent: '<p>Contenido de ejemplo generado por IA.</p>',
-    articles: []
-  };
+export async function generateWeeklyNewsletter(articles: any[]) {
+  const systemPrompt = AI_PROMPTS.NEWSLETTER.SYSTEM;
+  const userPrompt = AI_PROMPTS.NEWSLETTER.USER(articles);
+
+  logWithTime(`🗞️ Generando newsletter con ${articles.length} noticias...`);
+  
+  const result = await generateTextWithGemini({ 
+    systemPrompt, 
+    userPrompt, 
+    maxTokens: 8000, 
+    temperature: 0.7 
+  });
+
+  if (!result) throw new Error('Fallo la generación de la newsletter');
+
+  try {
+    const jsonStr = sanitizeJsonString(extractJson(result));
+    const parsed = JSON.parse(jsonStr);
+    return {
+      subject: parsed.subject || "EmeDotEme News: Tu resumen semanal",
+      htmlContent: parsed.htmlContent || "<p>Error al generar el contenido de la newsletter.</p>"
+    };
+  } catch (error) {
+    logWithTime('⚠️ Error parseando newsletter de Gemini. Usando fallback básico.');
+    return {
+      subject: "EmeDotEme News: Tu resumen semanal",
+      htmlContent: `<p>Esta semana hemos tenido ${articles.length} noticias importantes. Visita nuestra web para ver el detalle.</p>`
+    };
+  }
 }
 
 // ============================================================

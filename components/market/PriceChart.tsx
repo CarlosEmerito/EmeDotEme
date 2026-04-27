@@ -59,27 +59,13 @@ export default function PriceChart({ coinId, coinName, isPositive: initialIsPosi
 
         const formattedData = rawData.prices.map(([timestamp, price], index) => {
           const date = new Date(timestamp);
-          let timeLabel = "";
-          
-          if (days === "1") {
-            timeLabel = date.toLocaleTimeString(lang === "en" ? "en-US" : "es-ES", {
-              hour: "2-digit",
-              minute: "2-digit"
-            });
-          } else if (days === "365" || days === "max") {
-            timeLabel = date.toLocaleDateString(lang === "en" ? "en-US" : "es-ES", {
-              year: "2-digit",
-              month: "short"
-            });
-          } else {
-            timeLabel = date.toLocaleDateString(lang === "en" ? "en-US" : "es-ES", {
-              month: "short",
-              day: "numeric",
-            });
-          }
           
           return {
-            time: timeLabel,
+            timestamp,
+            time: date.toLocaleDateString(lang === "en" ? "en-US" : "es-ES", {
+              month: "short",
+              day: "numeric",
+            }),
             fullTime: date.toLocaleString(lang === "en" ? "en-US" : "es-ES", {
               year: "numeric",
               month: "short",
@@ -105,6 +91,20 @@ export default function PriceChart({ coinId, coinName, isPositive: initialIsPosi
   }, [coinId, days, lang]);
 
   const chartColor = isPositive ? "#10b981" : "#ef4444"; // emerald-500 or red-500
+
+  const formatXAxis = (tickItem: number) => {
+    const date = new Date(tickItem);
+    if (days === "1") {
+      return date.toLocaleTimeString(lang === "en" ? "en-US" : "es-ES", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+    return date.toLocaleDateString(lang === "en" ? "en-US" : "es-ES", {
+      month: "short",
+      day: "numeric",
+    });
+  };
 
   const t = {
     es: {
@@ -172,12 +172,13 @@ export default function PriceChart({ coinId, coinName, isPositive: initialIsPosi
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#888888" opacity={0.1} />
               <XAxis 
-                dataKey="time" 
+                dataKey="timestamp" 
                 hide={false} 
                 axisLine={false}
                 tickLine={false}
                 tick={{ fontSize: 10, fill: "#888888" }}
-                minTickGap={40}
+                minTickGap={60}
+                tickFormatter={formatXAxis}
               />
               {/* Y Axis for Price */}
               <YAxis 

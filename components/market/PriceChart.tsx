@@ -29,7 +29,6 @@ const TIME_RANGES = [
   { label: "3M", value: "90" },
   { label: "6M", value: "180" },
   { label: "1Y", value: "365" },
-  { label: "MAX", value: "max" },
 ];
 
 export default function PriceChart({ coinId, coinName, isPositive: initialIsPositive }: PriceChartProps) {

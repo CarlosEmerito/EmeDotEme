@@ -91,14 +91,14 @@ export async function getCoinDataBySymbol(symbol: string): Promise<Coin | null> 
 
 /**
  * Obtiene los datos históricos de precio y volumen para una moneda.
- * @param coinId El ID de la moneda en CoinGecko (ej: 'bitcoin').
- * @param days Número de días de historial (default: 7).
+ * Implementa fallback automático entre CoinGecko y CoinCap.
  */
 export async function getHistoricalData(coinId: string, days: string = '7'): Promise<{ prices: [number, number][], total_volumes: [number, number][] }> {
+  // 1. Intentar con CoinGecko primero
   try {
     const res = await fetch(
       `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${days}`,
-      { next: { revalidate: 3600 } } // 1 hour cache
+      { next: { revalidate: 3600 } }
     );
     if (res.ok) {
       const data = await res.json();
@@ -108,8 +108,39 @@ export async function getHistoricalData(coinId: string, days: string = '7'): Pro
       };
     }
   } catch (error) {
-    console.error(`Error fetching historical data for ${coinId}:`, error);
+    console.error(`CoinGecko history error for ${coinId}:`, error);
   }
+
+  // 2. Fallback a CoinCap si CoinGecko falla o para rangos largos
+  try {
+    // Mapeo de intervalos para CoinCap
+    let interval = 'd1';
+    if (days === '1') interval = 'm15';
+    else if (parseInt(days) <= 7) interval = 'h1';
+    else if (parseInt(days) <= 30) interval = 'h6';
+
+    const res = await fetch(
+      `https://api.coincap.io/v2/assets/${coinId}/history?interval=${interval}`,
+      { next: { revalidate: 3600 } }
+    );
+
+    if (res.ok) {
+      const { data } = await res.json();
+      const prices: [number, number][] = data.map((item: any) => [
+        item.time,
+        parseFloat(item.priceUsd)
+      ]);
+      
+      // CoinCap no da volumen histórico tan fácil, enviamos array vacío para no romper el tipo
+      return {
+        prices: prices,
+        total_volumes: []
+      };
+    }
+  } catch (error) {
+    console.error(`CoinCap fallback error for ${coinId}:`, error);
+  }
+
   return { prices: [], total_volumes: [] };
 }
 

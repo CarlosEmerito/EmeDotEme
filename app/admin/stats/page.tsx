@@ -14,7 +14,6 @@ export default async function StatsPage() {
         select: { name: true }
       }, 
       createdAt: true,
-      sentiment: true,
       isOriginal: true
     } 
   });
@@ -45,14 +44,6 @@ export default async function StatsPage() {
     .sort(([, a], [, b]) => b - a)
     .slice(0, 15)
     .map(([tag, count]) => ({ tag, count }));
-
-  // Sentiment analysis
-  const sentimentCounts: Record<string, number> = {};
-  articles.forEach(article => {
-    const sentiment = article.sentiment || 'Neutral ⚖️';
-    sentimentCounts[sentiment] = (sentimentCounts[sentiment] || 0) + 1;
-  });
-  const sentimentData = Object.entries(sentimentCounts).map(([name, count]) => ({ name, count }));
 
   // Articles by month (last 6 months)
   const monthlyData: Record<string, number> = {};
@@ -263,53 +254,6 @@ export default async function StatsPage() {
           </div>
           {topTags.length === 0 && (
             <p className="text-zinc-500 text-center py-8">No hay etiquetas asignadas aún.</p>
-          )}
-        </div>
-
-        <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold uppercase tracking-wider flex items-center">
-              <PieChart className="w-5 h-5 mr-2" />
-              Análisis de Sentimiento
-            </h2>
-            <span className="text-sm text-zinc-500">{sentimentData.length} categorías</span>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            {sentimentData.map(({ name, count }) => {
-              const percentage = Math.round((count / totalArticles) * 100);
-              let colorClass = "bg-zinc-100 dark:bg-zinc-900";
-              let textColorClass = "text-zinc-700 dark:text-zinc-300";
-              
-              if (name.includes('🐂') || name.includes('Positivo')) {
-                colorClass = "bg-green-100 dark:bg-green-900/30";
-                textColorClass = "text-green-700 dark:text-green-400";
-              } else if (name.includes('🐻') || name.includes('Negativo')) {
-                colorClass = "bg-red-100 dark:bg-red-900/30";
-                textColorClass = "text-red-700 dark:text-red-400";
-              } else if (name.includes('⚖️') || name.includes('Neutral')) {
-                colorClass = "bg-blue-100 dark:bg-blue-900/30";
-                textColorClass = "text-blue-700 dark:text-blue-400";
-              }
-              
-              return (
-                <div key={name} className={`${colorClass} border border-zinc-200 dark:border-zinc-800 rounded-lg p-4`}>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className={`font-bold ${textColorClass}`}>{name}</span>
-                    <span className="text-2xl font-bold text-black dark:text-white">{count}</span>
-                  </div>
-                  <div className="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-2">
-                    <div 
-                      className={`h-2 rounded-full ${textColorClass.replace('text-', 'bg-')}`}
-                      style={{ width: `${percentage}%` }}
-                    ></div>
-                  </div>
-                  <div className="text-right text-sm text-zinc-500 mt-1">{percentage}%</div>
-                </div>
-              );
-            })}
-          </div>
-          {sentimentData.length === 0 && (
-            <p className="text-zinc-500 text-center py-8">No hay datos de sentimiento disponibles.</p>
           )}
         </div>
       </div>

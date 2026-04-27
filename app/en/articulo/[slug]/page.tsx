@@ -247,7 +247,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         )}
 
 
-        {/* Footer info (Tags & Sentiment) */}
+        {/* Footer info (Tags) */}
         <div className="mt-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-t border-zinc-100 dark:border-zinc-800 pt-8">
           {/* Tags */}
           {article.articleTags && article.articleTags.length > 0 && (
@@ -263,16 +263,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               ))}
             </div>
           )}
-          
-          {/* Sentiment */}
-          {article.sentiment && (
-            <div className="flex items-center px-4 py-2 bg-zinc-50 dark:bg-zinc-900 rounded-lg text-sm font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 shadow-sm">
-               Market Sentiment: <span className="ml-2 font-bold">{article.sentiment}</span>
-            </div>
-          )}
-        </div>
+          </div>
 
-        {/* Affiliate / Monetization Section */}
+          {/* Schema.org JSON-LD */}
         <div className="mt-12 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 flex flex-col items-center text-center">
           <h3 className="text-lg font-bold text-black dark:text-white font-serif mb-2">
             Support independent journalism 💸

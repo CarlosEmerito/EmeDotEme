@@ -35,7 +35,6 @@ export interface GeneratedArticle {
   sourceImageUrl?: string;
   imageCaption?: string;
   category?: string;
-  sentiment?: string;
 }
 
 // ============================================================

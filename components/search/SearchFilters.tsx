@@ -16,12 +16,10 @@ interface Category {
 interface SearchFiltersProps {
   categories: Category[];
   popularTags: string[];
-  sentimentOptions: string[];
   currentFilters: {
     query?: string;
     category?: string;
     tags?: string[];
-    sentiment?: string;
     dateFrom?: string;
     dateTo?: string;
     sort?: string;
@@ -32,7 +30,6 @@ interface SearchFiltersProps {
 export function SearchFilters({ 
   categories, 
   popularTags, 
-  sentimentOptions, 
   currentFilters,
   language 
 }: SearchFiltersProps) {
@@ -42,7 +39,6 @@ export function SearchFilters({
     query: currentFilters.query || "",
     category: currentFilters.category || "",
     tags: currentFilters.tags || [],
-    sentiment: currentFilters.sentiment || "",
     dateFrom: currentFilters.dateFrom || "",
     dateTo: currentFilters.dateTo || "",
     sort: currentFilters.sort || "newest"
@@ -54,7 +50,6 @@ export function SearchFilters({
     if (localFilters.query) params.set("q", localFilters.query);
     if (localFilters.category) params.set("category", localFilters.category);
     if (localFilters.tags.length > 0) params.set("tags", localFilters.tags.join(","));
-    if (localFilters.sentiment) params.set("sentiment", localFilters.sentiment);
     if (localFilters.dateFrom) params.set("dateFrom", localFilters.dateFrom);
     if (localFilters.dateTo) params.set("dateTo", localFilters.dateTo);
     if (localFilters.sort && localFilters.sort !== "newest") params.set("sort", localFilters.sort);
@@ -67,7 +62,6 @@ export function SearchFilters({
       query: "",
       category: "",
       tags: [],
-      sentiment: "",
       dateFrom: "",
       dateTo: "",
       sort: "newest"
@@ -99,7 +93,6 @@ export function SearchFilters({
       categoryLabel: "Categoría",
       allCategories: "Todas las categorías",
       tagsLabel: "Etiquetas",
-      sentimentLabel: "Sentimiento",
       dateLabel: "Rango de fechas",
       sortLabel: "Ordenar por",
       sortOptions: {
@@ -121,7 +114,6 @@ export function SearchFilters({
       categoryLabel: "Category",
       allCategories: "All categories",
       tagsLabel: "Tags",
-      sentimentLabel: "Sentiment",
       dateLabel: "Date range",
       sortLabel: "Sort by",
       sortOptions: {
@@ -224,25 +216,6 @@ export function SearchFilters({
             </div>
           </div>
         )}
-
-        {/* Sentiment Filter */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
-            {t.sentimentLabel}
-          </label>
-          <select
-            value={localFilters.sentiment}
-            onChange={(e) => setLocalFilters(prev => ({ ...prev, sentiment: e.target.value }))}
-            className="w-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
-          >
-            <option value="">Todos los sentimientos</option>
-            {sentimentOptions.map(sentiment => (
-              <option key={sentiment} value={sentiment}>
-                {sentiment}
-              </option>
-            ))}
-          </select>
-        </div>
 
         {/* Date Range Filter */}
         <div className="mb-6">

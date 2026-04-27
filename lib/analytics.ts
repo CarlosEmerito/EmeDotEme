@@ -34,7 +34,6 @@ export interface AnalyticsEventData {
   article_id?: string;
   article_title?: string;
   article_category?: string;
-  article_sentiment?: string;
   search_query?: string;
   search_results?: number;
   category_name?: string;
@@ -171,14 +170,12 @@ export function trackPageView(data?: Partial<PageViewData>): void {
 export function trackArticleView(
   articleId: string, 
   articleTitle: string, 
-  category: string, 
-  sentiment?: string
+  category: string
 ): void {
   trackEvent('article_view', {
     article_id: articleId,
     article_title: articleTitle,
-    article_category: category,
-    article_sentiment: sentiment
+    article_category: category
   });
   
   // Start tracking reading time

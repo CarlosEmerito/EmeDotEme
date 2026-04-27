@@ -41,10 +41,9 @@ export function useAnalytics() {
   const trackArticle = useCallback((
     articleId: string, 
     articleTitle: string, 
-    category: string, 
-    sentiment?: string
+    category: string
   ) => {
-    trackArticleView(articleId, articleTitle, category, sentiment);
+    trackArticleView(articleId, articleTitle, category);
   }, []);
 
   const trackSearchAction = useCallback((query: string, resultsCount: number) => {
@@ -87,19 +86,19 @@ export function useAnalytics() {
 /**
  * Hook for tracking specific article reading
  */
-export function useArticleTracking(articleId?: string, articleTitle?: string, category?: string, sentiment?: string) {
+export function useArticleTracking(articleId?: string, articleTitle?: string, category?: string) {
   const { trackArticle, startArticleReadingTracker } = useAnalytics();
 
   useEffect(() => {
     if (articleId && articleTitle && category) {
-      trackArticle(articleId, articleTitle, category, sentiment);
+      trackArticle(articleId, articleTitle, category);
       startArticleReadingTracker(articleId);
     }
 
     return () => {
       stopReadingTimeTracker();
     };
-  }, [articleId, articleTitle, category, sentiment, trackArticle, startArticleReadingTracker]);
+  }, [articleId, articleTitle, category, trackArticle, startArticleReadingTracker]);
 
   return useAnalytics();
 }

@@ -94,7 +94,6 @@ export interface SearchOptions {
   categoryId?: string;
   categorySlug?: string;
   tags?: string[];
-  sentiment?: string;
   dateFrom?: Date;
   dateTo?: Date;
   publishedOnly?: boolean;
@@ -110,7 +109,6 @@ export async function searchArticles(options: SearchOptions = {}) {
     categoryId,
     categorySlug,
     tags = [],
-    sentiment,
     dateFrom,
     dateTo,
     publishedOnly = true,
@@ -170,10 +168,6 @@ export async function searchArticles(options: SearchOptions = {}) {
         slug: { in: tags.map(t => t.toLowerCase()) }
       }
     };
-  }
-
-  if (sentiment) {
-    where.sentiment = sentiment;
   }
 
   if (dateFrom || dateTo) {

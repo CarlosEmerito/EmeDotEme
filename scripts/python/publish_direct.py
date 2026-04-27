@@ -31,7 +31,6 @@ def recortar_texto(texto, limite):
 def construir_post(data, mercado):
     titulo = data.get("title", "").strip()
     desc = data.get("description", "").strip()
-    sentimiento = data.get("sentiment", "Neutral ➡️")
     prompt = (
         "Eres el analista principal de EmeDotEme. Redacta una micro-noticia MUY CONCISA para Binance Square basada en el texto.\n"
         "Reglas:\n"
@@ -50,7 +49,7 @@ def construir_post(data, mercado):
     )
     footer = "— Análisis por EmeDotEme\n#Criptomonedas #Web3 #EmeDotEme"
     espacio_disponible = (
-        MAX_POST_CHARS - len(titulo) - len(sentimiento) - len(footer) - 25
+        MAX_POST_CHARS - len(titulo) - len(footer) - 25
     )
     if not resumen:
         resumen = (
@@ -59,10 +58,10 @@ def construir_post(data, mercado):
         )
     resumen = recortar_texto(resumen, espacio_disponible)
     post = f"{resumen}\n\n{footer}"
-    return post, sentimiento
+    return post
 
 
-def publicar_en_square(post, sentimiento, imagen_url):
+def publicar_en_square(post, imagen_url):
     if is_dry_run():
         log_event(f"[DRY_RUN] Publicación Binance Square simulada:\n{post}")
         return True, "[dry-run]"
@@ -116,8 +115,8 @@ if __name__ == "__main__":
     if img and img.startswith("/"):
         img = f"https://emedoteme.es{img}"
     mercado = obtener_datos_mercado()
-    post, sentimiento = construir_post(article, mercado)
-    ok, detalle = publicar_en_square(post, sentimiento, img)
+    post = construir_post(article, mercado)
+    ok, detalle = publicar_en_square(post, img)
     if ok:
         log_event(f"[ok] Publicado en Binance Square: {titulo}")
         log_historial("BinanceSquare", "OK", titulo, detalle)

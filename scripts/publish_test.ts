@@ -80,7 +80,6 @@ async function main() {
       imageUrl: imageResult.imageUrl,
       imageCaption: imageResult.caption,
       sourceUrl: aiResponse.sourceUrl,
-      sentiment: aiResponse.sentiment || "Neutral ➡️",
       category: { name: randomCategory.name },
       author: 'Carlos "Emérito" López Lovera',
       published: false,
@@ -88,7 +87,6 @@ async function main() {
 
     console.log("\n✅ ARTÍCULO GENERADO CON ÉXITO (MODO PRUEBA):");
     console.log(`- Título: ${newArticle.title}`);
-    console.log(`- Sentimiento: ${newArticle.sentiment}`);
     console.log(`- Categoría: ${newArticle.category.name}`);
     console.log(`- URL Imagen (${imageResult.source}): ${newArticle.imageUrl}`);
     console.log(`- Resumen: ${newArticle.summary}`);
@@ -105,7 +103,6 @@ async function main() {
       description: newArticle.content || newArticle.summary,
       imageUrl: imageResult.imageUrl,
       caption: imageResult.caption,
-      sentiment: newArticle.sentiment,
       qaResult: imageResult.qaResult,
       source: imageResult.source,
       attempts: imageResult.attempts,

@@ -190,7 +190,6 @@ export class PublisherService {
         imageCaption: imageData.caption,
         sourceUrl: aiResponse.sourceUrl || null,
         isOriginal: !hasNews,
-        sentiment: aiResponse.sentiment || "Neutral ➡️",
         categoryId: selectedCategory.id,
         author: 'Carlos "Emérito" López Lovera',
         published: true,
@@ -210,8 +209,7 @@ export class PublisherService {
       title: article.title,
       link: `https://www.emedoteme.es/articulo/${article.slug}`,
       description: article.content || article.summary,
-      imageUrl: article.imageUrl,
-      sentiment: article.sentiment
+      imageUrl: article.imageUrl
     };
     
     fs.writeFileSync(path.join(tmpDir, 'latest_article.json'), JSON.stringify(articleData, null, 2));

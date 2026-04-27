@@ -27,10 +27,9 @@ TEXTO_BOTON_DINERO = "🎁 RECLAMAR HASTA 100$"
 
 import html
 
-def crea_mensaje(data, resumen, mercado, sentimiento):
+def crea_mensaje(data, resumen, mercado):
     titulo = html.escape(data.get("title", "").strip())
     resumen = html.escape(resumen)
-    sentimiento = html.escape(sentimiento)
     html_dyor = "<i>DYOR: No es consejo financiero.</i>"
     emedoteme = "<b>EmeDotEme</b>"
     hashtags = "#Criptomonedas #Web3 #EmeDotEme"
@@ -38,10 +37,10 @@ def crea_mensaje(data, resumen, mercado, sentimiento):
         mercado = html.escape(mercado)
         return (
             f"{mercado}\n──────────────\n"
-            f"📰 <b>{titulo}</b>\n\n{resumen}\n\nSentimiento del mercado: {sentimiento}\n\n{html_dyor}\n{emedoteme}\n\n{hashtags}"
+            f"📰 <b>{titulo}</b>\n\n{resumen}\n\n{html_dyor}\n{emedoteme}\n\n{hashtags}"
         )
     else:
-        return f"📰 <b>{titulo}</b>\n\n{resumen}\n\nSentimiento del mercado: {sentimiento}\n\n{html_dyor}\n{emedoteme}\n\n{hashtags}"
+        return f"📰 <b>{titulo}</b>\n\n{resumen}\n\n{html_dyor}\n{emedoteme}\n\n{hashtags}"
 
 
 def enviar_telegram(texto, imagen_url, link_noticia):
@@ -112,7 +111,6 @@ if __name__ == "__main__":
     img = article.get("imageUrl", "")
     if img and img.startswith("/"):
         img = f"https://emedoteme.es{img}"
-    sentimiento = article.get("sentiment", "Neutral ➡️")
     mercado = obtener_datos_mercado()
     prompt = (
         "Eres el admin del canal de Telegram de EmeDotEme (noticias cripto).\n"
@@ -132,7 +130,7 @@ if __name__ == "__main__":
     )
     if not resumen:
         resumen = "Resumen no disponible. Haz clic abajo para leer la noticia completa."
-    mensaje = crea_mensaje(article, resumen, mercado, sentimiento)
+    mensaje = crea_mensaje(article, resumen, mercado)
     ok, detalle = enviar_telegram(mensaje, img, link)
     if ok:
         log_event(f"[ok] Publicado en Telegram: {titulo}")

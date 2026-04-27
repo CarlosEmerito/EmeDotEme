@@ -57,7 +57,6 @@ model Article {
   priority    Int      @default(0)
   viewCount   Int      @default(0)
   publishedAt DateTime?
-  sentiment   String   @default("Neutral ⚖️")
   categoryId  String
   category    Category @relation(fields: [categoryId], references: [id])
   createdAt   DateTime @default(now())

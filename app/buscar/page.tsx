@@ -20,7 +20,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const q = typeof params.q === "string" ? params.q : "";
   const category = typeof params.category === "string" ? params.category : "";
   const tags = typeof params.tags === "string" ? params.tags.split(",").filter(t => t) : [];
-  const sentiment = typeof params.sentiment === "string" ? params.sentiment : "";
   const sortBy = typeof params.sort === "string" ? params.sort as 'relevance' | 'newest' | 'oldest' : 'newest';
   const page = typeof params.page === "string" ? parseInt(params.page) || 1 : 1;
   
@@ -40,7 +39,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     language: 'es',
     categorySlug: category,
     tags,
-    sentiment,
     dateFrom,
     dateTo,
     sortBy,
@@ -61,15 +59,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     }
   });
 
-  // Get unique sentiments
-  const sentimentOptions = [
-    'Positivo 🐂',
-    'Negativo 🐻', 
-    'Neutral ⚖️',
-    'Especulativo 🤔',
-    'Técnico 📊'
-  ];
-  
   // Extract popular tags from articles
   const allTags = new Set<string>();
   searchResult.articles.forEach(article => {
@@ -99,12 +88,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             <SearchFilters
               categories={categories}
               popularTags={popularTags}
-              sentimentOptions={sentimentOptions}
               currentFilters={{
                 query: q,
                 category,
                 tags,
-                sentiment,
                 dateFrom: dateFrom?.toISOString().split('T')[0],
                 dateTo: dateTo?.toISOString().split('T')[0],
                 sort: sortBy
@@ -159,7 +146,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                           ...(q && { q }),
                           ...(category && { category }),
                           ...(tags.length > 0 && { tags: tags.join(',') }),
-                          ...(sentiment && { sentiment }),
                           ...(dateFrom && { dateFrom: dateFrom.toISOString().split('T')[0] }),
                           ...(dateTo && { dateTo: dateTo.toISOString().split('T')[0] }),
                           sort: sortBy,
@@ -181,7 +167,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                           ...(q && { q }),
                           ...(category && { category }),
                           ...(tags.length > 0 && { tags: tags.join(',') }),
-                          ...(sentiment && { sentiment }),
                           ...(dateFrom && { dateFrom: dateFrom.toISOString().split('T')[0] }),
                           ...(dateTo && { dateTo: dateTo.toISOString().split('T')[0] }),
                           sort: sortBy,

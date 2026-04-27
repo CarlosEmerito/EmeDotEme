@@ -250,7 +250,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         )}
 
 
-        {/* Footer info (Tags & Sentiment) */}
+        {/* Footer info (Tags) */}
         <div className="mt-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-t border-zinc-100 dark:border-zinc-800 pt-8">
           {/* Tags */}
           {article.articleTags && article.articleTags.length > 0 && (
@@ -264,13 +264,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   #{tag.name}
                 </Link>
               ))}
-            </div>
-          )}
-          
-          {/* Sentiment */}
-          {article.sentiment && (
-            <div className="flex items-center px-4 py-2 bg-zinc-50 dark:bg-zinc-900 rounded-lg text-sm font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 shadow-sm">
-               Sentimiento del mercado: <span className="ml-2 font-bold">{article.sentiment}</span>
             </div>
           )}
         </div>

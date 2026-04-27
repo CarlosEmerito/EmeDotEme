@@ -37,12 +37,11 @@ def recortar_texto(texto, limite):
     return recortado.rstrip() + "."
 
 
-def construir_post(resumen, sentimiento, titulo, desc, link, img_url):
+def construir_post(resumen, titulo, desc, link, img_url):
     footer = "\n\nToda la información gratis en tu bolsillo: https://t.me/EmeDotEmeNews\n#EmeDotEme"
-    linea_sentimiento = f"\n\nSentimiento: {sentimiento}"
-    espacio_disponible = 300 - len(footer) - len(linea_sentimiento)
+    espacio_disponible = 300 - len(footer)
     texto_recortado = recortar_texto(resumen, espacio_disponible)
-    post_content = f"{texto_recortado}{linea_sentimiento}{footer}"
+    post_content = f"{texto_recortado}{footer}"
     return post_content
 
 
@@ -98,7 +97,6 @@ if __name__ == "__main__":
     img_url = article.get("imageUrl", "")
     if img_url and img_url.startswith("/"):
         img_url = f"https://emedoteme.es{img_url}"
-    sentimiento = article.get("sentiment", "Neutral ➡️")
     prompt = (
         "Eres el analista principal de EmeDotEme en Bluesky.\n"
         "Reglas:\n"
@@ -119,7 +117,7 @@ if __name__ == "__main__":
     )
     if not resumen:
         resumen = f"🚨 {titulo[:150]}"
-    post_content = construir_post(resumen, sentimiento, titulo, desc, link, img_url)
+    post_content = construir_post(resumen, titulo, desc, link, img_url)
     ok, detalle = enviar_bluesky(post_content, titulo, desc, link, img_url)
     if ok:
         log_event(f"[ok] Publicado en Bluesky: {titulo}")

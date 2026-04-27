@@ -34,7 +34,6 @@ REQUISITOS ESTRUCTURALES:
 10. Preguntas Frecuentes (faqs): Lista de 2-3 preguntas y respuestas breves que el artículo resuelve (formato: [{"question": "...", "answer": "..."}]).
 11. Una descripción visual detallada en inglés para generar una imagen (imagePrompt).
 12. Categoría (category): Elige estrictamente una de estas: Mercados, Tecnología, IA, Ciberseguridad, Criptomonedas.
-13. Sentimiento (sentiment): Indica el sentimiento del mercado (ej: "Alcista 🚀", "Bajista 📉", "Neutral ➡️").
 
 Responde ÚNICAMENTE en formato JSON:
 {
@@ -50,7 +49,6 @@ Responde ÚNICAMENTE en formato JSON:
   "tags": ["...", "..."],
   "imagePrompt": "...",
   "category": "...",
-  "sentiment": "...",
   "sourceUrl": "...",
   "sources": ["..."]
 }.${avoidanceClause}`,
@@ -77,8 +75,7 @@ Responde SOLO en JSON:
   "content": "...",
   "tags": ["..."],
   "category": "...",
-  "imagePrompt": "...",
-  "sentiment": "Neutral ➡️"
+  "imagePrompt": "..."
 }.${avoidanceClause}`
   },
 

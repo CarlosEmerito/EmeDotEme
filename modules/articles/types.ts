@@ -13,7 +13,6 @@ export interface ArticleDTO {
   articleTags?: { name: string; slug: string }[];
   isPinned: boolean;
   priority: number;
-  sentiment: string;
   categoryId: string;
   createdAt: Date;
   updatedAt: Date;

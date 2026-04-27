@@ -30,7 +30,7 @@ export default async function AboutPageEn() {
 
   return (
     <div className="flex flex-col flex-1 bg-white dark:bg-zinc-950 font-sans">
-      <main className="flex flex-col max-3xl mx-auto w-full px-4 py-12">
+      <main className="flex flex-col max-w-3xl mx-auto w-full px-4 py-12">
         <header className="mb-10 border-b border-zinc-200 dark:border-zinc-800 pb-8">
           <div className="flex items-center gap-6">
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-zinc-200 dark:bg-zinc-800 flex flex-shrink-0 overflow-hidden relative border border-zinc-200 dark:border-zinc-800">

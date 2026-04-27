@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { formatRelativeDate } from "@/lib/utils";
+import { formatRelativeDate, translateCategory } from "@/lib/utils";
 
 interface SidebarArticleCardProps {
   article: {
@@ -29,7 +29,7 @@ export function SidebarArticleCard({ article, lang = "es" }: SidebarArticleCardP
       <div className="flex-1 flex flex-col justify-center order-2 sm:order-1">
         <div className="mb-2">
           <span className="text-[color:var(--color-accent)] text-[10px] font-bold uppercase tracking-widest">
-            {article.category.name}
+            {translateCategory(article.category.name, lang)}
           </span>
         </div>
         <h3 className="text-xl font-serif font-bold mb-2 text-black dark:text-white group-hover:text-[color:var(--color-brand)] transition-colors line-clamp-3 leading-snug">

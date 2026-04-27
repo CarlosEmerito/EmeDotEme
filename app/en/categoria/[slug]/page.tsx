@@ -4,6 +4,7 @@ import { siteConfig } from "@/config/site";
 import { getArticlesByCategorySlug, getCategoryBySlug, getTotalArticlesByCategorySlug } from "@/modules/articles";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
 import { Pagination } from "@/components/layout/Pagination";
+import { translateCategory } from "@/lib/utils";
 
 interface CategoryPageProps {
   params: Promise<{
@@ -57,10 +58,10 @@ export default async function CategoryPageEn({ params, searchParams }: CategoryP
       <main className="flex flex-col max-w-7xl mx-auto w-full px-4 py-8">
         <header className="mb-10 pb-6 border-b border-zinc-200 dark:border-zinc-800">
           <h1 className="text-4xl font-bold mb-4 text-black dark:text-white">
-            <span className="text-[color:var(--color-brand)]">{category.name}</span> News
+            <span className="text-[color:var(--color-brand)]">{translateCategory(category.name, 'en')}</span> News
           </h1>
           <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-3xl">
-            Explore the latest news, analysis, and updates about <strong>{category.name}</strong>.
+            Explore the latest news, analysis, and updates about <strong>{translateCategory(category.name, 'en')}</strong>.
           </p>
         </header>
 

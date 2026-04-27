@@ -32,6 +32,22 @@ export function calculateReadingTime(content: string): number {
   return minutes || 1;
 }
 
+export function translateCategory(name: string, lang: 'es' | 'en'): string {
+  if (lang === 'es') return name;
+  
+  const mappings: Record<string, string> = {
+    'Criptomonedas': 'Cryptocurrencies',
+    'Mercados': 'Markets',
+    'Tecnología': 'Technology',
+    'Ciberseguridad': 'Cybersecurity',
+    'IA': 'AI',
+    'Tecnologia': 'Technology'
+  };
+
+  return mappings[name] || name;
+}
+
+
 // ============================================================
 // GENERACIÓN DE SLUG
 // ============================================================

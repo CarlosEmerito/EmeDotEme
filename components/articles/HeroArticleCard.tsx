@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { formatRelativeDate } from "@/lib/utils";
+import { formatRelativeDate, translateCategory } from "@/lib/utils";
 
 interface HeroArticleCardProps {
   article: {
@@ -42,7 +42,7 @@ export function HeroArticleCard({ article, lang = "es" }: HeroArticleCardProps) 
       <div className="flex flex-col flex-1 justify-center">
         <div className="mb-3">
           <span className="text-[color:var(--color-accent)] text-xs font-bold uppercase tracking-widest">
-            {article.category.name}
+            {translateCategory(article.category.name, lang)}
           </span>
         </div>
         <h2 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-black dark:text-white group-hover:text-[color:var(--color-brand)] transition-colors leading-tight">

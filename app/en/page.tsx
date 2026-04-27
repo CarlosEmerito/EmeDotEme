@@ -13,7 +13,7 @@ export default async function HomeEn() {
       <main className="flex flex-col max-w-7xl mx-auto w-full px-4 py-8">
         <div className="border-b-[3px] border-[color:var(--color-accent)] mb-8 inline-block w-max pb-1">
           <h1 className="text-3xl font-serif font-bold text-black dark:text-white uppercase tracking-wider">
-            Latest Crypto News
+            Latest News
           </h1>
         </div>
         

@@ -36,6 +36,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
+  const categoryEntriesEn: MetadataRoute.Sitemap = categories.map((category) => ({
+    url: `${siteConfig.url}/en/categoria/${category.slug}`,
+    lastModified: category.updatedAt,
+    changeFrequency: 'weekly',
+    priority: 0.5,
+  }));
+
   const staticEntries: MetadataRoute.Sitemap = [
     {
       url: siteConfig.url,
@@ -44,10 +51,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
+      url: `${siteConfig.url}/en`,
+      lastModified: new Date(),
+      changeFrequency: 'always',
+      priority: 0.9,
+    },
+    {
       url: `${siteConfig.url}/noticias`,
       lastModified: new Date(),
       changeFrequency: 'hourly',
       priority: 0.9,
+    },
+    {
+      url: `${siteConfig.url}/en/noticias`,
+      lastModified: new Date(),
+      changeFrequency: 'hourly',
+      priority: 0.8,
     },
     {
       url: `${siteConfig.url}/sobre-mi`,
@@ -55,7 +74,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.5,
     },
+    {
+      url: `${siteConfig.url}/en/sobre-mi`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+    {
+      url: `${siteConfig.url}/contacto`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${siteConfig.url}/en/contacto`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+    {
+      url: `${siteConfig.url}/criptomonedas`,
+      lastModified: new Date(),
+      changeFrequency: 'always',
+      priority: 0.7,
+    },
+    {
+      url: `${siteConfig.url}/en/criptomonedas`,
+      lastModified: new Date(),
+      changeFrequency: 'always',
+      priority: 0.6,
+    },
   ];
 
-  return [...staticEntries, ...categoryEntries, ...articleEntries, ...articleEntriesEn];
+  return [
+    ...staticEntries, 
+    ...categoryEntries, 
+    ...categoryEntriesEn, 
+    ...articleEntries, 
+    ...articleEntriesEn
+  ];
 }

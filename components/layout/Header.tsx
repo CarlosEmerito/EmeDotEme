@@ -2,12 +2,37 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import { SearchBar } from "@/components/layout/SearchBar";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const lang = pathname?.startsWith("/en") ? "en" : "es";
+
+  const navigation = {
+    es: [
+      { name: "Criptomonedas", href: "/categoria/criptomonedas" },
+      { name: "Mercados", href: "/categoria/mercados" },
+      { name: "IA", href: "/categoria/ia" },
+      { name: "Tecnología", href: "/categoria/tecnologia" },
+      { name: "Ciberseguridad", href: "/categoria/ciberseguridad" },
+    ],
+    en: [
+      { name: "Cryptocurrencies", href: "/en/categoria/criptomonedas" },
+      { name: "Markets", href: "/en/categoria/mercados" },
+      { name: "AI", href: "/en/categoria/ia" },
+      { name: "Technology", href: "/en/categoria/tecnologia" },
+      { name: "Cybersecurity", href: "/en/categoria/ciberseguridad" },
+    ],
+  };
+
+  const navItems = navigation[lang];
+  const homeHref = lang === "en" ? "/en" : "/";
+  const aboutHref = lang === "en" ? "/en/sobre-mi" : "/sobre-mi";
+  const aboutLabel = lang === "en" ? "About Author" : "Sobre el Autor";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
@@ -28,7 +53,7 @@ export function Header() {
             </svg>
           </button>
 
-          <Link className="mr-6 flex items-center space-x-2" href="/">
+          <Link className="mr-6 flex items-center space-x-2" href={homeHref}>
             <span className="font-bold inline-block text-xl text-black dark:text-white font-serif">
               {siteConfig.name}
             </span>
@@ -36,20 +61,21 @@ export function Header() {
           
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-            <Link className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" href="/categoria/criptomonedas">
-              Criptomonedas
-            </Link>
-            <Link className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" href="/categoria/mercados">
-              Mercados
-            </Link>
-            <Link className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" href="/categoria/ia">
-              IA
-            </Link>
-            <Link className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" href="/categoria/tecnologia">
-              Tecnología
-            </Link>
-            <Link className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" href="/categoria/ciberseguridad">
-              Ciberseguridad
+            {navItems.map((item) => (
+              <Link 
+                key={item.href}
+                className="transition-colors text-zinc-600 dark:text-zinc-400 hover:text-[color:var(--color-brand)] uppercase tracking-wider text-xs font-bold" 
+                href={item.href}
+              >
+                {item.name}
+              </Link>
+            ))}
+            {/* Language Switcher */}
+            <Link 
+              href={lang === "es" ? `/en${pathname === "/" ? "" : pathname}` : pathname.replace("/en", "") || "/"}
+              className="text-xs font-bold uppercase tracking-widest bg-zinc-100 dark:bg-zinc-900 px-2 py-1 rounded hover:bg-[color:var(--color-brand)] hover:text-white transition-all"
+            >
+              {lang === "es" ? "EN" : "ES"}
             </Link>
           </nav>
         </div>
@@ -63,47 +89,30 @@ export function Header() {
       {/* Mobile Nav Dropdown */}
       {isMenuOpen && (
         <div className="md:hidden absolute top-14 left-0 w-full bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 shadow-lg px-4 py-6 flex flex-col space-y-4">
+          {navItems.map((item) => (
+            <Link 
+              key={item.href}
+              className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-900 pb-3" 
+              href={item.href}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {item.name}
+            </Link>
+          ))}
           <Link 
             className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-900 pb-3" 
-            href="/categoria/criptomonedas"
+            href={aboutHref}
             onClick={() => setIsMenuOpen(false)}
           >
-            Criptomonedas
+            {aboutLabel}
           </Link>
+          {/* Mobile Language Switcher */}
           <Link 
-            className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-900 pb-3" 
-            href="/categoria/mercados"
+            href={lang === "es" ? `/en${pathname === "/" ? "" : pathname}` : pathname.replace("/en", "") || "/"}
+            className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider"
             onClick={() => setIsMenuOpen(false)}
           >
-            Mercados
-          </Link>
-          <Link 
-            className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-900 pb-3" 
-            href="/categoria/ia"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            IA
-          </Link>
-          <Link 
-            className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-900 pb-3" 
-            href="/categoria/tecnologia"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Tecnología
-          </Link>
-          <Link 
-            className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-900 pb-3" 
-            href="/categoria/ciberseguridad"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Ciberseguridad
-          </Link>
-          <Link 
-            className="transition-colors text-zinc-800 dark:text-zinc-200 hover:text-[color:var(--color-brand)] text-lg font-bold uppercase tracking-wider" 
-            href="/sobre-mi"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Sobre el Autor
+            {lang === "es" ? "Switch to English" : "Cambiar a Español"}
           </Link>
         </div>
       )}

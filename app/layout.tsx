@@ -11,6 +11,7 @@ import Script from "next/script";
 import { Providers } from "@/components/providers";
 import { TelegramBanner } from "@/components/TelegramBanner";
 import { WebSiteSchema } from "@/components/seo/WebSiteSchema";
+import { LanguageSync } from "@/components/layout/LanguageSync";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -103,6 +104,7 @@ export default function RootLayout({
       <head>
                       </head>
       <body className="min-h-full flex flex-col bg-white dark:bg-zinc-950 text-black dark:text-white">
+        <LanguageSync />
         <Providers>
           {/* Schema.org Structured Data */}
           <WebSiteSchema 

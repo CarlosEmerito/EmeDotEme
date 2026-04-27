@@ -3,11 +3,63 @@
 import { siteConfig } from "@/config/site";
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function Footer() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+  const pathname = usePathname();
+  const lang = pathname?.startsWith("/en") ? "en" : "es";
+
+  const t = {
+    es: {
+      sections: "Secciones",
+      company: "Empresa",
+      about: "Sobre el Autor",
+      contact: "Contacto",
+      newsletterTitle: "Suscríbete al Newsletter",
+      newsletterDesc: "Recibe las últimas noticias y análisis del mercado en tu bandeja de entrada.",
+      subscribe: "Suscribirse",
+      loading: "Cargando...",
+      success: "¡Gracias por suscribirte!",
+      error: "Hubo un error",
+      connectionError: "Error de conexión",
+      rights: "Todos los derechos reservados.",
+      analyzedBy: "Analizado por",
+      dataBy: "Datos provistos por",
+      categories: {
+        criptomonedas: "Criptomonedas",
+        mercados: "Mercados",
+        ia: "IA",
+        tecnologia: "Tecnología",
+        ciberseguridad: "Ciberseguridad"
+      }
+    },
+    en: {
+      sections: "Sections",
+      company: "Company",
+      about: "About Author",
+      contact: "Contact",
+      newsletterTitle: "Subscribe to Newsletter",
+      newsletterDesc: "Receive the latest news and market analysis in your inbox.",
+      subscribe: "Subscribe",
+      loading: "Loading...",
+      success: "Thanks for subscribing!",
+      error: "An error occurred",
+      connectionError: "Connection error",
+      rights: "All rights reserved.",
+      analyzedBy: "Analyzed by",
+      dataBy: "Data provided by",
+      categories: {
+        criptomonedas: "Cryptocurrencies",
+        mercados: "Markets",
+        ia: "AI",
+        tecnologia: "Technology",
+        ciberseguridad: "Cybersecurity"
+      }
+    }
+  }[lang];
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,17 +76,19 @@ export function Footer() {
       
       if (res.ok || data.success) {
         setStatus("success");
-        setMessage("¡Gracias por suscribirte!");
+        setMessage(t.success);
         setEmail("");
       } else {
         setStatus("error");
-        setMessage(data.error || "Hubo un error");
+        setMessage(data.error || t.error);
       }
     } catch (err) {
       setStatus("error");
-      setMessage("Error de conexión");
+      setMessage(t.connectionError);
     }
   };
+
+  const prefix = lang === "en" ? "/en" : "";
 
   return (
     <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 py-12 mt-12">
@@ -46,7 +100,7 @@ export function Footer() {
               {siteConfig.name}
             </h2>
             <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-6">
-              {siteConfig.description}
+              {lang === "en" ? siteConfig.descriptionEn || siteConfig.description : siteConfig.description}
             </p>
             <div className="flex flex-wrap gap-4 text-sm font-bold">
               <a href={siteConfig.links.bluesky} target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-[color:var(--color-brand)] transition-colors">Bluesky</a>
@@ -58,32 +112,32 @@ export function Footer() {
           </div>
 
           <div className="md:col-span-2">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-black dark:text-white mb-4">Secciones</h3>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-black dark:text-white mb-4">{t.sections}</h3>
             <ul className="space-y-3 text-sm text-zinc-600 dark:text-zinc-400">
-              <li><Link href="/categoria/criptomonedas" className="hover:text-[color:var(--color-brand)] transition-colors">Criptomonedas</Link></li>
-              <li><Link href="/categoria/mercados" className="hover:text-[color:var(--color-brand)] transition-colors">Mercados</Link></li>
-              <li><Link href="/categoria/ia" className="hover:text-[color:var(--color-brand)] transition-colors">IA</Link></li>
-              <li><Link href="/categoria/tecnologia" className="hover:text-[color:var(--color-brand)] transition-colors">Tecnología</Link></li>
-              <li><Link href="/categoria/ciberseguridad" className="hover:text-[color:var(--color-brand)] transition-colors">Ciberseguridad</Link></li>
+              <li><Link href={`${prefix}/categoria/criptomonedas`} className="hover:text-[color:var(--color-brand)] transition-colors">{t.categories.criptomonedas}</Link></li>
+              <li><Link href={`${prefix}/categoria/mercados`} className="hover:text-[color:var(--color-brand)] transition-colors">{t.categories.mercados}</Link></li>
+              <li><Link href={`${prefix}/categoria/ia`} className="hover:text-[color:var(--color-brand)] transition-colors">{t.categories.ia}</Link></li>
+              <li><Link href={`${prefix}/categoria/tecnologia`} className="hover:text-[color:var(--color-brand)] transition-colors">{t.categories.tecnologia}</Link></li>
+              <li><Link href={`${prefix}/categoria/ciberseguridad`} className="hover:text-[color:var(--color-brand)] transition-colors">{t.categories.ciberseguridad}</Link></li>
             </ul>
           </div>
           
           <div className="md:col-span-2">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-black dark:text-white mb-4">Empresa</h3>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-black dark:text-white mb-4">{t.company}</h3>
             <ul className="space-y-3 text-sm text-zinc-600 dark:text-zinc-400">
-              <li><a href="/sobre-mi" className="hover:text-[color:var(--color-brand)] transition-colors">Sobre el Autor</a></li>
-               <li><a href="/contacto" className="hover:text-[color:var(--color-brand)] transition-colors">Contacto</a></li>
+              <li><Link href={`${prefix}/sobre-mi`} className="hover:text-[color:var(--color-brand)] transition-colors">{t.about}</Link></li>
+               <li><Link href={`${prefix}/contacto`} className="hover:text-[color:var(--color-brand)] transition-colors">{t.contact}</Link></li>
             </ul>
           </div>
 
           <div className="md:col-span-4 bg-white dark:bg-zinc-900 p-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-black dark:text-white mb-2">Suscríbete al Newsletter</h3>
-            <p className="text-zinc-600 dark:text-zinc-400 text-sm mb-4">Recibe las últimas noticias y análisis del mercado en tu bandeja de entrada.</p>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-black dark:text-white mb-2">{t.newsletterTitle}</h3>
+            <p className="text-zinc-600 dark:text-zinc-400 text-sm mb-4">{t.newsletterDesc}</p>
             <form onSubmit={handleSubscribe} className="flex flex-col gap-3">
               <div className="relative">
                 <input
                   type="email"
-                  placeholder="tu@email.com"
+                  placeholder="your@email.com"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -99,7 +153,7 @@ export function Footer() {
                 disabled={status === "loading"}
                 className="bg-[color:var(--color-brand)] hover:opacity-90 text-white font-medium text-sm rounded-md px-6 py-2.5 transition-opacity disabled:opacity-50 w-full"
               >
-                {status === "loading" ? "Cargando..." : "Suscribirse"}
+                {status === "loading" ? t.loading : t.subscribe}
               </button>
               {status !== "idle" && (
                 <p className={`text-xs text-center ${status === "success" ? "text-green-600 dark:text-green-400" : "text-red-500"}`}>
@@ -112,10 +166,10 @@ export function Footer() {
 
         <div className="pt-8 border-t border-zinc-200 dark:border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            © {new Date().getFullYear()} {siteConfig.name}. Todos los derechos reservados.
+            © {new Date().getFullYear()} {siteConfig.name}. {t.rights}
           </p>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Analizado por {siteConfig.author} • Datos provistos por CoinGecko
+            {t.analyzedBy} {siteConfig.author} • {t.dataBy} CoinGecko
           </p>
         </div>
       </div>

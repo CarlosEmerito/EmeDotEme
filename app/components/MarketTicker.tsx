@@ -1,12 +1,42 @@
-import React from 'react';
-import { getMarketData } from '@/modules/market/market.service';
-import Link from 'next/link';
+"use client";
 
-export default async function MarketTicker() {
-  const coins = await getMarketData();
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+interface MarketCoin {
+  id: string;
+  symbol: string;
+  current_price: number;
+  price_change_percentage_24h: number;
+}
+
+export default function MarketTicker() {
+  const [coins, setCoins] = useState<MarketCoin[]>([]);
+  const pathname = usePathname();
+  const lang = pathname?.startsWith("/en") ? "en" : "es";
+  const prefix = lang === "en" ? "/en" : "";
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch('/api/market-data'); // I need to make sure this API exists or use a direct fetch
+        if (res.ok) {
+          const data = await res.json();
+          setCoins(data);
+        }
+      } catch (error) {
+        console.error("Error fetching market data for ticker:", error);
+      }
+    }
+    fetchData();
+    // Refresh every 60 seconds
+    const interval = setInterval(fetchData, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   if (!coins || coins.length === 0) {
-    return null; // Don't render ticker if API fails
+    return null;
   }
 
   return (
@@ -15,7 +45,7 @@ export default async function MarketTicker() {
         {/* First set - visible to all users */}
         {coins.map((coin, i) => (
           <Link 
-            href={`/criptomonedas/${coin.symbol.toUpperCase()}`}
+            href={`${prefix}/criptomonedas/${coin.symbol.toUpperCase()}`}
             key={`${coin.id}-original-${i}`} 
             className="flex items-center mx-6 hover:text-[color:var(--color-brand)] transition-colors"
           >
@@ -40,7 +70,7 @@ export default async function MarketTicker() {
         {/* Second set for seamless loop - hidden from screen readers */}
         {coins.map((coin, i) => (
           <Link 
-            href={`/criptomonedas/${coin.symbol.toUpperCase()}`}
+            href={`${prefix}/criptomonedas/${coin.symbol.toUpperCase()}`}
             key={`${coin.id}-duplicate-${i}`} 
             className="flex items-center mx-6 hover:text-[color:var(--color-brand)] transition-colors" 
             aria-hidden="true"

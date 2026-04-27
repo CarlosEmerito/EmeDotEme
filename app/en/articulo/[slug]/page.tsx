@@ -294,7 +294,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <h2 className="text-2xl font-bold mb-6 text-black dark:text-white font-serif">Related articles</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedArticles.map((related) => (
-                <SidebarArticleCard key={related.id} article={related} />
+                <SidebarArticleCard key={related.id} article={related} lang="en" />
               ))}
             </div>
           </section>

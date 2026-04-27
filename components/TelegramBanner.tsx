@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export function TelegramBanner() {
   const [isVisible, setIsVisible] = useState(false);
+  const pathname = usePathname();
+  const lang = pathname?.startsWith("/en") ? "en" : "es";
 
   useEffect(() => {
     // Retrasar la aparición del banner unos segundos para no ser invasivo
@@ -24,6 +27,21 @@ export function TelegramBanner() {
 
   if (!isVisible) return null;
 
+  const t = {
+    es: {
+      title: "¡Alertas en Tiempo Real! 🚀",
+      description: "Únete gratis a nuestro canal de Telegram y no te pierdas ningún movimiento del mercado.",
+      button: "Unirme Gratis",
+      close: "Cerrar"
+    },
+    en: {
+      title: "Real-Time Alerts! 🚀",
+      description: "Join our free Telegram channel and never miss a market move.",
+      button: "Join for Free",
+      close: "Close"
+    }
+  }[lang];
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 p-4 animate-in slide-in-from-bottom-full duration-500">
       <div className="max-w-4xl mx-auto bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl shadow-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 border border-blue-400/30">
@@ -34,8 +52,8 @@ export function TelegramBanner() {
             </svg>
           </div>
           <div>
-            <h4 className="font-bold text-lg leading-tight">¡Alertas en Tiempo Real! 🚀</h4>
-            <p className="text-blue-100 text-sm">Únete gratis a nuestro canal de Telegram y no te pierdas ningún movimiento del mercado.</p>
+            <h4 className="font-bold text-lg leading-tight">{t.title}</h4>
+            <p className="text-blue-100 text-sm">{t.description}</p>
           </div>
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -45,12 +63,12 @@ export function TelegramBanner() {
             rel="noopener noreferrer"
             className="flex-1 sm:flex-none whitespace-nowrap bg-white text-blue-600 hover:bg-blue-50 transition-colors px-6 py-2 rounded-full font-bold shadow-lg"
           >
-            Unirme Gratis
+            {t.button}
           </a>
           <button 
             onClick={handleClose}
             className="text-white/70 hover:text-white bg-black/10 hover:bg-black/20 p-2 rounded-full transition-colors"
-            aria-label="Cerrar"
+            aria-label={t.close}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />

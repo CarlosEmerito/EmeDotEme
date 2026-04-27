@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { formatRelativeDate } from "@/lib/utils";
-import TradingViewChart from "@/components/market/TradingViewChart";
+import PriceChart from "@/components/market/PriceChart";
 
 interface PricePageProps {
   params: Promise<{ symbol: string }>;
@@ -72,13 +72,12 @@ export default async function PricePage({ params }: PricePageProps) {
         </div>
       </div>
 
-      {/* Gráfico Interactiva */}
       <div className="container mx-auto px-4 py-10 max-w-5xl">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-black dark:text-white font-serif italic">Gráfico de precios</h2>
-          <span className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">Tiempo Real • Binance</span>
+          <h2 className="text-xl font-bold text-black dark:text-white font-serif italic">Gráfico de precios (7D)</h2>
+          <span className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">Datos en Tiempo Real • CoinGecko</span>
         </div>
-        <TradingViewChart symbol={coin.symbol} />
+        <PriceChart coinId={coin.id} coinName={coin.name} isPositive={isPositive} />
       </div>
 
       {/* Stats Grid */}

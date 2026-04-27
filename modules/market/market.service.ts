@@ -88,3 +88,25 @@ export async function getCoinDataBySymbol(symbol: string): Promise<Coin | null> 
 
   return null;
 }
+
+/**
+ * Obtiene los datos históricos de precio para una moneda.
+ * @param coinId El ID de la moneda en CoinGecko (ej: 'bitcoin').
+ * @param days Número de días de historial (default: 7).
+ */
+export async function getHistoricalData(coinId: string, days: string = '7'): Promise<[number, number][]> {
+  try {
+    const res = await fetch(
+      `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${days}`,
+      { next: { revalidate: 3600 } } // 1 hour cache
+    );
+    if (res.ok) {
+      const data = await res.json();
+      return data.prices; // Array of [timestamp, price]
+    }
+  } catch (error) {
+    console.error(`Error fetching historical data for ${coinId}:`, error);
+  }
+  return [];
+}
+

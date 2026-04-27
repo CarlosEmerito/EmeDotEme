@@ -74,7 +74,7 @@ export default async function PricePageEn({ params }: PricePageProps) {
 
       <div className="container mx-auto px-4 py-10 max-w-5xl">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-black dark:text-white font-serif italic">Price Chart (7D)</h2>
+          <h2 className="text-xl font-bold text-black dark:text-white font-serif italic">Price Chart</h2>
           <span className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">Real-Time Data • CoinGecko</span>
         </div>
         <PriceChart coinId={coin.id} coinName={coin.name} isPositive={isPositive} />

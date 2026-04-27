@@ -137,7 +137,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                       <Link 
                         href={`/criptomonedas/${ticker.toUpperCase()}`}
                         key={ticker} 
-                        className="text-[11px] font-bold text-zinc-400 dark:text-zinc-600 hover:text-[color:var(--color-brand)] transition-colors"
+                        className="text-sm font-black text-[color:var(--color-accent)] hover:underline transition-all"
                       >
                         ${ticker.toUpperCase()}
                       </Link>

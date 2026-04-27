@@ -181,13 +181,13 @@ export default function PriceChart({ coinId, coinName, isPositive: initialIsPosi
               />
               {/* Y Axis for Price */}
               <YAxis 
-                yId="left"
+                yAxisId="left"
                 hide={true} 
                 domain={["auto", "auto"]} 
               />
               {/* Y Axis for Volume */}
               <YAxis 
-                yId="right"
+                yAxisId="right"
                 hide={true} 
                 domain={[0, (dataMax: number) => dataMax * 4]} 
               />
@@ -218,7 +218,7 @@ export default function PriceChart({ coinId, coinName, isPositive: initialIsPosi
                 }}
               />
               <Area
-                yId="left"
+                yAxisId="left"
                 type="monotone"
                 dataKey="price"
                 stroke={chartColor}
@@ -229,7 +229,7 @@ export default function PriceChart({ coinId, coinName, isPositive: initialIsPosi
                 isAnimationActive={!isLoading}
               />
               <Bar
-                yId="right"
+                yAxisId="right"
                 dataKey="volume"
                 fill={chartColor}
                 opacity={0.15}

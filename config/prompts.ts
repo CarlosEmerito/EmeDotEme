@@ -16,7 +16,7 @@ ${newsText}
 INSTRUCCIONES DE ESTILO:
 1. NO USES NUNCA "En resumen", "En conclusión" o frases similares para cerrar.
 2. Evita las listas de viñetas dentro del cuerpo (content); prefiere párrafos analíticos bien estructurados.
-3. El título debe ser impactante pero serio (sin clickbait barato).
+3. El título debe ser impactante pero serio (sin clickbait barato). USA "SENTENCE CASE": Solo la primera letra de la primera palabra y los nombres propios deben ir en mayúscula.
 4. El resumen (summary) debe ser incisivo: dos frases que den el contexto clave.
 5. El cierre debe invitar a la reflexión o señalar qué vigilar a continuación.
 6. Máxima naturalidad: utiliza un vocabulario rico y conectores lógicos variados.
@@ -29,7 +29,7 @@ REQUISITOS ESTRUCTURALES:
 5. Puntos clave (keyPoints): Una lista de exactamente 3 puntos clave (balas) que resuman lo más importante del artículo para una lectura rápida.
 6. Nivel de impacto (impactLevel): Evalúa el impacto de la noticia en el mercado o sociedad. Elige uno: "Alto Impacto 💥", "Impacto Moderado ⚡", "Informativo 📰".
 7. Nivel de complejidad (complexity): Evalúa la dificultad técnica. Elige uno: "Principiante 🟢", "Intermedio 🟡", "Avanzado 🔴".
-8. Activos afectados (tickers): Lista de símbolos reales de criptomonedas o empresas mencionadas (ej: ["BTC", "ETH"]). IMPORTANTE: Solo incluye símbolos de activos financieros reales, máximo 3, siempre en mayúsculas. Evita palabras comunes o nombres de personas.
+8. Activos afectados (tickers): Lista de símbolos reales de CRIPTOMONEDAS mencionadas (ej: ["BTC", "ETH"]). IMPORTANTE: Solo incluye símbolos de CRIPTOMONEDAS reales, máximo 3, siempre en mayúsculas. NO incluyas empresas (como MSFT, AAPL, etc) a menos que tengan su propio token. Evita palabras comunes o nombres de personas.
 9. Glosario (glossary): Lista de 2-3 términos técnicos complejos usados en el texto y sus definiciones breves para principiantes.
 10. Preguntas Frecuentes (faqs): Lista de 2-3 preguntas y respuestas breves que el artículo resuelve (formato: [{"question": "...", "answer": "..."}]).
 11. Una descripción visual detallada en inglés para generar una imagen (imagePrompt).

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { siteConfig } from "@/config/site";
 import { generateBilingualContent } from "@/modules/ai/ai.service";
 import { fetchLatestNews } from "@/modules/news/news-sources.service";
-import { generateSlug } from "@/lib/utils";
+import { generateSlug, formatTitle } from "@/lib/utils";
 import { FALLBACK_IMAGES } from "@/config/constants";
 
 export const maxDuration = 300; // Allow up to 5 minutes for AI generation + RSS fetch
@@ -64,8 +64,8 @@ export async function GET(req: Request) {
     const tagsArray = aiResponse.tags || [];
     const newArticle = await prisma.article.create({
       data: {
-        title: aiResponse.title,
-        titleEn: aiResponse.titleEn,
+        title: formatTitle(aiResponse.title),
+        titleEn: formatTitle(aiResponse.titleEn),
         slug: slug + '-' + Date.now(),
         summary: aiResponse.summary,
         summaryEn: aiResponse.summaryEn,

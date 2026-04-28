@@ -6,6 +6,7 @@ import { siteConfig } from "@/config/site";
 import { getArticleBySlug, getRelatedArticles } from "@/modules/articles/article.service";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
 import { formatRelativeDate, calculateReadingTime } from "@/lib/utils";
+import { isLikelyCrypto } from "@/lib/market-utils";
 import { ShareButtons } from "@/components/articles/ShareButtons";
 import { Comments } from "@/components/articles/Comments";
 import { TextToSpeech } from "@/components/articles/TextToSpeech";
@@ -133,15 +134,28 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <div className="flex items-center gap-2">
                 {article.tickers && article.tickers.length > 0 && (
                   <div className="flex items-center gap-2">
-                    {article.tickers.map(ticker => (
-                      <Link 
-                        href={`/criptomonedas/${ticker.toUpperCase()}`}
-                        key={ticker} 
-                        className="text-sm font-black text-[color:var(--color-accent)] hover:underline transition-all"
-                      >
-                        ${ticker.toUpperCase()}
-                      </Link>
-                    ))}
+                    {article.tickers.map(ticker => {
+                      const isCrypto = isLikelyCrypto(ticker);
+                      const displayTicker = `$${ticker.toUpperCase()}`;
+                      
+                      return isCrypto ? (
+                        <Link 
+                          href={`/criptomonedas/${ticker.toUpperCase()}`}
+                          key={ticker} 
+                          className="text-sm font-black text-[color:var(--color-accent)] hover:underline transition-all"
+                        >
+                          {displayTicker}
+                        </Link>
+                      ) : (
+                        <span 
+                          key={ticker} 
+                          className="text-sm font-black text-zinc-400 dark:text-zinc-600 cursor-default"
+                          title="Asset not available for live pricing"
+                        >
+                          {displayTicker}
+                        </span>
+                      );
+                    })}
                   </div>
                 )}
               </div>

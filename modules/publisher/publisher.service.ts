@@ -4,7 +4,7 @@ import path from "path";
 import { generateBilingualContent } from "../ai/ai.service";
 import { fetchLatestNews } from "../news/news-sources.service";
 import { generateArticleImageAndAnalyzeQA } from "../images/image.service";
-import { generateSlug } from "../../lib/utils";
+import { generateSlug, formatTitle } from "../../lib/utils";
 import { sendCriticalErrorNotification } from "../notifications/telegram.service";
 
 /**
@@ -161,8 +161,8 @@ export class PublisherService {
 
     return await this.prisma.article.create({
       data: {
-        title: aiResponse.title,
-        titleEn: aiResponse.titleEn,
+        title: formatTitle(aiResponse.title),
+        titleEn: formatTitle(aiResponse.titleEn),
         slug,
         summary: aiResponse.summary,
         summaryEn: aiResponse.summaryEn,

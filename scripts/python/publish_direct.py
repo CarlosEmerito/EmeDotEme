@@ -32,11 +32,16 @@ def construir_post(data, mercado):
     titulo = data.get("title", "").strip()
     desc = data.get("description", "").strip()
     prompt = (
-        "Eres el analista principal de EmeDotEme. Redacta una micro-noticia MUY CONCISA para Binance Square basada en el texto.\n"
-        "Reglas:\n"
-        "- MAX 500 caracteres, no enlaces ni emojis, usa cashtags, tono profesional.\n"
+        "Eres el analista técnico senior de EmeDotEme. Redacta una síntesis de mercado profesional para Binance Square.\n"
+        "REGLAS:\n"
+        "- Contenido estrictamente OBJETIVO y DETALLADO dentro del límite.\n"
+        "- Céntrate en datos, cifras y consecuencias de mercado.\n"
+        "- MAX 500 caracteres.\n"
+        "- NO enlaces, NO emojis.\n"
+        "- Usa cashtags técnicos (ej: $BTC) de forma natural.\n"
+        "- Estilo de boletín financiero (Reuters/Bloomberg).\n"
         f"Título: {titulo}\nTexto: {desc[:1700]}\n"
-        f"Mercado: {mercado}"
+        f"Datos de Mercado: {mercado}"
     )
     resumen = resumen_ai(
         prompt,

@@ -98,12 +98,14 @@ if __name__ == "__main__":
     if img_url and img_url.startswith("/"):
         img_url = f"https://emedoteme.es{img_url}"
     prompt = (
-        "Eres el analista principal de EmeDotEme en Bluesky.\n"
-        "Reglas:\n"
-        "- UNA SOLA ORACIÓN gancho, con 1-2 emojis relevantes finanzas.\n"
-        "- 1 hashtag relevante.\n"
-        "- NO enlaces web.\n"
-        "- En español.\n"
+        "Eres el analista principal de EmeDotEme. Redacta un post analítico y conciso para Bluesky.\n"
+        "REGLAS:\n"
+        "- Una sola oración de impacto que resuma el núcleo técnico o estratégico de la noticia.\n"
+        "- Tono profesional, objetivo y sin adornos literarios.\n"
+        "- Máximo 1 emoji sobrio.\n"
+        "- 1 hashtag técnico relevante.\n"
+        "- NO incluyas enlaces ni el título del artículo.\n"
+        "- Idioma: Español.\n"
         f"Título: {titulo}\nTexto: {desc[:1500]}\n"
     )
     resumen = resumen_ai(

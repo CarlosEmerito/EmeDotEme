@@ -113,10 +113,14 @@ if __name__ == "__main__":
         img = f"https://emedoteme.es{img}"
     mercado = obtener_datos_mercado()
     prompt = (
-        "Eres el admin del canal de Telegram de EmeDotEme (noticias cripto).\n"
-        "1. Resume la noticia en 3 viñetas, usa emojis y estilo directo.\n"
-        "2. NO repitas el título.\n"
-        "3. NO uses HTML.\n"
+        "Eres un analista técnico senior para el canal de Telegram de EmeDotEme.\n"
+        "Tu objetivo es sintetizar la noticia con precisión y objetividad.\n"
+        "REGLAS:\n"
+        "1. Extrae los 3 puntos clave (bullets) más significativos a nivel técnico o de mercado.\n"
+        "2. Usa un tono sobrio y profesional. Evita exclamaciones innecesarias.\n"
+        "3. Usa emojis de forma mínima y funcional (solo para destacar puntos).\n"
+        "4. NO repitas el título del artículo.\n"
+        "5. NO uses HTML ni enlaces en el texto.\n"
         f"Título: {titulo}\nTexto: {desc[:1800]}\n"
     )
     resumen = resumen_ai(

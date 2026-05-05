@@ -21,6 +21,20 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     formats: ['image/webp'],
   },
+  async redirects() {
+    return [
+      {
+        source: '/index',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/en/index',
+        destination: '/en',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default withPWA({

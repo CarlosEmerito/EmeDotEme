@@ -127,6 +127,9 @@ export function Footer() {
             <ul className="space-y-3 text-sm text-zinc-600 dark:text-zinc-400">
               <li><Link href={`${prefix}/sobre-mi`} className="hover:text-[color:var(--color-brand)] transition-colors">{t.about}</Link></li>
                <li><Link href={`${prefix}/contacto`} className="hover:text-[color:var(--color-brand)] transition-colors">{t.contact}</Link></li>
+               <li><Link href="/politica-privacidad" className="hover:text-[color:var(--color-brand)] transition-colors">Privacidad</Link></li>
+               <li><Link href="/aviso-legal" className="hover:text-[color:var(--color-brand)] transition-colors">Aviso Legal</Link></li>
+               <li><Link href="/cookies" className="hover:text-[color:var(--color-brand)] transition-colors">Cookies</Link></li>
             </ul>
           </div>
 

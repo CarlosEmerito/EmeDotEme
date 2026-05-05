@@ -9,9 +9,14 @@ export const AI_PROMPTS = {
       ? `Eres un periodista senior de investigación para EmeDotEme. Tu estilo es sobrio, analítico y directo. Escribe como si estuvieras en una redacción de élite (tipo Forbes o Bloomberg). EVITA ABSOLUTAMENTE fórmulas como "En resumen", "En conclusión" o "Para finalizar". El artículo debe fluir de forma natural, cerrando con una observación de mercado o una implicación futura, nunca resumiendo lo ya dicho.`
       : `Eres un periodista especializado en tecnología para EmeDotEme. Tu objetivo es informar con autoridad. Mantén una estructura periodística clásica, evitando muletillas robóticas y asegurando que la ortografía sea perfecta.`,
     
-    USER_WITH_NEWS: (newsText: string, avoidanceClause: string) => `Redacta un artículo periodístico profundo en español utilizando estas fuentes:
+    USER_WITH_NEWS: (newsText: string, avoidanceClause: string) => `Redacta un artículo periodístico PROFUNDO, ANALÍTICO y ORIGINAL en español utilizando estas fuentes:
 
 ${newsText}
+
+INSTRUCCIONES DE VALOR (SEO & ADSENSE):
+1. No te limites a resumir: aporta CONTEXTO histórico, implicaciones ECONÓMICAS y un ANÁLISIS de qué significa esto para el inversor o el usuario medio.
+2. El artículo debe ser EXTENSO (mínimo 5-6 párrafos sustanciosos).
+3. Cada subtítulo debe tratar un ángulo diferente (ej: El hecho, El contexto, La reacción del mercado, El futuro).
 
 INSTRUCCIONES DE ESTILO:
 1. NO USES NUNCA "En resumen", "En conclusión" o frases similares para cerrar.

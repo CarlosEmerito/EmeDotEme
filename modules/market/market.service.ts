@@ -77,6 +77,7 @@ export async function getCoinDataBySymbol(symbol: string): Promise<Coin | null> 
           id: coin.id,
           symbol: coin.symbol,
           name: coin.name,
+          image: `https://assets.coincap.io/assets/icons/${coin.symbol.toLowerCase()}@2x.png`,
           current_price: parseFloat(coin.priceUsd),
           price_change_percentage_24h: parseFloat(coin.changePercent24Hr),
           market_cap: parseFloat(coin.marketCapUsd),

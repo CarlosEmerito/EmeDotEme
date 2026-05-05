@@ -13,28 +13,28 @@ export default async function AboutPage() {
   });
 
   const defaultContent = `<p>
-  Soy Carlos "Emérito" López Lovera, analista y divulgador tecnológico especializado en la intersección entre las finanzas digitales, la inteligencia artificial y la seguridad informática. Con una trayectoria centrada en entender cómo las tecnologías disruptivas transforman nuestra economía y sociedad, mi objetivo en <strong>${siteConfig.name}</strong> es proporcionar claridad en un entorno de cambio constante.
+  Soy Carlos "Emérito" López Lovera, analista y divulgador tecnológico especializado en la intersección entre las finanzas digitales, la inteligencia artificial y la seguridad informática. Mi objetivo en <strong>${siteConfig.name}</strong> es proporcionar análisis profundos y claridad estratégica en un entorno tecnológico de cambio constante.
 </p>
 
-<h2>Evolución y Enfoque</h2>
+<h2>Especialización y Cobertura</h2>
 <p>
-  Lo que comenzó como un espacio dedicado exclusivamente al análisis de los mercados de criptomonedas ha evolucionado hacia una plataforma integral de información tecnológica. Hoy, ${siteConfig.name} cubre cuatro pilares fundamentales que definen el futuro digital:
+  ${siteConfig.name} es una plataforma integral de información técnica centrada en los cuatro pilares que definen la economía digital contemporánea:
 </p>
 <ul>
-  <li><strong>Criptomonedas y Mercados:</strong> Análisis técnico y fundamental de activos digitales y tendencias macroeconómicas.</li>
-  <li><strong>Inteligencia Artificial:</strong> Seguimiento de los avances en modelos de lenguaje, automatización y el impacto de la IA en el sector empresarial.</li>
-  <li><strong>Ciberseguridad:</strong> Divulgación sobre amenazas, vulnerabilidades y estrategias de protección en un mundo cada vez más interconectado.</li>
-  <li><strong>Tecnología y Negocios:</strong> El impacto de la innovación en la estrategia corporativa y la economía global.</li>
+  <li><strong>Inteligencia Artificial:</strong> Seguimiento de los avances en modelos de lenguaje, automatización y el impacto transformador de la IA en el ecosistema empresarial.</li>
+  <li><strong>Ciberseguridad:</strong> Divulgación técnica sobre amenazas, vulnerabilidades y estrategias de protección en infraestructuras digitales.</li>
+  <li><strong>Criptomonedas y Mercados:</strong> Análisis técnico y fundamental de activos digitales, protocolos blockchain y tendencias macroeconómicas globales.</li>
+  <li><strong>Tecnología y Negocios:</strong> Análisis de la innovación tecnológica como motor de la estrategia corporativa y el crecimiento económico.</li>
 </ul>
 
 <h2>Nuestra Misión</h2>
 <p>
-  En la era de la sobreinformación, la calidad del análisis es más valiosa que nunca. En ${siteConfig.name}, no solo reportamos lo que sucede; analizamos <strong>por qué</strong> sucede y qué implicaciones tiene para los inversores, profesionales y entusiastas de la tecnología. Creemos en un periodismo independiente, analítico y respaldado por datos.
+  En la era de la sobreinformación, la calidad del análisis es el activo más valioso. En ${siteConfig.name}, no nos limitamos a reportar hechos; desglosamos <strong>por qué</strong> ocurren y evaluamos sus implicaciones para inversores, profesionales y tomadores de decisiones. Nuestro compromiso es con un periodismo independiente, analítico y estrictamente respaldado por datos.
 </p>
 
 <h2>Compromiso con la Educación</h2>
 <p>
-  La adopción masiva de tecnologías como la IA o la Blockchain requiere una base sólida de conocimiento. Por ello, cada artículo está diseñado para ser accesible pero profundo, proporcionando las herramientas necesarias para que nuestros lectores tomen decisiones informadas y seguras.
+  La adopción de tecnologías críticas como la IA o la Blockchain requiere una base sólida de conocimiento técnico. Por ello, cada artículo está diseñado para ser accesible pero riguroso, proporcionando las herramientas necesarias para que nuestros lectores naveguen el futuro digital de forma informada y segura.
 </p>`;
 
   const content = setting?.value || defaultContent;

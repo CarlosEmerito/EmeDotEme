@@ -1,9 +1,9 @@
 export const siteConfig = {
   name: "EmeDotEme",
-  title: "EmeDotEme - Cripto, Business and Technology News",
-  description: "EmeDotEme es tu fuente principal de noticias sobre Criptomonedas, Negocios, Inteligencia Artificial y Ciberseguridad.",
-  titleEn: "EmeDotEme - Crypto, Business and Technology News",
-  descriptionEn: "EmeDotEme is your main source for news on Cryptocurrencies, Business, Artificial Intelligence, and Cybersecurity.",
+  title: "EmeDotEme | Cripto, IA, Mercados y Ciberseguridad",
+  description: "Tu fuente principal de noticias y análisis sobre Criptomonedas, Mercados, Inteligencia Artificial y Ciberseguridad. Infórmate de las últimas tendencias.",
+  titleEn: "EmeDotEme | Crypto, AI, Markets and Cybersecurity",
+  descriptionEn: "EmeDotEme is your main source for news and analysis on Cryptocurrencies, Markets, Artificial Intelligence, and Cybersecurity.",
   url: "https://www.emedoteme.es",
   author: 'Carlos "Emérito" López Lovera',
   keywords: ["Criptomonedas", "Bitcoin", "Web3", "Ethereum", "Noticias Cripto"],

@@ -1,6 +1,16 @@
 import { getPublishedArticles } from "@/modules/articles/article.service";
 import { HeroArticleCard } from "@/components/articles/HeroArticleCard";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site";
+
+export const metadata: Metadata = {
+  title: siteConfig.titleEn,
+  description: siteConfig.descriptionEn,
+  alternates: {
+    canonical: "/en",
+  },
+};
 
 export default async function HomeEn() {
   const articles = await getPublishedArticles(5);

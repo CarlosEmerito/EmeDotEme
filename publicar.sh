@@ -43,16 +43,25 @@ if npx tsx scripts/publish.ts 2>&1; then
 
   # [Propuesta 4] Ejecución de scripts con python3
   echo -e "\n[2️⃣] Enviando a Binance Square (scripts/python/publish_direct.py)..."
-  python3 scripts/python/publish_direct.py "$JSON_PATH" 2>&1
-  echo "[✅] Fin del proceso de Binance Square."
+  if python3 scripts/python/publish_direct.py "$JSON_PATH" 2>&1; then
+    echo "[✅] Publicado en Binance Square."
+  else
+    echo "[⚠️] Falló la publicación en Binance Square."
+  fi
 
   echo -e "\n[3️⃣] Enviando a Telegram (scripts/python/publish_telegram.py)..."
-  python3 scripts/python/publish_telegram.py "$JSON_PATH" 2>&1
-  echo "[✅] Fin del proceso de Telegram."
+  if python3 scripts/python/publish_telegram.py "$JSON_PATH" 2>&1; then
+    echo "[✅] Publicado en Telegram."
+  else
+    echo "[⚠️] Falló la publicación en Telegram."
+  fi
 
   echo -e "\n[4️⃣] Enviando a Bluesky (scripts/python/publish_bluesky.py)..."
-  python3 scripts/python/publish_bluesky.py "$JSON_PATH" 2>&1
-  echo "[✅] Fin del proceso de Bluesky."
+  if python3 scripts/python/publish_bluesky.py "$JSON_PATH" 2>&1; then
+    echo "[✅] Publicado en Bluesky."
+  else
+    echo "[⚠️] Falló la publicación en Bluesky."
+  fi
 else
   echo "❌ Error al generar el artículo. Abortando publicación en redes."
   exit 1

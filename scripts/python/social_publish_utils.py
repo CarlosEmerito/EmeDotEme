@@ -89,73 +89,99 @@ def resumen_ai(
     if prefer_gemini:
         gemini_keys = [k for k in [gemini_api_key, gemini_api_key_2, gemini_api_key_3] if k]
         key_names = ["PRIMARIA", "SECUNDARIA", "TERCIARIA"]
-        for idx, key in enumerate(gemini_keys):
-            kname = key_names[idx] if idx < len(key_names) else f"EXTRA_{idx+1}"
-            try:
-                # Actualizado a gemini-2.5-flash
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
-                payload = {
-                    "contents": [{"parts": [{"text": prompt}]}],
-                    "generationConfig": {
-                        "temperature": 0.7,
-                        "maxOutputTokens": max_output_tokens,
-                        "responseMimeType": "text/plain",
-                    },
-                }
-                r = requests.post(url, json=payload, timeout=45)
-                if r.status_code == 200:
-                    result = r.json()
-                    candidates = result.get("candidates", [])
-                    if candidates:
-                        return candidates[0]["content"]["parts"][0]["text"].strip()
-                elif r.status_code == 429:
-                    log_event(f"[warn] Gemini {kname} cuota excedida (429), probando siguiente...", logging.WARNING)
+        
+        if not gemini_keys:
+            log_event("⚠️ No hay API keys de Gemini configuradas, saltando a Ollama...", logging.WARNING)
+        else:
+            for idx, key in enumerate(gemini_keys):
+                kname = key_names[idx] if idx < len(key_names) else f"EXTRA_{idx+1}"
+                try:
+                    # Actualizado a gemini-2.5-flash
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
+                    payload = {
+                        "contents": [{"parts": [{"text": prompt}]}],
+                        "generationConfig": {
+                            "temperature": 0.7,
+                            "maxOutputTokens": max_output_tokens,
+                            "responseMimeType": "text/plain",
+                        },
+                    }
+                    r = requests.post(url, json=payload, timeout=45)
+                    
+                    if r.status_code == 200:
+                        try:
+                            result = r.json()
+                            candidates = result.get("candidates", [])
+                            if candidates and "content" in candidates[0]:
+                                text = candidates[0]["content"]["parts"][0]["text"].strip()
+                                if text:
+                                    log_event(f"✅ Resumen generado con éxito usando Gemini {kname}.")
+                                    return text
+                        except (json.JSONDecodeError, KeyError, IndexError) as e:
+                            log_event(f"[warn] Error parseando respuesta de Gemini {kname}: {e}", logging.WARNING)
+                    
+                    elif r.status_code == 429:
+                        log_event(f"[warn] Gemini {kname} cuota excedida (429), probando siguiente...", logging.WARNING)
+                        continue
+                    else:
+                        log_event(f"[warn] Gemini {kname} error HTTP {r.status_code}: {r.text[:200]}, probando siguiente...", logging.WARNING)
+                        continue
+                except Exception as e:
+                    log_event(f"[warn] Gemini {kname} fallo crítico: {e}", logging.WARNING)
                     continue
-                else:
-                    log_event(f"[warn] Gemini {kname} error {r.status_code}, probando siguiente...", logging.WARNING)
-                    continue
-            except Exception as e:
-                log_event(f"[warn] Gemini {kname} fallo: {e}", logging.WARNING)
-                continue
 
     # Fallback Ollama con REINTENTOS y STREAMING
-    log_event(f"🔄 Usando Ollama ({ollama_model}) como fallback para redes sociales (streaming)...")
+    log_event(f"🔄 Iniciando fallback a Ollama (modelo: {ollama_model})...")
     max_retries = 2
     for attempt in range(max_retries + 1):
         try:
-            payload = {"model": ollama_model, "prompt": prompt, "stream": True, "keep_alive": 0}
-            r = requests.post(
-                "http://localhost:11434/api/generate", json=payload, timeout=240, stream=True
-            )
+            # Usamos 127.0.0.1 por estabilidad en algunos entornos linux
+            ollama_url = os.environ.get("OLLAMA_HOST", "http://localhost:11434") + "/api/generate"
+            payload = {
+                "model": ollama_model, 
+                "prompt": prompt, 
+                "stream": True, 
+                "keep_alive": "5m", # Mantener en memoria 5 min para posts seguidos
+                "options": {
+                    "temperature": 0.3, # Más determinista para redes
+                    "num_ctx": 4096
+                }
+            }
+            
+            r = requests.post(ollama_url, json=payload, timeout=180, stream=True)
             r.raise_for_status()
             
             full_text = ""
             for line in r.iter_lines():
                 if line:
-                    chunk = json.loads(line.decode('utf-8'))
-                    thinking = chunk.get("thinking", "")
-                    if thinking:
-                        print(thinking, end="", flush=True)
-                    
-                    texto_fragmento = chunk.get("response", "") or thinking
-                    full_text += texto_fragmento
-                    if chunk.get("done"):
-                        break
+                    try:
+                        chunk = json.loads(line.decode('utf-8'))
+                        if "error" in chunk:
+                            raise Exception(f"Ollama API error: {chunk['error']}")
+                        
+                        texto_fragmento = chunk.get("response", "")
+                        full_text += texto_fragmento
+                        if chunk.get("done"):
+                            break
+                    except json.JSONDecodeError:
+                        continue
             
             if full_text.strip():
-                return clean_control_chars(full_text)
-            raise Exception("Respuesta vacía de Ollama")
+                log_event(f"✅ Resumen generado con éxito usando Ollama ({ollama_model}).")
+                return clean_control_chars(full_text.strip())
+            
+            raise Exception("Ollama devolvió una respuesta vacía")
+            
         except Exception as e:
             if attempt < max_retries:
-                log_event(f"[warn] Ollama intento {attempt+1} fallido: {e}. Reintentando en 10s...", logging.WARNING)
+                log_event(f"[warn] Ollama intento {attempt+1} fallido: {e}. Reintentando...", logging.WARNING)
                 import time
-                # Intentar descargar modelos para liberar VRAM si el error es de memoria
-                try: requests.post("http://localhost:11434/api/load", json={"model": ollama_model, "keep_alive": 0}, timeout=10)
-                except: pass
-                time.sleep(10)
+                time.sleep(5)
             else:
-                log_event(f"[error] Todos los intentos con Ollama han fallado: {e}", logging.ERROR)
+                log_event(f"[error] Fallaron todos los intentos con Ollama: {e}", logging.ERROR)
+    
     return None
+
 
 
 def obtener_datos_mercado(coins="bitcoin,ethereum"):

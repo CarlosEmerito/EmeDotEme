@@ -13,17 +13,28 @@ export default async function AboutPage() {
   });
 
   const defaultContent = `<p>
-  Soy Carlos "Emérito" López Lovera, periodista financiero y analista de mercados especializado en criptomonedas, tecnología empresarial, inteligencia artificial y ciberseguridad. Con años de experiencia cubriendo los mercados digitales, mi objetivo es desmitificar el ecosistema blockchain y proporcionar análisis claros y accionables.
+  Soy Carlos "Emérito" López Lovera, analista y divulgador tecnológico especializado en la intersección entre las finanzas digitales, la inteligencia artificial y la seguridad informática. Con una trayectoria centrada en entender cómo las tecnologías disruptivas transforman nuestra economía y sociedad, mi objetivo en <strong>${siteConfig.name}</strong> es proporcionar claridad en un entorno de cambio constante.
 </p>
 
-<h2>Nuestra Misión en ${siteConfig.name}</h2>
+<h2>Evolución y Enfoque</h2>
 <p>
-  Fundé ${siteConfig.name} con una visión clara: entregar noticias financieras oportunas, libres de ruido y respaldadas por datos duros del mercado en tiempo real. En un ecosistema que se mueve 24/7, la velocidad y la precisión de la información son cruciales para tomar buenas decisiones.
+  Lo que comenzó como un espacio dedicado exclusivamente al análisis de los mercados de criptomonedas ha evolucionado hacia una plataforma integral de información tecnológica. Hoy, ${siteConfig.name} cubre cuatro pilares fundamentales que definen el futuro digital:
+</p>
+<ul>
+  <li><strong>Criptomonedas y Mercados:</strong> Análisis técnico y fundamental de activos digitales y tendencias macroeconómicas.</li>
+  <li><strong>Inteligencia Artificial:</strong> Seguimiento de los avances en modelos de lenguaje, automatización y el impacto de la IA en el sector empresarial.</li>
+  <li><strong>Ciberseguridad:</strong> Divulgación sobre amenazas, vulnerabilidades y estrategias de protección en un mundo cada vez más interconectado.</li>
+  <li><strong>Tecnología y Negocios:</strong> El impacto de la innovación en la estrategia corporativa y la economía global.</li>
+</ul>
+
+<h2>Nuestra Misión</h2>
+<p>
+  En la era de la sobreinformación, la calidad del análisis es más valiosa que nunca. En ${siteConfig.name}, no solo reportamos lo que sucede; analizamos <strong>por qué</strong> sucede y qué implicaciones tiene para los inversores, profesionales y entusiastas de la tecnología. Creemos en un periodismo independiente, analítico y respaldado por datos.
 </p>
 
-<h2>Trayectoria</h2>
+<h2>Compromiso con la Educación</h2>
 <p>
-  A lo largo de mi carrera he colaborado en diversos proyectos editoriales, siempre buscando la intersección entre las finanzas tradicionales y la nueva frontera tecnológica. Creo firmemente que la adopción de las criptomonedas, la IA y la ciberseguridad requieren educación de calidad y periodismo honesto.
+  La adopción masiva de tecnologías como la IA o la Blockchain requiere una base sólida de conocimiento. Por ello, cada artículo está diseñado para ser accesible pero profundo, proporcionando las herramientas necesarias para que nuestros lectores tomen decisiones informadas y seguras.
 </p>`;
 
   const content = setting?.value || defaultContent;

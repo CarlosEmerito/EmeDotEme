@@ -39,7 +39,7 @@ export default async function PricePage({ params }: PricePageProps) {
             <div className="flex items-center gap-6">
               {coin.image && (
                 <div className="relative w-20 h-20 bg-white dark:bg-zinc-900 rounded-2xl p-2 border border-zinc-200 dark:border-zinc-800 shadow-sm">
-                  <Image src={coin.image} alt={coin.name} fill className="object-contain p-2" />
+                  <Image src={coin.image} alt={coin.name} fill unoptimized className="object-contain p-2" />
                 </div>
               )}
               <div>

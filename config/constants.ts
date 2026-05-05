@@ -15,7 +15,7 @@ export const FALLBACK_IMAGES: Record<string, string[]> = {
   "Criptomonedas": [
     "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1605792657660-596af9009e82?q=80&w=1200&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1641337424160-5a3d7d745fcd?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1621761191319-c6fb62004040?q=80&w=1200&auto=format&fit=crop",
   ],
   "Empresa": [
     "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
@@ -23,7 +23,7 @@ export const FALLBACK_IMAGES: Record<string, string[]> = {
     "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop",
   ],
   "IA": [
-    "https://images.unsplash.com/photo-1639762681485-074b7f4f039a?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1200&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=1200&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?q=80&w=1200&auto=format&fit=crop",
   ],
@@ -46,6 +46,7 @@ export const CRYPTO_ACRONYMS: string[] = [
   'S&P', 'S&P 500', 'NASDAQ', 'NYSE', 'FTSE', 'DAX', 'CAC',
   'CISA', 'RDP', 'KEV', 'ASA', 'AWS', 'IT', 'IP', 'CEO', 'CTO', 'COO',
   'UI', 'UX', 'CMS', 'RSS', 'JSON', 'HTML', 'CSS', 'JS', 'TS',
+  'IBM', 'AMD', 'INTEL', 'ARM', 'TSMC', 'ASML', 'GPT', 'LLM', 'NLP', 'ML', 'RAG', 'SDLC',
 ];
 
 // ============================================================
@@ -91,6 +92,7 @@ export const PROPER_NOUNS: Record<string, string> = {
   'meta': 'Meta',
   'nvidia': 'Nvidia',
   'tesla': 'Tesla',
+  'ibm': 'IBM',
   'openai': 'OpenAI',
   'anthropic': 'Anthropic',
   'deepseek': 'DeepSeek',

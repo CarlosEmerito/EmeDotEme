@@ -16,7 +16,7 @@ ${newsText}
 INSTRUCCIONES DE ESTILO:
 1. NO USES NUNCA "En resumen", "En conclusión" o frases similares para cerrar.
 2. Evita las listas de viñetas dentro del cuerpo (content); prefiere párrafos analíticos bien estructurados.
-3. El título debe ser impactante pero serio (sin clickbait barato). USA "SENTENCE CASE": Solo la primera letra de la primera palabra y los nombres propios deben ir en mayúscula.
+3. El título debe ser impactante pero serio (sin clickbait barato). USA "SENTENCE CASE": Solo la primera letra de la primera palabra debe ser mayúscula, PERO RESPETA SIEMPRE las siglas y acrónimos técnicos (ej: IBM, AI, SEC, BTC, NVIDIA, OpenAI). NUNCA los conviertas a minúsculas.
 4. El resumen (summary) debe ser incisivo: dos frases que den el contexto clave.
 5. El cierre debe invitar a la reflexión o señalar qué vigilar a continuación.
 6. Máxima naturalidad: utiliza un vocabulario rico y conectores lógicos variados.

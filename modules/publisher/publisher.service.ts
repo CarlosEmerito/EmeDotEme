@@ -16,9 +16,10 @@ export class PublisherService {
   /**
    * Ejecuta el proceso completo de publicación diaria.
    */
-  async publishDailyArticle() {
+  async publishDailyArticle(sourceSlugs?: string[]) {
     console.log("=====================================================");
     console.log("🚀 INICIANDO PIPELINE DE PUBLICACIÓN AUTOMÁTICA 🚀");
+    if (sourceSlugs) console.log(`🎯 Filtrando por fuentes: ${sourceSlugs.join(', ')}`);
     console.log("=====================================================\n");
 
     try {
@@ -33,7 +34,7 @@ export class PublisherService {
       
       // 3. Obtener noticias de fuentes RSS
       console.log("📡 [3/7] Buscando noticias en fuentes RSS...");
-      const newsContext = await fetchLatestNews(recentTitles, recentSourceUrls);
+      const newsContext = await fetchLatestNews(recentTitles, recentSourceUrls, 10, sourceSlugs);
       
       if (newsContext.newsItems.length === 0) {
         console.log('✅ No hay noticias nuevas para cubrir. Saliendo con éxito.');

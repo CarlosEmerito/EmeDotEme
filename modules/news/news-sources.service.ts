@@ -135,9 +135,15 @@ export interface FetchedNewsContext {
 export async function fetchLatestNews(
   recentTitles: string[] = [],
   recentSourceUrls: string[] = [],
-  maxNewsPerSource: number = 10
+  maxNewsPerSource: number = 10,
+  sourceSlugs?: string[]
 ): Promise<FetchedNewsContext> {
-  const enabledSources = NEWS_SOURCES.filter((s) => s.enabled);
+  let enabledSources = NEWS_SOURCES.filter((s) => s.enabled);
+  
+  if (sourceSlugs && sourceSlugs.length > 0) {
+    enabledSources = enabledSources.filter((s) => sourceSlugs.includes(s.slug));
+  }
+
   const results = await Promise.allSettled(enabledSources.map((source) => fetchFromSource(source)));
 
   const allNews: NewsItem[] = [];

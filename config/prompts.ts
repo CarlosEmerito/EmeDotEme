@@ -23,13 +23,13 @@ INSTRUCCIONES DE ESTILO:
 2. Estilo directo: sujeto, verbo y predicado. Evita párrafos excesivamente ornamentados.
 3. Usa terminología técnica precisa del sector (IA, Ciberseguridad, Blockchain).
 4. El título debe ser informativo y profesional. USA "SENTENCE CASE": Solo la primera letra de la primera palabra debe ser mayúscula, PERO RESPETA SIEMPRE las siglas y acrónimos técnicos (ej: IBM, AI, SEC, BTC, NVIDIA, OpenAI).
-5. El resumen (summary) debe ser una síntesis técnica de exactamente 2 frases.
+5. El resumen (summary) debe ser una síntesis técnica EXTREMADAMENTE BREVE de máximo 1-2 frases cortas.
 6. El cierre debe ser una proyección técnica o un punto de control a vigilar, sin resúmenes.
 
 REQUISITOS ESTRUCTURALES:
 1. Título profesional y atractivo.
-2. Resumen ejecutivo de exactamente 2 frases.
-3. Cuerpo extenso y detallado con subtítulos HTML (p, h2, h3). Usa un estilo periodístico de calidad. IMPORTANTE: Los subtítulos (h2, h3) deben ser muy BREVES (máximo 3-4 palabras).
+2. Resumen (summary) extremadamente conciso (max 1-2 frases).
+3. Cuerpo extenso y detallado con subtítulos HTML (p, h2, h3). Usa un estilo periodístico de calidad.
 4. Lista de 3 a 5 etiquetas (tags) relevantes.
 5. Puntos clave (keyPoints): Una lista de exactamente 3 puntos clave (balas) que resuman lo más importante del artículo para una lectura rápida.
 6. Nivel de impacto (impactLevel): Evalúa el impacto de la noticia en el mercado o sociedad. Elige uno: "Alto Impacto 💥", "Impacto Moderado ⚡", "Informativo 📰".
@@ -100,8 +100,7 @@ Content: ${esArticle.content}
 INSTRUCTIONS:
 - Write ONLY in English.
 - Maintain the professional news style.
-- Include titleEn, summaryEn (2 sentences), keyPointsEn (array of 3 points), glossaryEn (array of terms/defs in English), faqsEn (array of questions/answers in English), and long contentEn with HTML tags (p, h2, h3).
-- IMPORTANT: All HTML subtitles (h2, h3) must be very BRIEF (max 3-4 words).
+- Include titleEn, summaryEn (EXTREMELY BRIEF, max 1-2 short sentences), keyPointsEn (array of 3 points), glossaryEn (array of terms/defs in English), faqsEn (array of questions/answers in English), and long contentEn with HTML tags (p, h2, h3).
 - Return ONLY a valid JSON object.
 
 JSON Format:

@@ -3,7 +3,7 @@ import { getArticlesByTicker } from "@/modules/articles/article.service";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { formatRelativeDate } from "@/lib/utils";
+import { formatRelativeDate, translateCategory } from "@/lib/utils";
 import PriceChart from "@/components/market/PriceChart";
 
 interface PricePageProps {
@@ -30,7 +30,7 @@ export default async function PricePageEn({ params }: PricePageProps) {
           <nav className="flex items-center text-xs uppercase tracking-widest font-bold text-zinc-400 dark:text-zinc-600 mb-8">
             <Link href="/en" className="hover:text-[color:var(--color-brand)]">Home</Link>
             <span className="mx-3">•</span>
-            <Link href="/en/criptomonedas" className="hover:text-[color:var(--color-brand)]">Cryptocurrencies</Link>
+            <Link href="/en/cryptocurrencies" className="hover:text-[color:var(--color-brand)]">Cryptocurrencies</Link>
             <span className="mx-3">•</span>
             <span className="text-zinc-900 dark:text-zinc-100">{coin.name}</span>
           </nav>
@@ -111,7 +111,7 @@ export default async function PricePageEn({ params }: PricePageProps) {
           {relatedArticles.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               {relatedArticles.map((article) => (
-                <Link href={`/en/articulo/${article.slug}`} key={article.id} className="group flex flex-col gap-6">
+                <Link href={`/en/article/${article.slug}`} key={article.id} className="group flex flex-col gap-6">
                   {article.imageUrl && (
                     <div className="aspect-[16/9] relative overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-900 rounded-2xl">
                       <Image 
@@ -124,7 +124,7 @@ export default async function PricePageEn({ params }: PricePageProps) {
                   )}
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-3 text-[11px] uppercase tracking-widest font-black text-[color:var(--color-brand)]">
-                      <span>{article.category.name}</span>
+                      <span>{translateCategory(article.category.name, 'en')}</span>
                       <span className="text-zinc-300 dark:text-zinc-800">•</span>
                       <span className="text-zinc-400 dark:text-zinc-600 font-bold">{formatRelativeDate(article.createdAt)}</span>
                     </div>

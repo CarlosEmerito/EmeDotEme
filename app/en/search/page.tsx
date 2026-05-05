@@ -142,7 +142,7 @@ export default async function SearchPageEn({ searchParams }: SearchPageProps) {
                   <div className="flex justify-center items-center space-x-2 mt-8 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                     {searchResult.page > 1 && (
                       <a
-                        href={`/en/buscar?${new URLSearchParams({
+                        href={`/en/search?${new URLSearchParams({
                           ...(q && { q }),
                           ...(category && { category }),
                           ...(tags.length > 0 && { tags: tags.join(',') }),
@@ -163,7 +163,7 @@ export default async function SearchPageEn({ searchParams }: SearchPageProps) {
                     
                     {searchResult.hasMore && (
                       <a
-                        href={`/en/buscar?${new URLSearchParams({
+                        href={`/en/search?${new URLSearchParams({
                           ...(q && { q }),
                           ...(category && { category }),
                           ...(tags.length > 0 && { tags: tags.join(',') }),
@@ -191,7 +191,7 @@ export default async function SearchPageEn({ searchParams }: SearchPageProps) {
                 {q && (
                   <div className="mt-6">
                     <a 
-                      href="/en/buscar"
+                      href="/en/search"
                       className="inline-block px-4 py-2 bg-black dark:bg-white text-white dark:text-black font-medium rounded hover:opacity-90 transition-opacity"
                     >
                       Clear search

@@ -80,7 +80,7 @@ export default async function CriptomonedasPageEn() {
                       {index + 1}
                     </td>
                     <td className="px-6 py-5">
-                      <Link href={`/en/criptomonedas/${coin.symbol.toUpperCase()}`} className="flex items-center">
+                      <Link href={`/en/cryptocurrencies/${coin.symbol.toUpperCase()}`} className="flex items-center">
                         <img src={coin.image} alt={coin.name} className="w-8 h-8 mr-4 rounded-full bg-white p-0.5 border border-zinc-100 dark:border-zinc-800" />
                         <div>
                           <div className="font-bold text-black dark:text-white group-hover:text-[color:var(--color-brand)] transition-colors">{coin.name}</div>

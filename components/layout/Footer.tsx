@@ -125,11 +125,11 @@ export function Footer() {
           <div className="md:col-span-2">
             <h3 className="text-sm font-bold uppercase tracking-wider text-black dark:text-white mb-4">{t.company}</h3>
             <ul className="space-y-3 text-sm text-zinc-600 dark:text-zinc-400">
-              <li><Link href={`${prefix}/sobre-mi`} className="hover:text-[color:var(--color-brand)] transition-colors">{t.about}</Link></li>
-               <li><Link href={`${prefix}/contacto`} className="hover:text-[color:var(--color-brand)] transition-colors">{t.contact}</Link></li>
-               <li><Link href="/politica-privacidad" className="hover:text-[color:var(--color-brand)] transition-colors">Privacidad</Link></li>
-               <li><Link href="/aviso-legal" className="hover:text-[color:var(--color-brand)] transition-colors">Aviso Legal</Link></li>
-               <li><Link href="/cookies" className="hover:text-[color:var(--color-brand)] transition-colors">Cookies</Link></li>
+              <li><Link href={lang === "es" ? "/sobre-mi" : "/en/about-me"} className="hover:text-[color:var(--color-brand)] transition-colors">{t.about}</Link></li>
+               <li><Link href={lang === "es" ? "/contacto" : "/en/contact"} className="hover:text-[color:var(--color-brand)] transition-colors">{t.contact}</Link></li>
+               <li><Link href={lang === "es" ? "/politica-privacidad" : "/en/privacy-policy"} className="hover:text-[color:var(--color-brand)] transition-colors">{lang === "es" ? "Privacidad" : "Privacy Policy"}</Link></li>
+               <li><Link href={lang === "es" ? "/aviso-legal" : "/en/legal-notice"} className="hover:text-[color:var(--color-brand)] transition-colors">{lang === "es" ? "Aviso Legal" : "Legal Notice"}</Link></li>
+               <li><Link href={lang === "es" ? "/cookies" : "/en/cookies"} className="hover:text-[color:var(--color-brand)] transition-colors">{lang === "es" ? "Cookies" : "Cookies Policy"}</Link></li>
             </ul>
           </div>
 

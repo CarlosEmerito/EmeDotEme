@@ -21,17 +21,17 @@ export function Header() {
       { name: "Ciberseguridad", href: "/categoria/ciberseguridad" },
     ],
     en: [
-      { name: "Cryptocurrencies", href: "/en/categoria/criptomonedas" },
-      { name: "Markets", href: "/en/categoria/mercados" },
-      { name: "AI", href: "/en/categoria/ia" },
-      { name: "Technology", href: "/en/categoria/tecnologia" },
-      { name: "Cybersecurity", href: "/en/categoria/ciberseguridad" },
+      { name: "Cryptocurrencies", href: "/en/cryptocurrencies" },
+      { name: "Markets", href: "/en/category/mercados" },
+      { name: "AI", href: "/en/category/ia" },
+      { name: "Technology", href: "/en/category/tecnologia" },
+      { name: "Cybersecurity", href: "/en/category/ciberseguridad" },
     ],
   };
 
   const navItems = navigation[lang];
   const homeHref = lang === "en" ? "/en" : "/";
-  const aboutHref = lang === "en" ? "/en/sobre-mi" : "/sobre-mi";
+  const aboutHref = lang === "en" ? "/en/about-me" : "/sobre-mi";
   const aboutLabel = lang === "en" ? "About Author" : "Sobre el Autor";
 
   return (

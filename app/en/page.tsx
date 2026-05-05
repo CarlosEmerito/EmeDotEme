@@ -47,7 +47,7 @@ export default async function HomeEn() {
             
             <div className="mt-8 pt-6 border-t border-zinc-200 dark:border-zinc-800 text-center">
               <a 
-                href="/en/noticias" 
+                href="/en/news" 
                 className="inline-block px-6 py-2.5 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-zinc-100 font-bold uppercase tracking-wider text-xs rounded transition-colors"
               >
                 View all news

@@ -33,6 +33,42 @@ const nextConfig = {
         destination: '/en',
         permanent: true,
       },
+      // English Route Renames
+      {
+        source: '/en/articulo/:path*',
+        destination: '/en/article/:path*',
+        permanent: true,
+      },
+      {
+        source: '/en/buscar',
+        destination: '/en/search',
+        permanent: true,
+      },
+      {
+        source: '/en/categoria/:path*',
+        destination: '/en/category/:path*',
+        permanent: true,
+      },
+      {
+        source: '/en/contacto',
+        destination: '/en/contact',
+        permanent: true,
+      },
+      {
+        source: '/en/noticias',
+        destination: '/en/news',
+        permanent: true,
+      },
+      {
+        source: '/en/sobre-mi',
+        destination: '/en/about-me',
+        permanent: true,
+      },
+      {
+        source: '/en/criptomonedas/:path*',
+        destination: '/en/cryptocurrencies/:path*',
+        permanent: true,
+      },
     ];
   },
 };

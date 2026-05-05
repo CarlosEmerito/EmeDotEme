@@ -30,3 +30,27 @@
 
 ✅ Newsletter enviada correctamente a 1 suscriptores!
 📧 Resend ID: 9d55d4d8-762d-4d90-adec-aaba3b61f48a
+🔑 Gemini API Keys disponibles: 3 (PRIMARIA, SECUNDARIA, TERCIARIA)
+=====================================================
+✉️  INICIANDO GENERACIÓN DE NEWSLETTER SEMANAL ✉️
+=====================================================
+
+👥 Suscriptores activos encontrados: 2
+📰 Noticias publicadas esta semana: 15
+
+⚙️ Generando la newsletter semanal...
+[2026-05-01 16:00:03] 🗞️ Generando newsletter con 15 noticias...
+🔄 Generando con Gemini (PRIMARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini primaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (SECUNDARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini secundaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+🔄 Generando con Gemini (TERCIARIA, modelo: gemini-2.5-flash)...
+📤 Enviando prompt a Gemini...
+❌ Error con Gemini terciaria: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+
+❌ ERROR DURANTE EL PROCESO DE LA NEWSLETTER: Error: Fallo la generación de la newsletter
+    at generateWeeklyNewsletter (/home/emerito/emedoteme/modules/ai/ai.service.ts:137:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async main (/home/emerito/emedoteme/scripts/send_newsletter.ts:60:38)

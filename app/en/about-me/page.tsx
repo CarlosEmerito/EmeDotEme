@@ -13,17 +13,28 @@ export default async function AboutPageEn() {
   });
 
   const defaultContent = `<p>
-  I am Carlos "Emérito" López Lovera, a financial journalist and market analyst specializing in cryptocurrencies, business technology, artificial intelligence, and cybersecurity. With years of experience covering digital markets, my goal is to demystify the blockchain ecosystem and provide clear, actionable analysis.
+  I am Carlos "Emérito" López Lovera, a technical analyst and technology advocate specializing in the intersection of digital finance, artificial intelligence, and information security. My goal at <strong>${siteConfig.name}</strong> is to provide deep analysis and strategic clarity in a constantly changing technological environment.
 </p>
 
-<h2>Our Mission at ${siteConfig.name}</h2>
+<h2>Specialization and Coverage</h2>
 <p>
-  I founded ${siteConfig.name} with a clear vision: to deliver timely financial news, free of noise and backed by hard real-time market data. In an ecosystem that moves 24/7, the speed and accuracy of information are crucial for making sound decisions.
+  ${siteConfig.name} is a comprehensive technical information platform focused on the four pillars defining the contemporary digital economy:
+</p>
+<ul>
+  <li><strong>Artificial Intelligence:</strong> Monitoring advances in language models, automation, and the transformative impact of AI on the business ecosystem.</li>
+  <li><strong>Cybersecurity:</strong> Technical disclosure on threats, vulnerabilities, and protection strategies in digital infrastructures.</li>
+  <li><strong>Cryptocurrencies and Markets:</strong> Technical and fundamental analysis of digital assets, blockchain protocols, and global macroeconomic trends.</li>
+  <li><strong>Technology and Business:</strong> Analysis of technological innovation as a driver of corporate strategy and economic growth.</li>
+</ul>
+
+<h2>Our Mission</h2>
+<p>
+  In the age of information overload, the quality of analysis is the most valuable asset. At ${siteConfig.name}, we don't just report facts; we break down <strong>why</strong> they happen and evaluate their implications for investors, professionals, and decision-makers. Our commitment is to independent, analytical journalism strictly backed by data.
 </p>
 
-<h2>Trajectory</h2>
+<h2>Commitment to Education</h2>
 <p>
-  Throughout my career, I have collaborated on various editorial projects, always seeking the intersection between traditional finance and the new technological frontier. I firmly believe that the adoption of cryptocurrencies, AI, and cybersecurity requires quality education and honest journalism.
+  The adoption of critical technologies such as AI or Blockchain requires a solid foundation of technical knowledge. Therefore, each article is designed to be accessible yet rigorous, providing the necessary tools for our readers to navigate the digital future in an informed and secure manner.
 </p>`;
 
   const content = setting?.value || defaultContent;

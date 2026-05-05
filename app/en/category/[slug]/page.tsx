@@ -27,8 +27,8 @@ export async function generateMetadata(
   }
 
   return {
-    title: `${category.name} News | ${siteConfig.name}`,
-    description: `Latest news and analysis about ${category.name}.`,
+    title: `${translateCategory(category.name, 'en')} News | ${siteConfig.name}`,
+    description: `Latest news and analysis about ${translateCategory(category.name, 'en')}.`,
   };
 }
 
@@ -77,7 +77,7 @@ export default async function CategoryPageEn({ params, searchParams }: CategoryP
           </div>
         )}
         
-        <Pagination currentPage={page} totalPages={totalPages} basePath={`/en/categoria/${slug}`} />
+        <Pagination currentPage={page} totalPages={totalPages} basePath={`/en/category/${slug}`} />
       </main>
     </div>
   );

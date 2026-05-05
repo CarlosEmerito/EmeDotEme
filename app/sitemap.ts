@@ -19,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articleEntriesEn: MetadataRoute.Sitemap = articles
     .filter(article => article.titleEn)
     .map((article) => ({
-      url: `${siteConfig.url}/en/articulo/${article.slug}`,
+      url: `${siteConfig.url}/en/article/${article.slug}`,
       lastModified: article.updatedAt,
       changeFrequency: 'never',
       priority: 0.7,
@@ -37,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const categoryEntriesEn: MetadataRoute.Sitemap = categories.map((category) => ({
-    url: `${siteConfig.url}/en/categoria/${category.slug}`,
+    url: `${siteConfig.url}/en/category/${category.slug}`,
     lastModified: category.updatedAt,
     changeFrequency: 'weekly',
     priority: 0.5,
@@ -63,7 +63,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${siteConfig.url}/en/noticias`,
+      url: `${siteConfig.url}/en/news`,
       lastModified: new Date(),
       changeFrequency: 'hourly',
       priority: 0.8,
@@ -75,7 +75,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     },
     {
-      url: `${siteConfig.url}/en/sobre-mi`,
+      url: `${siteConfig.url}/en/about-me`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.4,
@@ -87,7 +87,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     },
     {
-      url: `${siteConfig.url}/en/contacto`,
+      url: `${siteConfig.url}/en/contact`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.4,
@@ -99,7 +99,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
-      url: `${siteConfig.url}/en/criptomonedas`,
+      url: `${siteConfig.url}/en/cryptocurrencies`,
       lastModified: new Date(),
       changeFrequency: 'always',
       priority: 0.6,
@@ -118,6 +118,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${siteConfig.url}/cookies`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.3,
+    },
+    {
+      url: `${siteConfig.url}/en/privacy-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.3,
+    },
+    {
+      url: `${siteConfig.url}/en/legal-notice`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.3,
+    },
+    {
+      url: `${siteConfig.url}/en/cookies`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.3,

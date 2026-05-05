@@ -36,7 +36,7 @@ export default async function AllArticlesPageEn({
           </div>
         )}
 
-        <Pagination currentPage={page} totalPages={totalPages} basePath="/en/noticias" />
+        <Pagination currentPage={page} totalPages={totalPages} basePath="/en/news" />
       </main>
     </div>
   );

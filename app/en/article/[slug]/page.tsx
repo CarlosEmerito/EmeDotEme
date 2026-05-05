@@ -5,7 +5,7 @@ import { Metadata, ResolvingMetadata } from "next";
 import { siteConfig } from "@/config/site";
 import { getArticleBySlug, getRelatedArticles } from "@/modules/articles/article.service";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
-import { formatRelativeDate, calculateReadingTime } from "@/lib/utils";
+import { formatRelativeDate, calculateReadingTime, translateCategory } from "@/lib/utils";
 import { isLikelyCrypto } from "@/lib/market-utils";
 import { ShareButtons } from "@/components/articles/ShareButtons";
 import { Comments } from "@/components/articles/Comments";
@@ -35,7 +35,7 @@ export async function generateMetadata(
     description: article.summary || siteConfig.description,
     authors: [{ name: article.author }],
     alternates: {
-      canonical: `/articulo/${article.slug}`,
+      canonical: `/en/article/${article.slug}`,
     },
     openGraph: {
       title: article.title,
@@ -100,9 +100,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         {/* Breadcrumb */}
         <nav className="flex items-center justify-between text-sm text-zinc-500 mb-8">
           <div className="flex items-center">
-            <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400">Home</Link>
+            <Link href="/en" className="hover:text-blue-600 dark:hover:text-blue-400">Home</Link>
             <span className="mx-2">/</span>
-            <span className="font-medium text-zinc-900 dark:text-zinc-100">{article.category.name}</span>
+            <span className="font-medium text-zinc-900 dark:text-zinc-100">{translateCategory(article.category.name, 'en')}</span>
           </div>
           
           <div className="flex items-center gap-4">

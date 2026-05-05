@@ -23,12 +23,12 @@ INSTRUCCIONES DE ESTILO:
 2. Estilo directo: sujeto, verbo y predicado. Evita párrafos excesivamente ornamentados.
 3. Usa terminología técnica precisa del sector (IA, Ciberseguridad, Blockchain).
 4. El título debe ser informativo y profesional. USA "SENTENCE CASE": Solo la primera letra de la primera palabra debe ser mayúscula, PERO RESPETA SIEMPRE las siglas y acrónimos técnicos (ej: IBM, AI, SEC, BTC, NVIDIA, OpenAI).
-5. El resumen (summary) debe ser una síntesis técnica EXTREMADAMENTE BREVE de máximo 1-2 frases cortas.
+5. El resumen (summary) debe ser una síntesis técnica BREVE.
 6. El cierre debe ser una proyección técnica o un punto de control a vigilar, sin resúmenes.
 
 REQUISITOS ESTRUCTURALES:
 1. Título profesional y atractivo.
-2. Resumen (summary) extremadamente conciso (max 1-2 frases).
+2. Resumen (summary) breve.
 3. Cuerpo extenso y detallado con subtítulos HTML (p, h2, h3). Usa un estilo periodístico de calidad.
 4. Lista de 3 a 5 etiquetas (tags) relevantes.
 5. Puntos clave (keyPoints): Una lista de exactamente 3 puntos clave (balas) que resuman lo más importante del artículo para una lectura rápida.
@@ -100,7 +100,7 @@ Content: ${esArticle.content}
 INSTRUCTIONS:
 - Write ONLY in English.
 - Maintain the professional news style.
-- Include titleEn, summaryEn (EXTREMELY BRIEF, max 1-2 short sentences), keyPointsEn (array of 3 points), glossaryEn (array of terms/defs in English), faqsEn (array of questions/answers in English), and long contentEn with HTML tags (p, h2, h3).
+- Include titleEn, summaryEn (BRIEF), keyPointsEn (array of 3 points), glossaryEn (array of terms/defs in English), faqsEn (array of questions/answers in English), and long contentEn with HTML tags (p, h2, h3).
 - Return ONLY a valid JSON object.
 
 JSON Format:

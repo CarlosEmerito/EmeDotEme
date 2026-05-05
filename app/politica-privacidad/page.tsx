@@ -13,46 +13,61 @@ export default function PrivacyPage() {
         <h1 className="text-4xl font-bold font-serif text-black dark:text-white mb-8">Política de Privacidad</h1>
         
         <div className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
-          <p>Última actualización: {new Date().toLocaleDateString()}</p>
+          <p>Última actualización: {new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
           
-          <p>En <strong>{siteConfig.name}</strong>, accesible desde {siteConfig.url}, una de nuestras principales prioridades es la privacidad de nuestros visitantes. Este documento de Política de Privacidad contiene tipos de información que son recopilados y registrados por {siteConfig.name} y cómo la utilizamos.</p>
+          <p>En <strong>{siteConfig.name}</strong>, valoramos la privacidad de nuestros usuarios y estamos comprometidos con la protección de sus datos personales. Esta Política de Privacidad describe cómo recopilamos, utilizamos y protegemos su información de acuerdo con el Reglamento General de Protección de Datos (RGPD) y la Ley Orgánica de Protección de Datos y Garantía de Derechos Digitales (LOPDGDD).</p>
 
-          <h2>1. Información que recopilamos</h2>
-          <p>Si te suscribes a nuestra newsletter, te solicitamos tu dirección de correo electrónico. No recopilamos información personal adicional a menos que te pongas en contacto con nosotros directamente.</p>
-
-          <h2>2. Cómo utilizamos tu información</h2>
-          <p>Utilizamos la información que recopilamos de diversas maneras, incluyendo:</p>
+          <h2>1. Responsable del Tratamiento</h2>
+          <p>El responsable del tratamiento de los datos personales recogidos a través de este sitio web es:</p>
           <ul>
-            <li>Proporcionar, operar y mantener nuestro sitio web.</li>
-            <li>Mejorar, personalizar y expandir nuestro sitio web.</li>
-            <li>Comprender y analizar cómo utilizas nuestro sitio web.</li>
-            <li>Desarrollar nuevos productos, servicios, características y funcionalidades.</li>
-            <li>Comunicarnos contigo, ya sea directamente o a través de uno de nuestros socios, para proporcionarte actualizaciones y otra información relacionada con el sitio web, y con fines de marketing y promoción.</li>
-            <li>Enviarte correos electrónicos.</li>
-            <li>Encontrar y prevenir el fraude.</li>
+            <li><strong>Identidad:</strong> {siteConfig.author}</li>
+            <li><strong>Email:</strong> carlosemerito13@gmail.com</li>
+            <li><strong>Actividad:</strong> Divulgación de noticias sobre tecnología, criptomonedas y mercados.</li>
           </ul>
 
-          <h2>3. Cookies y balizas web</h2>
-          <p>Al igual que cualquier otro sitio web, {siteConfig.name} utiliza 'cookies'. Estas cookies se utilizan para almacenar información, incluyendo las preferencias de los visitantes y las páginas del sitio web a las que el visitante accedió o visitó. La información se utiliza para optimizar la experiencia de los usuarios personalizando el contenido de nuestra página web en función del tipo de navegador de los visitantes y/u otra información.</p>
-
-          <h2>4. Google DoubleClick DART Cookie</h2>
-          <p>Google es uno de los proveedores de terceros en nuestro sitio. También utiliza cookies, conocidas como cookies de DART, para servir anuncios a los visitantes de nuestro sitio basados en su visita a www.website.com y otros sitios en el internet.</p>
-
-          <h2>5. Nuestros socios publicitarios</h2>
-          <p>Algunos de los anunciantes en nuestro sitio pueden utilizar cookies y balizas web. Nuestros socios publicitarios incluyen:</p>
+          <h2>2. Finalidad del Tratamiento</h2>
+          <p>Tratamos la información que nos facilitan las personas interesadas con las siguientes finalidades:</p>
           <ul>
-            <li>Google AdSense</li>
+            <li><strong>Gestión de suscripciones:</strong> Gestionar el envío de nuestra newsletter y comunicaciones comerciales a las que el usuario se haya suscrito.</li>
+            <li><strong>Contacto y soporte:</strong> Atender las consultas, solicitudes o sugerencias enviadas a través de nuestro formulario de contacto.</li>
+            <li><strong>Mejora de la experiencia:</strong> Analizar la navegación del usuario para optimizar la usabilidad y el contenido del sitio web.</li>
+            <li><strong>Publicidad:</strong> Gestionar los espacios publicitarios en el sitio web de acuerdo con los intereses del usuario.</li>
           </ul>
 
-          <h2>6. Derechos de protección de datos (GDPR)</h2>
-          <p>Nos gustaría asegurarnos de que eres plenamente consciente de todos tus derechos de protección de datos. Todo usuario tiene derecho a lo siguiente:</p>
+          <h2>3. Base Legal para el Tratamiento</h2>
+          <p>La base legal para el tratamiento de sus datos varía según la finalidad:</p>
           <ul>
-            <li><strong>Derecho de acceso:</strong> Tienes derecho a solicitar copias de tus datos personales.</li>
-            <li><strong>Derecho de rectificación:</strong> Tienes derecho a solicitar que corrijamos cualquier información que creas que es inexacta.</li>
-            <li><strong>Derecho de supresión:</strong> Tienes derecho a solicitar que eliminemos tus datos personales, bajo ciertas condiciones.</li>
+            <li><strong>Consentimiento:</strong> Para la suscripción a la newsletter y el envío de consultas a través del formulario.</li>
+            <li><strong>Interés legítimo:</strong> Para la realización de análisis estadísticos y mejora del sitio web.</li>
+            <li><strong>Cumplimiento de obligaciones legales:</strong> En caso de que sea necesario para cumplir con la legislación vigente.</li>
           </ul>
 
-          <p>Si tienes preguntas adicionales o necesitas más información sobre nuestra Política de Privacidad, no dudes en contactarnos a través de {siteConfig.links.email}.</p>
+          <h2>4. Conservación de los Datos</h2>
+          <p>Los datos personales se conservarán mientras se mantenga la relación con el usuario o hasta que este solicite su supresión, y en cualquier caso, durante los plazos legales obligatorios.</p>
+
+          <h2>5. Destinatarios de los Datos</h2>
+          <p>No se cederán datos a terceros, salvo obligación legal o para la prestación de servicios necesarios para el funcionamiento del sitio web, tales como:</p>
+          <ul>
+            <li><strong>Proveedores de servicios de correo (Resend):</strong> Para el envío de la newsletter.</li>
+            <li><strong>Google LLC (Analytics/AdSense):</strong> Para análisis de tráfico y gestión publicitaria (sujeto a las políticas de privacidad de Google).</li>
+            <li><strong>Proveedores de Hosting (Vercel/Supabase):</strong> Para el alojamiento del sitio y la base de datos.</li>
+          </ul>
+
+          <h2>6. Transferencias Internacionales</h2>
+          <p>Algunos de nuestros proveedores (como Google o Resend) pueden estar ubicados en países fuera del Espacio Económico Europeo. En tales casos, nos aseguramos de que existan garantías adecuadas, como cláusulas contractuales tipo o marcos de privacidad reconocidos.</p>
+
+          <h2>7. Sus Derechos</h2>
+          <p>Como interesado, usted tiene derecho a:</p>
+          <ul>
+            <li>Acceder a sus datos personales.</li>
+            <li>Solicitar la rectificación de datos inexactos.</li>
+            <li>Solicitar su supresión cuando ya no sean necesarios.</li>
+            <li>Solicitar la limitación u oposición a su tratamiento.</li>
+            <li>Solicitar la portabilidad de sus datos.</li>
+          </ul>
+          <p>Puede ejercer estos derechos enviando un correo electrónico a carlosemerito13@gmail.com, adjuntando una copia de su DNI o documento equivalente para verificar su identidad.</p>
+
+          <p>Si considera que sus derechos no han sido debidamente atendidos, tiene derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (AEPD).</p>
         </div>
       </main>
     </div>

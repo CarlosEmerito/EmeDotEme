@@ -13,30 +13,67 @@ export default function CookiesPage() {
         <h1 className="text-4xl font-bold font-serif text-black dark:text-white mb-8">Política de Cookies</h1>
         
         <div className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
-          <p>Este sitio web, al igual que la mayoría de los sitios en Internet, utiliza cookies para mejorar y optimizar la experiencia del usuario.</p>
+          <p>Última actualización: {new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+
+          <p>Este sitio web, al igual que la mayoría de los sitios en Internet, utiliza cookies para mejorar y optimizar la experiencia del usuario. A continuación, encontrará información detallada sobre qué son las cookies, qué tipos utiliza este sitio web, cómo puede desactivarlas en su navegador y cómo bloquear específicamente la instalación de cookies de terceros.</p>
           
           <h2>1. ¿Qué son las cookies?</h2>
-          <p>Las cookies son pequeños archivos que el sitio web o la aplicación que utilizas instala en tu navegador o en tu dispositivo (Smartphone, tableta o televisión conectada) durante tu recorrido por las páginas o por la aplicación, y sirven para almacenar información sobre tu visita.</p>
-
-          <h2>2. Tipos de cookies que utiliza este sitio</h2>
+          <p>Las cookies son archivos que el sitio web o la aplicación que utiliza instala en su navegador o en su dispositivo durante su recorrido por las páginas, y sirven para almacenar información sobre su visita. Como la mayoría de los sitios en internet, <strong>{siteConfig.name}</strong> utiliza cookies para:</p>
           <ul>
-            <li><strong>Cookies técnicas:</strong> Son aquellas que permiten al usuario la navegación a través de una página web y la utilización de las diferentes opciones o servicios que en ella existan.</li>
-            <li><strong>Cookies de personalización:</strong> Permiten al usuario acceder al servicio con algunas características de carácter general predefinidas en función de una serie de criterios en el terminal del usuario (por ejemplo, el idioma o el tema oscuro/claro).</li>
-            <li><strong>Cookies de análisis:</strong> Son aquellas que, tratadas por nosotros o por terceros, nos permiten cuantificar el número de usuarios y así realizar la medición y análisis estadístico de la utilización que hacen los usuarios del servicio ofertado.</li>
-            <li><strong>Cookies publicitarias:</strong> Son aquellas que, tratadas por nosotros o por terceros, nos permiten gestionar de la forma más eficaz posible la oferta de los espacios publicitarios que hay en la página web.</li>
+            <li>Asegurar que las páginas web pueden funcionar correctamente.</li>
+            <li>Almacenar sus preferencias, como el idioma seleccionado o el tamaño de letra.</li>
+            <li>Conocer su experiencia de navegación.</li>
+            <li>Recopilar información estadística anónima, como qué páginas ha visto o cuánto tiempo ha estado en nuestros medios.</li>
           </ul>
 
-          <h2>3. Cookies de terceros</h2>
-          <p>En particular, este sitio web utiliza <strong>Google Analytics</strong> y <strong>Google AdSense</strong>, servicios analíticos y publicitarios prestados por Google, Inc. con domicilio en los Estados Unidos. Para la prestación de estos servicios, estos utilizan cookies que recopilan la información, incluida la dirección IP del usuario, que será transmitida, tratada y almacenada por Google en los términos fijados en la Web Google.com.</p>
+          <h2>2. Cookies utilizadas en este sitio</h2>
+          <p>A continuación se detalla una tabla con las cookies utilizadas en este sitio web:</p>
+          
+          <div className="overflow-x-auto my-8">
+            <table className="min-w-full text-sm text-left border-collapse border border-zinc-200 dark:border-zinc-800">
+              <thead className="bg-zinc-50 dark:bg-zinc-900">
+                <tr>
+                  <th className="p-3 border border-zinc-200 dark:border-zinc-800">Tipo</th>
+                  <th className="p-3 border border-zinc-200 dark:border-zinc-800">Nombre</th>
+                  <th className="p-3 border border-zinc-200 dark:border-zinc-800">Propósito</th>
+                  <th className="p-3 border border-zinc-200 dark:border-zinc-800">Proveedor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="p-3 border border-zinc-200 dark:border-zinc-800">Técnicas</td>
+                  <td className="p-3 border border-zinc-200 dark:border-zinc-800">next-themes</td>
+                  <td className="p-3 border border-zinc-200 dark:border-zinc-800">Gestiona la preferencia del tema oscuro/claro.</td>
+                  <td className="p-3 border border-zinc-200 dark:border-zinc-800">Propia</td>
+                </tr>
+                <tr>
+                  <td className="p-3 border border-zinc-200 dark:border-zinc-800">Análisis</td>
+                  <td className="p-3 border border-zinc-200 dark:border-zinc-800">_ga, _gid</td>
+                  <td className="p-3 border border-zinc-200 dark:border-zinc-800">Recopila información anónima sobre la navegación.</td>
+                  <td className="p-3 border border-zinc-200 dark:border-zinc-800">Google Analytics</td>
+                </tr>
+                <tr>
+                  <td className="p-3 border border-zinc-200 dark:border-zinc-800">Publicidad</td>
+                  <td className="p-3 border border-zinc-200 dark:border-zinc-800">__gads, IDE</td>
+                  <td className="p-3 border border-zinc-200 dark:border-zinc-800">Sirve anuncios basados en visitas anteriores.</td>
+                  <td className="p-3 border border-zinc-200 dark:border-zinc-800">Google AdSense</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-          <h2>4. Cómo gestionar las cookies</h2>
-          <p>El usuario puede en cualquier momento elegir qué cookies quiere que funcionen en este sitio web mediante la configuración del navegador:</p>
+          <h2>3. Gestión de cookies</h2>
+          <p>Al navegar y continuar en nuestro Sitio Web estará consintiendo el uso de las Cookies en las condiciones contenidas en la presente Política de Cookies. No obstante, usted tiene la opción de ejercer su derecho a bloquear, eliminar y rechazar el uso de Cookies en todo momento a través de la configuración de su navegador.</p>
+          
+          <p>Puede encontrar información sobre cómo gestionar las cookies en los navegadores más comunes en los siguientes enlaces:</p>
           <ul>
-            <li>Para <strong>Chrome</strong>, ver <a href="https://support.google.com/chrome/answer/95647?hl=es" target="_blank">este enlace</a>.</li>
-            <li>Para <strong>Explorer</strong>, ver <a href="https://support.microsoft.com/es-es/help/17442/windows-internet-explorer-delete-manage-cookies" target="_blank">este enlace</a>.</li>
-            <li>Para <strong>Firefox</strong>, ver <a href="https://support.mozilla.org/es/kb/habilitar-y-deshabilitar-cookies-que-los-sitios-we" target="_blank">este enlace</a>.</li>
-            <li>Para <strong>Safari</strong>, ver <a href="https://support.apple.com/kb/ph21411?locale=es_ES" target="_blank">este enlace</a>.</li>
+            <li><strong>Google Chrome:</strong> <a href="https://support.google.com/chrome/answer/95647?hl=es" target="_blank" rel="noopener noreferrer">Configuración de cookies</a></li>
+            <li><strong>Mozilla Firefox:</strong> <a href="https://support.mozilla.org/es/kb/habilitar-y-deshabilitar-cookies-sitios-web-rastrear-preferencias" target="_blank" rel="noopener noreferrer">Configuración de cookies</a></li>
+            <li><strong>Internet Explorer:</strong> <a href="https://support.microsoft.com/es-es/help/17442/windows-internet-explorer-delete-manage-cookies" target="_blank" rel="noopener noreferrer">Configuración de cookies</a></li>
+            <li><strong>Safari:</strong> <a href="https://support.apple.com/es-es/guide/safari/sfri11471/mac" target="_blank" rel="noopener noreferrer">Configuración de cookies</a></li>
           </ul>
+
+          <p>Tenga en cuenta que si decide bloquear o eliminar las cookies, es posible que no podamos mantener sus preferencias y que algunas características del sitio web no estén operativas, o que tengamos que solicitarle de nuevo autorización para su uso.</p>
         </div>
       </main>
     </div>

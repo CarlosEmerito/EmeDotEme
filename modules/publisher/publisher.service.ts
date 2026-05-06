@@ -52,14 +52,24 @@ export class PublisherService {
       );
       console.log("✨ Contenido generado exitosamente.");
 
+      // 4b. Generar Slug Único
+      const slug = generateSlug(aiResponse.title, true);
+
       // 5. Generación de Imagen
       console.log("🎨 [5/7] Iniciando pipeline de imagen...");
-      const imageUrls = await this.processImage(aiResponse, successfulCluster, allCategories);
+      const imageUrls = await this.processImage(aiResponse, successfulCluster, allCategories, slug);
+      
+      // Validación extra de seguridad
+      if (!imageUrls.url || imageUrls.url.startsWith('data:')) {
+         console.warn("⚠️ Imagen no válida (Data URI o vacía), aplicando fallback de emergencia.");
+         imageUrls.url = 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2832&auto=format&fit=crop';
+      }
+      
       console.log(`🖼️ Imagen lista: ${imageUrls.url}`);
 
       // 6. Guardar en Base de Datos
       console.log("💾 [6/7] Guardando artículo en base de datos...");
-      const newArticle = await this.saveToDatabase(aiResponse, imageUrls, newsContext.newsItems.length > 0);
+      const newArticle = await this.saveToDatabase(aiResponse, imageUrls, newsContext.newsItems.length > 0, slug);
       console.log(`✅ Artículo guardado con ID: ${newArticle.id} y slug: ${newArticle.slug}`);
 
       // 7. Post-procesado (Binance Square, etc.)
@@ -134,10 +144,9 @@ export class PublisherService {
     throw new Error('No se pudo generar contenido con ningún cluster de noticias.');
   }
 
-  private async processImage(aiResponse: any, cluster: any[], allCategories: any[]) {
+  private async processImage(aiResponse: any, cluster: any[], allCategories: any[], slug: string) {
     const rssImageUrl = cluster[0]?.imageUrl || aiResponse.sourceImageUrl;
     const categoryName = aiResponse.category || allCategories[0].name;
-    const slug = generateSlug(aiResponse.title, true);
 
     const imageResult = await generateArticleImageAndAnalyzeQA({
       title: aiResponse.title,
@@ -153,8 +162,7 @@ export class PublisherService {
     };
   }
 
-  private async saveToDatabase(aiResponse: any, imageData: { url: string, caption: string }, hasNews: boolean) {
-    const slug = generateSlug(aiResponse.title, true);
+  private async saveToDatabase(aiResponse: any, imageData: { url: string, caption: string }, hasNews: boolean, slug: string) {
     const allCategories = await this.prisma.category.findMany();
     let selectedCategory = allCategories.find(
       (cat) => cat.name.toLowerCase() === (aiResponse.category || '').toLowerCase()

@@ -46,6 +46,7 @@ export function SidebarArticleCard({ article, lang = "es" }: SidebarArticleCardP
             src={article.imageUrl} 
             alt={displayTitle}
             fill
+            unoptimized
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 640px) 100vw, 112px"
           />

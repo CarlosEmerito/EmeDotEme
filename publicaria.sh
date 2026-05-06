@@ -19,6 +19,9 @@ LOGFILE="logs/emedoteme.log"
 TIMESTAMP="$(date '+%Y-%m-%d %H:%M:%S')"
 JSON_PATH="tmp/latest_article.json"
 
+# Redirigir toda la salida (stdout y stderr) al logfile y a la consola
+exec > >(tee -a "$LOGFILE") 2>&1
+
 echo -e "\n================== 🤖 PUBLICARIA.sh ($TIMESTAMP) =================="
 
 echo "[1️⃣] Generando artículo de IA con scripts/publish-ia.ts..."

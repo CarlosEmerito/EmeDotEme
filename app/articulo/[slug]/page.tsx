@@ -177,6 +177,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   src={article.imageUrl} 
                   alt={article.imageCaption || `Imagen ilustrativa sobre ${article.title}`}
                   fill
+                  unoptimized
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 896px"
                   priority

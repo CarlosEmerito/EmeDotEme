@@ -33,6 +33,7 @@ export function HeroArticleCard({ article, lang = "es" }: HeroArticleCardProps) 
             src={article.imageUrl} 
             alt={displayTitle}
             fill
+            unoptimized
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 66vw"
             priority

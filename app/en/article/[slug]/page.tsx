@@ -170,15 +170,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           {article.imageUrl && (
             <figure className="w-full mb-10">
               <div className="aspect-video relative overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
-                <Image 
-                  src={article.imageUrl} 
+                <Image
+                  src={article.imageUrl}
                   alt={article.imageCaption || `Imagen ilustrativa sobre ${article.title}`}
                   fill
+                  unoptimized
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 896px"
                   priority
-                />
-              </div>
+                />              </div>
               {article.imageCaption && (
                 <figcaption className="mt-3 text-sm text-zinc-500 dark:text-zinc-400 italic text-center border-b border-zinc-100 dark:border-zinc-800/50 pb-4">
                   {article.imageCaption}

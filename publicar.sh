@@ -24,6 +24,9 @@ LOGFILE="logs/emedoteme.log"
 TIMESTAMP="$(date '+%Y-%m-%d %H:%M:%S')"
 JSON_PATH="tmp/latest_article.json"
 
+# Redirigir toda la salida (stdout y stderr) al logfile y a la consola
+exec > >(tee -a "$LOGFILE") 2>&1
+
 # === Logging de inicio ===
 echo -e "\n================== 📰 PUBLICAR.sh ($TIMESTAMP) =================="
 

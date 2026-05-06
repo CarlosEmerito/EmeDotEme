@@ -26,6 +26,11 @@ export async function GET() {
   });
 
   articles.forEach((article) => {
+    let mimeType = 'image/jpeg';
+    if (article.imageUrl?.endsWith('.webp')) mimeType = 'image/webp';
+    if (article.imageUrl?.endsWith('.png')) mimeType = 'image/png';
+    if (article.imageUrl?.endsWith('.gif')) mimeType = 'image/gif';
+
     feed.item({
       title: article.title,
       description: article.summary || '',
@@ -34,7 +39,7 @@ export async function GET() {
       categories: [article.category.name],
       author: article.author,
       date: article.createdAt,
-      enclosure: article.imageUrl ? { url: article.imageUrl, type: 'image/jpeg', size: 0 } : undefined,
+      enclosure: article.imageUrl ? { url: article.imageUrl, type: mimeType, size: 0 } : undefined,
       custom_elements: [
         { 'content:encoded': `<![CDATA[${article.content}]]>` }
       ]

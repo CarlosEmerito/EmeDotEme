@@ -50,12 +50,22 @@ export async function saveImageToSupabase(url: string, slug: string): Promise<st
 
     if (error) {
       console.error('[Storage] Supabase Upload Error:', error);
+      // Si la URL original es un Data URI o local, NO la devolvemos porque fallaría en producción
+      if (url.startsWith('data:') || url.includes('localhost') || url.includes('127.0.0.1')) {
+        return 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2832&auto=format&fit=crop'; // Fallback genérico tech
+      }
       return url;
     }
 
     const { data: { publicUrl } } = supabase.storage
       .from(bucketName)
       .getPublicUrl(data.path);
+
+    // Verificación de seguridad: si no hay publicUrl, devolvemos el fallback
+    if (!publicUrl) {
+       console.error('[Storage] Supabase: Falló la generación de PublicURL');
+       return 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2832&auto=format&fit=crop';
+    }
 
     return publicUrl;
   } catch (error) {

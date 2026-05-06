@@ -114,13 +114,13 @@ export default async function PricePage({ params }: PricePageProps) {
                 <Link href={`/articulo/${article.slug}`} key={article.id} className="group flex flex-col gap-6">
                   {article.imageUrl && (
                     <div className="aspect-[16/9] relative overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-900 rounded-2xl">
-                      <Image 
-                        src={article.imageUrl} 
-                        alt={article.title} 
-                        fill 
+                      <Image
+                        src={article.imageUrl}
+                        alt={article.title}
+                        fill
+                        unoptimized
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
+                      />                    </div>
                   )}
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-3 text-[11px] uppercase tracking-widest font-black text-[color:var(--color-brand)]">

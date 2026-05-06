@@ -37,8 +37,10 @@ export class PublisherService {
       const newsContext = await fetchLatestNews(recentTitles, recentSourceUrls, 10, sourceSlugs);
       
       if (newsContext.newsItems.length === 0) {
-        console.log('✅ No hay noticias nuevas para cubrir. Saliendo con éxito.');
-        return;
+        const errorMsg = '❌ ERROR CRÍTICO: No se encontraron noticias en las fuentes configuradas. Se requieren fuentes reales para generar contenido. La publicación ha sido cancelada.';
+        console.error(errorMsg);
+        await sendCriticalErrorNotification(errorMsg);
+        throw new Error(errorMsg);
       }
       console.log(`🗞️ Detectadas ${newsContext.newsItems.length} noticias nuevas.`);
 

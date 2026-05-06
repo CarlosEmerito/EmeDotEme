@@ -160,8 +160,11 @@ export async function generateArticleContent(
   recentTitles: string[] = [],
   newsContext: NewsItem[] = []
 ): Promise<GeneratedArticle> {
-  const hasRealNews = newsContext.length > 0;
-  const systemPrompt = AI_PROMPTS.SPANISH.SYSTEM(hasRealNews);
+  if (newsContext.length === 0) {
+    throw new Error('❌ ERROR CRÍTICO: No se encontraron noticias de fuentes fiables. No se generará contenido sin fuentes reales. La publicación ha sido cancelada.');
+  }
+
+  const systemPrompt = AI_PROMPTS.SPANISH.SYSTEM;
   
   let avoidanceClause = '';
   if (recentTitles.length > 0) {
@@ -169,9 +172,7 @@ export async function generateArticleContent(
     avoidanceClause = `\n\nEvita temas similares a:\n${recentList}`;
   }
 
-  const userPrompt = hasRealNews 
-    ? AI_PROMPTS.SPANISH.USER_WITH_NEWS(formatNewsForPrompt(newsContext.slice(0, 3)), avoidanceClause)
-    : AI_PROMPTS.SPANISH.USER_WITHOUT_NEWS(avoidanceClause);
+  const userPrompt = AI_PROMPTS.SPANISH.USER_WITH_NEWS(formatNewsForPrompt(newsContext.slice(0, 3)), avoidanceClause);
   
   let result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
   

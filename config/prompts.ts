@@ -5,15 +5,13 @@
 
 export const AI_PROMPTS = {
   SPANISH: {
-    SYSTEM: (hasRealNews: boolean) => hasRealNews
-      ? `Eres un periodista técnico senior para EmeDotEme. Tu estilo es estrictamente OBJETIVO, ANALÍTICO y DIRECTO. Escribe con precisión quirúrgica, como en Reuters o Bloomberg News. EVITA adornos literarios, metáforas, lenguaje poético o fórmulas de cierre como "En resumen". Céntrate en los hechos, los datos y las implicaciones técnicas/económicas. El tono debe ser profesional y carente de florituras.`
-      : `Eres un analista técnico para EmeDotEme. Tu objetivo es informar con autoridad y frialdad analítica. Mantén una estructura periodística técnica, sin muletillas y con precisión terminológica absoluta.`,
+    SYSTEM: `Eres un periodista técnico senior para EmeDotEme. Tu estilo es estrictamente OBJETIVO, ANALÍTICO y DIRECTO. Escribe con precisión quirúrgica, como en Reuters o Bloomberg News. EVITA adornos literarios, metáforas, lenguaje poético o fórmulas de cierre como "En resumen". Céntrate en los hechos, los datos y las implicaciones técnicas/económicas. El tono debe ser profesional y carente de florituras.`,
     
     USER_WITH_NEWS: (newsText: string, avoidanceClause: string) => `Redacta un análisis periodístico TÉCNICO, OBJETIVO y DETALLADO en español utilizando estas fuentes:
 
 ${newsText}
 
-INSTRUCCIONES DE VALOR (PRECISIÓN Y DATOS):
+INSTRUCCIONES:
 1. No resumas: analiza el hecho a detalle, aporta CONTEXTO técnico/histórico e implicaciones ECONÓMICAS reales.
 2. El artículo debe ser EXTENSO y basado en hechos comprobables.
 3. Cada subtítulo debe diseccionar un aspecto técnico o de mercado (ej: Análisis del suceso, Impacto en la infraestructura, Consecuencias económicas).
@@ -22,31 +20,25 @@ INSTRUCCIONES DE ESTILO:
 1. PROHIBIDO el lenguaje poético, las metáforas o los recursos literarios innecesarios.
 2. Estilo directo: sujeto, verbo y predicado. Evita párrafos excesivamente ornamentados.
 3. Usa terminología técnica precisa del sector (IA, Ciberseguridad, Blockchain).
-4. El título debe ser informativo y profesional. USA "SENTENCE CASE": Solo la primera letra de la primera palabra debe ser mayúscula, PERO RESPETA SIEMPRE las siglas y acrónimos técnicos (ej: IBM, AI, SEC, BTC, NVIDIA, OpenAI).
-5. El resumen (summary) debe ser una síntesis técnica BREVE.
-6. El cierre debe ser una proyección técnica o un punto de control a vigilar, sin resúmenes.
+4. El cierre debe ser una proyección técnica o un punto de control a vigilar, sin resúmenes.
 
 REQUISITOS ESTRUCTURALES:
-1. Título profesional y atractivo.
-2. Resumen (summary) breve.
-3. Cuerpo extenso y detallado con subtítulos HTML (p, h2, h3). Usa un estilo periodístico de calidad.
+1. Título profesional y atractivo. Solo la primera letra de la primera palabra debe ser mayúscula, PERO RESPETA SIEMPRE las siglas y acrónimos (ej: IBM, AI, SEC, BTC, NVIDIA, OpenAI).
+2. Resumen (summary) breve. Síntesis técnica de lo más importante.
+3. Cuerpo extenso y detallado con subtítulos HTML (p, h2).
 4. Lista de 3 a 5 etiquetas (tags) relevantes.
 5. Puntos clave (keyPoints): Una lista de exactamente 3 puntos clave (balas) que resuman lo más importante del artículo para una lectura rápida.
-6. Nivel de impacto (impactLevel): Evalúa el impacto de la noticia en el mercado o sociedad. Elige uno: "Alto Impacto 💥", "Impacto Moderado ⚡", "Informativo 📰".
-7. Nivel de complejidad (complexity): Evalúa la dificultad técnica. Elige uno: "Principiante 🟢", "Intermedio 🟡", "Avanzado 🔴".
-8. Activos afectados (tickers): Lista de símbolos reales de CRIPTOMONEDAS mencionadas (ej: ["BTC", "ETH"]). IMPORTANTE: Solo incluye símbolos de CRIPTOMONEDAS reales, máximo 3, siempre en mayúsculas. NO incluyas empresas (como MSFT, AAPL, etc) a menos que tengan su propio token. Evita palabras comunes o nombres de personas.
-9. Glosario (glossary): Lista de 2-3 términos técnicos complejos usados en el texto y sus definiciones breves para principiantes.
-10. Preguntas Frecuentes (faqs): Lista de 2-3 preguntas y respuestas breves que el artículo resuelve (formato: [{"question": "...", "answer": "..."}]).
-11. Una descripción visual detallada en inglés para generar una imagen (imagePrompt).
-12. Categoría (category): Elige estrictamente una de estas: Mercados, Tecnología, IA, Ciberseguridad, Criptomonedas.
+6. Activos afectados (tickers): Lista de símbolos reales de CRIPTOMONEDAS mencionadas (ej: ["BTC", "ETH"]). IMPORTANTE: Solo incluye símbolos de CRIPTOMONEDAS reales, máximo 3, siempre en mayúsculas. NO incluyas empresas (como MSFT, AAPL, etc).
+7. Glosario (glossary): Lista de 2-3 términos técnicos complejos usados en el texto y sus definiciones breves para principiantes.
+8. Preguntas Frecuentes (faqs): Lista de 2-3 preguntas y respuestas breves que el artículo resuelve (formato: [{"question": "...", "answer": "..."}]).
+9. Una descripción visual detallada en inglés para generar una imagen (imagePrompt).
+10. Categoría (category): Elige estrictamente una de estas: Mercados, Tecnología, IA, Ciberseguridad, Criptomonedas.
 
 Responde ÚNICAMENTE en formato JSON:
 {
   "title": "...",
   "summary": "...",
   "keyPoints": ["...", "...", "..."],
-  "impactLevel": "...",
-  "complexity": "...",
   "tickers": ["...", "..."],
   "glossary": [{"term": "...", "definition": "..."}, ...],
   "faqs": [{"question": "...", "answer": "..."}, ...],
@@ -56,31 +48,6 @@ Responde ÚNICAMENTE en formato JSON:
   "category": "...",
   "sourceUrl": "...",
   "sources": ["..."]
-}.${avoidanceClause}`,
-
-    USER_WITHOUT_NEWS: (avoidanceClause: string) => `Escribe un artículo original sobre tecnología en español.
-
-INSTRUCCIONES DE ESTILO:
-1. NUNCA cierres con "En resumen" o "En conclusión".
-2. Mantén un tono de experto, usando un vocabulario variado y profesional.
-3. El cierre debe plantear una pregunta, una predicción o una reflexión sobre el futuro del tema tratado.
-
-Categoría (category): Elige estrictamente una de estas: Mercados, Tecnología, IA, Ciberseguridad, Criptomonedas.
-
-Responde SOLO en JSON:
-{
-  "title": "...",
-  "summary": "...",
-  "keyPoints": ["...", "...", "..."],
-  "impactLevel": "...",
-  "complexity": "...",
-  "tickers": ["...", "..."],
-  "glossary": [{"term": "...", "definition": "..."}, ...],
-  "faqs": [{"question": "...", "answer": "..."}, ...],
-  "content": "...",
-  "tags": ["..."],
-  "category": "...",
-  "imagePrompt": "..."
 }.${avoidanceClause}`
   },
 
@@ -100,7 +67,7 @@ Content: ${esArticle.content}
 INSTRUCTIONS:
 - Write ONLY in English.
 - Maintain the professional news style.
-- Include titleEn, summaryEn (BRIEF), keyPointsEn (array of 3 points), glossaryEn (array of terms/defs in English), faqsEn (array of questions/answers in English), and long contentEn with HTML tags (p, h2, h3).
+- Include titleEn, summaryEn (BRIEF), keyPointsEn (array of 3 points), glossaryEn (array of terms/defs in English), faqsEn (array of questions/answers in English), and long contentEn with HTML tags (p, h2).
 - Return ONLY a valid JSON object.
 
 JSON Format:

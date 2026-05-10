@@ -5,16 +5,15 @@
 
 export const AI_PROMPTS = {
   SPANISH: {
-    SYSTEM: `Eres un periodista técnico senior para EmeDotEme. Tu estilo es estrictamente OBJETIVO, ANALÍTICO y DIRECTO. Escribe con precisión quirúrgica, como en Reuters o Bloomberg News. EVITA adornos literarios, metáforas, lenguaje poético o fórmulas de cierre como "En resumen". Céntrate en los hechos, los datos y las implicaciones técnicas/económicas. El tono debe ser profesional y carente de florituras.`,
+    SYSTEM: `Eres un periodista técnico senior para EmeDotEme. Tu estilo es estrictamente OBJETIVO, ANALÍTICO y DIRECTO. EVITA adornos literarios, metáforas, lenguaje poético o fórmulas de cierre como "En resumen". Céntrate en los hechos, los datos y las implicaciones técnicas/económicas. El tono debe ser profesional y carente de florituras.`,
     
     USER_WITH_NEWS: (newsText: string, avoidanceClause: string) => `Redacta un análisis periodístico TÉCNICO, OBJETIVO y DETALLADO en español utilizando estas fuentes:
 
 ${newsText}
 
 INSTRUCCIONES:
-1. No resumas: analiza el hecho a detalle, aporta CONTEXTO técnico/histórico e implicaciones ECONÓMICAS reales.
+1. No resumas: analiza el hecho a detalle, aporta CONTEXTO técnico/histórico e implicaciones económicas reales.
 2. El artículo debe ser EXTENSO y basado en hechos comprobables.
-3. Cada subtítulo debe diseccionar un aspecto técnico o de mercado (ej: Análisis del suceso, Impacto en la infraestructura, Consecuencias económicas).
 
 INSTRUCCIONES DE ESTILO:
 1. PROHIBIDO el lenguaje poético, las metáforas o los recursos literarios innecesarios.
@@ -23,16 +22,16 @@ INSTRUCCIONES DE ESTILO:
 4. El cierre debe ser una proyección técnica o un punto de control a vigilar, sin resúmenes.
 
 REQUISITOS ESTRUCTURALES:
-1. Título profesional y atractivo. Solo la primera letra de la primera palabra debe ser mayúscula, PERO RESPETA SIEMPRE las siglas y acrónimos (ej: IBM, AI, SEC, BTC, NVIDIA, OpenAI).
+1. Título atractivo y con gancho. Solo la primera letra de la primera palabra debe ser mayúscula. RESPETA SIEMPRE las siglas y acrónimos (ej: IBM, AI, SEC, BTC, NVIDIA, OpenAI).
 2. Resumen (summary) breve. Síntesis técnica de lo más importante.
 3. Cuerpo extenso y detallado con subtítulos HTML (p, h2).
 4. Lista de 3 a 5 etiquetas (tags) relevantes.
-5. Puntos clave (keyPoints): Una lista de exactamente 3 puntos clave (balas) que resuman lo más importante del artículo para una lectura rápida.
+5. Puntos clave (keyPoints): Una lista de exactamente 3 puntos clave que resuman lo más importante del artículo para una lectura rápida.
 6. Activos afectados (tickers): Lista de símbolos reales de CRIPTOMONEDAS mencionadas (ej: ["BTC", "ETH"]). IMPORTANTE: Solo incluye símbolos de CRIPTOMONEDAS reales, máximo 3, siempre en mayúsculas. NO incluyas empresas (como MSFT, AAPL, etc).
 7. Glosario (glossary): Lista de 2-3 términos técnicos complejos usados en el texto y sus definiciones breves para principiantes.
 8. Preguntas Frecuentes (faqs): Lista de 2-3 preguntas y respuestas breves que el artículo resuelve (formato: [{"question": "...", "answer": "..."}]).
 9. Una descripción visual detallada en inglés para generar una imagen (imagePrompt). Evita que la imagen tenga estilo cyberpunk o futurista, debe ser realista y profesional.
-10. Categoría (category): Elige estrictamente una de estas: Mercados, Tecnología, IA, Ciberseguridad, Criptomonedas.
+10. Categoría (category): Elige estrictamente una de estas, la que más se asimile a la noticia: Mercados, Tecnología, IA, Ciberseguridad, Criptomonedas.
 
 Responde ÚNICAMENTE en formato JSON:
 {

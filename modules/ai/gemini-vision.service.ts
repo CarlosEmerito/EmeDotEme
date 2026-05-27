@@ -40,125 +40,145 @@ URL de la imagen: ${imageUrl}
 
 Devuelve SOLO el JSON de análisis, nada más.`;
 
+  // Descargar la imagen y convertirla a base64 para enviarla a Gemini (una sola vez)
+  let imagePart: any;
+  try {
+    const response = await fetch(imageUrl, {
+      headers: {
+        'User-Agent': 'EmeDotEme/1.0 ImageAnalyzer',
+        'Accept': 'image/*',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} al descargar imagen`);
+    }
+    const buffer = await response.arrayBuffer();
+    const base64 = Buffer.from(buffer).toString('base64');
+    const mimeType = response.headers.get('content-type') || 'image/jpeg';
+
+    imagePart = {
+      inlineData: {
+        data: base64,
+        mimeType: mimeType,
+      },
+    };
+  } catch (downloadErr) {
+    console.error(`❌ Error descargando imagen para análisis: ${downloadErr}`);
+    throw new Error(`No se pudo descargar la imagen: ${downloadErr}`);
+  }
+
   for (let i = 0; i < apiKeys.length; i++) {
     const apiKey = apiKeys[i];
     const keyName = getKeyName(i);
 
-    try {
-      console.log(`🔍 Analizando imagen con Gemini Vision (${keyName})...`);
+    const retries = [30000, 60000, 120000]; // 30s, 60s, 120s
+    let attempt = 0;
 
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: GEMINI_MODEL_NAME });
-
-      // Descargar la imagen y convertirla a base64 para enviarla a Gemini
-      let imagePart: any;
+    while (true) {
       try {
-        const response = await fetch(imageUrl, {
-          headers: {
-            'User-Agent': 'EmeDotEme/1.0 ImageAnalyzer',
-            'Accept': 'image/*',
+        console.log(`🔍 Analizando imagen con Gemini Vision (${keyName})${attempt > 0 ? ` (reintento ${attempt}/3)` : ''}...`);
+
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: GEMINI_MODEL_NAME });
+
+        const result = await model.generateContent({
+          contents: [{
+            role: 'user',
+            parts: [
+              { text: `${IMAGE_ANALYSIS_SYSTEM_PROMPT}\n\n${userPrompt}` },
+              imagePart,
+            ],
+          }],
+          generationConfig: {
+            maxOutputTokens: 1000,
+            temperature: 0.3,
+            responseMimeType: 'application/json',
           },
         });
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status} al descargar imagen`);
+
+        const text = result.response.text();
+        if (!text || text.trim().length === 0) {
+          console.error(`❌ Gemini Vision (${keyName}) devolvió respuesta vacía`);
+          break;
         }
-        const buffer = await response.arrayBuffer();
-        const base64 = Buffer.from(buffer).toString('base64');
-        const mimeType = response.headers.get('content-type') || 'image/jpeg';
 
-        imagePart = {
-          inlineData: {
-            data: base64,
-            mimeType: mimeType,
-          },
-        };
-      } catch (downloadErr) {
-        console.error(`❌ Error descargando imagen para análisis: ${downloadErr}`);
-        throw new Error(`No se pudo descargar la imagen: ${downloadErr}`);
-      }
-
-      const result = await model.generateContent({
-        contents: [{
-          role: 'user',
-          parts: [
-            { text: `${IMAGE_ANALYSIS_SYSTEM_PROMPT}\n\n${userPrompt}` },
-            imagePart,
-          ],
-        }],
-        generationConfig: {
-          maxOutputTokens: 1000,
-          temperature: 0.3,
-          responseMimeType: 'application/json',
-        },
-      });
-
-      const text = result.response.text();
-      if (!text || text.trim().length === 0) {
-        console.error(`❌ Gemini Vision (${keyName}) devolvió respuesta vacía`);
-        continue;
-      }
-
-      // Parsear JSON con reparación de emergencia para respuestas truncadas
-      const cleaned = text.replace(/```json\n?/g, '').replace(/```/g, '').trim();
-      const jsonStart = cleaned.indexOf('{');
-      
-      if (jsonStart === -1) {
-        console.error(`❌ Respuesta sin JSON de Gemini Vision (${keyName})`);
-        continue;
-      }
-
-      let parsed: ImageAnalysisResult;
-      
-      try {
-        const jsonEnd = cleaned.lastIndexOf('}');
-        if (jsonEnd === -1) throw new Error('JSON truncado (no se encontró })');
-        parsed = JSON.parse(cleaned.substring(jsonStart, jsonEnd + 1)) as ImageAnalysisResult;
+        // Parsear JSON con reparación de emergencia para respuestas truncadas
+        const cleaned = text.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+        const jsonStart = cleaned.indexOf('{');
         
-        if (typeof parsed.coherente !== 'boolean' || typeof parsed.calidad_aceptable !== 'boolean') {
-          throw new Error('Estructura JSON incompleta devuelta por Gemini');
+        if (jsonStart === -1) {
+          console.error(`❌ Respuesta sin JSON de Gemini Vision (${keyName})`);
+          break;
         }
-      } catch (parseError) {
-        console.error(`❌ JSON inválido/truncado de Gemini Vision: ${cleaned.substring(0, 200)}...`);
-        console.log(`⚠️ Aplicando recuperación de emergencia (extrayendo variables directamente del string)`);
-        
-        const isCoherente = cleaned.includes('"coherente": true') || cleaned.includes('"coherente":true') || cleaned.includes('"coherente":  true');
-        const isAcceptable = cleaned.includes('"calidad_aceptable": false') || cleaned.includes('"calidad_aceptable":false') ? false : true;
-        
-        parsed = {
-          coherente: isCoherente,
-          razon_coherencia: "Recuperación automática de JSON truncado",
-          descripcion: "Descripción parcial recuperada mecánicamente.",
-          calidad_aceptable: isAcceptable,
-          problemas_detectados: []
-        };
-      }
 
-      console.log(`✅ Gemini (${GEMINI_MODEL_NAME}):`);
-      console.log(JSON.stringify(parsed, null, 2));
-      
-      return parsed;
-
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      if (errorMsg.includes('429') || errorMsg.includes('quota') || errorMsg.includes('Quota')) {
-        console.error(`⚠️ Cuota Gemini Vision ${keyName} excedida, intentando siguiente...`);
-        continue;
-      } else if (errorMsg.includes('SAFETY')) {
-        console.error(`❌ Contenido bloqueado por safety filters`);
-        // Safety block = imagen probablemente problemática → rechazarla
-        return {
-          coherente: false,
-          razon_coherencia: 'Imagen bloqueada por filtros de seguridad',
-          descripcion: 'No se pudo analizar (bloqueada)',
-          calidad_aceptable: false,
-          problemas_detectados: ['Bloqueada por filtros de seguridad'],
-        };
-      } else {
-        console.error(`❌ Error Gemini Vision ${keyName}: ${errorMsg}`);
-        if (i === apiKeys.length - 1) {
-          throw new Error(`Todas las keys de Gemini Vision fallaron: ${errorMsg}`);
+        let parsed: ImageAnalysisResult;
+        
+        try {
+          const jsonEnd = cleaned.lastIndexOf('}');
+          if (jsonEnd === -1) throw new Error('JSON truncado (no se encontró })');
+          parsed = JSON.parse(cleaned.substring(jsonStart, jsonEnd + 1)) as ImageAnalysisResult;
+          
+          if (typeof parsed.coherente !== 'boolean' || typeof parsed.calidad_aceptable !== 'boolean') {
+            throw new Error('Estructura JSON incompleta devuelta por Gemini');
+          }
+        } catch (parseError) {
+          console.error(`❌ JSON inválido/truncado de Gemini Vision: ${cleaned.substring(0, 200)}...`);
+          console.log(`⚠️ Aplicando recuperación de emergencia (extrayendo variables directamente del string)`);
+          
+          const isCoherente = cleaned.includes('"coherente": true') || cleaned.includes('"coherente":true') || cleaned.includes('"coherente":  true');
+          const isAcceptable = cleaned.includes('"calidad_aceptable": false') || cleaned.includes('"calidad_aceptable":false') ? false : true;
+          
+          parsed = {
+            coherente: isCoherente,
+            razon_coherencia: "Recuperación automática de JSON truncado",
+            descripcion: "Descripción parcial recuperada mecánicamente.",
+            calidad_aceptable: isAcceptable,
+            problemas_detectados: []
+          };
         }
-        continue;
+
+        console.log(`✅ Gemini (${GEMINI_MODEL_NAME}):`);
+        console.log(JSON.stringify(parsed, null, 2));
+        
+        return parsed;
+
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        
+        // Detectar si es un error de sobrecarga / alta demanda (HTTP 503 / overloaded)
+        const isOverloaded = errorMsg.includes('503') || 
+                             errorMsg.toLowerCase().includes('overloaded') || 
+                             errorMsg.toLowerCase().includes('service unavailable') || 
+                             errorMsg.toLowerCase().includes('temporarily unavailable');
+                             
+        if (isOverloaded && attempt < retries.length) {
+          const waitTime = retries[attempt];
+          console.warn(`⚠️ Alta demanda/Sobrecarga en Gemini Vision (${keyName}). Reintentando en ${waitTime / 1000}s (intento ${attempt + 1}/${retries.length})...`);
+          await new Promise(resolve => setTimeout(resolve, waitTime));
+          attempt++;
+          continue;
+        }
+
+        if (errorMsg.includes('429') || errorMsg.includes('quota') || errorMsg.includes('Quota')) {
+          console.error(`⚠️ Cuota Gemini Vision ${keyName} excedida, intentando siguiente...`);
+          break;
+        } else if (errorMsg.includes('SAFETY')) {
+          console.error(`❌ Contenido bloqueado por safety filters`);
+          // Safety block = imagen probablemente problemática → rechazarla
+          return {
+            coherente: false,
+            razon_coherencia: 'Imagen bloqueada por filtros de seguridad',
+            descripcion: 'No se pudo analizar (bloqueada)',
+            calidad_aceptable: false,
+            problemas_detectados: ['Bloqueada por filtros de seguridad'],
+          };
+        } else {
+          console.error(`❌ Error Gemini Vision ${keyName}: ${errorMsg}`);
+          if (i === apiKeys.length - 1) {
+            throw new Error(`Todas las keys de Gemini Vision fallaron: ${errorMsg}`);
+          }
+          break;
+        }
       }
     }
   }

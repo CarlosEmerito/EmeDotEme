@@ -30,18 +30,36 @@ export async function saveImageToSupabase(url: string, slug: string): Promise<st
   const bucketName = 'article-images';
 
   try {
-    const fetch = (await import('node-fetch')).default;
-    const response = await fetch(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': 'image/*',
-      },
-    });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    let buffer: any;
+    let contentType = 'image/webp';
+    let extension = 'webp';
 
-    const buffer = await response.arrayBuffer();
-    const contentType = response.headers.get('content-type') || 'image/webp';
-    const extension = contentType.split('/')[1] || 'webp';
+    if (url.startsWith('data:')) {
+      const parts = url.split(',');
+      const header = parts[0];
+      const base64Data = parts[1];
+      
+      const mimeMatch = header.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
+      if (mimeMatch && mimeMatch[1]) {
+        contentType = mimeMatch[1];
+      }
+      extension = contentType.split('/')[1] || 'jpeg';
+      buffer = Buffer.from(base64Data, 'base64');
+    } else {
+      const fetch = (await import('node-fetch')).default;
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Accept': 'image/*',
+        },
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      buffer = await response.arrayBuffer();
+      contentType = response.headers.get('content-type') || 'image/webp';
+      extension = contentType.split('/')[1] || 'webp';
+    }
+
     const fileName = `${slug}-${Date.now()}.${extension}`;
 
     const { data, error } = await supabase.storage

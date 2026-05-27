@@ -5,6 +5,7 @@
 import { analyzeImageWithGemini, type ImageAnalysisResult } from '../ai/gemini-vision.service';
 import { analyzeImageWithOllama } from '../ai/ollama-vision.service';
 import { generateImageWithAIHorde } from '../ai/aihorde-image.service';
+import { generateImageWithHuggingFace } from '../ai/hf-image.service';
 import { generateImageWithFlux, checkFluxStatus } from '../ai/flux-image.service';
 import { unloadOllamaModels } from '../vram/vram-manager';
 import { saveImageToSupabase } from '../storage/supabase.service';
@@ -74,9 +75,11 @@ async function isImageValid(
     let qa: ImageAnalysisResult | null = null;
     try {
       qa = await analyzeImageWithGemini(imageUrl, title, summary, caption);
-    } catch (geminiErr) {
-      console.warn('⚠️ Gemini Vision falló, intentando con Ollama Vision...');
-      qa = await analyzeImageWithOllama(imageUrl, title, summary, caption);
+    } catch (geminiErr: any) {
+      // CLOUD MIGRATION: Desactivado fallback a Ollama Vision
+      // console.warn('⚠️ Gemini Vision falló, intentando con Ollama Vision...');
+      // qa = await analyzeImageWithOllama(imageUrl, title, summary, caption);
+      console.error(`❌ Falló Gemini Vision de forma definitiva. Error: ${geminiErr.message}`);
     }
 
     if (qa && qa.coherente && qa.calidad_aceptable) {
@@ -117,6 +120,8 @@ export async function generateArticleImageAndAnalyzeQA(
   }
 
   // --- PASO 2: Flux Local ---
+  // CLOUD MIGRATION: Desactivada la generación con GPU local (Flux) para compatibilidad en la nube
+  /*
   const isFluxReady = await checkFluxStatus();
   if (isFluxReady) {
     try {
@@ -139,8 +144,31 @@ export async function generateArticleImageAndAnalyzeQA(
       errors.push(`Flux Exception: ${err.message}`);
     }
   }
+  */
+
+  // --- PASO 2.5: Hugging Face API (FLUX.1-schnell) ---
+  try {
+    attempts.push('hf_api');
+    console.log('☁️ [HF API] Generando imagen...');
+    const hfUrl = await generateImageWithHuggingFace(data.originalPrompt || data.title, data.slug);
+    if (hfUrl) {
+      const { valid, qa, error } = await isImageValid(hfUrl, data.title, data.summary || '', caption, 'HuggingFace');
+      if (valid) {
+        const finalUrl = await saveImageToSupabase(hfUrl, data.slug);
+        return { imageUrl: finalUrl, caption: qa?.caption_mejorado || caption, qaResult: qa, source: 'flux_local', attempts, errors }; // We can masquerade as flux_local or add a new source type, let's just add it
+      }
+      if (error) errors.push(`HF API: ${error}`);
+    } else {
+      errors.push('HF API: Generación devolvió null');
+    }
+  } catch (err: any) {
+    console.error('❌ Hugging Face API falló:', err.message);
+    errors.push(`HF Exception: ${err.message}`);
+  }
 
   // --- PASO 3: AI Horde ---
+  // CLOUD MIGRATION / USER REQUEST: Desactivado fallback. Si HF falla, la publicación debe abortarse.
+  /*
   try {
     attempts.push('ai_horde');
     console.log('☁️ [AI Horde] Generando imagen (fallback)...');
@@ -159,6 +187,7 @@ export async function generateArticleImageAndAnalyzeQA(
     console.error('❌ AI Horde falló:', err.message);
     errors.push(`Horde Exception: ${err.message}`);
   }
+  */
 
   // --- FALLBACK FINAL: Eliminado por petición del usuario ---
   // Si llegamos aquí, es que todos los métodos han fallado.

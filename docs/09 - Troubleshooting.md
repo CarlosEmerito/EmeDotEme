@@ -4,14 +4,14 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 
 ## 🔴 El Pipeline de Publicación falla
 
-### 1. Error de cuota en Gemini
+### 1. Error de cuota o alta demanda en Gemini
 > [!WARNING]
-> **Síntoma**: Los logs muestran `429 Too Many Requests` o `Quota exceeded`.
+> **Síntoma**: Los logs muestran `429 Too Many Requests` (cuota de peticiones superada) o errores `503 Service Unavailable / Model is overloaded` (alta demanda en servidores de Google).
 
 > [!TIP]
 > **Solución**: 
-> - Asegúrate de tener configuradas las claves de fallback (`GEMINI_API_KEY_2`, etc.) en el `.env`.
-> - Verifica el panel de Google AI Studio para ver el consumo actual.
+> - **Límites de Cuota (429):** Asegúrate de tener configuradas las claves de fallback (`GEMINI_API_KEY_2` y `GEMINI_API_KEY_3`) en el `.env`. El sistema rotará automáticamente a la siguiente clave.
+> - **Alta Demanda (503 / Overloaded):** El sistema implementa reintentos exponenciales automáticos esperando **30, 60 y 120 segundos** para cada clave API. Si tras los 3 reintentos (3.5 minutos en total) sigue fallando, rotará a la siguiente clave API. Si el problema persiste en todas las claves, comprueba el panel de estado de Google Cloud o espera unos minutos.
 
 ### 2. Error en el parseo JSON de la IA
 > [!WARNING]
@@ -20,60 +20,38 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 > [!TIP]
 > **Depuración**:
 > - Ejecuta `npx tsx scripts/diagnose-json-errors.ts` para ver qué está devolviendo la IA exactamente.
-> - Si el error persiste, Ollama suele ser más estricto con el formato; intenta ajustar el prompt en `modules/ai/`.
+> - Al no usar Ollama local, la robustez de Gemini 2.5 suele ser alta, pero si un JSON viene incompleto el sistema cuenta con rutinas automáticas de reparación de emergencia para recuperar la información básica estructurada.
 
-### 3. Ollama no responde
-> [!WARNING]
-> **Síntoma**: Timeout o `ECONNREFUSED` al intentar usar la IA local.
-
-> [!TIP]
-> **Solución**:
-> - Verifica que Ollama esté corriendo: `curl http://localhost:11434`.
-> - Asegúrate de que el modelo configurado en `OLLAMA_MODEL` esté descargado: `ollama list`.
+### 3. Ollama no responde (Desactivado en Cloud)
+> [!NOTE]
+> En la configuración actual orientada a Cloud VPS, el uso local de Ollama está **desactivado**. Por lo tanto, este error no debería ocurrir a menos que vuelvas a habilitar los servicios locales descomentando el código en `ai.service.ts`.
 
 ---
 
 ## 🖼️ Problemas con las Imágenes
 
-### 1. Flux.1 Local: Cómo monitorizar el progreso
+### 1. Hugging Face (FLUX.1-schnell) falla
+> [!WARNING]
+> **Síntoma**: El script indica que no se pudo generar la imagen mediante Hugging Face y se cancela la creación del artículo (ya que no hay fallback local ni de AI Horde).
+
+> [!TIP]
+> **Solución**:
+> - Asegúrate de que la variable `HF_TOKEN` en tu `.env` sea válida y no haya sido revocada.
+> - Verifica si has alcanzado los límites de uso gratuito de la API de Hugging Face Serverless Inference.
+> - Revisa si el modelo `black-forest-labs/FLUX.1-schnell` está disponible en la página de estado de Hugging Face.
+
+### 2. Flux.1 Local / AI Horde (Desactivados en Cloud)
 > [!NOTE]
-> **Síntoma**: El pipeline parece congelado durante la generación de imagen.
-> **Explicación**: La generación de Flux en GPUs de 8GB es intensiva y puede tardar varios minutos (hasta 15-20 min en casos extremos).
+> Para optimizar el despliegue en un entorno VPS sin tarjeta gráfica dedicada, la generación mediante Flux local, Ollama Vision y los fallbacks de AI Horde comunitarios han sido **completamente desactivados y comentados en el pipeline**. La generación de imágenes depende exclusivamente de la API Inference de Hugging Face o de la imagen original del feed RSS.
 
-> [!TIP]
-> **Solución**: 
-> - Abre una nueva terminal y ejecuta: `docker logs -f flux-api-server`.
-> - Verás el progreso paso a paso (ej: `Paso 4/28 (14.3%)`).
-
-### 2. Flux.1 Local: Error de Memoria (CUDA Out of Memory)
-> [!WARNING]
-> **Síntoma**: El log de Docker muestra `CUDA out of memory` y la generación falla.
-> **Causas**: 
-> - Ollama o Gemini Vision están reteniendo memoria de la GPU.
-> - El handoff de memoria no ha tenido tiempo suficiente para limpiar los buffers.
-
-> [!TIP]
-> **Solución**:
-> - El sistema utiliza `unloadOllamaModels()` con una pausa de 13 segundos antes de iniciar Flux. Si sigue fallando, prueba a limpiar manualmente la VRAM ejecutando `./detener-bot.sh`.
-> - Verifica que el contenedor de Flux se haya iniciado con `PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"` (lo hace automáticamente `iniciar-imagen.sh`).
-
-### 3. AI Horde tarda demasiado o falla
-> [!WARNING]
-> **Síntoma**: El script se queda esperando o devuelve errores de servidor.
-
-> [!TIP]
-> **Solución**:
-> - Es un servicio comunitario; a veces hay mucha carga. El sistema intentará automáticamente usar una imagen de stock (Unsplash) tras fallar los intentos locales por IA.
-> - Verifica si tu `AI_HORDE_API_KEY` tiene puntos de prioridad.
-
-### 4. Imágenes no se cargan en la web
+### 3. Imágenes no se cargan en la web
 > [!WARNING]
 > **Síntoma**: Errores 404 o imágenes rotas en el frontend.
 
 > [!TIP]
 > **Solución**:
-> - Verifica la configuración de Supabase Storage.
-> - Ejecuta `npx tsx scripts/test-upload.ts` para comprobar la conectividad con el bucket.
+> - Verifica la configuración de tu Supabase Storage y que el bucket tenga permisos de acceso público de lectura.
+> - Ejecuta `npx tsx scripts/test-upload.ts` para comprobar la conectividad de subida y lectura de Supabase Storage.
 
 ---
 

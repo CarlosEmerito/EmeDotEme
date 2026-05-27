@@ -16,26 +16,30 @@
 | `GEMINI_API_KEY_2` | Clave secundaria (fallback)                 | Recomendado  | |
 | `GEMINI_API_KEY_3` | Clave terciaria (fallback)                  | Recomendado  | |
 
-### IA - Ollama (Local)
+### IA - Hugging Face (Imágenes)
 
-**IMPORTANTE**: No existen valores por defecto. Deben configurarse obligatoriamente para usar las funciones locales.
+| Variable   | Descripción                                            | Requerido | Obtención |
+|------------|--------------------------------------------------------|-----------|-----------|
+| `HF_TOKEN` | Token de Hugging Face para consumir FLUX.1-schnell | ✅         | [Hugging Face Settings](https://huggingface.co/settings/tokens) |
+
+### IA - Ollama (Desactivado en Cloud)
 
 | Variable             | Descripción                                | Requerido | Ejemplo      |
 |----------------------|--------------------------------------------|-----------|--------------|
-| `OLLAMA_MODEL`       | Modelo para texto y corrección             | ✅         | `gemma4:26b` |
-| `OLLAMA_VISION_MODEL`| Modelo para análisis de imágenes (Vision)  | ✅         | `gemma4:e4b` |
+| `OLLAMA_MODEL`       | Modelo para texto y corrección (Inactivo)  | ❌         | `gemma4:26b` |
+| `OLLAMA_VISION_MODEL`| Modelo para análisis visual (Inactivo)     | ❌         | `gemma4:e4b` |
 
-### Imágenes - Flux.1 Local
+### Imágenes - Flux.1 Local (Desactivado en Cloud)
 
 | Variable           | Descripción                                 | Requerido | Default |
 |--------------------|---------------------------------------------|-----------|---------|
-| `FLUX_API_URL`     | URL de la API local de Flux                 | Opcional  | `http://localhost:8000` |
+| `FLUX_API_URL`     | URL de la API local de Flux (Inactivo)      | ❌         | `http://localhost:8000` |
 
-### Imágenes - AI Horde
+### Imágenes - AI Horde (Desactivado en Cloud)
 
 | Variable             | Descripción                                | Requerido   | Obtención |
 |----------------------|--------------------------------------------|-------------|-----------|
-| `AI_HORDE_API_KEY`   | Clave API de AI Horde                      | Recomendado | [AI Horde](https://aihorde.net/register) |
+| `AI_HORDE_API_KEY`   | Clave API de AI Horde (Inactivo)           | ❌           | [AI Horde](https://aihorde.net/register) |
 
 ### Imágenes - Supabase Storage (StorageService)
 
@@ -71,17 +75,13 @@ DATABASE_URL="postgresql://..."
 # GEMINI (IA - Texto)
 # ===========================================
 GEMINI_API_KEY="AIza..."
+GEMINI_API_KEY_2=""
+GEMINI_API_KEY_3=""
 
 # ===========================================
-# OLLAMA (IA Local) - MANDATORIOS
+# HUGGING FACE (IA - Imágenes)
 # ===========================================
-OLLAMA_MODEL="gemma4:26b"
-OLLAMA_VISION_MODEL="gemma4:e4b"
-
-# ===========================================
-# AI HORDE (Imágenes Fallback)
-# ===========================================
-AI_HORDE_API_KEY=""
+HF_TOKEN="hf_..."
 
 # ===========================================
 # SUPABASE (Storage Permanente)

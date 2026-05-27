@@ -177,9 +177,11 @@ export async function generateArticleContent(
   let result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
   
   if (!result || result.includes('Lo siento') || result.length < 200) {
-    logWithTime('⚠️ Fallback a Ollama...');
-    await unloadOllamaModels();
-    result = await generateTextWithOllama({ systemPrompt, userPrompt });
+    // CLOUD MIGRATION: Desactivado fallback a Ollama
+    // logWithTime('⚠️ Fallback a Ollama...');
+    // await unloadOllamaModels();
+    // result = await generateTextWithOllama({ systemPrompt, userPrompt });
+    throw new Error('❌ Falló la generación de texto en Gemini (Límite de API o error). Abortando para evitar bucle local.');
   }
 
   if (!result) throw new Error('Fallaron todos los modelos de generación.');
@@ -222,8 +224,10 @@ async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{
   logWithTime('📡 Solicitando traducción a Gemini...');
   let result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
   if (!result || result.length < 200) {
-    logWithTime('⚠️ Fallback a Ollama para inglés...');
-    result = await generateTextWithOllama({ systemPrompt, userPrompt });
+    // CLOUD MIGRATION: Desactivado fallback a Ollama
+    // logWithTime('⚠️ Fallback a Ollama para inglés...');
+    // result = await generateTextWithOllama({ systemPrompt, userPrompt });
+    throw new Error('❌ Falló la generación en inglés en Gemini. Abortando.');
   }
   if (!result) throw new Error('Fallo generación en inglés');
 

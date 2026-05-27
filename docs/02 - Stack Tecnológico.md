@@ -16,17 +16,17 @@
 
 | Servicio         | Uso                        | API/Local                | Notas |
 |------------------|---------------------------|--------------------------|-------|
-| Gemini (Google)  | Generación de texto       | API externa              | gemini-2.5-flash |
-| Ollama           | Fallback y post-procesado | Local (localhost:11434)  | gemma4:26b (soporta tokens 'thinking') |
+| Gemini (Google)  | Generación de texto       | API externa              | gemini-2.5-flash (con reintentos de alta demanda 30s/60s/120s) |
+| Hugging Face     | Generación de imágenes    | API externa              | FLUX.1-schnell (gratuito con HF_TOKEN) |
 | Gemini Vision    | QA de imágenes            | API externa              | gemini-2.5-flash |
-| Ollama Vision    | QA de imágenes fallback   | Local                    | gemma4:e4b |
-| Flux.1 Local     | Generación de imágenes    | Local (Docker/Python)    | Flux.1-dev optimizado (8GB VRAM) |
-| AI Horde         | Generación fallback       | API externa              | Stable Diffusion |
+| Ollama           | Desactivado en Cloud      | -                        | Anteriormente gemma4:26b |
+| Ollama Vision    | Desactivado en Cloud      | -                        | Anteriormente gemma4:e4b |
+| Flux.1 Local     | Desactivado en Cloud      | -                        | Anteriormente Docker local |
+| AI Horde         | Desactivado en Cloud      | -                        | Anteriormente fallback comunitario |
 
 ## Imágenes y almacenamiento
 
-- **Flux.1 Local**: Generador principal de imágenes (vía `flux-api` Docker).
-- **AI Horde**: Generación de imágenes de respaldo.
+- **Hugging Face**: Generador principal de imágenes (modelo `FLUX.1-schnell` mediante API Inference).
 - **Supabase Storage**: Almacenamiento permanente de imágenes analizadas y aprobadas.
 - **Unsplash**: Imágenes de stock (fallback inicial).
 

@@ -30,7 +30,13 @@ REQUISITOS ESTRUCTURALES:
 6. Activos afectados (tickers): Lista de símbolos reales de CRIPTOMONEDAS mencionadas (ej: ["BTC", "ETH"]). IMPORTANTE: Solo incluye símbolos de CRIPTOMONEDAS reales, máximo 3, siempre en mayúsculas. NO incluyas empresas (como MSFT, AAPL, etc).
 7. Glosario (glossary): Lista de 2-3 términos técnicos complejos usados en el texto y sus definiciones breves para principiantes.
 8. Preguntas Frecuentes (faqs): Lista de 2-3 preguntas y respuestas breves que el artículo resuelve (formato: [{"question": "...", "answer": "..."}]).
-9. Una descripción visual detallada en inglés para generar una imagen (imagePrompt). Evita que la imagen tenga estilo cyberpunk o futurista, debe ser realista y profesional.
+9. Una descripción visual concreta y detallada en inglés para generar una imagen fotorrealista (imagePrompt). REGLAS ESTRICTAS para el imagePrompt:
+   - Describe una escena o sujeto REAL y CONCRETO: personas reales en acción, edificios, salas de trading, servidores, reuniones, pantallas con datos, etc.
+   - PROHIBIDO: estilo cyberpunk, futurista, digital art, glowing lights, neon, abstract, conceptual art, 3D renders, sci-fi.
+   - OBLIGATORIO: la escena debe ser fotorrealista, como una foto de prensa de Reuters o Bloomberg.
+   - Incluye detalles específicos: iluminación natural u oficina, vestimenta de negocios, contexto geográfico si aplica.
+   - Ejemplo bueno: "A financial analyst in a suit reviewing stock charts on multiple monitors in a modern trading room, warm office lighting, realistic photography"
+   - Ejemplo malo: "futuristic digital blockchain network with glowing nodes"
 10. Categoría (category): Elige estrictamente una de estas, la que más se asimile a la noticia: Mercados, Tecnología, IA, Ciberseguridad, Criptomonedas.
 
 Responde ÚNICAMENTE en formato JSON:

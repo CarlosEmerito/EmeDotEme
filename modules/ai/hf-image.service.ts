@@ -11,6 +11,14 @@ const HF_MODELS = [
 ];
 const MAX_RETRIES = 2;
 
+// Prompt de calidad que se antepone a todas las descripciones de imagen.
+// Optimizado para FLUX.1-schnell: fotorrealista, periodístico, sin estética cyberpunk.
+const QUALITY_PREFIX = 'photorealistic, high resolution, professional press photograph, editorial photography, sharp focus, natural lighting, 4k quality, realistic textures, no watermarks, no text overlays';
+
+// Negative prompt: elementos a evitar en todas las generaciones.
+// FLUX.1-schnell no admite negative_prompt directamente en inputs, pero se puede incluir en el prompt.
+const QUALITY_SUFFIX = ', hyperdetailed, award-winning photograph, documentary style';
+
 /**
  * Intenta generar una imagen con un modelo HF concreto.
  * Devuelve null si el modelo está deprecado (410), sin créditos (402),
@@ -91,7 +99,7 @@ export async function generateImageWithHuggingFace(
   console.log(`🎨 [HF API] Generando imagen para: ${articleSlug}`);
   console.log(`🎨 [HF API] Prompt: ${prompt.substring(0, 100)}...`);
 
-  const qualityPrompt = `high quality, detailed, professional journalistic illustration, ${prompt}`;
+  const qualityPrompt = `${QUALITY_PREFIX}, ${prompt}${QUALITY_SUFFIX}`;
 
   for (const modelUrl of HF_MODELS) {
     const modelName = modelUrl.split('/').slice(-2).join('/');

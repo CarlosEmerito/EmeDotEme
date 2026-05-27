@@ -18,51 +18,27 @@ El pipeline de publicación es el flujo principal que genera y publica automáti
 
 ### Diagrama del Pipeline
 
-```
-+-------------------------------------------------------------+
-|                 PUBLISHER SERVICE PIPELINE                 |
-+-------------------------------------------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 1. INICIALIZACIÓN (ensureCategories)                         |
-|    - Asegurar que las categorías base existen en la BD       |
-|    - Obtener contexto reciente (títulos y URLs) para evitar  |
-|      duplicidad.                                             |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 2. FETCH NOTICIAS (NewsSources Service)                     |
-|    - Fetch RSS y agrupamiento en temas (ClusteringEngine)   |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 3. GENERACIÓN IA (AI Service)                               |
-|    - Lógica de Clusters: Intenta con cada tema hasta el éxito|
-|    - Generación Bilingüe (ES -> Post-procesado -> EN)       |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 4. PROCESO DE IMAGEN (Image Service)                        |
-|    - Fuente RSS -> Flux Local -> AI Horde -> Unsplash       |
-|    - Gestión VRAM: descarga Ollama antes de Flux            |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 5. PERSISTENCIA (Base de Datos)                             |
-|    - Guardar artículo, etiquetas y relación con categoría   |
-+-------------------------------+-----------------------------+
-                              |
-                              v
-+-------------------------------------------------------------+
-| 6. NOTIFICACIONES Y METADATOS                               |
-|    - Guardar JSON para Binance Square                       |
-|    - Notificar éxito/error vía Telegram (NotificationService)|
-+-------------------------------------------------------------+
+```mermaid
+graph TD
+    classDef init fill:#f1f5f9,stroke:#64748b,stroke-width:2px;
+    classDef step fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px;
+    classDef alert fill:#fef3c7,stroke:#f59e0b,stroke-width:2px;
+
+    Start((Inicio)):::init --> Step1
+    
+    Step1["<b>1. INICIALIZACIÓN</b><br/><i>(ensureCategories)</i><br/>- Asegurar categorías base<br/>- Obtener contexto reciente"]:::step --> Step2
+    
+    Step2["<b>2. FETCH NOTICIAS</b><br/><i>(NewsSources Service)</i><br/>- Fetch RSS<br/>- Agrupamiento en temas"]:::step --> Step3
+    
+    Step3["<b>3. GENERACIÓN IA</b><br/><i>(AI Service)</i><br/>- Generación bilingüe (ES->EN)<br/>- Post-procesado ortográfico"]:::step --> Step4
+    
+    Step4["<b>4. PROCESO DE IMAGEN</b><br/><i>(Image Service)</i><br/>- RSS -> Flux -> Horde -> Unsplash<br/>- Gestión VRAM"]:::step --> Step5
+    
+    Step5["<b>5. PERSISTENCIA</b><br/><i>(Base de Datos)</i><br/>- Guardar artículo y etiquetas"]:::step --> Step6
+    
+    Step6["<b>6. NOTIFICACIONES</b><br/><i>(Metadatos)</i><br/>- JSON para Binance Square<br/>- Notificación vía Telegram"]:::step
+    
+    Step6 --> End((Fin)):::init
 ```
 
 ### Código de ejecución
@@ -74,7 +50,8 @@ npx tsx scripts/publish.ts
 
 ### Variables de entorno CRÍTICAS
 
-A diferencia de versiones anteriores, **no existen modelos por defecto** para Ollama. Si no están en el `.env`, el sistema fallará explícitamente para garantizar el control del desarrollador.
+> [!WARNING]
+> A diferencia de versiones anteriores, **no existen modelos por defecto** para Ollama. Si no están en el `.env`, el sistema fallará explícitamente para garantizar el control del desarrollador.
 
 ```env
 OLLAMA_MODEL="gemma4:26b"         # Para generación de texto y corrección

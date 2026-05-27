@@ -51,6 +51,12 @@
 | `TELEGRAM_TOKEN`   | Token del bot                    | ✅           |
 | `TELEGRAM_CHAT_ID` | Chat ID para notificaciones      | ✅           |
 
+### Resend (Newsletters)
+
+| Variable           | Descripción                      | Requerido   | Obtención |
+|--------------------|----------------------------------|-------------|-----------|
+| `RESEND_API_KEY`   | Clave API para enviar correos    | Opcional    | [Resend](https://resend.com/) |
+
 ---
 
 ## Archivo .env.example (Actualizado)
@@ -88,6 +94,11 @@ SUPABASE_SERVICE_ROLE_KEY=""
 # ===========================================
 TELEGRAM_TOKEN=""
 TELEGRAM_CHAT_ID=""
+
+# ===========================================
+# RESEND (Newsletters)
+# ===========================================
+RESEND_API_KEY=""
 
 # ===========================================
 # AUTH & ADMIN

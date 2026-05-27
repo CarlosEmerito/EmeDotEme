@@ -20,6 +20,13 @@ Permite a los usuarios suscribirse al boletín informativo semanal.
     -   `400 Bad Request`: Email inválido o ya suscrito.
     -   `500 Internal Server Error`: Error en la base de datos.
 
+-   **Ejemplo cURL**:
+    ```bash
+    curl -X POST https://www.emedoteme.es/api/subscribe \
+      -H "Content-Type: application/json" \
+      -d '{"email": "usuario@ejemplo.com"}'
+    ```
+
 ---
 
 ### Formulario de Contacto
@@ -39,6 +46,13 @@ Envía un mensaje de contacto al administrador del sitio.
     -   `200 OK`: Mensaje enviado correctamente.
     -   `400 Bad Request`: Faltan campos o datos inválidos.
     -   `503 Service Unavailable`: Servicio de email no configurado.
+
+-   **Ejemplo cURL**:
+    ```bash
+    curl -X POST https://www.emedoteme.es/api/contact \
+      -H "Content-Type: application/json" \
+      -d '{"name": "Juan", "email": "juan@ejemplo.com", "message": "Hola equipo"}'
+    ```
 
 ---
 
@@ -62,6 +76,12 @@ Este endpoint dispara el pipeline completo de generación de un artículo a part
     -   `401 Unauthorized`: Token de autorización inválido o ausente.
     -   `500 Internal Server Error`: Error en el pipeline.
 
+-   **Ejemplo cURL**:
+    ```bash
+    curl -X GET https://www.emedoteme.es/api/generate \
+      -H "Authorization: Bearer TU_CRON_SECRET"
+    ```
+
 ---
 
 ## 🛠️ Notas Técnicas
@@ -70,4 +90,6 @@ Este endpoint dispara el pipeline completo de generación de un artículo a part
 Actualmente, el rate limiting se gestiona a nivel de infraestructura en Vercel.
 
 ### Seguridad
-Los endpoints que modifican datos o disparan procesos pesados requieren autenticación mediante tokens definidos en las variables de entorno (`CRON_SECRET`).
+
+> [!WARNING]
+> Los endpoints que modifican datos o disparan procesos pesados requieren autenticación mediante tokens definidos en las variables de entorno (`CRON_SECRET`). No expongas estos tokens en el cliente.

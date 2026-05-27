@@ -8,37 +8,53 @@ EmeDotEme es un sistema automatizado para la generación y publicación de artí
 
 ```mermaid
 graph TB
-    subgraph Frontend [Next.js 16 - Vercel]
-        UI[Página Principal]
-        Admin[Panel Admin]
-        API[API Routes]
+    %% Definición de estilos
+    classDef frontend fill:#3178c6,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef backend fill:#10b981,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef ai fill:#8b5cf6,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef db fill:#f59e0b,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef external fill:#64748b,stroke:#fff,stroke-width:2px,color:#fff;
+
+    subgraph "Frontend (Next.js 16 - Vercel)"
+        UI[Página Principal]:::frontend
+        Admin[Panel Admin]:::frontend
+        API[API Routes]:::frontend
     end
 
-    subgraph Backend [Backend Services]
-        DB[(PostgreSQL + Prisma)]
-        Pipeline[Pipeline de Publicación]
+    subgraph "Backend Services"
+        DB[(PostgreSQL + Prisma)]:::db
+        Pipeline{{"Publisher Pipeline"}}:::backend
+        RSS[Fuentes RSS]:::external
     end
 
-    subgraph Intelligence [AI & ML]
-        Gemini[Gemini API]
-        Ollama[Ollama Local]
-        Horde[AI Horde]
+    subgraph "Intelligence (AI & ML)"
+        Gemini[Gemini API]:::ai
+        Ollama[Ollama Local]:::ai
+        Flux[Flux.1 Local]:::ai
     end
 
-    subgraph Storage [External Services]
-        Supa[Supabase Storage]
-        Resend[Resend Email]
+    subgraph "External Services"
+        Supa[Supabase Storage]:::external
+        Resend[Resend Email]:::external
+        Horde[AI Horde / Unsplash]:::external
+        Social[Redes Sociales]:::external
     end
 
+    %% Data Flow
     UI <--> API
     Admin <--> API
     API <--> DB
-    Pipeline <--> DB
-    Pipeline --> Gemini
-    Pipeline --> Ollama
-    Pipeline --> Horde
-    Pipeline --> Supa
-    API --> Resend
+    
+    %% Pipeline Flow
+    RSS -- "1. Fetch & Cluster" --> Pipeline
+    Pipeline -- "2. Texto/Traducción" --> Gemini
+    Pipeline -- "3. Fallback/QA" --> Ollama
+    Pipeline -- "4. Generar Imagen" --> Flux
+    Flux -- "Fallback" --> Horde
+    Pipeline -- "5. Guardar Imagen" --> Supa
+    Pipeline -- "6. Guardar Post" --> DB
+    Pipeline -- "7. Publicar" --> Social
+    API -- "Newsletter" --> Resend
 ```
 
 ## Componentes principales

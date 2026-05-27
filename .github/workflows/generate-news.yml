@@ -54,7 +54,7 @@ jobs:
 
 
       - name: Run Database Migrations
-        run: npx prisma db push
+        run: npx prisma db push --accept-data-loss
 
       - name: Run Publish Pipeline
         run: |

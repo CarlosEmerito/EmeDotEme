@@ -66,7 +66,6 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
       if (!body) throw new Error('No body');
 
       const decoder = new TextDecoder();
-      // @ts-expect-error ReadableStream async iteration
       for await (const chunk of body) {
         const lines = decoder.decode(chunk as BufferSource, { stream: true }).split('\n');
         for (const line of lines) {

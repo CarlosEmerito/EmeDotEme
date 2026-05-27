@@ -60,7 +60,7 @@ describe('trackEvent', () => {
       configurable: true,
     });
 
-    process.env.NODE_ENV = 'production';
+    Object.defineProperty(process.env, 'NODE_ENV', { value: 'production', writable: true, configurable: true });
   });
 
   afterEach(() => {
@@ -71,7 +71,7 @@ describe('trackEvent', () => {
 
     console.log = originalConsoleLog;
     console.error = originalConsoleError;
-    process.env.NODE_ENV = originalNodeEnv;
+    Object.defineProperty(process.env, 'NODE_ENV', { value: originalNodeEnv, writable: true, configurable: true });
   });
 
   it('returns early if window is undefined', () => {
@@ -89,7 +89,7 @@ describe('trackEvent', () => {
   });
 
   it('tracks event and calls console.log in development', () => {
-    process.env.NODE_ENV = 'development';
+    Object.defineProperty(process.env, 'NODE_ENV', { value: 'development', writable: true, configurable: true });
 
     const logCalls: any[] = [];
     console.log = (...args) => {
@@ -135,7 +135,7 @@ describe('trackEvent', () => {
   });
 
   it('handles missing sessionStorage (private mode)', () => {
-    process.env.NODE_ENV = 'development';
+    Object.defineProperty(process.env, 'NODE_ENV', { value: 'development', writable: true, configurable: true });
 
     Object.defineProperty(global, 'sessionStorage', {
       value: {

@@ -8,6 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-test-coverage --test 'tests/**/*.test.ts'",
+    "test:bench": "node --test 'tests/**/*.bench.ts'",
     "postinstall": "prisma generate"
   },
   "dependencies": {

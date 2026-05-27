@@ -12,7 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articleEntries: MetadataRoute.Sitemap = articles.map((article) => ({
     url: `${siteConfig.url}/articulo/${article.slug}`,
     lastModified: article.updatedAt,
-    changeFrequency: 'never',
+    changeFrequency: 'weekly',
     priority: 0.8,
   }));
 
@@ -21,7 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .map((article) => ({
       url: `${siteConfig.url}/en/article/${article.slug}`,
       lastModified: article.updatedAt,
-      changeFrequency: 'never',
+      changeFrequency: 'weekly',
       priority: 0.7,
     }));
 

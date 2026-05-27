@@ -5,6 +5,8 @@ import { generateBilingualContent } from "@/modules/ai/ai.service";
 import { fetchLatestNews } from "@/modules/news/news-sources.service";
 import { generateSlug, formatTitle } from "@/lib/utils";
 import { BASE_CATEGORIES, FALLBACK_IMAGES } from "@/config/constants";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { sendCriticalErrorNotification } from "@/modules/notifications/telegram.service";
 
 export const maxDuration = 300; // Allow up to 5 minutes for AI generation + RSS fetch
 
@@ -12,6 +14,12 @@ export async function GET(req: Request) {
   const authHeader = req.headers.get('authorization');
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return new Response('Unauthorized', { status: 401 });
+  }
+
+  const ip = getClientIp(req);
+  const { allowed } = rateLimit(`generate:${ip}`);
+  if (!allowed) {
+    return new Response('Too Many Requests', { status: 429 });
   }
 
   try {
@@ -111,6 +119,9 @@ export async function GET(req: Request) {
     }, { status: 201 });
   } catch (error) {
     console.error("Error generating article:", error);
+    try {
+      await sendCriticalErrorNotification(error);
+    } catch {}
     return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
   }
 }

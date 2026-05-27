@@ -1,11 +1,28 @@
 {
-  "name": "EmeDotEme - Noticias de Cripto, Empresa y Tecnología",
+  "name": "EmeDotEme — Noticias de Cripto, Empresa y Tecnología",
   "short_name": "EmeDotEme",
-  "description": "EmeDotEme es tu fuente principal de noticias sobre Criptomonedas, Negocios, Inteligencia Artificial y Ciberseguridad.",
+  "description": "Tu fuente principal de noticias sobre Criptomonedas, Negocios, Inteligencia Artificial y Ciberseguridad.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
+  "categories": ["news", "crypto", "technology"],
+  "screenshots": [
+    {
+      "src": "/screenshots/mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Homepage de EmeDotEme en móvil"
+    },
+    {
+      "src": "/screenshots/desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Homepage de EmeDotEme en escritorio"
+    }
+  ],
   "icons": [
     {
       "src": "/android-chrome-192x192.svg",

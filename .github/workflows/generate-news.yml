@@ -1,3 +1,4 @@
+# Workflow para la generación automática de noticias de EmeDotEme
 name: Publicador Automático de Noticias
 
 on:

@@ -45,9 +45,11 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY="${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}"
           TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}"
           TELEGRAM_CHAT_ID="${{ secrets.TELEGRAM_CHAT_ID }}"
+          TELEGRAM_CHANNEL_ID="${{ secrets.TELEGRAM_CHANNEL_ID }}"
+          BLUESKY_HANDLE="${{ secrets.BLUESKY_HANDLE }}"
+          BLUESKY_PASSWORD="${{ secrets.BLUESKY_PASSWORD }}"
+          BINANCE_SQUARE_API_KEY="${{ secrets.BINANCE_SQUARE_API_KEY }}"
           RESEND_API_KEY="${{ secrets.RESEND_API_KEY }}"
-          NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}"
-          NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}"
           ADMIN_PASSWORD="${{ secrets.ADMIN_PASSWORD }}"
           EOF
 

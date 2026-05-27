@@ -48,12 +48,26 @@
 | `SUPABASE_URL`             | URL del proyecto             | ✅           | [Supabase Console](https://supabase.com/dashboard/) |
 | `SUPABASE_SERVICE_ROLE_KEY`| Clave de servicio (admin)    | ✅           | |
 
-### Telegram (Notificaciones)
+### Telegram (Notificaciones y Canal)
 
-| Variable           | Descripción                      | Requerido   |
-|--------------------|----------------------------------|-------------|
-| `TELEGRAM_TOKEN`   | Token del bot                    | ✅           |
-| `TELEGRAM_CHAT_ID` | Chat ID para notificaciones      | ✅           |
+| Variable              | Descripción                                                        | Requerido |
+|-----------------------|--------------------------------------------------------------------|-----------|
+| `TELEGRAM_TOKEN`      | Token del bot de Telegram                                          | ✅         |
+| `TELEGRAM_CHAT_ID`    | Chat ID de pruebas o notificaciones de error                       | ✅         |
+| `TELEGRAM_CHANNEL_ID` | Chat ID del canal público donde se publican las noticias           | ✅         |
+
+### Bluesky (Publicación)
+
+| Variable           | Descripción                                                | Requerido | Obtención |
+|--------------------|------------------------------------------------------------|-----------|-----------|
+| `BLUESKY_HANDLE`   | Identificador de usuario de Bluesky (ej. `emedoteme.bsky.social`) | ✅         | |
+| `BLUESKY_PASSWORD` | Contraseña o App Password de Bluesky                       | ✅         | Settings > App passwords |
+
+### Binance Square (Publicación)
+
+| Variable                 | Descripción                                                | Requerido | Obtención |
+|--------------------------|------------------------------------------------------------|-----------|-----------|
+| `BINANCE_SQUARE_API_KEY` | Clave OpenAPI para publicar artículos en Binance Square    | ✅         | Binance Developer Panel |
 
 ### Resend (Newsletters)
 
@@ -90,10 +104,22 @@ SUPABASE_URL="https://..."
 SUPABASE_SERVICE_ROLE_KEY=""
 
 # ===========================================
-# TELEGRAM (Notificaciones Críticas)
+# TELEGRAM (Notificaciones y Canal)
 # ===========================================
 TELEGRAM_TOKEN=""
 TELEGRAM_CHAT_ID=""
+TELEGRAM_CHANNEL_ID=""
+
+# ===========================================
+# BLUESKY
+# ===========================================
+BLUESKY_HANDLE=""
+BLUESKY_PASSWORD=""
+
+# ===========================================
+# BINANCE SQUARE
+# ===========================================
+BINANCE_SQUARE_API_KEY=""
 
 # ===========================================
 # RESEND (Newsletters)
@@ -103,8 +129,6 @@ RESEND_API_KEY=""
 # ===========================================
 # AUTH & ADMIN
 # ===========================================
-NEXTAUTH_URL="https://www.emedoteme.es"
-NEXTAUTH_SECRET="random-secret-min-32-chars"
 ADMIN_PASSWORD="change-me"
 ```
 

@@ -1,24 +1,9 @@
-import { describe, it, before } from "node:test";
+import { describe, it } from "node:test";
 import assert from "node:assert";
 
 const baseUrl = process.env.TEST_BASE_URL || "http://localhost:3000";
 
-async function isServerUp(): Promise<boolean> {
-  try {
-    const res = await fetch(`${baseUrl}/api/health`, { signal: AbortSignal.timeout(3000) });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
 describe("/api/health", () => {
-  before(async function () {
-    if (!await isServerUp()) {
-      this.skip();
-    }
-  });
-
   it("returns 200 with healthy status", async () => {
     const res = await fetch(`${baseUrl}/api/health`);
     assert.strictEqual(res.status, 200);
@@ -28,12 +13,6 @@ describe("/api/health", () => {
 });
 
 describe("/api/contact", () => {
-  before(async function () {
-    if (!await isServerUp()) {
-      this.skip();
-    }
-  });
-
   it("returns 400 on missing fields", async () => {
     const res = await fetch(`${baseUrl}/api/contact`, {
       method: "POST",
@@ -71,12 +50,6 @@ describe("/api/contact", () => {
 });
 
 describe("/api/subscribe", () => {
-  before(async function () {
-    if (!await isServerUp()) {
-      this.skip();
-    }
-  });
-
   it("returns 400 on missing email", async () => {
     const res = await fetch(`${baseUrl}/api/subscribe`, {
       method: "POST",

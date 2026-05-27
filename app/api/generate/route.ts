@@ -4,7 +4,7 @@ import { siteConfig } from "@/config/site";
 import { generateBilingualContent } from "@/modules/ai/ai.service";
 import { fetchLatestNews } from "@/modules/news/news-sources.service";
 import { generateSlug, formatTitle } from "@/lib/utils";
-import { FALLBACK_IMAGES } from "@/config/constants";
+import { BASE_CATEGORIES, FALLBACK_IMAGES } from "@/config/constants";
 
 export const maxDuration = 300; // Allow up to 5 minutes for AI generation + RSS fetch
 
@@ -16,7 +16,7 @@ export async function GET(req: Request) {
 
   try {
     // 1. Asegurar que existan categorías base
-    const categories = ["Criptomonedas", "IA", "Mercados", "Tecnología", "Ciberseguridad"];
+    const categories = [...BASE_CATEGORIES];
     
     await Promise.all(
       categories.map(name =>

@@ -16,13 +16,13 @@
 
 | Servicio         | Uso                        | API/Local                | Notas |
 |------------------|---------------------------|--------------------------|-------|
-| Gemini (Google)  | Generación de texto       | API externa              | gemini-2.5-flash (con reintentos de alta demanda 30s/60s/120s) |
-| Hugging Face     | Generación de imágenes    | API externa              | FLUX.1-schnell (gratuito con HF_TOKEN) |
+| Gemini (Google)  | Generación de texto       | API externa              | gemini-2.5-flash (con reintentos de alta demanda 30s/60s/120s y rotación de 3 claves) |
+| Hugging Face     | Generación de imágenes    | API externa              | FLUX.1-schnell (API Inference) |
 | Gemini Vision    | QA de imágenes            | API externa              | gemini-2.5-flash |
-| Ollama           | Desactivado en Cloud      | -                        | Anteriormente gemma4:26b |
-| Ollama Vision    | Desactivado en Cloud      | -                        | Anteriormente gemma4:e4b |
-| Flux.1 Local     | Desactivado en Cloud      | -                        | Anteriormente Docker local |
-| AI Horde         | Desactivado en Cloud      | -                        | Anteriormente fallback comunitario |
+| Ollama           | Fallback local opcional   | Local                    | qwen3.5:9b (cuando está disponible) |
+| Ollama Vision    | QA local de imágenes      | Local                    | Opcional |
+| Flux.1 Local     | Generación local          | Docker local             | Requiere GPU NVIDIA 8GB+ VRAM |
+| AI Horde         | Fallback imagen comunitario | API externa            | Requiere AI_HORDE_API_KEY |
 
 ## Imágenes y almacenamiento
 

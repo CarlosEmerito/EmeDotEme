@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
-  FileText, 
   FolderTree, 
   Mail, 
   BarChart3, 
@@ -19,7 +18,6 @@ export function AdminNav() {
 
   const navItems = [
     { label: "Dashboard", href: "/admin", exact: true, icon: Home },
-    { label: "Artículos", href: "/admin", exact: true, icon: FileText },
     { label: "Categorías", href: "/admin/categories", icon: FolderTree },
     { label: "Newsletter", href: "/admin/newsletter", icon: Mail },
     { label: "Estadísticas", href: "/admin/stats", icon: BarChart3 },

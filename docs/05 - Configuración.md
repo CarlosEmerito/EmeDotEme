@@ -22,19 +22,20 @@
 | Variable   | Descripción                                            | Requerido | Obtención |
 |------------|--------------------------------------------------------|-----------|-----------|
 | `HF_TOKEN` | Token de Hugging Face para consumir FLUX.1-schnell | ✅         | [Hugging Face Settings](https://huggingface.co/settings/tokens) |
+| `AI_HORDE_API_KEY` | Clave API de AI Horde (fallback comunitario)  | Opcional   | [AI Horde](https://aihorde.net/register) |
 
-### IA - Ollama (Desactivado en Cloud)
+### IA - Ollama (Opcional, local)
 
 | Variable             | Descripción                                | Requerido | Ejemplo      |
 |----------------------|--------------------------------------------|-----------|--------------|
-| `OLLAMA_MODEL`       | Modelo para texto y corrección (Inactivo)  | ❌         | `gemma4:26b` |
-| `OLLAMA_VISION_MODEL`| Modelo para análisis visual (Inactivo)     | ❌         | `gemma4:e4b` |
+| `OLLAMA_MODEL`       | Modelo para texto y corrección             | ❌         | `qwen3.5:9b` |
+| `OLLAMA_VISION_MODEL`| Modelo para análisis visual                | ❌         |              |
 
-### Imágenes - Flux.1 Local (Desactivado en Cloud)
+### Imágenes - Flux.1 Local (Opcional, Docker con GPU)
 
 | Variable           | Descripción                                 | Requerido | Default |
 |--------------------|---------------------------------------------|-----------|---------|
-| `FLUX_API_URL`     | URL de la API local de Flux (Inactivo)      | ❌         | `http://localhost:8000` |
+| `FLUX_API_URL`     | URL de la API local de Flux                 | ❌         | `http://localhost:8000` |
 
 ### Imágenes - AI Horde (Desactivado en Cloud)
 
@@ -81,57 +82,34 @@
 ## Archivo .env.example (Actualizado)
 
 ```env
-# ===========================================
-# BASE DE DATOS
-# ===========================================
-DATABASE_URL="postgresql://..."
-DIRECT_URL="postgresql://..."
+# === CORE APP ENVIRONMENT ===
+DATABASE_URL=""
+DIRECT_URL=""
+CRON_SECRET=""
+ADMIN_PASSWORD=""
+SUPABASE_URL=""
+SUPABASE_SERVICE_ROLE_KEY=""
+RESEND_API_KEY=""
 
-# ===========================================
-# GEMINI (IA - Texto)
-# ===========================================
-GEMINI_API_KEY="AIza..."
+# === INTELIGENCIA ARTIFICIAL ===
+OLLAMA_MODEL="qwen3.5:9b"
+GEMINI_API_KEY=""
 GEMINI_API_KEY_2=""
 GEMINI_API_KEY_3=""
+AI_HORDE_API_KEY=""
 
-# ===========================================
-# HUGGING FACE (IA - Imágenes)
-# ===========================================
-HF_TOKEN="hf_..."
-
-# ===========================================
-# SUPABASE (Storage Permanente)
-# ===========================================
-SUPABASE_URL="https://..."
-SUPABASE_SERVICE_ROLE_KEY=""
-
-# ===========================================
-# TELEGRAM (Notificaciones y Canal)
-# ===========================================
+# === TELEGRAM ===
 TELEGRAM_TOKEN=""
 TELEGRAM_CHAT_ID=""
 TELEGRAM_CHANNEL_ID=""
 
-# ===========================================
-# BLUESKY
-# ===========================================
+# === BLUESKY ===
 BLUESKY_HANDLE=""
 BLUESKY_PASSWORD=""
 
-# ===========================================
-# BINANCE SQUARE
-# ===========================================
+# === BINANCE SQUARE ===
 BINANCE_SQUARE_API_KEY=""
-
-# ===========================================
-# RESEND (Newsletters)
-# ===========================================
-RESEND_API_KEY=""
-
-# ===========================================
-# AUTH & ADMIN
-# ===========================================
-ADMIN_PASSWORD="change-me"
+MAX_POST_CHARS=900
 ```
 
 ---

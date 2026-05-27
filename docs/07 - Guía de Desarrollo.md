@@ -13,7 +13,7 @@ Esta guía proporciona instrucciones para desarrolladores que deseen ampliar o m
 ### Instalación
 1.  Clonar el repositorio.
 2.  Instalar dependencias de Node: `npm install`.
-3.  Instalar dependencias de Python: `pip install -r requirements.txt`.
+3.  Instalar dependencias de Python: `pip install -r scripts/python/requirements.txt`.
 4.  Configurar el archivo `.env` (ver [[05 - Configuración]]).
 5.  Inicializar la base de datos: `npx prisma migrate dev`.
 
@@ -43,7 +43,7 @@ Las fuentes se gestionan en `modules/news/news-sources.service.ts`.
 La lógica de la IA reside en `modules/ai/`.
 
 ### Cambiar el System Prompt
-Si deseas ajustar el tono o estilo de los artículos, modifica el `SYSTEM_PROMPT` en `modules/ai/gemini-text.service.ts`.
+Si deseas ajustar el tono o estilo de los artículos, modifica los prompts en `config/prompts.ts`. Los system prompts de Gemini están en `modules/ai/constants.ts`.
 
 ### Añadir un nuevo modelo de Ollama
 1.  Asegúrate de haber descargado el modelo: `ollama pull nuevo-modelo`.
@@ -66,8 +66,9 @@ Si quieres cambiar las imágenes que se usan cuando falla la generación por IA:
 
 El proyecto utiliza un enfoque de testing pragmático.
 
-- **Pruebas unitarias**: Ubicadas en `tests/`. Ejecutar con `npm test`.
-- **Pruebas de integración**: `npx tsx scripts/publish_test.ts` simula un ciclo completo de publicación sin afectar a la base de datos de producción ni publicar en redes sociales reales.
+- **Pruebas unitarias**: Ubicadas en `tests/`. Incluyen tests para admin-actions, analytics, json-sanitizer, utils, y contact-route. Ejecutar con `npx tsx <test-file>`.
+- **Benchmarks**: `npm run test:bench` para medir rendimiento de fuentes RSS.
+- **Pruebas de integración**: `npx tsx scripts/publish_test.ts` simula un ciclo completo de publicación sin afectar a la base de datos ni publicar en redes sociales.
 
 ---
 

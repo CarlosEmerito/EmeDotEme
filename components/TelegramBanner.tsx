@@ -43,7 +43,7 @@ export function TelegramBanner() {
   }[lang];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 animate-in slide-in-from-bottom-full duration-500">
+    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 transition-all duration-500" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(100%)' }}>
       <div className="max-w-4xl mx-auto bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl shadow-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 border border-blue-400/30">
         <div className="flex items-center gap-4 text-white">
           <div className="bg-white/20 p-2 rounded-full hidden sm:block">

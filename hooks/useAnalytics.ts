@@ -84,41 +84,6 @@ export function useAnalytics() {
 }
 
 /**
- * Hook for tracking specific article reading
- */
-export function useArticleTracking(articleId?: string, articleTitle?: string, category?: string) {
-  const { trackArticle, startArticleReadingTracker } = useAnalytics();
-
-  useEffect(() => {
-    if (articleId && articleTitle && category) {
-      trackArticle(articleId, articleTitle, category);
-      startArticleReadingTracker(articleId);
-    }
-
-    return () => {
-      stopReadingTimeTracker();
-    };
-  }, [articleId, articleTitle, category, trackArticle, startArticleReadingTracker]);
-
-  return useAnalytics();
-}
-
-/**
- * Hook for tracking search interactions
- */
-export function useSearchTracking() {
-  const { trackSearch } = useAnalytics();
-
-  const trackSearchAction = useCallback((query: string, resultsCount: number) => {
-    trackSearch(query, resultsCount);
-  }, [trackSearch]);
-
-  return {
-    trackSearch: trackSearchAction
-  };
-}
-
-/**
  * Hook for tracking social shares
  */
 export function useShareTracking() {
@@ -133,17 +98,3 @@ export function useShareTracking() {
   };
 }
 
-/**
- * Hook for tracking newsletter subscriptions
- */
-export function useNewsletterTracking() {
-  const { trackNewsletter } = useAnalytics();
-
-  const trackSubscription = useCallback((email: string, source?: string) => {
-    trackNewsletter(email, source);
-  }, [trackNewsletter]);
-
-  return {
-    trackSubscription
-  };
-}

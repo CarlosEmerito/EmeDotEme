@@ -16,5 +16,3 @@ export const siteConfig = {
     email: "mailto:carlosemerito13@gmail.com",
   },
 };
-
-export type SiteConfig = typeof siteConfig;

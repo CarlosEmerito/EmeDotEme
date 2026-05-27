@@ -51,14 +51,14 @@ export default function SendNewsletterButton() {
       </button>
 
       {status === "success" && (
-        <p className="text-xs font-bold text-green-600 flex items-center gap-1 animate-in fade-in slide-in-from-top-1">
+        <p className="text-xs font-bold text-green-600 flex items-center gap-1 transition-all duration-300">
           <CheckCircle2 className="w-3.4 h-3" />
           {message}
         </p>
       )}
 
       {status === "error" && (
-        <p className="text-xs font-bold text-red-500 flex items-center gap-1 animate-in fade-in slide-in-from-top-1">
+        <p className="text-xs font-bold text-red-500 flex items-center gap-1 transition-all duration-300">
           <AlertCircle className="w-3.4 h-3" />
           {message}
         </p>

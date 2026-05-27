@@ -54,12 +54,6 @@ export function translateCategory(name: string, lang: 'es' | 'en'): string {
 
 export { generateSlug } from './slug';
 
-// ============================================================
-// NORMALIZACIÓN DE TEXTOS GENERADOS POR IA
-// ============================================================
-
-import { CRYPTO_ACRONYMS, PROPER_NOUNS, TERMS_TO_CAPITALIZE } from '@/config/constants';
-
 /**
  * Normaliza el título generado por la IA. 
  * Confiamos en que la IA siga las instrucciones del prompt respecto a siglas (IBM, AI).
@@ -67,10 +61,6 @@ import { CRYPTO_ACRONYMS, PROPER_NOUNS, TERMS_TO_CAPITALIZE } from '@/config/con
  */
 export function formatTitle(title: string): string {
   if (!title) return title;
-  
-  // Trim espacios extra
   const trimmed = title.trim();
-  
-  // Asegurar que la primera letra sea mayúscula, manteniendo el resto tal cual viene de la IA
   return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
 }

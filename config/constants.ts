@@ -141,4 +141,4 @@ export const TERMS_TO_CAPITALIZE: Record<string, string> = {
 // CATEGORÍAS BASE
 // ============================================================
 
-export const BASE_CATEGORIES = ["Criptomonedas", "Empresa", "IA", "Ciberseguridad"] as const;
+export const BASE_CATEGORIES = ["Criptomonedas", "IA", "Mercados", "Tecnología", "Ciberseguridad"] as const;

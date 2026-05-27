@@ -67,7 +67,7 @@ graph TB
 
 ### Base de datos
 - PostgreSQL con Prisma ORM.
-- Tablas: Articles, Categories, Subscribers, Analytics.
+- Tablas: Articles, Categories, Tags, Subscribers, Settings.
 
 ### Pipeline de contenido
 - **Servicio de fuentes de noticias**: Fetch y normalización de fuentes RSS (CoinDesk, Decrypt, etc.).

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { verifySession } from './lib/session'
 
-export async function proxy(req: NextRequest) {
+export default async function middleware(req: NextRequest) {
   const expectedPwd = process.env.ADMIN_PASSWORD
 
   // Check for session cookie if ADMIN_PASSWORD is set

@@ -6,6 +6,9 @@
 - News Module (Clustering)
 - AI Module (Generación)
 - Images Module (Pipeline Visual)
+- Articles Module (Consultas y búsqueda)
+- Market Module (Datos de mercado)
+- Newsletter Module (Boletín semanal)
 - Storage & Notifications (Infraestructura)
 - VRAM Manager (Recursos)
 
@@ -46,8 +49,15 @@ Es el orquestador central del sistema. Encapsula el flujo de negocio de publicac
 - **Análisis Vision**: Validación de imágenes mediante Gemini u Ollama Vision.
 
 ### Archivos clave
-- `ai.service.ts`: Generación de texto y post-procesado.
-- `ollama-vision.service.ts`: QA local de imágenes.
+- `ai.service.ts`: Generación de texto bilingüe y post-procesado.
+- `gemini-text.service.ts`: Integración con Gemini API (rotación de claves, reintentos).
+- `gemini-vision.service.ts`: QA de imágenes mediante Gemini Vision.
+- `ollama-vision.service.ts`: QA local de imágenes (opcional).
+- `flux-image.service.ts`: Cliente para generación local con Flux.1.
+- `hf-image.service.ts`: Cliente para Hugging Face Inference API.
+- `aihorde-image.service.ts`: Cliente para AI Horde (fallback comunitario).
+- `constants.ts`: System prompts para generación de texto.
+- `gemini-keys.ts`: Gestión de rotación de claves API de Gemini.
 
 ---
 
@@ -60,8 +70,7 @@ Es el orquestador central del sistema. Encapsula el flujo de negocio de publicac
 - Integración con el `VRAMManager` para carga segura de modelos.
 
 ### Archivos clave
-- `image.service.ts`: Lógica del pipeline de imagen.
-- `flux-image.service.ts`: Integración con Flux.1 local.
+- `image.service.ts`: Lógica del pipeline de imagen (RSS → Hugging Face → AI Horde → Unsplash).
 
 ---
 
@@ -77,7 +86,49 @@ Es el orquestador central del sistema. Encapsula el flujo de negocio de publicac
 
 ### VRAM Manager
 **Ubicación**: `modules/vram/`
-- `vram-manager.ts`: Control de memoria GPU. Obligatorio para alternar entre Ollama y Flux en hardware limitado.
+- `vram-manager.ts`: Control de memoria GPU. Útil para alternar entre Ollama y Flux en hardware limitado.
+
+---
+
+## Articles Module (Consultas y búsqueda)
+
+**Ubicación**: `modules/articles/`
+
+### Funcionalidad
+- Consultas optimizadas de artículos para el frontend.
+- Búsqueda full-text con filtros.
+- Servicio de categorías.
+
+### Archivos clave
+- `article.service.ts`: Consultas, búsqueda, filtrado y paginación de artículos.
+- `category.service.ts`: Gestión de categorías.
+- `types.ts`: Tipos compartidos del módulo.
+
+---
+
+## Market Module (Datos de mercado)
+
+**Ubicación**: `modules/market/`
+
+### Funcionalidad
+- Obtención de datos de criptomonedas en tiempo real.
+- Integración con APIs de mercado para el ticker y gráficos.
+
+### Archivos clave
+- `market.service.ts`: Cliente de datos de mercado.
+
+---
+
+## Newsletter Module (Boletín semanal)
+
+**Ubicación**: `modules/newsletter/`
+
+### Funcionalidad
+- Obtención de noticias relevantes de la semana para el newsletter.
+- Generación de contenido del boletín.
+
+### Archivos clave
+- `news.service.ts`: Fetch de noticias para newsletter.
 
 ---
 
@@ -91,7 +142,9 @@ await publisher.publishDailyArticle();
 
 ### Otros scripts
 - `publish_test.ts`: Generación completa sin persistencia en DB (Modo Prueba).
-- `regenerate-images.ts`: Re-procesar imágenes para artículos antiguos.
+- `publish-ia.ts`: Pipeline especializado en temas de Inteligencia Artificial.
+- `force-generate.ts`: Fuerza generación omitiendo verificación de duplicados.
+- `send_newsletter.ts`: Generación y envío del newsletter semanal.
 
 ---
 

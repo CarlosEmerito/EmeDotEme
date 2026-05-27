@@ -26,10 +26,10 @@
 
 Para poner en marcha el proyecto localmente:
 
-1.  **Instalar dependencias:** `npm install` y `pip install -r requirements.txt`.
-2.  **Preparar IA Local:**
-    -   Instala Ollama y descarga el modelo: `ollama run gemma4:26b`.
-    -   Inicia el servidor de imágenes: `./iniciar-imagen.sh` (requiere Docker y GPU NVIDIA).
+1.  **Instalar dependencias:** `npm install` y `pip install -r scripts/python/requirements.txt`.
+2.  **Preparar IA Local (opcional):**
+    -   Instala Ollama y descarga el modelo: `ollama run qwen3.5:9b`.
+    -   Para generación local de imágenes, despliega `flux-api/` con Docker (requiere GPU NVIDIA).
 3.  **Configurar entorno:** Copia `.env.example` a `.env` y rellena las claves mínimas (DATABASE_URL, GEMINI_API_KEY).
 4.  **Base de datos:** `npx prisma migrate dev`.
 5.  **Ejecutar dev:** `npm run dev`.

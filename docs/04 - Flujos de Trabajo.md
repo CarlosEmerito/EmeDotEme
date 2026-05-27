@@ -32,7 +32,7 @@ graph TD
     
     Step3["<b>3. GENERACIÓN IA</b><br/><i>(AI Service)</i><br/>- Generación bilingüe (ES->EN)<br/>- Post-procesado ortográfico"]:::step --> Step4
     
-    Step4["<b>4. PROCESO DE IMAGEN</b><br/><i>(Image Service)</i><br/>- RSS → QA Gemini Vision<br/>- HF API (FLUX.1-schnell, SD3.5, Dreamshaper)<br/>- Fallo → artículo NO publicado"]:::step --> Step5
+    Step4["<b>4. PROCESO DE IMAGEN</b><br/><i>(Image Service)</i><br/>- RSS -> Flux -> Horde -> Unsplash<br/>- Gestión VRAM"]:::step --> Step5
     
     Step5["<b>5. PERSISTENCIA</b><br/><i>(Base de Datos)</i><br/>- Guardar artículo y etiquetas"]:::step --> Step6
     
@@ -50,13 +50,12 @@ npx tsx scripts/publish.ts
 
 ### Variables de entorno CRÍTICAS
 
-> [!NOTE]
-> La generación de imágenes y texto funciona exclusivamente a través de APIs en la nube (Gemini, Hugging Face). Ollama y Flux local están completamente desactivados.
+> [!WARNING]
+> A diferencia de versiones anteriores, **no existen modelos por defecto** para Ollama. Si no están en el `.env`, el sistema usará exclusivamente Gemini para la generación de texto.
 
 ```env
-# No requeridas en cloud — desactivadas por defecto
-# OLLAMA_MODEL="gemma4:26b"
-# OLLAMA_VISION_MODEL="gemma4:e4b"
+OLLAMA_MODEL="qwen3.5:9b"        # Para generación de texto local (opcional)
+OLLAMA_VISION_MODEL=""            # Para análisis visual local (opcional)
 ```
 
 ---
@@ -71,16 +70,11 @@ graph TD
     B -- Sí --> E[QA Gemini Vision]
     B -- No --> D[Hugging Face API]
     E -- Aprobada --> F[Subir a Supabase]
-    E -- Rechazada / Error 403 --> D
-    D --> M1["Modelo 1: FLUX.1-schnell"]
-    M1 -- Éxito --> QA2[QA Gemini Vision]
-    M1 -- Fallo 410/402 --> M2["Modelo 2: SD 3.5 Medium"]
-    M2 -- Éxito --> QA2
-    M2 -- Fallo --> M3["Modelo 3: Dreamshaper-8"]
-    M3 -- Éxito --> QA2
-    M3 -- Fallo --> ERR["❌ Error crítico → artículo NO publicado"]
-    QA2 -- Aprobada --> F
-    QA2 -- Rechazada --> ERR
+    E -- Rechazada --> D
+    D --> I[Generar con FLUX.1-schnell]
+    I -- Éxito --> F
+    I -- Fallo --> K[Unsplash Stock Fallback]
+    K --> L[Imagen Final]
     F --> L[URL Permanente en Supabase]
 ```
 
@@ -93,45 +87,24 @@ Toda imagen aceptada o generada se sube automáticamente a Supabase Storage para
 
 El flujo de IA ahora utiliza **AI_PROMPTS** centralizados en `config/prompts.ts`.
 
-### Generación de imagen (`imagePrompt`)
-
-Gemini genera una descripción visual concreta en inglés que se usa para generar la imagen con FLUX.1-schnell. Las reglas son:
-- ✅ Escenas **fotorrealistas** estilo Reuters/Bloomberg: salas de trading, reuniones, edificios, pantallas
-- ❌ Prohibido: cyberpunk, neon, digital art, glowing nodes, 3D renders, sci-fi
-
-El servicio HF antepone automáticamente un prefijo de calidad al prompt antes de enviárselo al modelo:
-```
-photorealistic, high resolution, professional press photograph, editorial photography,
-sharp focus, natural lighting, 4k quality, realistic textures, no watermarks, no text overlays,
-[descripción del artículo],
-hyperdetailed, award-winning photograph, documentary style
-```
-
-### Publicación en redes sociales y hashtags dinámicos
-
-Los scripts de Python (`publish_telegram.py`, `publish_direct.py`, `publish_bluesky.py`) leen el archivo `tmp/latest_article.json` generado por el pipeline. Las etiquetas (`tags`) del artículo se convierten automáticamente en hashtags mediante `format_hashtags()` en `social_publish_utils.py`:
-- `#EmeDotEme` siempre es el **primer hashtag**
-- Los tags del artículo se convierten a PascalCase sin caracteres especiales (ej. `"Banca Sella"` → `#BancaSella`)
-- El mensaje de Telegram **no incluye precios de criptomonedas** ni índice Fear & Greed
-
 ### Postprocesado
 
-El postprocesado ortográfico en local mediante Ollama ha sido **desactivado** para habilitar la ejecución serverless en la nube, optimizando el tiempo y dependiendo exclusivamente del modelo `gemini-2.5-flash` para la generación y coherencia.
+El postprocesado ortográfico en local mediante Ollama ha sido **desactivado** para habilitar la ejecución serverless en la nube, optimizando el tiempo y dependiendo exclusivamente del modelo `gemini-2.5-flash` para la generación y coherencia. Ollama sigue disponible como opción para entornos locales con GPU.
 
 ---
 
-## Gestión de Memoria (VRAM) - (Desactivado en Cloud)
+## Gestión de Memoria (VRAM)
 
-Al correr de manera serverless en GitHub Actions y consumir APIs en la nube (Gemini, Hugging Face), no hay un consumo de recursos de tarjeta gráfica (GPU/VRAM) local ni contenedores Docker locales que gestionar. La clase `VRAMManager` y sus métodos siguen existiendo por compatibilidad pero no realizan operaciones de espera o descarga.
+El `VRAMManager` gestiona la memoria de GPU para entornos con hardware limitado, alternando entre Ollama y Flux.1 cuando ambos están configurados localmente. En entornos cloud/serverless, este módulo no realiza operaciones activas pero permanece disponible.
 
 ---
 
 ## Automatización y Flujo Temporal
 
-La ejecución automática se orquesta nativamente mediante **GitHub Actions** en contenedores efímeros bajo demanda:
+La ejecución automática se orquesta mediante **GitHub Actions** en contenedores efímeros bajo demanda:
 
 | Proceso | Frecuencia | Orquestador | Comando Ejecutado |
 |---------|------------|-------------|-------------------|
 | **Publicación automática** | Cada 4 horas (`0 */4 * * *`) | GitHub Actions | `./publicar.sh` |
-| **Envío de Newsletter** | Semanal | GitHub Actions (opcional) | `./enviar_newsletter.sh` |
+| **Envío de Newsletter** | Semanal | GitHub Actions (workflow_dispatch) | `./enviar_newsletter.sh` |
 | **Ejecución de Prueba** | Manual | GitHub Actions (`workflow_dispatch`) | `./publicarprueba.sh` |

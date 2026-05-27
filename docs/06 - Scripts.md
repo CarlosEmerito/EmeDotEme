@@ -43,11 +43,18 @@ La generación y publicación automática de noticias está automatizada mediant
 
 ## Scripts de Diagnóstico
 
-### check-articles.ts
-Muestra los últimos 5 artículos en la base de datos con todos sus campos (útil para verificar slugs y traducciones).
+### check-latest-article.ts
+Muestra el último artículo generado con todos sus campos (útil para verificar slugs y traducciones).
 
 ```bash
-npx tsx scripts/check-articles.ts
+npx tsx scripts/check-latest-article.ts
+```
+
+### test-env.ts
+Verifica la configuración del entorno.
+
+```bash
+npx tsx scripts/test-env.ts
 ```
 
 ---
@@ -58,13 +65,10 @@ Ubicados en `scripts/python/`, estos scripts publican el contenido generado en d
 
 | Script                | Descripción                        |
 |-----------------------|------------------------------------|
-| `publish_telegram.py` | Publica en el canal de Telegram con resumen generado por Gemini y hashtags dinámicos del artículo |
-| `publish_bluesky.py`  | Publica en Bluesky con hashtags dinámicos del artículo |
-| `publish_direct.py`   | Publica en Binance Square con hashtags dinámicos del artículo |
-| `send_private_test.py`| Envía informe de QA visual al grupo de Telegram privado |
-
-> [!NOTE]
-> Los tres scripts de publicación leen el archivo `tmp/latest_article.json`. Las etiquetas (`tags`) del artículo se convierten automáticamente en hashtags (PascalCase) con `#EmeDotEme` siempre en primera posición. Los precios de criptomonedas y el índice Fear & Greed han sido eliminados de los mensajes.
+| `publish_telegram.py` | Publica en el canal de Telegram    |
+| `publish_bluesky.py` | Publica en Bluesky                 |
+| `publish_direct.py`   | Publicación directa general        |
+| `send_private_test.py`| Envía al grupo de Telegram privado |
 
 ---
 
@@ -103,7 +107,7 @@ npx tsx scripts/publish.ts
 ### Errores
 
 - Si todas las IAs fallan → Avisa por Telegram + exit(1)
-- Si el pipeline de imagen falla → el artículo **no se publica** (sin fallback de Unsplash)
+- Si el pipeline de imagen falla → Usa fallback de Unsplash
 
 ### Referencias
 
@@ -123,6 +127,22 @@ Fuerza la generación de un artículo, omitiendo las verificaciones de duplicado
 
 ```bash
 npx tsx scripts/force-generate.ts
+```
+
+---
+
+## publish-ia.ts
+
+**Ubicación**: `scripts/publish-ia.ts`
+
+### Descripción
+
+Pipeline de publicación especializado en temas de Inteligencia Artificial.
+
+### Uso
+
+```bash
+npx tsx scripts/publish-ia.ts
 ```
 
 ---
@@ -173,68 +193,12 @@ npx tsx scripts/send_newsletter.ts
 
 ## Scripts de mantenimiento
 
-### delete-duplicates.ts
-
-Elimina artículos duplicados por slug.
-
-```bash
-npx tsx scripts/delete-duplicates.ts
-```
-
-### delete-external-images.ts
-
-Elimina imágenes externas no almacenadas en Supabase.
-
-```bash
-npx tsx scripts/delete-external-images.ts
-```
-
-### check-expired-images.ts
-
-Verifica imágenes expiradas.
-
-```bash
-npx tsx scripts/check-expired-images.ts
-```
-
-### delete-fallbacks.ts
-
-Elimina imágenes de fallback almacenadas.
-
-```bash
-npx tsx scripts/delete-fallbacks.ts
-```
-
-### test-env.ts
-
-Verifica la configuración del entorno.
-
-```bash
-npx tsx scripts/test-env.ts
-```
-
 ### test-upload.ts
 
-Prueba la carga de imágenes.
+Prueba la carga de imágenes a Supabase Storage.
 
 ```bash
 npx tsx scripts/test-upload.ts
-```
-
-### diagnose-json-errors.ts
-
-Ayuda a diagnosticar errores en el parseo JSON de las IA.
-
-```bash
-npx tsx scripts/diagnose-json-errors.ts
-```
-
-### migrate-images.ts
-
-Script para migrar imágenes a Supabase Storage.
-
-```bash
-npx tsx scripts/migrate-images.ts
 ```
 
 ### ensure-bucket.ts
@@ -243,6 +207,14 @@ Asegura que el bucket de almacenamiento exista y esté configurado.
 
 ```bash
 npx tsx scripts/ensure-bucket.ts
+```
+
+### add_sub.ts
+
+Añade un suscriptor manualmente al newsletter.
+
+```bash
+npx tsx scripts/add_sub.ts
 ```
 
 ---

@@ -1,8 +1,8 @@
 # EMEDOTEME - Portal de Noticias Inteligente
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.2.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-5.22-5a67d8?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.x-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-5.x-5a67d8?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
 
 EmeDotEme es una plataforma automatizada de vanguardia diseñada para centralizar la generación, curación y publicación de noticias sobre Criptomonedas, Web3, Tecnología e Inteligencia Artificial. Utilizando pipelines avanzados de IA, el sistema transforma fuentes RSS en artículos profesionales publicados automáticamente en múltiples canales.
@@ -22,35 +22,32 @@ Para una comprensión profunda del sistema, consulta nuestra documentación téc
 
 ## 🚀 Características Principales
 
--   **Pipeline de IA Multicanal**: Generación de texto bilingüe (ES/EN) con Gemini (Google) y fallback local con Ollama.
+-   **Pipeline de IA Multicanal**: Generación de texto bilingüe (ES/EN) con Gemini (Google) y fallback local opcional con Ollama.
 -   **Curación Inteligente**: Obtención y filtrado automático de noticias desde fuentes RSS de alta fiabilidad.
--   **Generación de Imágenes de Alta Calidad**: Motor local **Flux.1 [dev]** optimizado para 8GB VRAM, con fallback automático a AI Horde.
+-   **Generación de Imágenes**: Motor local Flux.1 [dev] (Docker + GPU NVIDIA 8GB VRAM) con fallback automático a Hugging Face y Unsplash.
 -   **Publicación Unificada**: Distribución automática en Binance Square, Telegram, Bluesky y Web.
--   **Automatización Total**: Scripts de gestión para encendido/apagado unificado de bots y motores de IA.
+-   **Automatización Total**: Pipeline automatizado vía GitHub Actions cada 4 horas.
 -   **Newsletter Semanal**: Generación y envío automático de boletines informativos a suscriptores.
 
 ---
 
-## 🛠️ Servidor de IA Local (Flux.1)
+## 🛠️ Servidor de IA Local (Flux.1 - Opcional)
 
-El sistema ahora soporta generación de imágenes local para máxima calidad sin depender de servicios externos.
+La generación local de imágenes usa Flux.1 [dev] para máxima calidad sin depender de servicios externos.
 
 ### Requisitos de Hardware
 - GPU NVIDIA con al menos 8GB VRAM (optimizado para RTX 4060).
 - Docker instalado.
 
 ### Puesta en marcha
-1. **Iniciar IA y Bot**:
+1. **Iniciar el servidor de imágenes**:
    ```bash
-   ./iniciar-bot.sh
+   cd flux-api && docker compose up -d
    ```
-   *Este comando levanta tanto el servicio de imágenes Flux.1 como el bot de publicación automática.*
-
-2. **Detener todo**:
+2. **Publicar artículo**:
    ```bash
-   ./detener-bot.sh
+   ./publicar.sh
    ```
-   *Apaga el bot y libera la VRAM de la tarjeta gráfica.*
 
 ---
 

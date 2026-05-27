@@ -4,7 +4,12 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { formatRelativeDate, translateCategory } from "@/lib/utils";
-import PriceChart from "@/components/market/PriceChart";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+
+const PriceChart = dynamic(() => import("@/components/market/PriceChart"), {
+  loading: () => <ChartSkeleton />,
+});
 
 interface PricePageProps {
   params: Promise<{ symbol: string }>;
@@ -12,13 +17,15 @@ interface PricePageProps {
 
 export default async function PricePageEn({ params }: PricePageProps) {
   const { symbol } = await params;
-  const coin = await getCoinDataBySymbol(symbol);
+
+  const [coin, relatedArticles] = await Promise.all([
+    getCoinDataBySymbol(symbol),
+    getArticlesByTicker(symbol),
+  ]);
 
   if (!coin) {
     notFound();
   }
-
-  const relatedArticles = await getArticlesByTicker(symbol);
 
   const isPositive = coin.price_change_percentage_24h >= 0;
 
@@ -72,13 +79,15 @@ export default async function PricePageEn({ params }: PricePageProps) {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-10 max-w-5xl">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-black dark:text-white font-serif italic">Price Chart</h2>
-          <span className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">Real-Time Data • CoinGecko</span>
+      <Suspense fallback={<ChartSkeleton />}>
+        <div className="container mx-auto px-4 py-10 max-w-5xl">
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-black dark:text-white font-serif italic">Price Chart</h2>
+            <span className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">Real-Time Data • CoinGecko</span>
+          </div>
+          <PriceChart coinId={coin.id} coinName={coin.name} isPositive={isPositive} />
         </div>
-        <PriceChart coinId={coin.id} coinName={coin.name} isPositive={isPositive} />
-      </div>
+      </Suspense>
 
       {/* Stats Grid */}
       <div className="container mx-auto px-4 py-16 max-w-5xl">
@@ -102,45 +111,47 @@ export default async function PricePageEn({ params }: PricePageProps) {
         </div>
 
         {/* Related News */}
-        <div className="mt-24">
-          <div className="flex items-center justify-between mb-12">
-            <h2 className="text-3xl font-bold text-black dark:text-white font-serif">{coin.name} News</h2>
-            <div className="h-px flex-1 bg-zinc-100 dark:bg-zinc-900 mx-8"></div>
-          </div>
+        <Suspense fallback={<NewsSkeleton />}>
+          <div className="mt-24">
+            <div className="flex items-center justify-between mb-12">
+              <h2 className="text-3xl font-bold text-black dark:text-white font-serif">{coin.name} News</h2>
+              <div className="h-px flex-1 bg-zinc-100 dark:bg-zinc-900 mx-8"></div>
+            </div>
 
-          {relatedArticles.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              {relatedArticles.map((article) => (
-                <Link href={`/en/article/${article.slug}`} key={article.id} className="group flex flex-col gap-6">
-                  {article.imageUrl && (
-                    <div className="aspect-[16/9] relative overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-900 rounded-2xl">
-                      <Image
-                        src={article.imageUrl}
-                        alt={article.titleEn || article.title}
-                        fill
-                        unoptimized
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />                    </div>
-                  )}
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-3 text-[11px] uppercase tracking-widest font-black text-[color:var(--color-brand)]">
-                      <span>{translateCategory(article.category.name, 'en')}</span>
-                      <span className="text-zinc-300 dark:text-zinc-800">•</span>
-                      <span className="text-zinc-400 dark:text-zinc-600 font-bold">{formatRelativeDate(article.createdAt)}</span>
+            {relatedArticles.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                {relatedArticles.map((article) => (
+                  <Link href={`/en/article/${article.slug}`} key={article.id} className="group flex flex-col gap-6">
+                    {article.imageUrl && (
+                      <div className="aspect-[16/9] relative overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-900 rounded-2xl">
+                        <Image
+                          src={article.imageUrl}
+                          alt={article.titleEn || article.title}
+                          fill
+                          unoptimized
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />                    </div>
+                    )}
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center gap-3 text-[11px] uppercase tracking-widest font-black text-[color:var(--color-brand)]">
+                        <span>{translateCategory(article.category.name, 'en')}</span>
+                        <span className="text-zinc-300 dark:text-zinc-800">•</span>
+                        <span className="text-zinc-400 dark:text-zinc-600 font-bold">{formatRelativeDate(article.createdAt)}</span>
+                      </div>
+                      <h3 className="text-xl font-bold text-black dark:text-white group-hover:text-[color:var(--color-brand)] transition-colors leading-tight font-serif">
+                        {article.titleEn || article.title}
+                      </h3>
                     </div>
-                    <h3 className="text-xl font-bold text-black dark:text-white group-hover:text-[color:var(--color-brand)] transition-colors leading-tight font-serif">
-                      {article.titleEn || article.title}
-                    </h3>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-20 bg-zinc-50 dark:bg-zinc-950/50 rounded-3xl border border-dashed border-zinc-200 dark:border-zinc-800">
-              <p className="text-zinc-500 dark:text-zinc-400 font-medium">No recent news for ${coin.symbol.toUpperCase()}.</p>
-            </div>
-          )}
-        </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20 bg-zinc-50 dark:bg-zinc-950/50 rounded-3xl border border-dashed border-zinc-200 dark:border-zinc-800">
+                <p className="text-zinc-500 dark:text-zinc-400 font-medium">No recent news for ${coin.symbol.toUpperCase()}.</p>
+              </div>
+            )}
+          </div>
+        </Suspense>
       </div>
     </main>
   );
@@ -151,6 +162,41 @@ function StatCard({ label, value }: { label: string; value: string }) {
     <div className="p-6 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl shadow-sm">
       <div className="text-xs uppercase tracking-widest font-bold text-zinc-400 dark:text-zinc-600 mb-3">{label}</div>
       <div className="text-xl font-black text-black dark:text-white tracking-tight">{value}</div>
+    </div>
+  );
+}
+
+function ChartSkeleton() {
+  return (
+    <div className="container mx-auto px-4 py-10 max-w-5xl animate-pulse">
+      <div className="flex items-center justify-between mb-6">
+        <div className="h-5 bg-zinc-200 dark:bg-zinc-800 rounded w-48" />
+        <div className="h-3 bg-zinc-200 dark:bg-zinc-800 rounded w-40" />
+      </div>
+      <div className="aspect-[16/9] md:aspect-[21/9] bg-zinc-100 dark:bg-zinc-900 rounded-2xl" />
+    </div>
+  );
+}
+
+function NewsSkeleton() {
+  return (
+    <div className="mt-24 animate-pulse">
+      <div className="flex items-center justify-between mb-12">
+        <div className="h-8 bg-zinc-200 dark:bg-zinc-800 rounded w-64" />
+        <div className="h-px flex-1 bg-zinc-100 dark:bg-zinc-900 mx-8" />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        {[1, 2].map((i) => (
+          <div key={i} className="flex flex-col gap-6">
+            <div className="aspect-[16/9] bg-zinc-200 dark:bg-zinc-800 rounded-2xl" />
+            <div className="flex flex-col gap-3">
+              <div className="h-3 bg-zinc-200 dark:bg-zinc-800 rounded w-32" />
+              <div className="h-6 bg-zinc-200 dark:bg-zinc-800 rounded w-full" />
+              <div className="h-6 bg-zinc-200 dark:bg-zinc-800 rounded w-2/3" />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

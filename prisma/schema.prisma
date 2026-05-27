@@ -55,7 +55,6 @@ model Article {
   articleTags Tag[]
   isPinned    Boolean  @default(false)
   priority    Int      @default(0)
-  viewCount   Int      @default(0)
   publishedAt DateTime?
   categoryId  String
   category    Category @relation(fields: [categoryId], references: [id])
@@ -67,6 +66,7 @@ model Article {
   @@index([isOriginal])
   @@index([publishedAt(sort: Desc)])
   @@index([isPinned, priority(sort: Desc), publishedAt(sort: Desc)])
+  @@index([tickers], type: Gin)
 }
 
 model Subscriber {

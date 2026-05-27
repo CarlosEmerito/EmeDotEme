@@ -19,44 +19,31 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 
 > [!TIP]
 > **Depuración**:
-> - Ejecuta `npx tsx scripts/diagnose-json-errors.ts` para ver qué está devolviendo la IA exactamente.
-> - Al no usar Ollama local, la robustez de Gemini 2.5 suele ser alta, pero si un JSON viene incompleto el sistema cuenta con rutinas automáticas de reparación de emergencia para recuperar la información básica estructurada.
+> - Al no usar Ollama local, la robustez de Gemini 2.5 suele ser alta, pero si un JSON viene incompleto el sistema cuenta con rutinas automáticas de reparación (`lib/json-sanitizer.ts`) para recuperar la información básica estructurada.
 
-### 3. Ollama no responde (Desactivado en Cloud)
+### 3. Ollama no responde (Opcional, local)
 > [!NOTE]
-> En la configuración actual orientada a Cloud VPS, el uso local de Ollama está **desactivado**. Por lo tanto, este error no debería ocurrir a menos que vuelvas a habilitar los servicios locales descomentando el código en `ai.service.ts`.
+> En la configuración actual orientada a Cloud/VPS, el uso local de Ollama es opcional. Si no está configurado, el sistema usará exclusivamente Gemini. Para entornos locales con GPU, configura `OLLAMA_MODEL` en tu `.env`.
 
 ---
 
 ## 🖼️ Problemas con las Imágenes
 
-### 1. Hugging Face falla — error HTTP 410 (modelo deprecado)
+### 1. Hugging Face (FLUX.1-schnell) falla
 > [!WARNING]
-> **Síntoma**: `Error HTTP 410: The requested model is deprecated and no longer supported by provider hf-inference`
-
-> [!TIP]
-> **Solución**: El sistema prueba automáticamente tres modelos en cascada:
-> 1. `black-forest-labs/FLUX.1-schnell` (preferido — gratuito)
-> 2. `stabilityai/stable-diffusion-3.5-medium` (fallback)
-> 3. `Lykon/dreamshaper-8` (fallback de emergencia)
->
-> Si los tres fallan, el artículo **no se publica**. Actualiza la lista `HF_MODELS` en `modules/ai/hf-image.service.ts` con modelos activos.
-
-### 2. Hugging Face falla — error HTTP 402 (sin créditos)
-> [!WARNING]
-> **Síntoma**: `Error HTTP 402: You have depleted your monthly included credits`
+> **Síntoma**: El script indica que no se pudo generar la imagen mediante Hugging Face y se cancela la creación del artículo (ya que no hay fallback local ni de AI Horde).
 
 > [!TIP]
 > **Solución**:
-> - El tier gratuito de HuggingFace tiene un límite mensual de Inference Providers.
-> - Verifica el uso en [huggingface.co/settings/billing](https://huggingface.co/settings/billing).
-> - Considera rotar a otro modelo de la lista `HF_MODELS` que use un proveedor diferente.
+> - Asegúrate de que la variable `HF_TOKEN` en tu `.env` sea válida y no haya sido revocada.
+> - Verifica si has alcanzado los límites de uso gratuito de la API de Hugging Face Serverless Inference.
+> - Revisa si el modelo `black-forest-labs/FLUX.1-schnell` está disponible en la página de estado de Hugging Face.
 
-### 3. Flux.1 Local / AI Horde (Desactivados en Cloud)
+### 2. Flux.1 Local / AI Horde (Opcionales)
 > [!NOTE]
-> Para optimizar el despliegue en un entorno VPS sin tarjeta gráfica dedicada, la generación mediante Flux local, Ollama Vision y los fallbacks de AI Horde comunitarios han sido **completamente desactivados y comentados en el pipeline**. La generación de imágenes depende exclusivamente de la API Inference de Hugging Face o de la imagen original del feed RSS.
+> Para entornos sin GPU dedicada, la generación mediante Flux local y AI Horde es opcional. La generación de imágenes depende principalmente de la API Inference de Hugging Face (`HF_TOKEN`) o de la imagen original del feed RSS. Flux.1 local requiere Docker + GPU NVIDIA 8GB+ VRAM.
 
-### 4. Imágenes no se cargan en la web
+### 3. Imágenes no se cargan en la web
 > [!WARNING]
 > **Síntoma**: Errores 404 o imágenes rotas en el frontend.
 
@@ -94,31 +81,10 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 
 ---
 
-## 🔖 Publicación en Redes Sociales
-
-### 1. Hashtags incorrectos o faltantes
-> [!WARNING]
-> **Síntoma**: Los posts aparecen sin hashtags o solo con `#EmeDotEme`.
-
-> [!TIP]
-> **Solución**:
-> - Verifica que el artículo tenga `tags` en la base de datos (columna `articleTags` en Prisma).
-> - Comprueba que `tmp/latest_article.json` contenga la clave `tags` con un array no vacío.
-> - La función `format_hashtags()` en `social_publish_utils.py` es la que convierte los tags a hashtags.
-
-### 2. Error de Prisma al ejecutar `npx prisma db push`
-> [!WARNING]
-> **Síntoma**: `Error: Environment variable not found: DIRECT_URL`
-
-> [!TIP]
-> **Solución**: Asegúrate de que el secret `DIRECT_URL` esté configurado en GitHub → Settings → Secrets and variables → Actions. Supabase requiere dos URLs distintas: una con pooler (`DATABASE_URL`) y otra directa (`DIRECT_URL`).
-
----
-
 ## 🛠️ Herramientas de Diagnóstico
 
 El proyecto incluye varios scripts para facilitar la depuración:
 
 -   **`scripts/test-env.ts`**: Verifica que todas las variables de entorno necesarias estén presentes y tengan formatos válidos.
--   **`scripts/test-ai-tags.ts`**: Prueba específicamente la generación de etiquetas por IA.
 -   **`scripts/check-latest-article.ts`**: Muestra el JSON del último artículo generado para inspección manual.
+-   **`scripts/test-upload.ts`**: Prueba la conectividad de subida y lectura de Supabase Storage.

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -11,29 +11,49 @@ interface MarketCoin {
   price_change_percentage_24h: number;
 }
 
+let globalCache: { data: MarketCoin[]; ts: number } | null = null;
+const CACHE_TTL = 60_000;
+
 export default function MarketTicker() {
-  const [coins, setCoins] = useState<MarketCoin[]>([]);
+  const [coins, setCoins] = useState<MarketCoin[]>(() => {
+    if (globalCache && Date.now() - globalCache.ts < CACHE_TTL) {
+      return globalCache.data;
+    }
+    return [];
+  });
   const pathname = usePathname();
+  const pathRef = useRef(pathname);
   const lang = pathname?.startsWith("/en") ? "en" : "es";
   const prefix = lang === "en" ? "/en" : "";
+  const isCryptoPage = pathname?.includes("/criptomonedas") || pathname?.includes("/cryptocurrencies");
 
   useEffect(() => {
+    pathRef.current = pathname;
+    let mounted = true;
+
     async function fetchData() {
+      if (globalCache && Date.now() - globalCache.ts < CACHE_TTL) {
+        if (mounted) setCoins(globalCache.data);
+        return;
+      }
       try {
-        const res = await fetch('/api/market-data'); // I need to make sure this API exists or use a direct fetch
+        const res = await fetch('/api/market-data');
         if (res.ok) {
           const data = await res.json();
-          setCoins(data);
+          globalCache = { data, ts: Date.now() };
+          if (mounted) setCoins(data);
         }
-      } catch (error) {
-        console.error("Error fetching market data for ticker:", error);
-      }
+      } catch {}
     }
+
     fetchData();
-    // Refresh every 60 seconds
-    const interval = setInterval(fetchData, 60000);
-    return () => clearInterval(interval);
-  }, []);
+
+    const interval = setInterval(fetchData, isCryptoPage ? 30_000 : 120_000);
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, [isCryptoPage]);
 
   if (!coins || coins.length === 0) {
     return null;
@@ -42,7 +62,6 @@ export default function MarketTicker() {
   return (
     <div className="w-full bg-zinc-100 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 overflow-hidden flex items-center h-10 text-sm group">
       <div className="flex animate-marquee whitespace-nowrap min-w-max group-hover:[animation-play-state:paused]">
-        {/* First set - visible to all users */}
         {coins.map((coin, i) => (
           <Link 
             href={`${prefix}/criptomonedas/${coin.symbol.toUpperCase()}`}
@@ -67,7 +86,6 @@ export default function MarketTicker() {
             </span>
           </Link>
         ))}
-        {/* Second set for seamless loop - hidden from screen readers */}
         {coins.map((coin, i) => (
           <Link 
             href={`${prefix}/criptomonedas/${coin.symbol.toUpperCase()}`}

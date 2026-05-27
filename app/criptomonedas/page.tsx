@@ -1,52 +1,14 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { getMarketData } from "@/modules/market/market.service";
 
 export const metadata: Metadata = {
   title: "Criptomonedas en Tiempo Real | EmeDotEme",
   description: "Precios y datos del mercado de criptomonedas en tiempo real.",
 };
 
-async function getMarketData(): Promise<Array<{
-  id: string;
-  symbol: string;
-  name: string;
-  image: string;
-  current_price: number;
-  price_change_percentage_24h: number;
-  market_cap: number;
-  total_volume: number;
-}>> {
-  try {
-    const res = await fetch(
-      "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false",
-      { next: { revalidate: 60 } }
-    );
-    if (res.ok) return await res.json();
-  } catch {}
-
-  try {
-    const fallbackRes = await fetch("https://api.coincap.io/v2/assets?limit=100", {
-      next: { revalidate: 60 }
-    });
-    if (fallbackRes.ok) {
-      const data = await fallbackRes.json();
-      return data.data.map((coin: any) => ({
-        id: coin.id,
-        symbol: coin.symbol,
-        name: coin.name,
-        image: `https://assets.coincap.io/assets/icons/${coin.symbol.toLowerCase()}@2x.png`,
-        current_price: parseFloat(coin.priceUsd),
-        price_change_percentage_24h: parseFloat(coin.changePercent24Hr),
-        market_cap: parseFloat(coin.marketCapUsd),
-        total_volume: parseFloat(coin.volumeUsd24Hr)
-      }));
-    }
-  } catch {}
-  return [];
-}
-
 export default async function CriptomonedasPage() {
-  const coins = await getMarketData();
+  const coins = await getMarketData(100);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 min-h-screen">

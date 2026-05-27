@@ -6,6 +6,7 @@ import { fetchLatestNews } from "../news/news-sources.service";
 import { generateArticleImageAndAnalyzeQA } from "../images/image.service";
 import { generateSlug, formatTitle } from "../../lib/utils";
 import { sendCriticalErrorNotification } from "../notifications/telegram.service";
+import { BASE_CATEGORIES } from "../../config/constants";
 
 /**
  * PublisherService: Orquestador central del pipeline de publicación.
@@ -88,7 +89,7 @@ export class PublisherService {
   }
 
   private async ensureCategories() {
-    const categories = ["Criptomonedas", "IA", "Mercados", "Tecnología", "Ciberseguridad"];
+    const categories = [...BASE_CATEGORIES];
     for (const name of categories) {
       await this.prisma.category.upsert({
         where: { name },

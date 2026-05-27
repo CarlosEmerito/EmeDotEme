@@ -1,22 +1,10 @@
 import { OLLAMA_URL } from './constants';
 import { AI_PROMPTS } from '../../config/prompts';
-import { unloadOllamaModels } from '../vram/vram-manager';
 import { generateTextWithGemini } from './gemini-text.service';
 import type { NewsItem } from '../news/news-sources.service';
 import { formatNewsForPrompt } from '../news/news-sources.service';
 import { sanitizeJsonString } from '../../lib/json-sanitizer';
-
-function getTime(): string {
-  return new Date().toISOString().replace('T', ' ').substring(0, 19);
-}
-
-function logWithTime(msg: string) {
-  console.log(`[${getTime()}] ${msg}`);
-}
-
-// ============================================================
-// INTERFACES
-// ============================================================
+import { logWithTime } from '../../lib/logger';
 
 export interface GeneratedArticle {
   title: string;
@@ -37,14 +25,10 @@ export interface GeneratedArticle {
   category?: string;
 }
 
-// ============================================================
-// GENERACIÓN CORE (OLLAMA & GEMINI)
-// ============================================================
-
 export async function generateTextWithOllama({ systemPrompt, userPrompt }: { systemPrompt: string; userPrompt: string; }): Promise<string | null> {
   const model = process.env.OLLAMA_MODEL;
   if (!model) {
-    throw new Error('❌ Error: La variable de entorno OLLAMA_MODEL no está configurada.');
+    throw new Error('Error: La variable de entorno OLLAMA_MODEL no está configurada.');
   }
   const maxRetries = 2;
   let attempt = 0;
@@ -54,7 +38,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
       logWithTime(`🤖 [Ollama ${model}] Intento ${attempt + 1}/${maxRetries + 1}...`);
       const prompt = `${systemPrompt}\n\n${userPrompt}`;
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1200000); // 20 min
+      const timeoutId = setTimeout(() => controller.abort(), 1200000);
 
       const fetchNode = (await import('node-fetch')).default;
       const response = await fetchNode(OLLAMA_URL, {
@@ -69,10 +53,10 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
         }),
         signal: controller.signal as any
       });
-      
+
       clearTimeout(timeoutId);
       if (!response.ok) {
-        logWithTime(`❌ Ollama respondió con error HTTP ${response.status}`);
+        logWithTime(`Ollama respondió con error HTTP ${response.status}`);
         throw new Error(`Error HTTP ${response.status}`);
       }
 
@@ -80,7 +64,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
       let fullResponse = "";
       const body = response.body;
       if (!body) throw new Error('No body');
-      
+
       const decoder = new TextDecoder();
       // @ts-ignore
       for await (const chunk of body) {
@@ -92,20 +76,20 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
             const content = data.response || data.thinking || "";
             if (content) fullResponse += content;
             if (data.done) break;
-          } catch (e) {}
+          } catch {}
         }
       }
-      logWithTime(`✅ Ollama completó la generación (${fullResponse.length} caracteres).`);
+      logWithTime(`Ollama completó la generación (${fullResponse.length} caracteres).`);
       return fullResponse;
     } catch (err: any) {
-      logWithTime(`⚠️ Error en intento ${attempt + 1}: ${err.message}`);
+      logWithTime(`Error en intento ${attempt + 1}: ${err.message}`);
       attempt++;
       if (attempt <= maxRetries) {
         const waitTime = 5000 * attempt;
-        logWithTime(`⏳ Esperando ${waitTime/1000}s antes de reintentar...`);
+        logWithTime(`Esperando ${waitTime/1000}s antes de reintentar...`);
         await new Promise(resolve => setTimeout(resolve, waitTime));
       } else {
-        logWithTime('❌ Se agotaron los reintentos para Ollama.');
+        logWithTime('Se agotaron los reintentos para Ollama.');
         return null;
       }
     }
@@ -114,24 +98,17 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
   return null;
 }
 
-// ============================================================
-// NEWSLETTER
-// ============================================================
-
-/**
- * Genera el contenido de la newsletter semanal usando Gemini.
- */
 export async function generateWeeklyNewsletter(articles: any[]) {
   const systemPrompt = AI_PROMPTS.NEWSLETTER.SYSTEM;
   const userPrompt = AI_PROMPTS.NEWSLETTER.USER(articles);
 
-  logWithTime(`🗞️ Generando newsletter con ${articles.length} noticias...`);
-  
-  const result = await generateTextWithGemini({ 
-    systemPrompt, 
-    userPrompt, 
-    maxTokens: 8000, 
-    temperature: 0.7 
+  logWithTime(`Generando newsletter con ${articles.length} noticias...`);
+
+  const result = await generateTextWithGemini({
+    systemPrompt,
+    userPrompt,
+    maxTokens: 8000,
+    temperature: 0.7
   });
 
   if (!result) throw new Error('Fallo la generación de la newsletter');
@@ -144,7 +121,7 @@ export async function generateWeeklyNewsletter(articles: any[]) {
       htmlContent: parsed.htmlContent || "<p>Error al generar el contenido de la newsletter.</p>"
     };
   } catch (error) {
-    logWithTime('⚠️ Error parseando newsletter de Gemini. Usando fallback básico.');
+    logWithTime('Error parseando newsletter de Gemini. Usando fallback básico.');
     return {
       subject: "EmeDotEme News: Tu resumen semanal",
       htmlContent: `<p>Esta semana hemos tenido ${articles.length} noticias importantes. Visita nuestra web para ver el detalle.</p>`
@@ -152,20 +129,16 @@ export async function generateWeeklyNewsletter(articles: any[]) {
   }
 }
 
-// ============================================================
-// PIPELINE DE GENERACIÓN DE ARTÍCULO
-// ============================================================
-
 export async function generateArticleContent(
   recentTitles: string[] = [],
   newsContext: NewsItem[] = []
 ): Promise<GeneratedArticle> {
   if (newsContext.length === 0) {
-    throw new Error('❌ ERROR CRÍTICO: No se encontraron noticias de fuentes fiables. No se generará contenido sin fuentes reales. La publicación ha sido cancelada.');
+    throw new Error('ERROR CRÍTICO: No se encontraron noticias de fuentes fiables. No se generará contenido sin fuentes reales. La publicación ha sido cancelada.');
   }
 
   const systemPrompt = AI_PROMPTS.SPANISH.SYSTEM;
-  
+
   let avoidanceClause = '';
   if (recentTitles.length > 0) {
     const recentList = recentTitles.slice(0, 3).map(title => `- "${title}"`).join('\n');
@@ -173,15 +146,11 @@ export async function generateArticleContent(
   }
 
   const userPrompt = AI_PROMPTS.SPANISH.USER_WITH_NEWS(formatNewsForPrompt(newsContext.slice(0, 3)), avoidanceClause);
-  
+
   let result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
-  
+
   if (!result || result.includes('Lo siento') || result.length < 200) {
-    // CLOUD MIGRATION: Desactivado fallback a Ollama
-    // logWithTime('⚠️ Fallback a Ollama...');
-    // await unloadOllamaModels();
-    // result = await generateTextWithOllama({ systemPrompt, userPrompt });
-    throw new Error('❌ Falló la generación de texto en Gemini (Límite de API o error). Abortando para evitar bucle local.');
+    throw new Error('Falló la generación de texto en Gemini (Límite de API o error). Abortando para evitar bucle local.');
   }
 
   if (!result) throw new Error('Fallaron todos los modelos de generación.');
@@ -192,28 +161,28 @@ export async function generateArticleContent(
 export async function generateBilingualContent(
   recentTitles: string[] = [],
   newsContext: NewsItem[] = []
-): Promise<GeneratedArticle & { 
-  titleEn: string; 
-  summaryEn: string; 
-  keyPointsEn: string[]; 
+): Promise<GeneratedArticle & {
+  titleEn: string;
+  summaryEn: string;
+  keyPointsEn: string[];
   contentEn: string;
   glossaryEn?: { term: string; definition: string }[];
   faqsEn?: { question: string; answer: string }[];
 }> {
-  logWithTime('🇪🇸 Iniciando generación en español...');
+  logWithTime('Iniciando generación en español...');
   const esArticle = await generateArticleContent(recentTitles, newsContext);
-  
-  logWithTime('🇬🇧 Iniciando traducción/generación en inglés...');
+
+  logWithTime('Iniciando traducción/generación en inglés...');
   const enArticle = await generateEnglishContent(esArticle);
-  
-  logWithTime('✅ Contenido bilingüe listo.');
+
+  logWithTime('Contenido bilingüe listo.');
   return { ...esArticle, ...enArticle };
 }
 
-async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{ 
-  titleEn: string; 
-  summaryEn: string; 
-  keyPointsEn: string[]; 
+async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{
+  titleEn: string;
+  summaryEn: string;
+  keyPointsEn: string[];
   contentEn: string;
   glossaryEn?: { term: string; definition: string }[];
   faqsEn?: { question: string; answer: string }[];
@@ -221,19 +190,16 @@ async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{
   const systemPrompt = AI_PROMPTS.ENGLISH.SYSTEM;
   const userPrompt = AI_PROMPTS.ENGLISH.USER_TRANSLATE(esArticle, "");
 
-  logWithTime('📡 Solicitando traducción a Gemini...');
+  logWithTime('Solicitando traducción a Gemini...');
   let result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
   if (!result || result.length < 200) {
-    // CLOUD MIGRATION: Desactivado fallback a Ollama
-    // logWithTime('⚠️ Fallback a Ollama para inglés...');
-    // result = await generateTextWithOllama({ systemPrompt, userPrompt });
-    throw new Error('❌ Falló la generación en inglés en Gemini. Abortando.');
+    throw new Error('Falló la generación en inglés en Gemini. Abortando.');
   }
   if (!result) throw new Error('Fallo generación en inglés');
 
   try {
     const parsed = JSON.parse(sanitizeJsonString(extractJson(result)));
-    logWithTime('✅ Traducción completada y parseada.');
+    logWithTime('Traducción completada y parseada.');
     return {
       titleEn: parsed.titleEn || esArticle.title,
       summaryEn: parsed.summaryEn || esArticle.summary,
@@ -243,21 +209,17 @@ async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{
       contentEn: parsed.contentEn || esArticle.content
     };
   } catch {
-    logWithTime('⚠️ Error parseando traducción, usando fallback de contenido original.');
-    return { 
-      titleEn: esArticle.title, 
-      summaryEn: esArticle.summary, 
+    logWithTime('Error parseando traducción, usando fallback de contenido original.');
+    return {
+      titleEn: esArticle.title,
+      summaryEn: esArticle.summary,
       keyPointsEn: esArticle.keyPoints || [],
       glossaryEn: [],
       faqsEn: [],
-      contentEn: esArticle.content 
+      contentEn: esArticle.content
     };
   }
 }
-
-// ============================================================
-// UTILIDADES DE PARSEO
-// ============================================================
 
 function extractJson(text: string): string {
   const cleaned = text.replace(/```json\n?/g, '').replace(/```/g, '').trim();
@@ -274,7 +236,7 @@ function parseAndRecoverJson(result: string, newsContext: NewsItem[]): Generated
     if (!parsed.title) throw new Error('No title');
     return parsed;
   } catch (error) {
-    logWithTime('⚠️ Recuperación por Regex...');
+    logWithTime('Recuperación por Regex...');
     const titleMatch = result.match(/(?:"title"\s*:\s*"|Título\s*:\s*|#\s*)([^"}\n\n]+)/i);
     const summaryMatch = result.match(/(?:"summary"\s*:\s*"|Resumen\s*:\s*)([^"}\n\n]+)/i);
     const contentMatch = result.match(/(?:"content"\s*:\s*"|Contenido\s*:\s*)([\s\S]+?)(?=",\s*"|(?:"\s*})|#|$)/i);
@@ -283,8 +245,8 @@ function parseAndRecoverJson(result: string, newsContext: NewsItem[]): Generated
       title: titleMatch?.[1].trim() || "Artículo sin título",
       summary: summaryMatch?.[1].trim() || "",
       keyPoints: [],
-      impactLevel: "Informativo 📰",
-      complexity: "Principiante 🟢",
+      impactLevel: "Informativo",
+      complexity: "Principiante",
       tickers: [],
       glossary: [],
       faqs: [],

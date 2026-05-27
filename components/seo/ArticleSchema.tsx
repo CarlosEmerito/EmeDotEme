@@ -1,6 +1,3 @@
-import { Article } from "@prisma/client";
-import { Category } from "@prisma/client";
-
 interface ArticleSchemaProps {
   article: any; // Using any to avoid type complexity with includes
   siteUrl: string;

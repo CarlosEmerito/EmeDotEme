@@ -66,7 +66,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
       if (!body) throw new Error('No body');
 
       const decoder = new TextDecoder();
-      // @ts-ignore
+      // @ts-expect-error ReadableStream async iteration
       for await (const chunk of body) {
         const lines = decoder.decode(chunk as BufferSource, { stream: true }).split('\n');
         for (const line of lines) {
@@ -147,7 +147,7 @@ export async function generateArticleContent(
 
   const userPrompt = AI_PROMPTS.SPANISH.USER_WITH_NEWS(formatNewsForPrompt(newsContext.slice(0, 3)), avoidanceClause);
 
-  let result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
+  const result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
 
   if (!result || result.includes('Lo siento') || result.length < 200) {
     throw new Error('Falló la generación de texto en Gemini (Límite de API o error). Abortando para evitar bucle local.');
@@ -191,7 +191,7 @@ async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{
   const userPrompt = AI_PROMPTS.ENGLISH.USER_TRANSLATE(esArticle, "");
 
   logWithTime('Solicitando traducción a Gemini...');
-  let result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
+  const result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
   if (!result || result.length < 200) {
     throw new Error('Falló la generación en inglés en Gemini. Abortando.');
   }
@@ -235,7 +235,7 @@ function parseAndRecoverJson(result: string, newsContext: NewsItem[]): Generated
     const parsed = JSON.parse(jsonStr);
     if (!parsed.title) throw new Error('No title');
     return parsed;
-  } catch (error) {
+  } catch {
     logWithTime('Recuperación por Regex...');
     const titleMatch = result.match(/(?:"title"\s*:\s*"|Título\s*:\s*|#\s*)([^"}\n\n]+)/i);
     const summaryMatch = result.match(/(?:"summary"\s*:\s*"|Resumen\s*:\s*)([^"}\n\n]+)/i);

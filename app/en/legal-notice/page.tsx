@@ -26,7 +26,7 @@ export default function LegalNoticePageEn() {
           </ul>
 
           <h2>2. Users and Use of the Website</h2>
-          <p>Accessing and/or using this portal attributes the status of USER, who accepts, from said access and/or use, the General Conditions of Use reflected here. The Website provides access to a multitude of information, services, programs, or data (hereinafter, "the contents") on the Internet belonging to <strong>{siteConfig.name}</strong> or its licensors.</p>
+          <p>Accessing and/or using this portal attributes the status of USER, who accepts, from said access and/or use, the General Conditions of Use reflected here. The Website provides access to a multitude of information, services, programs, or data (hereinafter, &quot;the contents&quot;) on the Internet belonging to <strong>{siteConfig.name}</strong> or its licensors.</p>
           <p>The USER assumes responsibility for the use of the portal. This responsibility extends to the registration that may be necessary to access certain services or contents.</p>
 
           <h2>3. Intellectual and Industrial Property</h2>

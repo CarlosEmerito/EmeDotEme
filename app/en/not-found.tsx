@@ -13,7 +13,7 @@ export default function NotFoundEn() {
           Oops! You seem to be lost.
         </h2>
         <p className="mt-4 text-zinc-600 dark:text-zinc-400">
-          The article or page you are looking for doesn't exist, has been moved, or is simply a market myth.
+          The article or page you are looking for does not exist, has been moved, or is simply a market myth.
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">

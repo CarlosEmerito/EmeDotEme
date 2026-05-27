@@ -91,7 +91,7 @@ describe('trackEvent', () => {
   it('tracks event and calls console.log in development', () => {
     process.env.NODE_ENV = 'development';
 
-    let logCalls: any[] = [];
+    const logCalls: any[] = [];
     console.log = (...args) => {
       logCalls.push(args);
     };
@@ -116,7 +116,7 @@ describe('trackEvent', () => {
   });
 
   it('calls Vercel Analytics if available', () => {
-    let vaCalls: any[] = [];
+    const vaCalls: any[] = [];
     const mockWindow = { ...((global as any).window) };
     mockWindow.va = (...args: any[]) => {
       vaCalls.push(args);
@@ -146,7 +146,7 @@ describe('trackEvent', () => {
       configurable: true,
     });
 
-    let logCalls: any[] = [];
+    const logCalls: any[] = [];
     console.log = (...args) => {
       logCalls.push(args);
     };
@@ -166,7 +166,7 @@ describe('trackEvent', () => {
     });
     Object.defineProperty(global, 'window', { value: mockWindow, writable: true, configurable: true });
 
-    let errorCalls: any[] = [];
+    const errorCalls: any[] = [];
     console.error = (...args) => {
       errorCalls.push(args);
     };

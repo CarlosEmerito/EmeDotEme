@@ -28,7 +28,7 @@ async function ensureBucket() {
       return;
     }
     // Create bucket using JS client (if method exists)
-    // @ts-ignore
+    // @ts-expect-error createBucket may not be typed
     if (typeof supabase.storage.createBucket === 'function') {
       const { data, error } = await supabase.storage.createBucket(bucketName, {
         public: true,

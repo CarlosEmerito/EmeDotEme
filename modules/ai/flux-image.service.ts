@@ -1,6 +1,4 @@
 import 'dotenv/config';
-import fs from 'fs';
-import path from 'path';
 
 const FLUX_API_URL = process.env.FLUX_API_URL || 'http://127.0.0.1:8000';
 

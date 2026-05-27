@@ -7,7 +7,7 @@ export function sanitizeJsonString(jsonStr: string): string {
 
   // 1. Replace backslash followed by a non-valid JSON escape character
   // Valid JSON escape sequences are: \" \\ \/ \b \f \n \r \t \u
-  let result = jsonStr.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+  const result = jsonStr.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
 
   // 2. Replace literal control characters (like newlines, tabs) inside JSON strings
   let inString = false;

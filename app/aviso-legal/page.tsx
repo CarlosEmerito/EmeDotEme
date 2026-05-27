@@ -26,7 +26,7 @@ export default function LegalNoticePage() {
           </ul>
 
           <h2>2. Usuarios y Uso del Sitio Web</h2>
-          <p>El acceso y/o uso de este portal le atribuye la condición de USUARIO, que acepta, desde dicho acceso y/o uso, las Condiciones Generales de Uso aquí reflejadas. El Sitio Web proporciona el acceso a multitud de informaciones, servicios, programas o datos (en adelante, "los contenidos") en Internet pertenecientes a <strong>{siteConfig.name}</strong> o a sus licenciantes.</p>
+          <p>El acceso y/o uso de este portal le atribuye la condición de USUARIO, que acepta, desde dicho acceso y/o uso, las Condiciones Generales de Uso aquí reflejadas. El Sitio Web proporciona el acceso a multitud de informaciones, servicios, programas o datos (en adelante, &quot;los contenidos&quot;) en Internet pertenecientes a <strong>{siteConfig.name}</strong> o a sus licenciantes.</p>
           <p>El USUARIO asume la responsabilidad del uso del portal. Dicha responsabilidad se extiende al registro que fuese necesario para acceder a determinados servicios o contenidos.</p>
 
           <h2>3. Propiedad Intelectual e Industrial</h2>

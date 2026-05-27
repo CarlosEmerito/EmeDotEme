@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
-import { BarChart3, PieChart, TrendingUp, Hash, FileText, Users, Tag, BarChart } from "lucide-react";
+import { BarChart3, TrendingUp, Hash, FileText, Users, Tag, BarChart } from "lucide-react";
 
 export const metadata = { title: "Estadísticas | Admin" };
 

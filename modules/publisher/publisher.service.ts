@@ -165,7 +165,7 @@ export class PublisherService {
 
   private async saveToDatabase(aiResponse: any, imageData: { url: string, caption: string }, hasNews: boolean, slug: string) {
     const allCategories = await this.prisma.category.findMany();
-    let selectedCategory = allCategories.find(
+    const selectedCategory = allCategories.find(
       (cat) => cat.name.toLowerCase() === (aiResponse.category || '').toLowerCase()
     ) || allCategories[0];
 

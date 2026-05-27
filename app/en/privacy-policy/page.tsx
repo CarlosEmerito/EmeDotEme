@@ -15,7 +15,7 @@ export default function PrivacyPageEn() {
         <div className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
           <p>Last updated: {new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
           
-          <p>At <strong>{siteConfig.name}</strong>, we value our users' privacy and are committed to protecting their personal data. This Privacy Policy describes how we collect, use, and protect your information in accordance with the General Data Protection Regulation (GDPR) and relevant data protection laws.</p>
+          <p>At <strong>{siteConfig.name}</strong>, we value our users&apos; privacy and are committed to protecting their personal data. This Privacy Policy describes how we collect, use, and protect your information in accordance with the General Data Protection Regulation (GDPR) and relevant data protection laws.</p>
 
           <h2>1. Data Controller</h2>
           <p>The controller for the personal data collected through this website is:</p>
@@ -31,7 +31,7 @@ export default function PrivacyPageEn() {
             <li><strong>Subscription management:</strong> Manage the sending of our newsletter and commercial communications to which the user has subscribed.</li>
             <li><strong>Contact and support:</strong> Attend to queries, requests, or suggestions sent through our contact form.</li>
             <li><strong>Experience improvement:</strong> Analyze user navigation to optimize the usability and content of the website.</li>
-            <li><strong>Advertising:</strong> Manage advertising spaces on the website according to the user's interests.</li>
+            <li><strong>Advertising:</strong> Manage advertising spaces on the website according to the user&apos;s interests.</li>
           </ul>
 
           <h2>3. Legal Basis for Processing</h2>
@@ -49,7 +49,7 @@ export default function PrivacyPageEn() {
           <p>Data will not be transferred to third parties, except for legal obligation or for the provision of services necessary for the operation of the website, such as:</p>
           <ul>
             <li><strong>Email service providers (Resend):</strong> For sending the newsletter.</li>
-            <li><strong>Google LLC (Analytics/AdSense):</strong> For traffic analysis and advertising management (subject to Google's privacy policies).</li>
+            <li><strong>Google LLC (Analytics/AdSense):</strong> For traffic analysis and advertising management (subject to Google&apos;s privacy policies).</li>
             <li><strong>Hosting Providers (Vercel/Supabase):</strong> For hosting the site and database.</li>
           </ul>
 

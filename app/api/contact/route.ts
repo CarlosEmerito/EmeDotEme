@@ -74,7 +74,7 @@ export async function POST(req: Request) {
     const resend = new Resend(resendApiKey);
 
     // Enviar email al administrador (Carlos)
-    const { data: _, error } = await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: "Contacto EmeDotEme <contacto@emedoteme.es>",
       to: ["carlosemerito13@gmail.com"],
       subject: `Nuevo mensaje de contacto de ${name}`,

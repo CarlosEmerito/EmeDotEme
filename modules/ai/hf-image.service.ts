@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 const HF_TOKEN = process.env.HF_TOKEN;
-const HF_MODEL_URL = 'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell';
+const HF_MODEL_URL = 'https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-xl-base-1.0';
 const MAX_RETRIES = 3;
 
 /**
@@ -35,11 +35,6 @@ export async function generateImageWithHuggingFace(
         },
         body: JSON.stringify({
           inputs: qualityPrompt,
-          parameters: {
-            // Some optional parameters supported by HF text-to-image API
-            guidance_scale: 3.5,
-            num_inference_steps: 4,
-          }
         }),
       });
 

@@ -58,10 +58,13 @@ Ubicados en `scripts/python/`, estos scripts publican el contenido generado en d
 
 | Script                | Descripción                        |
 |-----------------------|------------------------------------|
-| `publish_telegram.py` | Publica en el canal de Telegram    |
-| `publish_bluesky.py` | Publica en Bluesky                 |
-| `publish_direct.py`   | Publicación directa general        |
-| `send_private_test.py`| Envía al grupo de Telegram privado |
+| `publish_telegram.py` | Publica en el canal de Telegram con resumen generado por Gemini y hashtags dinámicos del artículo |
+| `publish_bluesky.py`  | Publica en Bluesky con hashtags dinámicos del artículo |
+| `publish_direct.py`   | Publica en Binance Square con hashtags dinámicos del artículo |
+| `send_private_test.py`| Envía informe de QA visual al grupo de Telegram privado |
+
+> [!NOTE]
+> Los tres scripts de publicación leen el archivo `tmp/latest_article.json`. Las etiquetas (`tags`) del artículo se convierten automáticamente en hashtags (PascalCase) con `#EmeDotEme` siempre en primera posición. Los precios de criptomonedas y el índice Fear & Greed han sido eliminados de los mensajes.
 
 ---
 
@@ -100,7 +103,7 @@ npx tsx scripts/publish.ts
 ### Errores
 
 - Si todas las IAs fallan → Avisa por Telegram + exit(1)
-- Si el pipeline de imagen falla → Usa fallback de Unsplash
+- Si el pipeline de imagen falla → el artículo **no se publica** (sin fallback de Unsplash)
 
 ### Referencias
 

@@ -2,40 +2,39 @@
 
 ## 🐚 Scripts de Shell (Raíz)
 
-Estos scripts actúan como orquestadores de alto nivel para facilitar la ejecución de tareas comunes y la gestión del bot automático.
+Estos scripts actúan como orquestadores de alto nivel para facilitar la ejecución de tareas comunes y la automatización del bot.
 
 | Script                | Descripción                                                                 |
 |-----------------------|-----------------------------------------------------------------------------|
 | `publicar.sh`         | **Pipeline Principal**: Genera el artículo y lo publica en todas las redes sociales configuradas. |
+| `publicaria.sh`       | **Pipeline IA**: Orquesta el pipeline exclusivamente para temas de Inteligencia Artificial. |
 | `publicarprueba.sh`   | **Modo Test**: Simula la generación de un artículo y muestra previsualizaciones sin afectar a producción. |
-| `iniciar-imagen.sh`   | Levanta el motor de IA local **Flux.1 [dev]** en Docker con optimización de VRAM. |
-| `iniciar-bot.sh`      | Orquestador completo: Asegura que la IA esté encendida y levanta el bot automático (3-5h). |
-| `detener-bot.sh`      | Apaga el bot y el servidor de imágenes de forma segura, liberando la VRAM de la GPU. |
 | `enviar_newsletter.sh`| Ejecuta el proceso de envío de la newsletter semanal.                       |
-| `pruebaia.sh`         | Script rápido para probar todas las funciones de IA.                        |
 
 ---
 
-## 🛠️ Detalles de Scripts de Shell
+## 🛠️ Detalles de Scripts de Shell y Automatización
 
 ### publicar.sh
 Es el script principal de producción. Carga el entorno, ejecuta el pipeline de Node.js (`publish.ts`) y, si tiene éxito, dispara los scripts de publicación en Python para Binance Square, Telegram y Bluesky.
 - **Logs**: Centralizados en `logs/emedoteme.log`.
 
-### iniciar-bot.sh
-Ideal para servidores donde se desea una publicación constante sin depender de servicios externos de Cron.
-- Genera esperas aleatorias entre ejecuciones para humanizar el ritmo de publicación.
-- Crea un archivo `bot.pid` para control de procesos y un log dedicado en `bot.log`.
-- **Nuevo**: Lanza automáticamente `./iniciar-imagen.sh` para asegurar que el motor gráfico esté listo.
-
-### iniciar-imagen.sh
-Gestiona el ciclo de vida del contenedor Docker de la IA Flux.1.
-- Levanta el servicio en el puerto 8000.
-- Aplica optimizaciones de VRAM secuenciales para tarjetas de 8GB.
-- Configura persistencia mediante `--restart unless-stopped`.
+### publicaria.sh
+Orquesta la publicación diaria especializada en Inteligencia Artificial llamando a `scripts/publish-ia.ts` y publicando el JSON resultante en las redes sociales.
 
 ### publicarprueba.sh
-Utiliza la variable de entorno `DRY_RUN=true`. Es la herramienta principal para validar cambios en el formato de los artículos o en la generación de imágenes antes de salir a producción.
+Utiliza la variable de entorno `DRY_RUN=true`. Es la herramienta principal para validar cambios en el formato de los artículos o en la generación de imágenes en modo de prueba (sin persistencia en base de datos ni publicaciones en producción).
+
+---
+
+## 🚀 Automatización en GitHub Actions
+
+La generación y publicación automática de noticias está automatizada mediante **GitHub Actions**. El flujo está definido en el archivo [generate-news.yml](file:///home/emerito/EmeDotEme/.github/workflows/generate-news.yml) y corre de forma "serverless" (sin servidores residentes):
+
+1. **Cron Job**: Ejecuta automáticamente el pipeline cada 4 horas (`0 */4 * * *`).
+2. **Ejecución Manual**: Permite disparar la generación en cualquier momento desde la pestaña "Actions" de GitHub usando `workflow_dispatch`.
+3. **Configuración**: El workflow lee los secretos configurados en el repositorio de GitHub y reconstruye el archivo `.env` dinámicamente en el entorno de ejecución temporal.
+
 ---
 
 ## 🚀 Scripts de Node.js (TSX)
@@ -43,13 +42,6 @@ Utiliza la variable de entorno `DRY_RUN=true`. Es la herramienta principal para 
 ---
 
 ## Scripts de Diagnóstico
-
-### test-flux.ts
-Verifica la conexión con el servidor local de Flux y genera una imagen de prueba.
-
-```bash
-npx tsx scripts/test-flux.ts
-```
 
 ### check-articles.ts
 Muestra los últimos 5 artículos en la base de datos con todos sus campos (útil para verificar slugs y traducciones).

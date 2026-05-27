@@ -67,18 +67,13 @@ OLLAMA_VISION_MODEL="gemma4:e4b"  # Para análisis visual (Vision)
 ```mermaid
 graph TD
     A[Inicio: Datos del Artículo] --> B{¿Hay Imagen RSS?}
-    B -- Sí --> E[QA Gemini/Ollama Vision]
-    B -- No --> D
+    B -- Sí --> E[QA Gemini Vision]
+    B -- No --> D[Hugging Face API]
     E -- Aprobada --> F[Subir a Supabase]
-    E -- Rechazada --> D[Flux Local]
-    D --> G{¿Flux Online?}
-    G -- Sí --> H[VRAM: Unload Ollama]
-    H --> I[Generar con Flux.1]
-    G -- No --> J[AI Horde Fallback]
+    E -- Rechazada --> D
+    D --> I[Generar con FLUX.1-schnell]
     I -- Éxito --> F
-    I -- Fallo --> J
-    J -- Éxito --> F
-    J -- Fallo --> K[Unsplash Stock Fallback]
+    I -- Fallo --> K[Unsplash Stock Fallback]
     K --> L[Imagen Final]
     F --> L[URL Permanente en Supabase]
 ```
@@ -94,25 +89,22 @@ El flujo de IA ahora utiliza **AI_PROMPTS** centralizados en `config/prompts.ts`
 
 ### Postprocesado
 
-El postprocesado ortográfico es obligatorio y se realiza mediante Ollama en local tras la generación del contenido en español, asegurando la calidad de nombres propios y siglas antes de proceder a la traducción al inglés.
+El postprocesado ortográfico en local mediante Ollama ha sido **desactivado** para habilitar la ejecución serverless en la nube, optimizando el tiempo y dependiendo exclusivamente del modelo `gemini-2.5-flash` para la generación y coherencia.
 
 ---
 
-## Gestión de Memoria (VRAM)
+## Gestión de Memoria (VRAM) - (Desactivado en Cloud)
 
-Dada la limitación de VRAM (ej. 8GB), el `VRAMManager` centraliza el control:
-
-1.  **Keep Alive 0**: Todas las llamadas a Ollama liberan memoria inmediatamente.
-2.  **Unload Explícito**: Antes de usar Flux, se fuerza la descarga de Ollama.
-3.  **Pausas de Estabilización**:
-    *   **8s**: Limpieza física de buffers del driver NVIDIA.
-    *   **5s**: Estabilización previa a la carga de Flux.
+Al correr de manera serverless en GitHub Actions y consumir APIs en la nube (Gemini, Hugging Face), no hay un consumo de recursos de tarjeta gráfica (GPU/VRAM) local ni contenedores Docker locales que gestionar. La clase `VRAMManager` y sus métodos siguen existiendo por compatibilidad pero no realizan operaciones de espera o descarga.
 
 ---
 
-## Cron jobs
+## Automatización y Flujo Temporal
 
-| Job                 | Frecuencia         | Script                      |
-|---------------------|-------------------|-----------------------------|
-| Publicación diaria  | 1x día (8:00 UTC) | `scripts/publish.ts`        |
-| Newsletter semanal  | 1x semana         | `scripts/send_newsletter.ts`|
+La ejecución automática se orquesta nativamente mediante **GitHub Actions** en contenedores efímeros bajo demanda:
+
+| Proceso | Frecuencia | Orquestador | Comando Ejecutado |
+|---------|------------|-------------|-------------------|
+| **Publicación automática** | Cada 4 horas (`0 */4 * * *`) | GitHub Actions | `./publicar.sh` |
+| **Envío de Newsletter** | Semanal | GitHub Actions (opcional) | `./enviar_newsletter.sh` |
+| **Ejecución de Prueba** | Manual | GitHub Actions (`workflow_dispatch`) | `./publicarprueba.sh` |

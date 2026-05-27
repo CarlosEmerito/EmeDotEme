@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 const HF_TOKEN = process.env.HF_TOKEN;
-const HF_MODEL_URL = 'https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell';
+const HF_MODEL_URL = 'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell';
 const MAX_RETRIES = 3;
 
 /**

@@ -78,108 +78,87 @@ def resumen_ai(
     gemini_api_key_2=None,
     gemini_api_key_3=None,
     prefer_gemini=True,
-    max_output_tokens=600,
     **kwargs,
 ):
-    # Detectar modelo de Ollama
-    if not ollama_model:
-        ollama_model = os.environ.get("OLLAMA_MODEL", "gemma4:26b")
-
     # Gemini primero si se quiere — prueba las 3 keys en orden
     if prefer_gemini:
         gemini_keys = [k for k in [gemini_api_key, gemini_api_key_2, gemini_api_key_3] if k]
         key_names = ["PRIMARIA", "SECUNDARIA", "TERCIARIA"]
         
         if not gemini_keys:
-            log_event("⚠️ No hay API keys de Gemini configuradas, saltando a Ollama...", logging.WARNING)
+            log_event("⚠️ No hay API keys de Gemini configuradas.", logging.WARNING)
         else:
+            retries = [30, 60, 120]  # Esperas de 30s, 60s y 120s
+            
             for idx, key in enumerate(gemini_keys):
                 kname = key_names[idx] if idx < len(key_names) else f"EXTRA_{idx+1}"
-                try:
-                    # Actualizado a gemini-2.5-flash
-                    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
-                    payload = {
-                        "contents": [{"parts": [{"text": prompt}]}],
-                        "generationConfig": {
-                            "temperature": 0.7,
-                            "maxOutputTokens": max_output_tokens,
-                            "responseMimeType": "text/plain",
-                        },
-                    }
-                    r = requests.post(url, json=payload, timeout=45)
-                    
-                    if r.status_code == 200:
-                        try:
-                            result = r.json()
-                            candidates = result.get("candidates", [])
-                            if candidates and "content" in candidates[0]:
-                                text = candidates[0]["content"]["parts"][0]["text"].strip()
-                                if text:
-                                    log_event(f"✅ Resumen generado con éxito usando Gemini {kname}.")
-                                    return text
-                        except (json.JSONDecodeError, KeyError, IndexError) as e:
-                            log_event(f"[warn] Error parseando respuesta de Gemini {kname}: {e}", logging.WARNING)
-                    
-                    elif r.status_code == 429:
-                        log_event(f"[warn] Gemini {kname} cuota excedida (429), probando siguiente...", logging.WARNING)
-                        continue
-                    else:
-                        log_event(f"[warn] Gemini {kname} error HTTP {r.status_code}: {r.text[:200]}, probando siguiente...", logging.WARNING)
-                        continue
-                except Exception as e:
-                    log_event(f"[warn] Gemini {kname} fallo crítico: {e}", logging.WARNING)
-                    continue
-
-    # Fallback Ollama con REINTENTOS y STREAMING
-    log_event(f"🔄 Iniciando fallback a Ollama (modelo: {ollama_model})...")
-    max_retries = 2
-    for attempt in range(max_retries + 1):
-        try:
-            # Usamos 127.0.0.1 por estabilidad en algunos entornos linux
-            ollama_url = os.environ.get("OLLAMA_HOST", "http://localhost:11434") + "/api/generate"
-            payload = {
-                "model": ollama_model, 
-                "prompt": prompt, 
-                "stream": True, 
-                "keep_alive": "5m", # Mantener en memoria 5 min para posts seguidos
-                "options": {
-                    "temperature": 0.3, # Más determinista para redes
-                    "num_ctx": 4096
-                }
-            }
-            
-            r = requests.post(ollama_url, json=payload, timeout=180, stream=True)
-            r.raise_for_status()
-            
-            full_text = ""
-            for line in r.iter_lines():
-                if line:
+                attempt = 0
+                
+                while True:
                     try:
-                        chunk = json.loads(line.decode('utf-8'))
-                        if "error" in chunk:
-                            raise Exception(f"Ollama API error: {chunk['error']}")
+                        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
+                        payload = {
+                            "contents": [{"parts": [{"text": prompt}]}],
+                            "generationConfig": {
+                                "temperature": 0.7,
+                                "maxOutputTokens": max_output_tokens,
+                                "responseMimeType": "text/plain",
+                            },
+                        }
+                        r = requests.post(url, json=payload, timeout=45)
                         
-                        texto_fragmento = chunk.get("response", "")
-                        full_text += texto_fragmento
-                        if chunk.get("done"):
-                            break
-                    except json.JSONDecodeError:
-                        continue
-            
-            if full_text.strip():
-                log_event(f"✅ Resumen generado con éxito usando Ollama ({ollama_model}).")
-                return clean_control_chars(full_text.strip())
-            
-            raise Exception("Ollama devolvió una respuesta vacía")
-            
-        except Exception as e:
-            if attempt < max_retries:
-                log_event(f"[warn] Ollama intento {attempt+1} fallido: {e}. Reintentando...", logging.WARNING)
-                import time
-                time.sleep(5)
-            else:
-                log_event(f"[error] Fallaron todos los intentos con Ollama: {e}", logging.ERROR)
-    
+                        # Comprobar si hay error de sobrecarga / alta demanda (HTTP 503 o texto de error)
+                        is_overloaded = r.status_code == 503 or (
+                            r.status_code != 200 and (
+                                "overloaded" in r.text.lower() or
+                                "service unavailable" in r.text.lower() or
+                                "temporarily unavailable" in r.text.lower()
+                            )
+                        )
+                        
+                        if is_overloaded and attempt < len(retries):
+                            wait_time = retries[attempt]
+                            log_event(f"⚠️ Alta demanda/Sobrecarga en Gemini {kname}. Reintentando en {wait_time}s (intento {attempt + 1}/{len(retries)})...", logging.WARNING)
+                            import time
+                            time.sleep(wait_time)
+                            attempt += 1
+                            continue
+                        
+                        if r.status_code == 200:
+                            try:
+                                result = r.json()
+                                candidates = result.get("candidates", [])
+                                if candidates and "content" in candidates[0]:
+                                    text = candidates[0]["content"]["parts"][0]["text"].strip()
+                                    if text:
+                                        log_event(f"✅ Resumen generado con éxito usando Gemini {kname}.")
+                                        return text
+                            except (json.JSONDecodeError, KeyError, IndexError) as e:
+                                log_event(f"[warn] Error parseando respuesta de Gemini {kname}: {e}", logging.WARNING)
+                                break # Rompe el bucle while y pasa a la siguiente clave API
+                        
+                        elif r.status_code == 429:
+                            log_event(f"[warn] Gemini {kname} cuota excedida (429), probando siguiente...", logging.WARNING)
+                            break # Pasa a la siguiente clave API
+                        else:
+                            log_event(f"[warn] Gemini {kname} error HTTP {r.status_code}: {r.text[:200]}, probando siguiente...", logging.WARNING)
+                            break # Pasa a la siguiente clave API
+                            
+                    except Exception as e:
+                        # Reintentar ante errores transitorios de red / de resolución DNS
+                        if attempt < len(retries):
+                            wait_time = retries[attempt]
+                            log_event(f"⚠️ Error de conexión con Gemini {kname}: {e}. Reintentando en {wait_time}s...", logging.WARNING)
+                            import time
+                            time.sleep(wait_time)
+                            attempt += 1
+                            continue
+                        
+                        log_event(f"[warn] Gemini {kname} fallo crítico persistente: {e}", logging.WARNING)
+                        break # Pasa a la siguiente clave API
+
+    # Fallback Ollama desactivado en Cloud por requisitos de ejecución sin IA local
+    log_event("❌ Fallaron todas las API keys de Gemini y Ollama local está desactivado.", logging.ERROR)
     return None
 
 

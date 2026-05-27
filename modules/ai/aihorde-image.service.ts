@@ -111,6 +111,7 @@ export async function generateImageWithAIHorde(
           continue;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const pollData = await poll.json() as any;
         
         if (pollData.is_possible === false) {
@@ -176,6 +177,7 @@ export async function checkAIHordeStatus(): Promise<{ ok: boolean; workers: numb
       return { ok: false, workers: 0, queued: 0 };
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data = await response.json() as any;
     return {
       ok: true,

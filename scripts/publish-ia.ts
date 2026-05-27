@@ -17,7 +17,7 @@ async function main() {
   try {
     // Forzamos la publicación filtrando solo por fuentes de IA
     await publisher.publishDailyArticle(IA_SOURCES);
-  } catch (error) {
+  } catch {
     console.error("❌ Fallo en el script de publicación de IA.");
     process.exit(1);
   } finally {

@@ -29,7 +29,7 @@ async function ensureBucket() {
     }
     // Create bucket using JS client (if method exists)
     if (typeof supabase.storage.createBucket === 'function') {
-      const { data, error } = await supabase.storage.createBucket(bucketName, {
+      const { error } = await supabase.storage.createBucket(bucketName, {
         public: true,
         allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
         fileSizeLimit: 5242880, // 5MB

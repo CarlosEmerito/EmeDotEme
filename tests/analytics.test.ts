@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert';
 import { trackEvent } from '../lib/analytics.ts';

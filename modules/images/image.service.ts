@@ -43,6 +43,7 @@ async function isImageValid(
     let qa: ImageAnalysisResult | null = null;
     try {
       qa = await analyzeImageWithGemini(imageUrl, title, summary, caption);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (geminiErr: any) {
       console.error(`❌ Falló Gemini Vision de forma definitiva. Error: ${geminiErr.message}`);
     }
@@ -55,6 +56,7 @@ async function isImageValid(
       console.warn(`❌ [QA ${stepName}] Imagen RECHAZADA: ${razon}`);
       return { valid: false, qa };
     }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error(`❌ [QA ${stepName}] Error en análisis:`, error.message);
     return { valid: false, qa: null, error: error.message };
@@ -93,6 +95,7 @@ export async function generateArticleImageAndAnalyzeQA(
     } else {
       errors.push('HF API: Generación devolvió null');
     }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error('❌ Hugging Face API falló:', err.message);
     errors.push(`HF Exception: ${err.message}`);

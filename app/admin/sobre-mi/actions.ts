@@ -18,7 +18,7 @@ export async function updateSobreMiContent(content: string) {
     revalidatePath("/admin/sobre-mi");
     revalidatePath("/sobre-mi");
     return { success: true };
-  } catch (error) {
+  } catch {
     return { success: false, error: "Error al guardar el contenido." };
   }
 }

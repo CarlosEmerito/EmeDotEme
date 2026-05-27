@@ -15,9 +15,9 @@ if (!supabaseUrl || !supabaseKey) {
 } else {
   console.log('Creating Supabase client...');
   try {
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    createClient(supabaseUrl, supabaseKey);
     console.log('Supabase client created successfully');
-  } catch (error) {
-    console.error('Error creating Supabase client:', error);
+  } catch {
+    console.error('Error creating Supabase client');
   }
 }

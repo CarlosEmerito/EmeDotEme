@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { test, mock } from 'node:test';
 import assert from 'node:assert';
 import { deleteArticle } from '../../app/admin/actions.ts';

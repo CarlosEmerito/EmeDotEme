@@ -11,6 +11,7 @@ test('createCategory handles error when prisma throws', async () => {
 
   // Replace the original with the mock
   const originalCreate = prisma.category.create;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   prisma.category.create = mockCreate as any;
 
   // Mock console.error to avoid noise in test output

@@ -37,6 +37,7 @@ export async function getMarketData(limit: number = 15): Promise<Coin[]> {
     });
     if (fallbackRes.ok) {
       const data = await fallbackRes.json();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return data.data.map((coin: any) => ({
         id: coin.id,
         symbol: coin.symbol,
@@ -130,6 +131,7 @@ export async function getHistoricalData(coinId: string, days: string = '7'): Pro
     );
     if (res.ok) {
       const { data } = await res.json();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const prices: [number, number][] = data.map((item: any) => [
         item.time,
         parseFloat(item.priceUsd),

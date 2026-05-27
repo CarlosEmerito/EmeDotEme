@@ -131,6 +131,7 @@ Devuelve SOLO el JSON de análisis, nada más.`;
       logWithTime(`✅ Ollama Vision completado (${visionModel}).`);
       return parsed;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       attempt++;
       if (attempt <= maxRetries) {

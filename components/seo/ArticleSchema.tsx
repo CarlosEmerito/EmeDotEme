@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface ArticleSchemaProps {
   article: any; // Using any to avoid type complexity with includes
   siteUrl: string;

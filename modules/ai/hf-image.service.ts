@@ -56,6 +56,7 @@ async function tryModel(modelUrl: string, qualityPrompt: string): Promise<string
       // Verificar que la respuesta es una imagen (no un JSON de error)
       const contentType = response.headers.get('content-type') || '';
       if (contentType.includes('application/json')) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const json = await response.json() as any;
         console.error(`❌ [HF API] Respuesta JSON inesperada:`, JSON.stringify(json).substring(0, 200));
         return null;
@@ -72,6 +73,7 @@ async function tryModel(modelUrl: string, qualityPrompt: string): Promise<string
       console.log(`✅ [HF API] Imagen generada (${(buffer.byteLength / 1024).toFixed(0)} KB, modelo: ${modelUrl.split('/').pop()})`);
       return `data:${mimeType};base64,${base64}`;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error(`❌ [HF API] Error de red en la petición:`, error.message);
       attempt++;

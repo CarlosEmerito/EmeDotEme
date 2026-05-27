@@ -39,6 +39,7 @@ export async function generateImageWithFlux(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       signal: controller.signal as any,
     });
 
@@ -63,6 +64,7 @@ export async function generateImageWithFlux(
     console.log(`✅ [FLUX LOCAL] Imagen generada con éxito.`);
     return dataUri;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.name === 'AbortError') {
       console.error('❌ [FLUX LOCAL] Timeout alcanzado durante la generación.');
@@ -85,11 +87,11 @@ export async function checkFluxStatus(): Promise<boolean> {
   while (elapsedMs < maxWaitMs) {
     try {
       const response = await fetch(`${FLUX_API_URL}/health`, {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         signal: AbortSignal.timeout(3000) as any
       });
       if (response.ok) return true;
-    } catch (err) {
-      // Si el error es de conexión, comprobamos si es que aún está arrancando
+    } catch {
       console.log(`[FLUX] Esperando respuesta del servidor (${elapsedMs/1000}s)...`);
     }
     

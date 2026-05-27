@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { prisma } from "@/lib/prisma";
@@ -45,9 +46,12 @@ export default async function AboutPageEn() {
         <header className="mb-10 border-b border-zinc-200 dark:border-zinc-800 pb-8">
           <div className="flex items-center gap-6">
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-zinc-200 dark:bg-zinc-800 flex flex-shrink-0 overflow-hidden relative border border-zinc-200 dark:border-zinc-800">
-              <img 
+              <Image
                 src="/EmeDotEme.jpg" 
-                alt="Carlos Emérito López Lovera" 
+                alt="Carlos Emérito López Lovera"
+                width={128}
+                height={128}
+                unoptimized
                 className="w-full h-full object-cover"
               />
             </div>

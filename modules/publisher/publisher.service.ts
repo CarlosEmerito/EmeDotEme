@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as fs from "fs";
 import path from "path";
 import { generateBilingualContent } from "../ai/ai.service";

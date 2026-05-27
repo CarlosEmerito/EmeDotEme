@@ -1,5 +1,5 @@
 export const dynamic = "force-dynamic";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { prisma } from "@/lib/prisma";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
@@ -13,8 +13,7 @@ interface TagPageProps {
 }
 
 export async function generateMetadata(
-  { params }: TagPageProps,
-  _parent: ResolvingMetadata
+  { params }: TagPageProps
 ): Promise<Metadata> {
   const { slug } = await params;
   

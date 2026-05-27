@@ -9,8 +9,7 @@ async function main() {
   
   try {
     await publisher.publishDailyArticle();
-  } catch (error) {
-    // El error ya ha sido notificado por el servicio
+  } catch {
     console.error("❌ Fallo en el script de publicación.");
     process.exit(1);
   } finally {

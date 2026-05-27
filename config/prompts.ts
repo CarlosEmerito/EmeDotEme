@@ -59,6 +59,7 @@ Responde ÚNICAMENTE en formato JSON:
   ENGLISH: {
     SYSTEM: `You are a professional journalist for the digital media "EmeDotEme". Your goal is to write informative and professional news articles in English.`,
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     USER_TRANSLATE: (esArticle: any, avoidanceClause: string) => `Write a professional English version of this Spanish news article:
 
 SPANISH ORIGINAL:
@@ -89,6 +90,7 @@ JSON Format:
   NEWSLETTER: {
     SYSTEM: `Eres un editor jefe de un medio tecnológico premium. Tu tarea es redactar una newsletter semanal atractiva, informativa y concisa que resuma las noticias más importantes. Usa un tono profesional pero cercano, capaz de retener a la audiencia.`,
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     USER: (articles: any[]) => `Basándote en estas noticias de la última semana, redacta una newsletter semanal para EmeDotEme.
     
 NOTICIAS:

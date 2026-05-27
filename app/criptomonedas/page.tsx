@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Metadata } from "next";
 import Link from "next/link";
 import { getMarketData } from "@/modules/market/market.service";
@@ -43,7 +44,7 @@ export default async function CriptomonedasPage() {
                     </td>
                     <td className="px-6 py-5">
                       <Link href={`/criptomonedas/${coin.symbol.toUpperCase()}`} className="flex items-center">
-                        <img src={coin.image} alt={coin.name} className="w-8 h-8 mr-4 rounded-full bg-white p-0.5 border border-zinc-100 dark:border-zinc-800" />
+                        <Image src={coin.image || ''} alt={coin.name} width={32} height={32} unoptimized className="w-8 h-8 mr-4 rounded-full bg-white p-0.5 border border-zinc-100 dark:border-zinc-800" />
                         <div>
                           <div className="font-bold text-black dark:text-white group-hover:text-[color:var(--color-brand)] transition-colors">{coin.name}</div>
                           <div className="text-[10px] text-zinc-500 uppercase font-black tracking-tighter">{coin.symbol}</div>

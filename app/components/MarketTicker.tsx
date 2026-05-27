@@ -53,7 +53,7 @@ export default function MarketTicker() {
       mounted = false;
       clearInterval(interval);
     };
-  }, [isCryptoPage]);
+  }, [isCryptoPage, pathname]);
 
   if (!coins || coins.length === 0) {
     return null;

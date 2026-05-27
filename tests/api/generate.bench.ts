@@ -1,5 +1,4 @@
 import { test, describe } from "node:test";
-import assert from "node:assert";
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()

@@ -82,7 +82,7 @@ export function Footer() {
         setStatus("error");
         setMessage(data.error || t.error);
       }
-    } catch (err) {
+    } catch {
       setStatus("error");
       setMessage(t.connectionError);
     }

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { getArticlesByCategorySlug, getCategoryBySlug, getTotalArticlesByCategorySlug } from "@/modules/articles";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
@@ -14,8 +14,7 @@ interface CategoryPageProps {
 }
 
 export async function generateMetadata(
-  { params }: CategoryPageProps,
-  _parent: ResolvingMetadata
+  { params }: CategoryPageProps
 ): Promise<Metadata> {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);

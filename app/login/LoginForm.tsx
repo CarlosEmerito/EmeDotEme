@@ -24,7 +24,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
         setError(res.error || 'Error')
         setIsLoading(false)
       }
-    } catch (err) {
+    } catch {
       setError('Error de conexión')
       setIsLoading(false)
     }

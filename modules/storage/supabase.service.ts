@@ -30,6 +30,7 @@ export async function saveImageToSupabase(url: string, slug: string): Promise<st
   const bucketName = 'article-images';
 
   try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let buffer: any;
     let contentType = 'image/webp';
     let extension = 'webp';

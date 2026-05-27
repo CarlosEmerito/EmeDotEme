@@ -51,6 +51,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
           options: { temperature: 0.1, num_ctx: 8192 },
           keep_alive: 0
         }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         signal: controller.signal as any
       });
 
@@ -80,6 +81,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
       }
       logWithTime(`Ollama completó la generación (${fullResponse.length} caracteres).`);
       return fullResponse;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       logWithTime(`Error en intento ${attempt + 1}: ${err.message}`);
       attempt++;
@@ -97,6 +99,7 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
   return null;
 }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateWeeklyNewsletter(articles: any[]) {
   const systemPrompt = AI_PROMPTS.NEWSLETTER.SYSTEM;
   const userPrompt = AI_PROMPTS.NEWSLETTER.USER(articles);
@@ -119,7 +122,7 @@ export async function generateWeeklyNewsletter(articles: any[]) {
       subject: parsed.subject || "EmeDotEme News: Tu resumen semanal",
       htmlContent: parsed.htmlContent || "<p>Error al generar el contenido de la newsletter.</p>"
     };
-  } catch (error) {
+  } catch {
     logWithTime('Error parseando newsletter de Gemini. Usando fallback básico.');
     return {
       subject: "EmeDotEme News: Tu resumen semanal",

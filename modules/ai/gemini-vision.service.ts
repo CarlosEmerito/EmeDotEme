@@ -41,6 +41,7 @@ URL de la imagen: ${imageUrl}
 Devuelve SOLO el JSON de análisis, nada más.`;
 
   // Descargar la imagen y convertirla a base64 para enviarla a Gemini (una sola vez)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let imagePart: any;
   try {
     const response = await fetch(imageUrl, {
@@ -121,7 +122,7 @@ Devuelve SOLO el JSON de análisis, nada más.`;
           if (typeof parsed.coherente !== 'boolean' || typeof parsed.calidad_aceptable !== 'boolean') {
             throw new Error('Estructura JSON incompleta devuelta por Gemini');
           }
-        } catch (parseError) {
+        } catch {
           console.error(`❌ JSON inválido/truncado de Gemini Vision: ${cleaned.substring(0, 200)}...`);
           console.log(`⚠️ Aplicando recuperación de emergencia (extrayendo variables directamente del string)`);
           

@@ -50,6 +50,7 @@ export async function sendTelegramNotification(
 /**
  * Notificación especializada para errores críticos del sistema.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function sendCriticalErrorNotification(error: any): Promise<boolean> {
   const errorMessage = error.message || String(error);
   const text = `❌ <b>ERROR CRÍTICO (EmeDotEme Bot):</b>\n\nEl proceso de publicación falló y fue abortado para preservar la calidad.\n\n<b>Error:</b> ${errorMessage}`;

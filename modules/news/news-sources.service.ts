@@ -86,7 +86,9 @@ async function fetchFromSource(source: NewsSource): Promise<NewsItem[]> {
       .filter((item) => item.title && item.link)
       .map((item) => {
         let imageUrl: string | undefined;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mediaContent = (item as any).mediaContent;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mediaThumbnail = (item as any).mediaThumbnail;
         const enclosure = item.enclosure;
 
@@ -100,6 +102,7 @@ async function fetchFromSource(source: NewsSource): Promise<NewsItem[]> {
         if (item.categories) {
           for (const cat of item.categories) {
             if (typeof cat === 'string') categories.push(cat.trim());
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             else if (typeof cat === 'object' && (cat as any)._) categories.push((cat as any)._.trim());
           }
         }
@@ -112,6 +115,7 @@ async function fetchFromSource(source: NewsSource): Promise<NewsItem[]> {
           sourceSlug: source.slug,
           pubDate: item.pubDate ? new Date(item.pubDate) : new Date(),
           categories,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           author: (item as any).creator || item.creator || undefined,
           imageUrl,
         };
@@ -120,7 +124,7 @@ async function fetchFromSource(source: NewsSource): Promise<NewsItem[]> {
         const hoursAgo = (Date.now() - item.pubDate.getTime()) / (1000 * 60 * 60);
         return hoursAgo <= 48;
       });
-  } catch (error) {
+  } catch {
     return [];
   }
 }

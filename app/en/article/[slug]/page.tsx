@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { getArticleBySlug, getRelatedArticles } from "@/modules/articles/article.service";
 import { SidebarArticleCard } from "@/components/articles/SidebarArticleCard";
@@ -18,8 +18,7 @@ interface ArticlePageProps {
 }
 
 export async function generateMetadata(
-  { params }: ArticlePageProps,
-  _parent: ResolvingMetadata
+  { params }: ArticlePageProps
 ): Promise<Metadata> {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
@@ -222,6 +221,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <span className="text-2xl">📖</span> Key Terms Glossary
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {(article.glossaryEn as any[]).map((item, i) => (
                 <div key={i} className="group">
                   <dt className="text-sm font-black uppercase tracking-widest text-[color:var(--color-brand)] mb-1 group-hover:translate-x-1 transition-transform inline-block">
@@ -243,6 +243,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <span className="text-2xl">❓</span> Frequently Asked Questions
             </h3>
             <div className="space-y-4">
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {(article.faqsEn as any[]).map((faq, i) => (
                 <details key={i} className="group bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all">
                   <summary className="flex items-center justify-between p-5 cursor-pointer list-none font-bold text-zinc-900 dark:text-zinc-100 group-open:bg-zinc-50 dark:group-open:bg-zinc-800/50 transition-colors">

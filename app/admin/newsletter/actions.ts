@@ -59,6 +59,7 @@ export async function sendNewsletterNow() {
     if (stderr) console.error("Newsletter stderr:", stderr);
     
     return { success: true, message: "Proceso de envío finalizado. Revisa los logs para detalles." };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Manual newsletter send error:", error);
     return { success: false, error: `Error al ejecutar el envío: ${error.message}` };

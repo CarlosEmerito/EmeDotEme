@@ -4,9 +4,10 @@
 
 ### Base de datos
 
-| Variable         | Descripción                        | Requerido |
-|------------------|------------------------------------|-----------|
-| `DATABASE_URL`   | URL de PostgreSQL (Prisma)         | ✅        |
+| Variable       | Descripción                                                   | Requerido |
+|----------------|---------------------------------------------------------------|-----------|
+| `DATABASE_URL` | URL de conexión principal (con pooler si aplica)              | ✅         |
+| `DIRECT_URL`   | URL de conexión directa a la base de datos (para migraciones)  | ✅         |
 
 ### IA - Gemini
 
@@ -84,6 +85,7 @@
 # BASE DE DATOS
 # ===========================================
 DATABASE_URL="postgresql://..."
+DIRECT_URL="postgresql://..."
 
 # ===========================================
 # GEMINI (IA - Texto)

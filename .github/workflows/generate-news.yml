@@ -37,6 +37,7 @@ jobs:
         run: |
           cat <<EOF > .env
           DATABASE_URL="${{ secrets.DATABASE_URL }}"
+          DIRECT_URL="${{ secrets.DIRECT_URL }}"
           GEMINI_API_KEY="${{ secrets.GEMINI_API_KEY }}"
           GEMINI_API_KEY_2="${{ secrets.GEMINI_API_KEY_2 }}"
           GEMINI_API_KEY_3="${{ secrets.GEMINI_API_KEY_3 }}"

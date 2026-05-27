@@ -189,9 +189,21 @@ export async function generateArticleImageAndAnalyzeQA(
   }
   */
 
-  // --- FALLBACK FINAL: Eliminado por petición del usuario ---
+  // --- FALLBACK FINAL: Imagen de Unsplash genérica ---
   // Si llegamos aquí, es que todos los métodos han fallado.
+  // En lugar de abortar el artículo entero, usamos una imagen de stock genérica.
   const errorDetail = errors.join(' | ');
   console.error(`❌ No se pudo obtener ninguna imagen válida tras agotar todos los métodos. Errores: ${errorDetail}`);
-  throw new Error(`Pipeline de imagen fallido: No se pudo generar o validar ninguna imagen coherente y de calidad. DETALLES: ${errorDetail}`);
+  console.warn(`⚠️ Usando imagen de fallback de Unsplash para continuar con la publicación.`);
+
+  const fallbackUrl = 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2832&auto=format&fit=crop';
+  const finalFallbackUrl = await saveImageToSupabase(fallbackUrl, data.slug).catch(() => fallbackUrl);
+  return {
+    imageUrl: finalFallbackUrl,
+    caption: generateCaption(data.title, data.topic),
+    qaResult: null,
+    source: 'fallback_unsplash',
+    attempts,
+    errors,
+  };
 }

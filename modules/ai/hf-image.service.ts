@@ -1,11 +1,81 @@
 import 'dotenv/config';
 
 const HF_TOKEN = process.env.HF_TOKEN;
-const HF_MODEL_URL = 'https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-xl-base-1.0';
-const MAX_RETRIES = 3;
+
+// Modelos en orden de preferencia — se prueban en secuencia hasta que uno funcione.
+// FLUX.1-schnell es el modelo gratuito de Black Forest Labs disponible en hf-inference.
+const HF_MODELS = [
+  'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell',
+  'https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-3.5-medium',
+  'https://router.huggingface.co/hf-inference/models/Lykon/dreamshaper-8',
+];
+const MAX_RETRIES = 2;
 
 /**
- * Genera una imagen utilizando la Inference API de Hugging Face de forma gratuita.
+ * Intenta generar una imagen con un modelo HF concreto.
+ * Devuelve null si el modelo está deprecado (410), sin créditos (402),
+ * o si todos los reintentos transitorios (503) se agotan.
+ */
+async function tryModel(modelUrl: string, qualityPrompt: string): Promise<string | null> {
+  let attempt = 0;
+  while (attempt <= MAX_RETRIES) {
+    try {
+      const response = await fetch(modelUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${HF_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ inputs: qualityPrompt }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`❌ [HF API] Error HTTP ${response.status} (${modelUrl.split('/').pop()}): ${errorText.substring(0, 200)}`);
+
+        if (response.status === 503) {
+          // El modelo se está cargando — reintentar con espera
+          console.log(`⚠️ [HF API] Modelo cargando. Reintentando en 15s... (intento ${attempt + 1}/${MAX_RETRIES})`);
+          await new Promise(res => setTimeout(res, 15000));
+          attempt++;
+          continue;
+        }
+
+        // 410 = Deprecated, 402 = Sin créditos, 404 = No encontrado → pasar al siguiente modelo
+        return null;
+      }
+
+      // Verificar que la respuesta es una imagen (no un JSON de error)
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        const json = await response.json() as any;
+        console.error(`❌ [HF API] Respuesta JSON inesperada:`, JSON.stringify(json).substring(0, 200));
+        return null;
+      }
+
+      const buffer = await response.arrayBuffer();
+      if (buffer.byteLength < 1000) {
+        console.error(`❌ [HF API] Respuesta demasiado pequeña (${buffer.byteLength} bytes), probablemente un error.`);
+        return null;
+      }
+
+      const base64 = Buffer.from(buffer).toString('base64');
+      const mimeType = contentType.split(';')[0] || 'image/jpeg';
+      console.log(`✅ [HF API] Imagen generada (${(buffer.byteLength / 1024).toFixed(0)} KB, modelo: ${modelUrl.split('/').pop()})`);
+      return `data:${mimeType};base64,${base64}`;
+
+    } catch (error: any) {
+      console.error(`❌ [HF API] Error de red en la petición:`, error.message);
+      attempt++;
+      await new Promise(res => setTimeout(res, 3000));
+    }
+  }
+  return null;
+}
+
+/**
+ * Genera una imagen utilizando la Inference API de Hugging Face.
+ * Prueba los modelos en orden hasta que uno funcione.
  * Retorna la imagen en formato Data URI (base64) para que pueda ser validada
  * por Gemini Vision y luego subida a Supabase.
  */
@@ -21,51 +91,16 @@ export async function generateImageWithHuggingFace(
   console.log(`🎨 [HF API] Generando imagen para: ${articleSlug}`);
   console.log(`🎨 [HF API] Prompt: ${prompt.substring(0, 100)}...`);
 
-  // Enhancing the prompt for better stylistic results
   const qualityPrompt = `high quality, detailed, professional journalistic illustration, ${prompt}`;
 
-  let attempt = 0;
-  while (attempt < MAX_RETRIES) {
-    try {
-      const response = await fetch(HF_MODEL_URL, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${HF_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          inputs: qualityPrompt,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`❌ [HF API] Error HTTP ${response.status}: ${errorText}`);
-        
-        // Handle model loading error (503 Service Unavailable)
-        if (response.status === 503) {
-          console.log(`⚠️ [HF API] El modelo se está cargando. Reintentando en 10s...`);
-          await new Promise(res => setTimeout(res, 10000));
-          attempt++;
-          continue;
-        }
-        return null;
-      }
-
-      // Read response as ArrayBuffer
-      const buffer = await response.arrayBuffer();
-      const base64 = Buffer.from(buffer).toString('base64');
-      const contentType = response.headers.get('content-type') || 'image/jpeg';
-      
-      console.log(`✅ [HF API] Imagen generada con éxito (${base64.length} bytes)`);
-      return `data:${contentType};base64,${base64}`;
-    } catch (error) {
-      console.error(`❌ [HF API] Error en la petición:`, error);
-      attempt++;
-      await new Promise(res => setTimeout(res, 2000));
-    }
+  for (const modelUrl of HF_MODELS) {
+    const modelName = modelUrl.split('/').slice(-2).join('/');
+    console.log(`🎨 [HF API] Probando modelo: ${modelName}`);
+    const result = await tryModel(modelUrl, qualityPrompt);
+    if (result) return result;
+    console.warn(`⚠️ [HF API] Modelo ${modelName} no funcionó, probando siguiente...`);
   }
 
-  console.error(`❌ [HF API] Fallaron todos los intentos de generación`);
+  console.error(`❌ [HF API] Todos los modelos de HuggingFace fallaron.`);
   return null;
 }

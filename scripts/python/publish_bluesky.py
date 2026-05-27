@@ -8,6 +8,7 @@ from social_publish_utils import (
     resumen_ai,
     limpiar_html,
     get_env,
+    format_hashtags,
 )
 import requests
 from atproto import Client, models
@@ -37,8 +38,8 @@ def recortar_texto(texto, limite):
     return recortado.rstrip() + "."
 
 
-def construir_post(resumen, titulo, desc, link, img_url):
-    footer = "\n\nToda la información gratis en tu bolsillo: https://t.me/EmeDotEmeNews\n#EmeDotEme"
+def construir_post(resumen, hashtags):
+    footer = f"\n\nToda la información gratis en tu bolsillo: https://t.me/EmeDotEmeNews\n{hashtags}"
     espacio_disponible = 300 - len(footer)
     texto_recortado = recortar_texto(resumen, espacio_disponible)
     post_content = f"{texto_recortado}{footer}"
@@ -119,7 +120,9 @@ if __name__ == "__main__":
     )
     if not resumen:
         resumen = f"🚨 {titulo[:150]}"
-    post_content = construir_post(resumen, titulo, desc, link, img_url)
+    tags = article.get("tags", [])
+    hashtags = format_hashtags(tags)
+    post_content = construir_post(resumen, hashtags)
     ok, detalle = enviar_bluesky(post_content, titulo, desc, link, img_url)
     if ok:
         log_event(f"[ok] Publicado en Bluesky: {titulo}")

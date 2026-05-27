@@ -8,7 +8,7 @@ from social_publish_utils import (
     resumen_ai,
     limpiar_html,
     get_env,
-    obtener_datos_mercado,
+    format_hashtags,
 )
 import requests
 
@@ -28,7 +28,7 @@ def recortar_texto(texto, limite):
     return texto[: max(0, limite - 3)].rstrip() + "..."
 
 
-def construir_post(data, mercado):
+def construir_post(data, hashtags):
     titulo = data.get("title", "").strip()
     desc = data.get("description", "").strip()
     prompt = (
@@ -41,7 +41,6 @@ def construir_post(data, mercado):
         "- Usa cashtags técnicos (ej: $BTC) de forma natural.\n"
         "- Estilo de boletín financiero (Reuters/Bloomberg).\n"
         f"Título: {titulo}\nTexto: {desc[:1700]}\n"
-        f"Datos de Mercado: {mercado}"
     )
     resumen = resumen_ai(
         prompt,
@@ -52,7 +51,7 @@ def construir_post(data, mercado):
         prefer_gemini=True,
         max_output_tokens=500,
     )
-    footer = "— Análisis por EmeDotEme\n#Criptomonedas #Web3 #EmeDotEme"
+    footer = f"— Análisis por EmeDotEme\n{hashtags}"
     espacio_disponible = (
         MAX_POST_CHARS - len(titulo) - len(footer) - 25
     )
@@ -119,8 +118,9 @@ if __name__ == "__main__":
     img = article.get("imageUrl", "")
     if img and img.startswith("/"):
         img = f"https://emedoteme.es{img}"
-    mercado = obtener_datos_mercado()
-    post = construir_post(article, mercado)
+    tags = article.get("tags", [])
+    hashtags = format_hashtags(tags)
+    post = construir_post(article, hashtags)
     ok, detalle = publicar_en_square(post, img)
     if ok:
         log_event(f"[ok] Publicado en Binance Square: {titulo}")

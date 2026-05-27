@@ -40,6 +40,34 @@ def clean_control_chars(text):
     return "".join(c if c >= " " or c in "\t\n\r" else " " for c in text)
 
 
+def to_hashtag(tag):
+    parts = re.split(r'[\s\-_]+', tag.strip())
+    hashtag_parts = []
+    for p in parts:
+        clean = re.sub(r'[^a-zA-Z0-9]', '', p)
+        if clean:
+            capitalized = clean[0].upper() + clean[1:] if len(clean) > 0 else ""
+            hashtag_parts.append(capitalized)
+    if hashtag_parts:
+        return "#" + "".join(hashtag_parts)
+    return ""
+
+
+def format_hashtags(tags, primary_tag="EmeDotEme"):
+    formatted_tags = [f"#{primary_tag}"]
+    seen_tags_lower = {primary_tag.lower()}
+    
+    for tag in (tags or []):
+        hashtag = to_hashtag(tag)
+        if hashtag:
+            hashtag_lower = hashtag.lstrip('#').lower()
+            if hashtag_lower not in seen_tags_lower:
+                formatted_tags.append(hashtag)
+                seen_tags_lower.add(hashtag_lower)
+                
+    return " ".join(formatted_tags)
+
+
 def load_json_file(path):
     try:
         with open(path, "r", encoding="utf-8") as f:
@@ -80,6 +108,7 @@ def resumen_ai(
     prefer_gemini=True,
     **kwargs,
 ):
+    max_output_tokens = kwargs.get("max_output_tokens", 600)
     # Gemini primero si se quiere — prueba las 3 keys en orden
     if prefer_gemini:
         gemini_keys = [k for k in [gemini_api_key, gemini_api_key_2, gemini_api_key_3] if k]

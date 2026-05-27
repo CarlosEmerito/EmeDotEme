@@ -208,6 +208,7 @@ export class PublisherService {
       },
       include: {
         category: true,
+        articleTags: true,
       }
     });
   }
@@ -220,7 +221,8 @@ export class PublisherService {
       title: article.title,
       link: `https://www.emedoteme.es/articulo/${article.slug}`,
       description: article.content || article.summary,
-      imageUrl: article.imageUrl
+      imageUrl: article.imageUrl,
+      tags: article.articleTags ? article.articleTags.map((t: any) => t.name) : []
     };
     
     fs.writeFileSync(path.join(tmpDir, 'latest_article.json'), JSON.stringify(articleData, null, 2));

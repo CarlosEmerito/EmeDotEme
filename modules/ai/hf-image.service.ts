@@ -3,11 +3,11 @@ import 'dotenv/config';
 const HF_TOKEN = process.env.HF_TOKEN;
 
 // Modelos en orden de preferencia — se prueban en secuencia hasta que uno funcione.
-// FLUX.1-schnell es el modelo gratuito de Black Forest Labs disponible en hf-inference.
+// stable-diffusion-3-medium-diffusers es (a fecha de este comentario) el único
+// modelo text-to-image servido por el proveedor hf-inference de Hugging Face.
+// Verificar antes de añadir otros: GET https://huggingface.co/api/models?pipeline_tag=text-to-image&inference_provider=hf-inference
 const HF_MODELS = [
-  'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell',
-  'https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-3.5-medium',
-  'https://router.huggingface.co/hf-inference/models/Lykon/dreamshaper-8',
+  'https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-3-medium-diffusers',
 ];
 const MAX_RETRIES = 2;
 

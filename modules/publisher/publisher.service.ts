@@ -60,13 +60,6 @@ export class PublisherService {
       // 5. Generación de Imagen
       console.log("🎨 [5/7] Iniciando pipeline de imagen...");
       const imageUrls = await this.processImage(aiResponse, successfulCluster, allCategories, slug);
-      
-      // Validación extra de seguridad
-      if (!imageUrls.url || imageUrls.url.startsWith('data:')) {
-         console.warn("⚠️ Imagen no válida (Data URI o vacía), aplicando fallback de emergencia.");
-         imageUrls.url = 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2832&auto=format&fit=crop';
-      }
-      
       console.log(`🖼️ Imagen lista: ${imageUrls.url}`);
 
       // 6. Guardar en Base de Datos

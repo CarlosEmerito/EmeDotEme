@@ -5,6 +5,14 @@ import type { NewsItem } from '../news/news-sources.service';
 import { formatNewsForPrompt } from '../news/news-sources.service';
 import { sanitizeJsonString } from '../../lib/json-sanitizer';
 import { logWithTime } from '../../lib/logger';
+import {
+  articleResponseSchema,
+  articleZodSchema,
+  englishArticleResponseSchema,
+  englishArticleZodSchema,
+  newsletterResponseSchema,
+  newsletterZodSchema,
+} from './schemas';
 
 export interface GeneratedArticle {
   title: string;
@@ -36,7 +44,6 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
   while (attempt <= maxRetries) {
     try {
       logWithTime(`🤖 [Ollama ${model}] Intento ${attempt + 1}/${maxRetries + 1}...`);
-      const prompt = `${systemPrompt}\n\n${userPrompt}`;
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 1200000);
 
@@ -46,7 +53,10 @@ export async function generateTextWithOllama({ systemPrompt, userPrompt }: { sys
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model,
-          prompt,
+          // `system` separa las instrucciones fijas de los datos variables del
+          // usuario (que pueden incluir texto de fuentes externas no confiables).
+          system: systemPrompt,
+          prompt: userPrompt,
           stream: true,
           options: { temperature: 0.1, num_ctx: 8192 },
           keep_alive: 0
@@ -110,20 +120,17 @@ export async function generateWeeklyNewsletter(articles: any[]) {
     systemPrompt,
     userPrompt,
     maxTokens: 8000,
-    temperature: 0.7
+    temperature: 0.7,
+    responseSchema: newsletterResponseSchema,
   });
 
   if (!result) throw new Error('Fallo la generación de la newsletter');
 
   try {
     const jsonStr = sanitizeJsonString(extractJson(result));
-    const parsed = JSON.parse(jsonStr);
-    return {
-      subject: parsed.subject || "EmeDotEme News: Tu resumen semanal",
-      htmlContent: parsed.htmlContent || "<p>Error al generar el contenido de la newsletter.</p>"
-    };
+    return newsletterZodSchema.parse(JSON.parse(jsonStr));
   } catch {
-    logWithTime('Error parseando newsletter de Gemini. Usando fallback básico.');
+    logWithTime('Error parseando/validando newsletter de Gemini. Usando fallback básico.');
     return {
       subject: "EmeDotEme News: Tu resumen semanal",
       htmlContent: `<p>Esta semana hemos tenido ${articles.length} noticias importantes. Visita nuestra web para ver el detalle.</p>`
@@ -149,7 +156,13 @@ export async function generateArticleContent(
 
   const userPrompt = AI_PROMPTS.SPANISH.USER_WITH_NEWS(formatNewsForPrompt(newsContext.slice(0, 3)), avoidanceClause);
 
-  const result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
+  const result = await generateTextWithGemini({
+    systemPrompt,
+    userPrompt,
+    maxTokens: 6000,
+    temperature: 0.7,
+    responseSchema: articleResponseSchema,
+  });
 
   if (!result || result.includes('Lo siento') || result.length < 200) {
     throw new Error('Falló la generación de texto en Gemini (Límite de API o error). Abortando para evitar bucle local.');
@@ -193,25 +206,23 @@ async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{
   const userPrompt = AI_PROMPTS.ENGLISH.USER_TRANSLATE(esArticle, "");
 
   logWithTime('Solicitando traducción a Gemini...');
-  const result = await generateTextWithGemini({ systemPrompt, userPrompt, maxTokens: 6000, temperature: 0.7 });
+  const result = await generateTextWithGemini({
+    systemPrompt,
+    userPrompt,
+    maxTokens: 6000,
+    temperature: 0.7,
+    responseSchema: englishArticleResponseSchema,
+  });
   if (!result || result.length < 200) {
     throw new Error('Falló la generación en inglés en Gemini. Abortando.');
   }
-  if (!result) throw new Error('Fallo generación en inglés');
 
   try {
-    const parsed = JSON.parse(sanitizeJsonString(extractJson(result)));
-    logWithTime('Traducción completada y parseada.');
-    return {
-      titleEn: parsed.titleEn || esArticle.title,
-      summaryEn: parsed.summaryEn || esArticle.summary,
-      keyPointsEn: parsed.keyPointsEn || esArticle.keyPoints || [],
-      glossaryEn: parsed.glossaryEn || [],
-      faqsEn: parsed.faqsEn || [],
-      contentEn: parsed.contentEn || esArticle.content
-    };
+    const parsed = englishArticleZodSchema.parse(JSON.parse(sanitizeJsonString(extractJson(result))));
+    logWithTime('Traducción completada, parseada y validada.');
+    return parsed;
   } catch {
-    logWithTime('Error parseando traducción, usando fallback de contenido original.');
+    logWithTime('Error parseando/validando traducción, usando fallback de contenido original.');
     return {
       titleEn: esArticle.title,
       summaryEn: esArticle.summary,
@@ -234,9 +245,10 @@ function extractJson(text: string): string {
 function parseAndRecoverJson(result: string, newsContext: NewsItem[]): GeneratedArticle {
   try {
     const jsonStr = sanitizeJsonString(extractJson(result));
-    const parsed = JSON.parse(jsonStr);
-    if (!parsed.title) throw new Error('No title');
-    return parsed;
+    // Con responseSchema forzando la forma del JSON en la propia API de Gemini,
+    // este parseo+validación debería ser el camino habitual. El bloque de abajo
+    // (regex) queda solo como red de seguridad ante fallos totalmente inesperados.
+    return articleZodSchema.parse(JSON.parse(jsonStr));
   } catch {
     logWithTime('Recuperación por Regex...');
     const titleMatch = result.match(/(?:"title"\s*:\s*"|Título\s*:\s*|#\s*)([^"}\n\n]+)/i);

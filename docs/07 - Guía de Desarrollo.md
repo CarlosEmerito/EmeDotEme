@@ -45,6 +45,8 @@ La lógica de la IA reside en `modules/ai/`.
 ### Cambiar el System Prompt
 Si deseas ajustar el tono o estilo de los artículos, modifica los prompts en `config/prompts.ts`. Los system prompts de Gemini están en `modules/ai/constants.ts`.
 
+Si el cambio añade, quita o renombra un campo en el JSON que devuelve la IA (p. ej. un nuevo campo en el artículo), actualiza también `modules/ai/schemas.ts` en el mismo cambio: el `responseSchema` que se envía a Gemini y el esquema `zod` que valida la respuesta al vuelo. Si solo tocas el prompt y no el schema, Gemini seguirá forzando la forma antigua y el campo nuevo no llegará. Ver [[10 - Seguridad y Prompts de IA]] para el porqué de este diseño (incluye las defensas anti prompt-injection, que conviene mantener si tocas `USER_WITH_NEWS`).
+
 ### Añadir un nuevo modelo de Ollama
 1.  Asegúrate de haber descargado el modelo: `ollama pull nuevo-modelo`.
 2.  Actualiza `OLLAMA_MODEL` en tu `.env`.

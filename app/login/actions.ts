@@ -1,13 +1,29 @@
 'use server'
 
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
+import { timingSafeEqual } from 'crypto'
 import { createSession } from '@/lib/session'
+import { getClientIpFromHeaders } from '@/lib/rate-limit'
 
 const attempts = new Map<string, { count: number; blockedUntil: number }>()
 const MAX_ATTEMPTS = 5
 const BLOCK_DURATION_MS = 15 * 60 * 1000
 
-export async function loginAction(password: string, ip: string = 'unknown') {
+/** Compara dos strings en tiempo constante para evitar timing attacks. */
+function safeCompare(a: string, b: string): boolean {
+  const bufA = Buffer.from(a)
+  const bufB = Buffer.from(b)
+  // Buffers de distinta longitud no se pueden comparar con timingSafeEqual;
+  // igualamos longitudes con un buffer dummy para no filtrar la longitud real.
+  if (bufA.length !== bufB.length) {
+    timingSafeEqual(bufA, bufA)
+    return false
+  }
+  return timingSafeEqual(bufA, bufB)
+}
+
+export async function loginAction(password: string) {
+  const ip = getClientIpFromHeaders(await headers())
   const now = Date.now()
   const record = attempts.get(ip)
 
@@ -18,7 +34,7 @@ export async function loginAction(password: string, ip: string = 'unknown') {
 
   const expectedPwd = process.env.ADMIN_PASSWORD
 
-  if (expectedPwd && password === expectedPwd) {
+  if (expectedPwd && safeCompare(password, expectedPwd)) {
     attempts.delete(ip)
     const cookieStore = await cookies()
     const value = await createSession()

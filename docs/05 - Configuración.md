@@ -9,6 +9,13 @@
 | `DATABASE_URL` | URL de conexión principal (con pooler si aplica)              | ✅         |
 | `DIRECT_URL`   | URL de conexión directa a la base de datos (para migraciones)  | ✅         |
 
+### Autenticación del panel admin
+
+| Variable          | Descripción                                                                                   | Requerido      |
+|-------------------|------------------------------------------------------------------------------------------------|----------------|
+| `ADMIN_PASSWORD`  | Contraseña del panel `/admin`                                                                  | ✅              |
+| `SESSION_SECRET`  | Secreto para firmar las cookies de sesión. Debe ser un valor aleatorio independiente de `ADMIN_PASSWORD` (ej: `openssl rand -hex 32`). Si se omite, se reutiliza `ADMIN_PASSWORD` como fallback (se avisa por log) — ver [[10 - Seguridad y Prompts de IA]]. | Recomendado ✅ |
+
 ### IA - Gemini
 
 | Variable           | Descripción                                 | Requerido    | Obtención |
@@ -87,6 +94,7 @@ DATABASE_URL=""
 DIRECT_URL=""
 CRON_SECRET=""
 ADMIN_PASSWORD=""
+SESSION_SECRET=""
 SUPABASE_URL=""
 SUPABASE_SERVICE_ROLE_KEY=""
 RESEND_API_KEY=""

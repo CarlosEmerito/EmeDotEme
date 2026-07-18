@@ -19,6 +19,7 @@
 *   [[07 - Guía de Desarrollo]] - Instrucciones para configurar el entorno local, añadir fuentes RSS y extender la lógica de la IA.
 *   [[08 - API]] - Documentación de los endpoints internos para automatizaciones y el frontend, incluyendo ejemplos cURL.
 *   [[09 - Troubleshooting]] - Solución a problemas comunes, manejo de errores de cuota, falta de memoria (VRAM) y depuración.
+*   [[10 - Seguridad y Prompts de IA]] - Sanitización de HTML, defensas anti prompt-injection, `responseSchema`/`zod`, autenticación del panel admin.
 
 ---
 

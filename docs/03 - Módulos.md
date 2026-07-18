@@ -47,10 +47,11 @@ Es el orquestador central del sistema. Encapsula el flujo de negocio de publicac
 - Generación bilingüe (ES/EN) de artículos.
 - **Prompts Centralizados**: Configuración en `config/prompts.ts`.
 - **Análisis Vision**: Validación de imágenes mediante Gemini u Ollama Vision.
+- **Salida estructurada y validada**: los prompts a Gemini fuerzan un `responseSchema` (forma exacta del JSON) y toda respuesta se revalida con `zod` antes de usarse. Ver [[10 - Seguridad y Prompts de IA]].
 
 ### Archivos clave
 - `ai.service.ts`: Generación de texto bilingüe y post-procesado.
-- `gemini-text.service.ts`: Integración con Gemini API (rotación de claves, reintentos).
+- `gemini-text.service.ts`: Integración con Gemini API (rotación de claves, reintentos, `systemInstruction` + `responseSchema`).
 - `gemini-vision.service.ts`: QA de imágenes mediante Gemini Vision.
 - `ollama-vision.service.ts`: QA local de imágenes (opcional).
 - `flux-image.service.ts`: Cliente para generación local con Flux.1.
@@ -58,6 +59,7 @@ Es el orquestador central del sistema. Encapsula el flujo de negocio de publicac
 - `aihorde-image.service.ts`: Cliente para AI Horde (fallback comunitario).
 - `constants.ts`: System prompts para generación de texto.
 - `gemini-keys.ts`: Gestión de rotación de claves API de Gemini.
+- `schemas.ts`: Fuente única de verdad de la forma del JSON esperado de la IA — esquemas Gemini (`responseSchema`) y esquemas `zod` (validación post-parseo) para artículo ES/EN, newsletter y análisis de imagen.
 
 ---
 

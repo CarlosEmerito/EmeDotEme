@@ -1,3 +1,5 @@
+import { safeJsonLdString } from "@/lib/sanitize-html";
+
 interface WebSiteSchemaProps {
   siteUrl: string;
   siteName: string;
@@ -33,7 +35,7 @@ export function WebSiteSchema({ siteUrl, siteName, siteDescription }: WebSiteSch
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLdString(websiteSchema) }}
     />
   );
 }

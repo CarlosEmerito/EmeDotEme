@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { safeJsonLdString } from "@/lib/sanitize-html";
+
 interface ArticleSchemaProps {
   article: any; // Using any to avoid type complexity with includes
   siteUrl: string;
@@ -71,7 +73,7 @@ export function ArticleSchema({ article, siteUrl }: ArticleSchemaProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas.length === 1 ? schemas[0] : schemas, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLdString(schemas.length === 1 ? schemas[0] : schemas) }}
     />
   );
 }

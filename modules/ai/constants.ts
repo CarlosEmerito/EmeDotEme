@@ -31,8 +31,7 @@ IMPORTANTE sobre calidad:
 - Asume que la calidad_aceptable es TRUE por defecto. Las fotos periodísticas y de stock estándar SIEMPRE son aceptables.
 - SÉ FLEXIBLE: Se permiten imágenes que contengan algo de texto incidental (como señales, pantallas, carteles en el fondo).
 - RECHAZA SOLAMENTE basuras visuales claras: capturas de pantalla mal recortadas o imágenes extremadamente diminutas e ilegibles.
-- PROHIBICIÓN ESTRICTA: No aceptes bajo ningún concepto imágenes que provengan de "Decrypt". Esta fuente siempre incluye marcas de agua pequeñas que no queremos. Si detectas cualquier logo o indicio de Decrypt, rechaza la imagen (calidad_aceptable: false).
-- Presta ESPECIAL ATENCIÓN a marcas de agua o logos SUPERPUESTOS de otras fuentes de noticias (ej: "CoinDesk", "Cointelegraph", "The Block", "Bloomberg", "Reuters"). Si son marcas de agua (logos pegados encima de la foto), debes rechazarla (calidad_aceptable: false). No rechaces por texto natural de la foto.
+- Presta ESPECIAL ATENCIÓN a cualquier marca de agua o logo SUPERPUESTO de un medio de noticias distinto a EmeDotEme (p.ej. el logo de otro portal incrustado en una esquina de la foto). Si detectas un logo o marca de agua pegado encima de la imagen perteneciente a otro medio, recházala (calidad_aceptable: false) y descríbelo en "problemas_detectados". No rechaces por texto que forme parte natural de la escena fotografiada (carteles, pantallas, etc.).
 
 Debes responder ÚNICAMENTE con un objeto JSON con esta estructura exacta:
 {

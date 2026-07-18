@@ -10,6 +10,7 @@ import { isLikelyCrypto } from "@/lib/market-utils";
 import { ShareButtons } from "@/components/articles/ShareButtons";
 import { Comments } from "@/components/articles/Comments";
 import { TextToSpeech } from "@/components/articles/TextToSpeech";
+import { sanitizeArticleHtml, safeJsonLdString } from "@/lib/sanitize-html";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -93,7 +94,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     <div className="flex flex-col flex-1 bg-white dark:bg-zinc-950 font-sans">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLdString(jsonLd) }}
       />
       <main className="flex flex-col max-w-4xl mx-auto w-full px-4 py-12">
         {/* Breadcrumb */}
@@ -211,7 +212,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
         {/* Content */}
         <article className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
-          <div dangerouslySetInnerHTML={{ __html: article.contentEn || article.content }} />
+          <div dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(article.contentEn || article.content) }} />
         </article>
 
         {/* Glossary Section */}

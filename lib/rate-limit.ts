@@ -20,7 +20,13 @@ export function rateLimit(key: string): { allowed: boolean; remaining: number } 
   return { allowed: true, remaining: MAX_REQUESTS - entry.count };
 }
 
+/** Núcleo compartido: extrae la IP real a partir de cualquier objeto Headers-like. */
+export function getClientIpFromHeaders(headers: { get(name: string): string | null }): string {
+  const forwarded = headers.get("x-forwarded-for");
+  if (forwarded) return forwarded.split(",")[0].trim();
+  return headers.get("x-real-ip") || "127.0.0.1";
+}
+
 export function getClientIp(request: Request): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  return forwarded?.split(",")[0]?.trim() || "127.0.0.1";
+  return getClientIpFromHeaders(request.headers);
 }

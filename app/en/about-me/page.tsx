@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { prisma } from "@/lib/prisma";
+import { sanitizeArticleHtml } from "@/lib/sanitize-html";
 
 export const metadata: Metadata = {
   title: `About the Author | ${siteConfig.name}`,
@@ -68,7 +69,7 @@ export default async function AboutPageEn() {
 
         <article 
           className="prose prose-zinc dark:prose-invert prose-lg max-w-none prose-a:text-[color:var(--color-brand)] prose-a:no-underline hover:prose-a:underline"
-          dangerouslySetInnerHTML={{ __html: content }}
+          dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(content) }}
         />
 
         <div className="not-prose mt-8 p-6 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg">

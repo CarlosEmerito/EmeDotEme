@@ -16,7 +16,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
     setError('')
     
     try {
-      const res = await loginAction(password)
+      const res = await loginAction(password) // la IP se obtiene server-side a partir del request
       if (res?.success) {
         router.push(callbackUrl)
         router.refresh()

@@ -1,14 +1,8 @@
 import { ImageAnalysisResult } from './gemini-vision.service';
 import { OLLAMA_URL, IMAGE_ANALYSIS_SYSTEM_PROMPT } from './constants';
 import { unloadOllamaModels } from '../vram/vram-manager';
-
-function getTime(): string {
-  return new Date().toISOString().replace('T', ' ').substring(0, 19);
-}
-
-function logWithTime(msg: string) {
-  console.log(`[${getTime()}] ${msg}`);
-}
+import { logWithTime } from '../../lib/logger';
+import { imageAnalysisZodSchema } from './schemas';
 
 export async function analyzeImageWithOllama(
   imageUrl: string,
@@ -60,10 +54,14 @@ Devuelve SOLO el JSON de análisis, nada más.`;
         await new Promise(resolve => setTimeout(resolve, 5000));
       }
 
-      // Petición a Ollama con Streaming habilitado
+      // Petición a Ollama con Streaming habilitado.
+      // `system` separa las instrucciones fijas de análisis del `prompt` (que
+      // contiene título/resumen del artículo, en última instancia derivados
+      // de fuentes externas no confiables).
       const payload = {
         model: visionModel,
-        prompt: `${IMAGE_ANALYSIS_SYSTEM_PROMPT}\n\n${userPrompt}`,
+        system: IMAGE_ANALYSIS_SYSTEM_PROMPT,
+        prompt: userPrompt,
         images: [base64Image],
         stream: true,
         options: {
@@ -122,11 +120,7 @@ Devuelve SOLO el JSON de análisis, nada más.`;
       }
 
       const jsonStr = cleaned.substring(jsonStart, jsonEnd + 1);
-      const parsed = JSON.parse(jsonStr) as ImageAnalysisResult;
-
-      if (typeof parsed.coherente !== 'boolean' || typeof parsed.calidad_aceptable !== 'boolean') {
-        throw new Error('Estructura JSON incompleta devuelta por Ollama');
-      }
+      const parsed = imageAnalysisZodSchema.parse(JSON.parse(jsonStr)) as ImageAnalysisResult;
 
       logWithTime(`✅ Ollama Vision completado (${visionModel}).`);
       return parsed;

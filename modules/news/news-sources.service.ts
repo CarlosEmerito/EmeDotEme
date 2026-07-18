@@ -186,11 +186,15 @@ export async function fetchLatestNews(
 
 export function formatNewsForPrompt(newsItems: NewsItem[]): string {
   if (newsItems.length === 0) return '';
-  return newsItems.map((item, i) => `
+  return newsItems.map((item, i) => {
+    const truncated = item.description.length > 300;
+    const description = item.description.substring(0, 300) + (truncated ? '...' : '');
+    return `
 --- Noticia ${i + 1} (${item.source}) ---
 Título: ${item.title}
-Resumen: ${item.description.substring(0, 300)}...
+Resumen: ${description}
 URL: ${item.link}
 Fecha: ${item.pubDate.toISOString()}
-`).join('\n');
+`;
+  }).join('\n');
 }

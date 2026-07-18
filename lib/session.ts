@@ -1,9 +1,25 @@
 const encoder = new TextEncoder();
 
+let warnedAboutFallbackSecret = false;
+
+/**
+ * Devuelve el secreto usado para firmar las cookies de sesión.
+ * SESSION_SECRET es la opción correcta: si un atacante averigua ADMIN_PASSWORD
+ * (p.ej. por fuerza bruta o filtración), no debería poder también falsificar
+ * sesiones firmadas, y viceversa. Se mantiene el fallback a ADMIN_PASSWORD por
+ * compatibilidad con despliegues existentes, pero se avisa para migrar.
+ */
 function getSecret() {
   const secret = process.env.SESSION_SECRET || process.env.ADMIN_PASSWORD;
   if (!secret) {
     throw new Error('No secret configured for session management');
+  }
+  if (!process.env.SESSION_SECRET && !warnedAboutFallbackSecret) {
+    warnedAboutFallbackSecret = true;
+    console.warn(
+      '⚠️  SESSION_SECRET no está configurado; se está reutilizando ADMIN_PASSWORD para firmar las sesiones. ' +
+      'Configura SESSION_SECRET con un valor aleatorio e independiente (ver .env.example).'
+    );
   }
   return secret;
 }

@@ -192,9 +192,13 @@ export class PublisherService {
         contentEn: aiResponse.contentEn,
         articleTags: {
           connectOrCreate: tagsArray.map((tag: string) => ({
-            where: { name: tag },
-            create: { 
-              name: tag, 
+            // Se busca por slug (no por name) para deduplicar etiquetas cuyo
+            // nombre generado por la IA difiere en grafía/mayúsculas de una
+            // ya existente pero normaliza al mismo slug (evita un choque de
+            // Tag.slug @unique que Prisma reporta como si fuera Article.slug).
+            where: { slug: generateSlug(tag, false) },
+            create: {
+              name: tag,
               slug: generateSlug(tag, false)
             }
           }))

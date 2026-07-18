@@ -165,34 +165,6 @@ export function trackPageView(data?: Partial<PageViewData>): void {
 }
 
 /**
- * Track article view with reading time estimation
- */
-export function trackArticleView(
-  articleId: string, 
-  articleTitle: string, 
-  category: string
-): void {
-  trackEvent('article_view', {
-    article_id: articleId,
-    article_title: articleTitle,
-    article_category: category
-  });
-  
-  // Start tracking reading time
-  startReadingTimeTracker(articleId);
-}
-
-/**
- * Track search performance
- */
-export function trackSearch(query: string, resultsCount: number): void {
-  trackEvent('search_performed', {
-    search_query: query,
-    search_results: resultsCount
-  });
-}
-
-/**
  * Track social share attempts
  */
 export function trackShare(platform: string, url: string, title?: string): void {
@@ -200,28 +172,6 @@ export function trackShare(platform: string, url: string, title?: string): void 
     share_platform: platform,
     url: url,
     article_title: title
-  });
-}
-
-/**
- * Track newsletter subscription
- */
-export function trackNewsletterSubscribe(email: string, source?: string): void {
-  trackEvent('newsletter_subscribe', {
-    engagement_type: 'newsletter_subscription',
-    user_id: hashEmail(email), // Privacy: hash email for tracking
-    source: source
-  });
-}
-
-/**
- * Track errors for monitoring
- */
-export function trackError(error: Error, context?: string): void {
-  trackEvent('error_occurred', {
-    error_message: error.message,
-    error_stack: error.stack?.substring(0, 500), // Limit stack trace size
-    engagement_type: context
   });
 }
 
@@ -245,133 +195,15 @@ function getSessionId(): string {
 }
 
 /**
- * Simple email hashing for privacy
- */
-function hashEmail(email: string): string {
-  if (typeof window === 'undefined') return 'hashed';
-  try {
-    // Simple hash for demo purposes - in production use proper hashing
-    return `email_${btoa(email).substring(0, 10)}`;
-  } catch {
-    return 'email_hash_error';
-  }
-}
-
-/**
  * Reading time tracker for articles
  */
 let readingTimeInterval: NodeJS.Timeout | null = null;
-let readingStartTime: number = 0;
-let currentArticleId: string = '';
-
-export function startReadingTimeTracker(articleId: string): void {
-  if (typeof window === 'undefined') return;
-  
-  // Stop previous tracker if exists
-  if (readingTimeInterval) {
-    clearInterval(readingTimeInterval);
-  }
-  
-  currentArticleId = articleId;
-  readingStartTime = Date.now();
-  
-  // Track reading time every 30 seconds
-  readingTimeInterval = setInterval(() => {
-    const readingTimeSeconds = Math.floor((Date.now() - readingStartTime) / 1000);
-    
-    if (readingTimeSeconds >= 30) { // Only track if user has been reading for at least 30 seconds
-      trackEvent('reading_time', {
-        article_id: currentArticleId,
-        reading_time_seconds: readingTimeSeconds,
-        engagement_type: 'article_reading'
-      });
-    }
-  }, 30000); // Check every 30 seconds
-  
-  // Track scroll depth
-  trackScrollDepth();
-}
 
 export function stopReadingTimeTracker(): void {
   if (readingTimeInterval) {
     clearInterval(readingTimeInterval);
     readingTimeInterval = null;
   }
-}
-
-/**
- * Track scroll depth in articles
- */
-function trackScrollDepth(): void {
-  if (typeof window === 'undefined') return;
-  
-  let maxScrollPercentage = 0;
-  const articleHeight = document.documentElement.scrollHeight - window.innerHeight;
-  
-  if (articleHeight <= 0) return;
-  
-  const trackScroll = () => {
-    const scrollTop = window.scrollY;
-    const scrollPercentage = Math.min(Math.round((scrollTop / articleHeight) * 100), 100);
-    
-    // Track at 25%, 50%, 75%, 100% milestones
-    if (scrollPercentage >= 25 && maxScrollPercentage < 25) {
-      trackEvent('scroll_depth', {
-        article_id: currentArticleId,
-        scroll_percentage: 25,
-        engagement_type: 'scroll_milestone'
-      });
-      maxScrollPercentage = 25;
-    } else if (scrollPercentage >= 50 && maxScrollPercentage < 50) {
-      trackEvent('scroll_depth', {
-        article_id: currentArticleId,
-        scroll_percentage: 50,
-        engagement_type: 'scroll_milestone'
-      });
-      maxScrollPercentage = 50;
-    } else if (scrollPercentage >= 75 && maxScrollPercentage < 75) {
-      trackEvent('scroll_depth', {
-        article_id: currentArticleId,
-        scroll_percentage: 75,
-        engagement_type: 'scroll_milestone'
-      });
-      maxScrollPercentage = 75;
-    } else if (scrollPercentage >= 95 && maxScrollPercentage < 95) {
-      trackEvent('scroll_depth', {
-        article_id: currentArticleId,
-        scroll_percentage: 95,
-        engagement_type: 'scroll_milestone'
-      });
-      maxScrollPercentage = 95;
-    }
-  };
-  
-  window.addEventListener('scroll', trackScroll);
-  
-  // Clean up after 10 minutes
-  setTimeout(() => {
-    window.removeEventListener('scroll', trackScroll);
-  }, 600000); // 10 minutes
-}
-
-/**
- * Click tracking for important elements
- */
-export function setupClickTracking(elementIds: string[]): void {
-  if (typeof window === 'undefined') return;
-  
-  elementIds.forEach(elementId => {
-    const element = document.getElementById(elementId);
-    if (element) {
-      element.addEventListener('click', () => {
-        trackEvent('click_tracking', {
-          element_id: elementId,
-          element_text: element.textContent?.substring(0, 100) || '',
-          url: window.location.href
-        });
-      });
-    }
-  });
 }
 
 /**

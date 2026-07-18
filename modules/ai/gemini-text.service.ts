@@ -13,8 +13,6 @@ interface GenerationOptions {
     responseSchema?: Schema;
 }
 
-export { isGeminiAvailable } from './gemini-keys';
-
 export async function generateTextWithGemini(
     options: GenerationOptions
 ): Promise<string | null> {

@@ -129,12 +129,3 @@ export const newsletterZodSchema = z.object({
   subject: z.string().min(1),
   htmlContent: z.string().min(1),
 });
-
-export const imageAnalysisZodSchema = z.object({
-  coherente: z.boolean(),
-  razon_coherencia: z.string().default(''),
-  descripcion: z.string().default(''),
-  calidad_aceptable: z.boolean(),
-  problemas_detectados: z.array(z.string()).default([]),
-  caption_mejorado: z.string().optional(),
-});

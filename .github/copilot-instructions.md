@@ -36,8 +36,6 @@
 ## Key Conventions
 
 - **Categories:** Use base categories: "Criptomonedas", "Empresa", "IA", "Ciberseguridad".
-- **Acronyms:** Crypto/finance acronyms (BTC, ETH, ETF, etc.) must remain uppercase (see `CRYPTO_ACRONYMS` in `config/constants.ts`).
-- **Proper nouns:** Normalize names (e.g., 'bitcoin' → 'Bitcoin') using `PROPER_NOUNS` in `config/constants.ts`.
 - **Fallback images:** If all image generation fails, use category-based Unsplash images from `FALLBACK_IMAGES`.
 - **DRY_RUN:** Set `DRY_RUN=true` in env or script to simulate publishing without real posts.
 - **Error handling:** Critical failures abort publishing and notify via Telegram if credentials are set.

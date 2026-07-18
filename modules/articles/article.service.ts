@@ -228,10 +228,5 @@ export async function getArticlesByTicker(ticker: string, limit: number = 6) {
   });
 }
 
-export async function simpleSearchArticles(query: string, limit: number = 10) {
-  const result = await searchArticles({ query, limit });
-  return result.articles;
-}
-
 
 

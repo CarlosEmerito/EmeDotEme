@@ -72,7 +72,7 @@ Esto refuerza la frontera entre "instrucción de confianza" y "dato no confiable
 **Archivo nuevo**: `modules/ai/schemas.ts`. Fuente única de verdad de la forma del JSON esperado, en dos formatos:
 
 - **Gemini `responseSchema`** (`articleResponseSchema`, `englishArticleResponseSchema`, `newsletterResponseSchema`, `imageAnalysisResponseSchema`): se pasa en `generationConfig.responseSchema` junto con `responseMimeType: "application/json"`. Gemini garantiza que la respuesta cumple esa forma (tipos, campos obligatorios, enum de `category`).
-- **Esquemas `zod`** (`articleZodSchema`, `englishArticleZodSchema`, `newsletterZodSchema`, `imageAnalysisZodSchema`): se aplican después de `JSON.parse()` como defensa en profundidad — por si el modelo se desviase del schema o cambiase de versión.
+- **Esquemas `zod`** (`articleZodSchema`, `englishArticleZodSchema`, `newsletterZodSchema`): se aplican después de `JSON.parse()` como defensa en profundidad — por si el modelo se desviase del schema o cambiase de versión.
 
 `CATEGORY_VALUES` (`Mercados, Tecnología, IA, Ciberseguridad, Criptomonedas`) vive en `schemas.ts` y se reutiliza tanto en el prompt (`config/prompts.ts`) como en el `responseSchema` y en el `zod` — antes las categorías estaban hardcodeadas por triplicado (implícitamente) y podían desincronizarse.
 

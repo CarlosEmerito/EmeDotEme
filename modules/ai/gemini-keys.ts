@@ -22,11 +22,6 @@ export function getKeyName(index: number): string {
   return KEY_NAMES[index] || `EXTRA_${index + 1}`;
 }
 
-/** Comprueba si hay al menos una key configurada */
-export function isGeminiAvailable(): boolean {
-  return getGeminiApiKeys().length > 0;
-}
-
 // Log de disponibilidad (solo al cargar el módulo)
 const keys = getGeminiApiKeys();
 console.log(`🔑 Gemini API Keys disponibles: ${keys.length} (${KEY_NAMES.slice(0, keys.length).join(', ') || 'ninguna'})`);

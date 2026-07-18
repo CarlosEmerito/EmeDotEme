@@ -91,7 +91,7 @@ npx tsx scripts/publish.ts
 
 1. Inicialización (categorías, artículos recientes)
 2. Obtención de noticias desde fuentes RSS
-3. Generación IA (Gemini → Ollama → fallback)
+3. Generación IA (Gemini)
 4. Traducción y postprocesado
 5. Pipeline de imagen
 6. Guardar en base de datos

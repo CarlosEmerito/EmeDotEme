@@ -18,7 +18,7 @@ export interface ImagePipelineResult {
   imageUrl: string;
   caption: string;
   qaResult: ImageAnalysisResult | null;
-  source: 'rss_source' | 'flux_local' | 'ai_horde' | 'fallback_unsplash';
+  source: 'rss_source' | 'flux_local' | 'fallback_unsplash';
   attempts: string[];
   errors: string[];
 }

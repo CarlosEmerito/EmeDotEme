@@ -19,11 +19,7 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 
 > [!TIP]
 > **Depuración**:
-> - Al no usar Ollama local, la robustez de Gemini 2.5 suele ser alta, pero si un JSON viene incompleto el sistema cuenta con rutinas automáticas de reparación (`lib/json-sanitizer.ts`) para recuperar la información básica estructurada.
-
-### 3. Ollama no responde (Opcional, local)
-> [!NOTE]
-> En la configuración actual orientada a Cloud/VPS, el uso local de Ollama es opcional. Si no está configurado, el sistema usará exclusivamente Gemini. Para entornos locales con GPU, configura `OLLAMA_MODEL` en tu `.env`.
+> - La robustez de Gemini 2.5 suele ser alta, pero si un JSON viene incompleto el sistema cuenta con rutinas automáticas de reparación (`lib/json-sanitizer.ts`) para recuperar la información básica estructurada.
 
 ---
 
@@ -39,11 +35,7 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 > - Verifica si has alcanzado los límites de uso gratuito de la API de Hugging Face Serverless Inference.
 > - Revisa si el modelo `black-forest-labs/FLUX.1-schnell` está disponible en la página de estado de Hugging Face.
 
-### 2. Flux.1 Local / AI Horde (Opcionales)
-> [!NOTE]
-> Para entornos sin GPU dedicada, la generación mediante Flux local y AI Horde es opcional. La generación de imágenes depende principalmente de la API Inference de Hugging Face (`HF_TOKEN`) o de la imagen original del feed RSS. Flux.1 local requiere Docker + GPU NVIDIA 8GB+ VRAM.
-
-### 3. Imágenes no se cargan en la web
+### 2. Imágenes no se cargan en la web
 > [!WARNING]
 > **Síntoma**: Errores 404 o imágenes rotas en el frontend.
 

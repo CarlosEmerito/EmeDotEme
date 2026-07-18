@@ -22,32 +22,12 @@ Para una comprensión profunda del sistema, consulta nuestra documentación téc
 
 ## 🚀 Características Principales
 
--   **Pipeline de IA Multicanal**: Generación de texto bilingüe (ES/EN) con Gemini (Google) y fallback local opcional con Ollama.
+-   **Pipeline de IA Multicanal**: Generación de texto bilingüe (ES/EN) con Gemini (Google).
 -   **Curación Inteligente**: Obtención y filtrado automático de noticias desde fuentes RSS de alta fiabilidad.
--   **Generación de Imágenes**: Motor local Flux.1 [dev] (Docker + GPU NVIDIA 8GB VRAM) con fallback automático a Hugging Face y Unsplash.
+-   **Generación de Imágenes**: Imagen original del RSS o generación vía Hugging Face Inference API (FLUX.1-schnell), con fallback a imágenes de stock de Unsplash.
 -   **Publicación Unificada**: Distribución automática en Binance Square, Telegram, Bluesky y Web.
 -   **Automatización Total**: Pipeline automatizado vía GitHub Actions cada 4 horas.
 -   **Newsletter Semanal**: Generación y envío automático de boletines informativos a suscriptores.
-
----
-
-## 🛠️ Servidor de IA Local (Flux.1 - Opcional)
-
-La generación local de imágenes usa Flux.1 [dev] para máxima calidad sin depender de servicios externos.
-
-### Requisitos de Hardware
-- GPU NVIDIA con al menos 8GB VRAM (optimizado para RTX 4060).
-- Docker instalado.
-
-### Puesta en marcha
-1. **Iniciar el servidor de imágenes**:
-   ```bash
-   cd flux-api && docker compose up -d
-   ```
-2. **Publicar artículo**:
-   ```bash
-   ./publicar.sh
-   ```
 
 ---
 

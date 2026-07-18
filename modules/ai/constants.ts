@@ -1,14 +1,9 @@
 /**
  * Constantes compartidas del módulo AI.
- * Centraliza el prompt de análisis de imagen y el nombre del modelo Gemini
- * que estaban duplicados entre gemini-vision.service.ts y ollama-vision.service.ts.
  */
 
 /** Modelo de Gemini utilizado para generación de texto y análisis visual */
 export const GEMINI_MODEL_NAME = "gemini-2.5-flash";
-
-/** URL base de Ollama */
-export const OLLAMA_URL = "http://127.0.0.1:11434/api/generate";
 
 /**
  * Prompt del sistema para análisis de imágenes.

@@ -29,14 +29,13 @@ graph TB
 
     subgraph "Intelligence (AI & ML)"
         Gemini[Gemini API]:::ai
-        Ollama[Ollama Local]:::ai
-        Flux[Flux.1 Local]:::ai
+        HF[Hugging Face API]:::ai
     end
 
     subgraph "External Services"
         Supa[Supabase Storage]:::external
         Resend[Resend Email]:::external
-        Horde[AI Horde / Unsplash]:::external
+        Stock[Unsplash Stock]:::external
         Social[Redes Sociales]:::external
     end
 
@@ -48,9 +47,9 @@ graph TB
     %% Pipeline Flow
     RSS -- "1. Fetch & Cluster" --> Pipeline
     Pipeline -- "2. Texto/Traducción" --> Gemini
-    Pipeline -- "3. Fallback/QA" --> Ollama
-    Pipeline -- "4. Generar Imagen" --> Flux
-    Flux -- "Fallback" --> Horde
+    Pipeline -- "3. QA Imagen" --> Gemini
+    Pipeline -- "4. Generar Imagen" --> HF
+    HF -- "Fallback" --> Stock
     Pipeline -- "5. Guardar Imagen" --> Supa
     Pipeline -- "6. Guardar Post" --> DB
     Pipeline -- "7. Publicar" --> Social
@@ -71,8 +70,8 @@ graph TB
 
 ### Pipeline de contenido
 - **Servicio de fuentes de noticias**: Fetch y normalización de fuentes RSS (CoinDesk, Decrypt, etc.).
-- **Servicio de IA**: Generación bilingüe con Gemini y fallback a Ollama (gemma4:26b). Soporta modelos de razonamiento.
-- **Servicio de imágenes**: Pipeline jerárquico (RSS -> Flux.1 Local -> AI Horde) con gestión dinámica de VRAM para descargar modelos de Ollama antes de activar la GPU para Flux.
+- **Servicio de IA**: Generación bilingüe con Gemini (gemini-2.5-flash), con rotación de hasta 3 claves API.
+- **Servicio de imágenes**: Pipeline jerárquico (RSS -> Hugging Face -> Unsplash de stock), con QA vía Gemini Vision.
 
 ## Referencias
 

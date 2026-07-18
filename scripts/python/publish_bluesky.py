@@ -19,7 +19,6 @@ BLUESKY_PASSWORD = get_env("BLUESKY_PASSWORD", "").strip()
 GEMINI_API_KEY = get_env("GEMINI_API_KEY", "")
 GEMINI_API_KEY_2 = get_env("GEMINI_API_KEY_2", "")
 GEMINI_API_KEY_3 = get_env("GEMINI_API_KEY_3", "")
-OLLAMA_MODEL = get_env("OLLAMA_MODEL", "gemma4:26b").strip()
 
 # --- Helpers
 
@@ -111,7 +110,6 @@ if __name__ == "__main__":
     )
     resumen = resumen_ai(
         prompt,
-        ollama_model=OLLAMA_MODEL,
         gemini_api_key=GEMINI_API_KEY,
         gemini_api_key_2=GEMINI_API_KEY_2,
         gemini_api_key_3=GEMINI_API_KEY_3,

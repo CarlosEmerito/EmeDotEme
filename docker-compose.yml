@@ -12,23 +12,5 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  flux-api:
-    build:
-      context: ./flux-api
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    environment:
-      HF_TOKEN: "${HF_TOKEN:-}"
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-    profiles:
-      - gpu
-
 volumes:
   pgdata:

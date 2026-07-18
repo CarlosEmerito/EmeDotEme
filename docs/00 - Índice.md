@@ -7,7 +7,7 @@
 
 ### 1. Fundamentos
 *   [[01 - Arquitectura]] - Visión general del sistema, diagrama de flujo de datos y arquitectura de componentes.
-*   [[02 - Stack Tecnológico]] - Tecnologías core, frameworks (Next.js), modelos de IA (Gemini, Ollama, Flux) y servicios externos.
+*   [[02 - Stack Tecnológico]] - Tecnologías core, frameworks (Next.js), modelos de IA (Gemini, Hugging Face) y servicios externos.
 
 ### 2. Referencia del Sistema
 *   [[03 - Módulos]] - Detalle técnico y responsabilidades de los módulos de negocio principales (`ai`, `images`, `news`, etc).
@@ -18,7 +18,7 @@
 ### 3. Guías de Desarrollo
 *   [[07 - Guía de Desarrollo]] - Instrucciones para configurar el entorno local, añadir fuentes RSS y extender la lógica de la IA.
 *   [[08 - API]] - Documentación de los endpoints internos para automatizaciones y el frontend, incluyendo ejemplos cURL.
-*   [[09 - Troubleshooting]] - Solución a problemas comunes, manejo de errores de cuota, falta de memoria (VRAM) y depuración.
+*   [[09 - Troubleshooting]] - Solución a problemas comunes, manejo de errores de cuota y depuración.
 *   [[10 - Seguridad y Prompts de IA]] - Sanitización de HTML, defensas anti prompt-injection, `responseSchema`/`zod`, autenticación del panel admin.
 
 ---
@@ -28,13 +28,10 @@
 Para poner en marcha el proyecto localmente:
 
 1.  **Instalar dependencias:** `npm install` y `pip install -r scripts/python/requirements.txt`.
-2.  **Preparar IA Local (opcional):**
-    -   Instala Ollama y descarga el modelo: `ollama run qwen3.5:9b`.
-    -   Para generación local de imágenes, despliega `flux-api/` con Docker (requiere GPU NVIDIA).
-3.  **Configurar entorno:** Copia `.env.example` a `.env` y rellena las claves mínimas (DATABASE_URL, GEMINI_API_KEY).
-4.  **Base de datos:** `npx prisma migrate dev`.
-5.  **Ejecutar dev:** `npm run dev`.
-6.  **Probar pipeline:** `npx tsx scripts/publish_test.ts`.
+2.  **Configurar entorno:** Copia `.env.example` a `.env` y rellena las claves mínimas (DATABASE_URL, GEMINI_API_KEY, HF_TOKEN).
+3.  **Base de datos:** `npx prisma migrate dev`.
+4.  **Ejecutar dev:** `npm run dev`.
+5.  **Probar pipeline:** `npx tsx scripts/publish_test.ts`.
 
 ---
 

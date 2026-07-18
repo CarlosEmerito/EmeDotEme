@@ -29,26 +29,6 @@
 | Variable   | Descripción                                            | Requerido | Obtención |
 |------------|--------------------------------------------------------|-----------|-----------|
 | `HF_TOKEN` | Token de Hugging Face para consumir FLUX.1-schnell | ✅         | [Hugging Face Settings](https://huggingface.co/settings/tokens) |
-| `AI_HORDE_API_KEY` | Clave API de AI Horde (fallback comunitario)  | Opcional   | [AI Horde](https://aihorde.net/register) |
-
-### IA - Ollama (Opcional, local)
-
-| Variable             | Descripción                                | Requerido | Ejemplo      |
-|----------------------|--------------------------------------------|-----------|--------------|
-| `OLLAMA_MODEL`       | Modelo para texto y corrección             | ❌         | `qwen3.5:9b` |
-| `OLLAMA_VISION_MODEL`| Modelo para análisis visual                | ❌         |              |
-
-### Imágenes - Flux.1 Local (Opcional, Docker con GPU)
-
-| Variable           | Descripción                                 | Requerido | Default |
-|--------------------|---------------------------------------------|-----------|---------|
-| `FLUX_API_URL`     | URL de la API local de Flux                 | ❌         | `http://localhost:8000` |
-
-### Imágenes - AI Horde (Desactivado en Cloud)
-
-| Variable             | Descripción                                | Requerido   | Obtención |
-|----------------------|--------------------------------------------|-------------|-----------|
-| `AI_HORDE_API_KEY`   | Clave API de AI Horde (Inactivo)           | ❌           | [AI Horde](https://aihorde.net/register) |
 
 ### Imágenes - Supabase Storage (StorageService)
 
@@ -100,11 +80,9 @@ SUPABASE_SERVICE_ROLE_KEY=""
 RESEND_API_KEY=""
 
 # === INTELIGENCIA ARTIFICIAL ===
-OLLAMA_MODEL="qwen3.5:9b"
 GEMINI_API_KEY=""
 GEMINI_API_KEY_2=""
 GEMINI_API_KEY_3=""
-AI_HORDE_API_KEY=""
 
 # === TELEGRAM ===
 TELEGRAM_TOKEN=""

@@ -5,7 +5,6 @@
 - Pipeline de publicación (Publisher Service)
 - Flujo de imágenes
 - Flujo de IA
-- Gestión de Memoria (VRAM)
 - Cron jobs
 
 ---
@@ -32,7 +31,7 @@ graph TD
     
     Step3["<b>3. GENERACIÓN IA</b><br/><i>(AI Service)</i><br/>- Generación bilingüe (ES->EN)<br/>- Post-procesado ortográfico"]:::step --> Step4
     
-    Step4["<b>4. PROCESO DE IMAGEN</b><br/><i>(Image Service)</i><br/>- RSS -> Flux -> Horde -> Unsplash<br/>- Gestión VRAM"]:::step --> Step5
+    Step4["<b>4. PROCESO DE IMAGEN</b><br/><i>(Image Service)</i><br/>- RSS -> Hugging Face -> Unsplash"]:::step --> Step5
     
     Step5["<b>5. PERSISTENCIA</b><br/><i>(Base de Datos)</i><br/>- Guardar artículo y etiquetas"]:::step --> Step6
     
@@ -48,16 +47,6 @@ graph TD
 npx tsx scripts/publish.ts
 ```
 
-### Variables de entorno CRÍTICAS
-
-> [!WARNING]
-> A diferencia de versiones anteriores, **no existen modelos por defecto** para Ollama. Si no están en el `.env`, el sistema usará exclusivamente Gemini para la generación de texto.
-
-```env
-OLLAMA_MODEL="qwen3.5:9b"        # Para generación de texto local (opcional)
-OLLAMA_VISION_MODEL=""            # Para análisis visual local (opcional)
-```
-
 ---
 
 ## Flujo de imágenes
@@ -71,7 +60,7 @@ graph TD
     B -- No --> D[Hugging Face API]
     E -- Aprobada --> F[Subir a Supabase]
     E -- Rechazada --> D
-    D --> I[Generar con FLUX.1-schnell]
+    D --> I[Generar con Hugging Face - FLUX.1-schnell]
     I -- Éxito --> F
     I -- Fallo --> K[Unsplash Stock Fallback]
     K --> L[Imagen Final]
@@ -89,13 +78,7 @@ El flujo de IA ahora utiliza **AI_PROMPTS** centralizados en `config/prompts.ts`
 
 ### Postprocesado
 
-El postprocesado ortográfico en local mediante Ollama ha sido **desactivado** para habilitar la ejecución serverless en la nube, optimizando el tiempo y dependiendo exclusivamente del modelo `gemini-2.5-flash` para la generación y coherencia. Ollama sigue disponible como opción para entornos locales con GPU.
-
----
-
-## Gestión de Memoria (VRAM)
-
-El `VRAMManager` gestiona la memoria de GPU para entornos con hardware limitado, alternando entre Ollama y Flux.1 cuando ambos están configurados localmente. En entornos cloud/serverless, este módulo no realiza operaciones activas pero permanece disponible.
+Toda la generación y postprocesado ortográfico depende exclusivamente del modelo `gemini-2.5-flash`, para habilitar la ejecución serverless en la nube sin dependencias locales.
 
 ---
 

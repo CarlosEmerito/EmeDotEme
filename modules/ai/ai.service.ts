@@ -1,4 +1,3 @@
-import { OLLAMA_URL } from './constants';
 import { AI_PROMPTS } from '../../config/prompts';
 import { generateTextWithGemini } from './gemini-text.service';
 import type { NewsItem } from '../news/news-sources.service';
@@ -31,82 +30,6 @@ export interface GeneratedArticle {
   sourceImageUrl?: string;
   imageCaption?: string;
   category?: string;
-}
-
-export async function generateTextWithOllama({ systemPrompt, userPrompt }: { systemPrompt: string; userPrompt: string; }): Promise<string | null> {
-  const model = process.env.OLLAMA_MODEL;
-  if (!model) {
-    throw new Error('Error: La variable de entorno OLLAMA_MODEL no está configurada.');
-  }
-  const maxRetries = 2;
-  let attempt = 0;
-
-  while (attempt <= maxRetries) {
-    try {
-      logWithTime(`🤖 [Ollama ${model}] Intento ${attempt + 1}/${maxRetries + 1}...`);
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1200000);
-
-      const fetchNode = (await import('node-fetch')).default;
-      const response = await fetchNode(OLLAMA_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model,
-          // `system` separa las instrucciones fijas de los datos variables del
-          // usuario (que pueden incluir texto de fuentes externas no confiables).
-          system: systemPrompt,
-          prompt: userPrompt,
-          stream: true,
-          options: { temperature: 0.1, num_ctx: 8192 },
-          keep_alive: 0
-        }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        signal: controller.signal as any
-      });
-
-      clearTimeout(timeoutId);
-      if (!response.ok) {
-        logWithTime(`Ollama respondió con error HTTP ${response.status}`);
-        throw new Error(`Error HTTP ${response.status}`);
-      }
-
-      logWithTime(`🤖 [Ollama ${model}] Recibiendo stream de respuesta...`);
-      let fullResponse = "";
-      const body = response.body;
-      if (!body) throw new Error('No body');
-
-      const decoder = new TextDecoder();
-      for await (const chunk of body) {
-        const lines = decoder.decode(chunk as BufferSource, { stream: true }).split('\n');
-        for (const line of lines) {
-          if (!line.trim()) continue;
-          try {
-            const data = JSON.parse(line);
-            const content = data.response || data.thinking || "";
-            if (content) fullResponse += content;
-            if (data.done) break;
-          } catch {}
-        }
-      }
-      logWithTime(`Ollama completó la generación (${fullResponse.length} caracteres).`);
-      return fullResponse;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      logWithTime(`Error en intento ${attempt + 1}: ${err.message}`);
-      attempt++;
-      if (attempt <= maxRetries) {
-        const waitTime = 5000 * attempt;
-        logWithTime(`Esperando ${waitTime/1000}s antes de reintentar...`);
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-      } else {
-        logWithTime('Se agotaron los reintentos para Ollama.');
-        return null;
-      }
-    }
-  }
-
-  return null;
 }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

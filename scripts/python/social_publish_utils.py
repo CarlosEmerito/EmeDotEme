@@ -101,7 +101,6 @@ def log_historial(red, status, title, extra=None):
 # IA: RESUMEN UNIFICADO ------------------------------------------------------
 def resumen_ai(
     prompt,
-    ollama_model=None,
     gemini_api_key=None,
     gemini_api_key_2=None,
     gemini_api_key_3=None,
@@ -186,8 +185,7 @@ def resumen_ai(
                         log_event(f"[warn] Gemini {kname} fallo crítico persistente: {e}", logging.WARNING)
                         break # Pasa a la siguiente clave API
 
-    # Fallback Ollama desactivado en Cloud por requisitos de ejecución sin IA local
-    log_event("❌ Fallaron todas las API keys de Gemini y Ollama local está desactivado.", logging.ERROR)
+    log_event("❌ Fallaron todas las API keys de Gemini.", logging.ERROR)
     return None
 
 

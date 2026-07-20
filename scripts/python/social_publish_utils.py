@@ -53,18 +53,25 @@ def to_hashtag(tag):
     return ""
 
 
-def format_hashtags(tags, primary_tag="EmeDotEme"):
+def format_hashtags(tags, primary_tag="EmeDotEme", max_extra_tags=2):
+    # Binance Square rechaza la publicación con "Hashtag count exceeds the
+    # allowed limit" si hay demasiados hashtags (no documentan la cifra
+    # exacta). El footer fijo previo a los hashtags dinámicos ("#Criptomonedas
+    # #Web3 #EmeDotEme", 3 en total) siempre funcionó, así que usamos ese
+    # tope como límite seguro: primary_tag + como máximo max_extra_tags.
     formatted_tags = [f"#{primary_tag}"]
     seen_tags_lower = {primary_tag.lower()}
-    
+
     for tag in (tags or []):
+        if len(formatted_tags) > max_extra_tags:
+            break
         hashtag = to_hashtag(tag)
         if hashtag:
             hashtag_lower = hashtag.lstrip('#').lower()
             if hashtag_lower not in seen_tags_lower:
                 formatted_tags.append(hashtag)
                 seen_tags_lower.add(hashtag_lower)
-                
+
     return " ".join(formatted_tags)
 
 

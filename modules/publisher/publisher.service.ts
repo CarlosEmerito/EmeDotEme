@@ -149,7 +149,7 @@ export class PublisherService {
       topic: categoryName,
       originalPrompt: aiResponse.imagePrompt,
       summary: aiResponse.summary
-    }, rssImageUrl);
+    }, rssImageUrl, cluster[0]?.link);
 
     return {
       url: imageResult.imageUrl,

@@ -35,7 +35,6 @@ graph TB
     subgraph "External Services"
         Supa[Supabase Storage]:::external
         Resend[Resend Email]:::external
-        Stock[Unsplash Stock]:::external
         Social[Redes Sociales]:::external
     end
 
@@ -49,7 +48,6 @@ graph TB
     Pipeline -- "2. Texto/Traducción" --> Gemini
     Pipeline -- "3. QA Imagen" --> Gemini
     Pipeline -- "4. Generar Imagen" --> HF
-    HF -- "Fallback" --> Stock
     Pipeline -- "5. Guardar Imagen" --> Supa
     Pipeline -- "6. Guardar Post" --> DB
     Pipeline -- "7. Publicar" --> Social
@@ -71,7 +69,7 @@ graph TB
 ### Pipeline de contenido
 - **Servicio de fuentes de noticias**: Fetch y normalización de fuentes RSS (CoinDesk, Decrypt, etc.).
 - **Servicio de IA**: Generación bilingüe con Gemini (gemini-2.5-flash), con rotación de hasta 3 claves API.
-- **Servicio de imágenes**: Pipeline jerárquico (RSS -> Hugging Face -> Unsplash de stock), con QA vía Gemini Vision.
+- **Servicio de imágenes**: Pipeline jerárquico (RSS -> Hugging Face), con QA vía Gemini Vision en cada paso. Si ningún método produce una imagen válida, el pipeline lanza una excepción y el artículo no se publica (no hay fallback de stock).
 
 ## Referencias
 

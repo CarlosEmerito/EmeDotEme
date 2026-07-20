@@ -35,14 +35,15 @@ async function isImageValid(
   title: string,
   summary: string,
   caption: string,
-  stepName: string
+  stepName: string,
+  refererUrl?: string
 ): Promise<{ valid: boolean; qa: ImageAnalysisResult | null; error?: string }> {
   try {
     console.log(`🔍 [QA ${stepName}] Analizando imagen...`);
 
     let qa: ImageAnalysisResult | null = null;
     try {
-      qa = await analyzeImageWithGemini(imageUrl, title, summary, caption);
+      qa = await analyzeImageWithGemini(imageUrl, title, summary, caption, refererUrl);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (geminiErr: any) {
       console.error(`❌ Falló Gemini Vision de forma definitiva. Error: ${geminiErr.message}`);
@@ -65,7 +66,8 @@ async function isImageValid(
 
 export async function generateArticleImageAndAnalyzeQA(
   data: ArticleImageData,
-  rssImageUrl?: string
+  rssImageUrl?: string,
+  sourceLink?: string
 ): Promise<ImagePipelineResult> {
   const attempts: string[] = [];
   const errors: string[] = [];
@@ -73,7 +75,7 @@ export async function generateArticleImageAndAnalyzeQA(
 
   if (rssImageUrl) {
     attempts.push('rss_source');
-    const { valid, qa, error } = await isImageValid(rssImageUrl, data.title, data.summary || '', caption, 'RSS');
+    const { valid, qa, error } = await isImageValid(rssImageUrl, data.title, data.summary || '', caption, 'RSS', sourceLink);
     if (valid) {
       const finalUrl = await saveImageToSupabase(rssImageUrl, data.slug);
       return { imageUrl: finalUrl, caption: qa?.caption_mejorado || caption, qaResult: qa, source: 'rss_source', attempts, errors };

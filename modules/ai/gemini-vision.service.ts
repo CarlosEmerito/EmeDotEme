@@ -23,7 +23,8 @@ export async function analyzeImageWithGemini(
   imageUrl: string,
   articleTitle: string,
   articleSummary: string,
-  currentCaption?: string
+  currentCaption?: string,
+  refererUrl?: string
 ): Promise<ImageAnalysisResult> {
   const apiKeys = getGeminiApiKeys();
 
@@ -46,10 +47,23 @@ Devuelve SOLO el JSON de análisis, nada más.`;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let imagePart: any;
   try {
+    // Muchos CDNs de medios (CNBC, Investing.com, etc.) aplican hotlink-protection:
+    // rechazan con 403 las peticiones sin un Referer del propio sitio o con un
+    // User-Agent que no parezca un navegador. Usamos la URL del artículo de origen
+    // como Referer (o el propio origen de la imagen como último recurso) y un
+    // User-Agent de navegador real para maximizar las probabilidades de éxito.
+    let referer: string | undefined;
+    try {
+      referer = refererUrl ? new URL(refererUrl).origin + '/' : new URL(imageUrl).origin + '/';
+    } catch {
+      referer = undefined;
+    }
+
     const response = await fetch(imageUrl, {
       headers: {
-        'User-Agent': 'EmeDotEme/1.0 ImageAnalyzer',
-        'Accept': 'image/*',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'Accept': 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
+        ...(referer ? { 'Referer': referer } : {}),
       },
     });
     if (!response.ok) {

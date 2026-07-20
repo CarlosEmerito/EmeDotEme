@@ -25,17 +25,27 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 
 ## 🖼️ Problemas con las Imágenes
 
-### 1. Hugging Face (FLUX.1-schnell) falla
+### 1. Hugging Face (stable-diffusion-3-medium-diffusers) falla
 > [!WARNING]
-> **Síntoma**: El script indica que no se pudo generar la imagen mediante Hugging Face y se cancela la creación del artículo (ya que no hay fallback local ni de AI Horde).
+> **Síntoma**: El script indica que no se pudo generar la imagen mediante Hugging Face y se cancela la creación del artículo (no hay fallback de stock ni local: si la imagen del RSS es rechazada por QA y Hugging Face también falla, el pipeline lanza una excepción).
 
 > [!TIP]
 > **Solución**:
 > - Asegúrate de que la variable `HF_TOKEN` en tu `.env` sea válida y no haya sido revocada.
+> - **Créditos agotados (HTTP 402)**: `{"error":"You have depleted your monthly included credits..."}` — significa que se agotó la cuota mensual gratuita de Hugging Face Inference Providers, no un problema del código. Compra créditos prepago o suscríbete a PRO en [huggingface.co/settings/billing](https://huggingface.co/settings/billing), o espera al reset mensual.
 > - Verifica si has alcanzado los límites de uso gratuito de la API de Hugging Face Serverless Inference.
-> - Revisa si el modelo `black-forest-labs/FLUX.1-schnell` está disponible en la página de estado de Hugging Face.
+> - Revisa si el modelo `stabilityai/stable-diffusion-3-medium-diffusers` sigue disponible en el proveedor `hf-inference` (consulta `GET https://huggingface.co/api/models?pipeline_tag=text-to-image&inference_provider=hf-inference`); Hugging Face cambia con frecuencia qué modelos sirve cada proveedor.
 
-### 2. Imágenes no se cargan en la web
+### 2. La imagen del RSS es rechazada con "HTTP 403 al descargar imagen"
+> [!WARNING]
+> **Síntoma**: En el paso `[QA RSS]` los logs muestran `Error descargando imagen para análisis: Error: HTTP 403 al descargar imagen`, y el pipeline pasa a intentar Hugging Face (con el riesgo de fallar también si no hay créditos, ver punto 1).
+
+> [!TIP]
+> **Causa**: muchos CDNs de medios (CNBC, Investing.com, etc.) aplican *hotlink-protection*: rechazan las descargas de imagen que no incluyan un `Referer` del propio sitio o que usen un `User-Agent` que no parezca un navegador.
+> **Solución ya aplicada**: `analyzeImageWithGemini` (`modules/ai/gemini-vision.service.ts`) envía un `User-Agent` de navegador real y un header `Referer` derivado de la URL del artículo de origen (`NewsItem.link`, propagado desde `publisher.service.ts` y `publish_test.ts`). Esto resuelve la protección "naive" basada en esos headers.
+> - Si el 403 persiste para una fuente concreta después de este cambio, probablemente el sitio usa un WAF/bot-management más avanzado (Cloudflare, Akamai) que bloquea por reputación de IP (p. ej. rangos de datacenter de GitHub Actions), no por headers — en ese caso no hay solución a nivel de headers; toca aceptar que esa fuente caerá siempre a Hugging Face.
+
+### 3. Imágenes no se cargan en la web
 > [!WARNING]
 > **Síntoma**: Errores 404 o imágenes rotas en el frontend.
 

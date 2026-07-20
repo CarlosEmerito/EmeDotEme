@@ -31,7 +31,7 @@ graph TD
     
     Step3["<b>3. GENERACIÓN IA</b><br/><i>(AI Service)</i><br/>- Generación bilingüe (ES->EN)<br/>- Post-procesado ortográfico"]:::step --> Step4
     
-    Step4["<b>4. PROCESO DE IMAGEN</b><br/><i>(Image Service)</i><br/>- RSS -> Hugging Face -> Unsplash"]:::step --> Step5
+    Step4["<b>4. PROCESO DE IMAGEN</b><br/><i>(Image Service)</i><br/>- RSS -> Hugging Face (con QA Gemini Vision)"]:::step --> Step5
     
     Step5["<b>5. PERSISTENCIA</b><br/><i>(Base de Datos)</i><br/>- Guardar artículo y etiquetas"]:::step --> Step6
     
@@ -60,15 +60,19 @@ graph TD
     B -- No --> D[Hugging Face API]
     E -- Aprobada --> F[Subir a Supabase]
     E -- Rechazada --> D
-    D --> I[Generar con Hugging Face - FLUX.1-schnell]
-    I -- Éxito --> F
-    I -- Fallo --> K[Unsplash Stock Fallback]
-    K --> L[Imagen Final]
+    D --> I[Generar con Hugging Face - stable-diffusion-3-medium-diffusers]
+    I -- Éxito --> G[QA Gemini Vision]
+    G -- Aprobada --> F
+    G -- Rechazada --> J[Excepción: pipeline fallido]
+    I -- Fallo --> J
     F --> L[URL Permanente en Supabase]
 ```
 
 ### Gestión de Supabase (StorageService)
 Toda imagen aceptada o generada se sube automáticamente a Supabase Storage para evitar enlaces rotos de fuentes externas.
+
+### Sin fallback de stock
+Si ni la imagen del RSS ni la generación con Hugging Face producen una imagen válida (aprobada por QA), `generateArticleImageAndAnalyzeQA` (`modules/images/image.service.ts`) lanza una excepción y el artículo no se guarda ni se publica. No existe fallback a imágenes de stock (Unsplash u otro servicio).
 
 ---
 

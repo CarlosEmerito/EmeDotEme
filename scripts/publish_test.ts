@@ -60,7 +60,7 @@ async function main() {
       topic: randomCategory.name,
       originalPrompt: aiResponse.imagePrompt,
       summary: aiResponse.summary
-    }, rssImageUrl);
+    }, rssImageUrl, newsContext.newsItems[0]?.link);
 
     console.log(`📊 RESUMEN IMAGEN: ${imageResult.imageUrl}`);
     console.log(`📊 FUENTE IMAGEN: ${imageResult.source}`);

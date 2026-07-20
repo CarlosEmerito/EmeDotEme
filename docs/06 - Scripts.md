@@ -107,7 +107,7 @@ npx tsx scripts/publish.ts
 ### Errores
 
 - Si todas las IAs fallan → Avisa por Telegram + exit(1)
-- Si el pipeline de imagen falla → Usa fallback de Unsplash
+- Si el pipeline de imagen falla (RSS y Hugging Face rechazados o sin resultado) → lanza excepción, no hay fallback de stock; el artículo no se guarda
 
 ### Referencias
 

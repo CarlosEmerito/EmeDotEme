@@ -32,10 +32,11 @@
 
 ### Imágenes - Supabase Storage (StorageService)
 
-| Variable                   | Descripción                  | Requerido   | Obtención |
-|----------------------------|------------------------------|-------------|-----------|
-| `SUPABASE_URL`             | URL del proyecto             | ✅           | [Supabase Console](https://supabase.com/dashboard/) |
-| `SUPABASE_SERVICE_ROLE_KEY`| Clave de servicio (admin)    | ✅           | |
+| Variable                   | Descripción                          | Requerido   | Obtención |
+|----------------------------|--------------------------------------|-------------|-----------|
+| `SUPABASE_URL`             | URL del proyecto                     | ✅           | [Supabase Console](https://supabase.com/dashboard/) |
+| `NEXT_PUBLIC_SUPABASE_URL` | URL pública (para `next.config.js`)  | Recomendado | Misma que `SUPABASE_URL` |
+| `SUPABASE_SERVICE_ROLE_KEY`| Clave de servicio (admin)            | ✅           | |
 
 ### Telegram (Notificaciones y Canal)
 
@@ -64,6 +65,17 @@
 |--------------------|----------------------------------|-------------|-----------|
 | `RESEND_API_KEY`   | Clave API para enviar correos    | Opcional    | [Resend](https://resend.com/) |
 
+### Rate limiting distribuido (Opcional, recomendado en producción)
+
+Si no se configura, el rate limit usa memoria local (no válido en serverless).
+
+| Variable                     | Descripción                       | Requerido | Obtención |
+|------------------------------|-----------------------------------|-----------|-----------|
+| `UPSTASH_REDIS_REST_URL`     | URL REST de la base Redis         | Opcional  | [Upstash](https://upstash.com/) |
+| `UPSTASH_REDIS_REST_TOKEN`   | Token REST de la base Redis       | Opcional  | [Upstash](https://upstash.com/) |
+
+> También se aceptan las variables de Vercel KV: `KV_REST_API_URL` / `KV_REST_API_TOKEN`.
+
 ---
 
 ## Archivo .env.example (Actualizado)
@@ -76,13 +88,19 @@ CRON_SECRET=""
 ADMIN_PASSWORD=""
 SESSION_SECRET=""
 SUPABASE_URL=""
+NEXT_PUBLIC_SUPABASE_URL=""
 SUPABASE_SERVICE_ROLE_KEY=""
 RESEND_API_KEY=""
+
+# === RATE LIMITING DISTRIBUIDO (opcional) ===
+UPSTASH_REDIS_REST_URL=""
+UPSTASH_REDIS_REST_TOKEN=""
 
 # === INTELIGENCIA ARTIFICIAL ===
 GEMINI_API_KEY=""
 GEMINI_API_KEY_2=""
 GEMINI_API_KEY_3=""
+HF_TOKEN=""
 
 # === TELEGRAM ===
 TELEGRAM_TOKEN=""

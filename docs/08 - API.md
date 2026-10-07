@@ -18,6 +18,7 @@ Permite a los usuarios suscribirse al boletín informativo semanal.
 -   **Respuestas**:
     -   `200 OK`: Suscrito correctamente o reactivado.
     -   `400 Bad Request`: Email inválido o ya suscrito.
+    -   `429 Too Many Requests`: Se superó el límite de peticiones (5/minuto por IP).
     -   `500 Internal Server Error`: Error en la base de datos.
 
 -   **Ejemplo cURL**:
@@ -26,6 +27,22 @@ Permite a los usuarios suscribirse al boletín informativo semanal.
       -H "Content-Type: application/json" \
       -d '{"email": "usuario@ejemplo.com"}'
     ```
+
+---
+
+### Baja del Newsletter
+
+Da de baja a un suscriptor. El enlace se genera por correo con un **token HMAC firmado** (`token`), de modo que no basta con conocer el email para darse de baja.
+
+-   **URL**: `/api/unsubscribe`
+-   **Método**: `GET`
+-   **Parámetros de query**:
+    -   `email`: email del suscriptor.
+    -   `token`: firma HMAC-SHA256 del email (la genera `scripts/send_newsletter.ts`).
+-   **Respuestas**:
+    -   `200 OK`: Baja procesada (HTML).
+    -   `400 Bad Request`: Falta el email o el token no es válido/caducado.
+    -   `429 Too Many Requests`: Se superó el límite de peticiones (10/minuto por IP).
 
 ---
 
@@ -87,7 +104,8 @@ Este endpoint dispara el pipeline completo de generación de un artículo a part
 ## 🛠️ Notas Técnicas
 
 ### Rate Limiting
-Actualmente, el rate limiting se gestiona a nivel de infraestructura en Vercel.
+
+El rate limiting se aplica en `lib/rate-limit.ts`. Si se configuran `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN` (o `KV_REST_API_URL`/`KV_REST_API_TOKEN` de Vercel KV), usa un backend Redis distribuido, válido en entornos serverless/multinstancia. Si no, cae a un store en memoria (solo fiable en desarrollo). Se aplica a `/api/contact`, `/api/subscribe`, `/api/unsubscribe` y `/api/generate`.
 
 ### Seguridad
 

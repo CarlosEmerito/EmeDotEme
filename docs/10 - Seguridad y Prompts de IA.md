@@ -131,6 +131,43 @@ Se quitaron de git (`git rm --cached`, los ficheros siguen en disco):
 
 ---
 
+## 10. Rate limiting distribuido
+
+**Archivo**: `lib/rate-limit.ts`.
+
+Antes el rate limit era un `Map` en memoria del proceso. En Vercel/serverless cada instancia tiene su propia memoria, así que en producción el límite era efectivamente inútil (cada lambda arrancaba a cero y no se compartía el contador). Afectaba a `/api/contact` y `/api/generate`.
+
+Ahora:
+
+- Si están definidas `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN` (o `KV_REST_API_URL`/`KV_REST_API_TOKEN` de Vercel KV), el contador vive en Redis: `INCR` (atómico) + `PTTL`, fijando la ventana con `PEXPIRE` solo en la primera petición de cada ventana.
+- Si el backend distribuido falla o no está configurado, se cae al store en memoria, de forma que el desarrollo y los tests siguen funcionando sin dependencias externas.
+- La función pasó a ser `async`; se actualizaron sus llamadas y sus tests.
+- Se añadió rate limit a `/api/subscribe` (antes no tenía) y a `/api/unsubscribe`.
+
+> **Acción del operador**: para que el rate limit sea real en producción, define las variables de Upstash/Vercel KV en `.env` (ver `.env.example`). Sin ellas el sistema funciona, pero vuelve al store en memoria.
+
+---
+
+## 11. Enlace de baja firmado (`/api/unsubscribe`)
+
+**Archivo nuevo**: `lib/unsubscribe-token.ts`.
+
+Antes la baja se hacía con un `GET /api/unsubscribe?email=...` sin firma: cualquiera que conociera el email de un suscriptor podía darlo de baja. Ahora:
+
+- El enlace incluye `email` + `token`, donde el token es un HMAC-SHA256 de `unsubscribe:<email-normalizado>` firmado con `SESSION_SECRET` (o `ADMIN_PASSWORD` como fallback, igual que las sesiones).
+- `verifyUnsubscribeToken()` compara en tiempo (casi) constante y el email se normaliza (trim + minúsculas) para que el enlace sea estable.
+- `scripts/send_newsletter.ts` genera el token al construir cada enlace; los enlaces antiguos sin token dejan de ser válidos.
+
+---
+
+## 12. Slugs limpios y deterministas
+
+**Archivo**: `lib/slug.ts` (`ensureUniqueSlug`).
+
+Antes los artículos añadían `Date.now()` al slug para garantizar unicidad (`mi-titulo-1760000000000`), lo que ensuciaba las URLs y era inconsistente entre el pipeline y `/api/generate`. Ahora `ensureUniqueSlug()` parte del slug limpio y solo añade un sufijo incremental (`-2`, `-3`, …) cuando ya existe en la base de datos. Se usa en `modules/publisher/publisher.service.ts` y en `app/api/generate/route.ts`.
+
+---
+
 ## Referencias
 
 - [[03 - Módulos]] — módulo `ai` y su nuevo archivo `schemas.ts`.

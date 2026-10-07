@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
-import { generateSlug } from '../lib/slug.ts';
+import { generateSlug, ensureUniqueSlug } from '../lib/slug.ts';
 import { formatRelativeDate } from '../lib/utils.ts';
 
 test('generateSlug - basic conversion', () => {
@@ -100,4 +100,20 @@ test('formatRelativeDate - input as string', () => {
 test('formatRelativeDate - input as number (timestamp)', () => {
   const timestamp = Date.now() - 30 * 1000;
   assert.strictEqual(formatRelativeDate(timestamp), 'hace unos segundos');
+});
+
+test('ensureUniqueSlug - devuelve el slug base si está libre', async () => {
+  const slug = await ensureUniqueSlug('mi-articulo', async () => false);
+  assert.strictEqual(slug, 'mi-articulo');
+});
+
+test('ensureUniqueSlug - añade sufijo incremental si hay colisión', async () => {
+  const taken = new Set(['mi-articulo', 'mi-articulo-2']);
+  const slug = await ensureUniqueSlug('mi-articulo', async (candidate) => taken.has(candidate));
+  assert.strictEqual(slug, 'mi-articulo-3');
+});
+
+test('ensureUniqueSlug - evita slugs vacíos', async () => {
+  const slug = await ensureUniqueSlug('---', async () => false);
+  assert.strictEqual(slug, 'articulo');
 });

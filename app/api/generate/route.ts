@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { siteConfig } from "@/config/site";
 import { generateBilingualContent } from "@/modules/ai/ai.service";
 import { fetchLatestNews } from "@/modules/news/news-sources.service";
-import { generateSlug, formatTitle } from "@/lib/utils";
+import { generateSlug, ensureUniqueSlug, formatTitle } from "@/lib/utils";
 import { BASE_CATEGORIES, FALLBACK_IMAGES } from "@/config/constants";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { sendCriticalErrorNotification } from "@/modules/notifications/telegram.service";
@@ -17,7 +17,7 @@ export async function GET(req: Request) {
   }
 
   const ip = getClientIp(req);
-  const { allowed } = rateLimit(`generate:${ip}`);
+  const { allowed } = await rateLimit(`generate:${ip}`, { max: 10, windowMs: 60_000 });
   if (!allowed) {
     return new Response('Too Many Requests', { status: 429 });
   }
@@ -59,7 +59,11 @@ export async function GET(req: Request) {
     // 3. Llamada al servicio de IA con contexto de noticias reales
     const aiResponse = await generateBilingualContent(recentTitles, newsContext.newsItems);
     
-    const slug = generateSlug(aiResponse.title, false);
+    const slug = await ensureUniqueSlug(
+      generateSlug(aiResponse.title, false),
+      async (candidate) =>
+        Boolean(await prisma.article.findUnique({ where: { slug: candidate }, select: { id: true } }))
+    );
 
     let imageUrl = aiResponse.sourceImageUrl;
     if (!imageUrl) {
@@ -74,7 +78,7 @@ export async function GET(req: Request) {
       data: {
         title: formatTitle(aiResponse.title),
         titleEn: formatTitle(aiResponse.titleEn),
-        slug: slug + '-' + Date.now(),
+        slug: slug,
         summary: aiResponse.summary,
         summaryEn: aiResponse.summaryEn,
         keyPoints: aiResponse.keyPoints || [],

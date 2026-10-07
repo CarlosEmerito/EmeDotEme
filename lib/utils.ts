@@ -52,7 +52,7 @@ export function translateCategory(name: string, lang: 'es' | 'en'): string {
 // GENERACIÓN DE SLUG
 // ============================================================
 
-export { generateSlug } from './slug';
+export { generateSlug, ensureUniqueSlug } from './slug';
 
 /**
  * Normaliza el título generado por la IA. 

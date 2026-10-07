@@ -9,8 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "npx tsx --test 'tests/utils.test.ts' 'tests/json-sanitizer.test.ts' 'tests/contact-route.test.ts' 'tests/lib/rate-limit.test.ts'",
-    "test:all": "npx tsx --test 'tests/utils.test.ts' 'tests/json-sanitizer.test.ts' 'tests/contact-route.test.ts' 'tests/lib/rate-limit.test.ts' 'tests/analytics.test.ts' 'tests/admin-actions.test.ts' 'tests/verify_fix.test.ts'",
+    "test": "npx tsx --test 'tests/utils.test.ts' 'tests/json-sanitizer.test.ts' 'tests/contact-route.test.ts' 'tests/lib/rate-limit.test.ts' 'tests/lib/unsubscribe-token.test.ts'",
+    "test:all": "npx tsx --test 'tests/utils.test.ts' 'tests/json-sanitizer.test.ts' 'tests/contact-route.test.ts' 'tests/lib/rate-limit.test.ts' 'tests/lib/unsubscribe-token.test.ts' 'tests/analytics.test.ts' 'tests/admin-actions.test.ts' 'tests/verify_fix.test.ts'",
     "test:integration": "npx tsx --test 'tests/api/routes.test.ts'",
     "test:bench": "npx tsx --test 'tests/**/*.bench.ts'",
     "postinstall": "prisma generate"

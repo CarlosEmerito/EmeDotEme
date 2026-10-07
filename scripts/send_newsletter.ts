@@ -1,6 +1,7 @@
 import { generateWeeklyNewsletter } from "../modules/ai/ai.service";
 import { PrismaClient } from "@prisma/client";
 import { Resend } from "resend";
+import { createUnsubscribeToken } from "../lib/unsubscribe-token";
 
 const prisma = new PrismaClient();
 
@@ -120,7 +121,8 @@ async function main() {
       let failCount = 0;
 
       for (const subscriber of subscribers) {
-        const unsubscribeLink = `https://www.emedoteme.es/api/unsubscribe?email=${encodeURIComponent(subscriber.email)}`;
+        const token = await createUnsubscribeToken(subscriber.email);
+        const unsubscribeLink = `https://www.emedoteme.es/api/unsubscribe?email=${encodeURIComponent(subscriber.email)}&token=${token}`;
         const personalizedHtml = emailHtml.replace('{{UNSUBSCRIBE_LINK}}', unsubscribeLink);
 
         const { error } = await resend.emails.send({

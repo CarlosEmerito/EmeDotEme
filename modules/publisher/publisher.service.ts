@@ -5,7 +5,7 @@ import path from "path";
 import { generateBilingualContent } from "../ai/ai.service";
 import { fetchLatestNews } from "../news/news-sources.service";
 import { generateArticleImageAndAnalyzeQA } from "../images/image.service";
-import { generateSlug, formatTitle } from "../../lib/utils";
+import { generateSlug, ensureUniqueSlug, formatTitle } from "../../lib/utils";
 import { sendCriticalErrorNotification } from "../notifications/telegram.service";
 import { BASE_CATEGORIES } from "../../config/constants";
 
@@ -54,8 +54,12 @@ export class PublisherService {
       );
       console.log("✨ Contenido generado exitosamente.");
 
-      // 4b. Generar Slug Único
-      const slug = generateSlug(aiResponse.title, true);
+      // 4b. Generar Slug Único (limpio, sin timestamp, con sufijo si colisiona)
+      const slug = await ensureUniqueSlug(
+        generateSlug(aiResponse.title, false),
+        async (candidate) =>
+          Boolean(await this.prisma.article.findUnique({ where: { slug: candidate }, select: { id: true } }))
+      );
 
       // 5. Generación de Imagen
       console.log("🎨 [5/7] Iniciando pipeline de imagen...");

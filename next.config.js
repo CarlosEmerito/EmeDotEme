@@ -2,13 +2,27 @@
 
 import withPWA from "@ducanh2912/next-pwa";
 
+// Host de Supabase Storage derivado de las variables de entorno. Si no está
+// definido, se conserva el host histórico como fallback.
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+let supabaseHostname = 'elfglqkqprwlenwjtfgj.supabase.co';
+try {
+  if (supabaseUrl) supabaseHostname = new URL(supabaseUrl).hostname;
+} catch {
+  // URL inválida: mantenemos el fallback
+}
+const supabaseAssetPattern = new RegExp(
+  `^https://${supabaseHostname.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/.*`,
+  'i'
+);
+
 const nextConfig = {
   turbopack: {},
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'elfglqkqprwlenwjtfgj.supabase.co',
+        hostname: supabaseHostname,
       },
       {
         protocol: 'https',
@@ -158,7 +172,7 @@ export default withPWA({
       },
     },
     {
-      urlPattern: /^https:\/\/elfglqkqprwlenwjtfgj\.supabase\.co\/.*/i,
+      urlPattern: supabaseAssetPattern,
       handler: 'StaleWhileRevalidate',
       options: {
         cacheName: 'supabase-assets',

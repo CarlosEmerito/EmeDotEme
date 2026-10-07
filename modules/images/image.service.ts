@@ -18,7 +18,7 @@ export interface ImagePipelineResult {
   imageUrl: string;
   caption: string;
   qaResult: ImageAnalysisResult | null;
-  source: 'rss_source' | 'flux_local' | 'fallback_unsplash';
+  source: 'rss_source' | 'hf_api' | 'ai_horde' | 'fallback_unsplash';
   attempts: string[];
   errors: string[];
 }
@@ -91,7 +91,7 @@ export async function generateArticleImageAndAnalyzeQA(
       const { valid, qa, error } = await isImageValid(hfUrl, data.title, data.summary || '', caption, 'HuggingFace');
       if (valid) {
         const finalUrl = await saveImageToSupabase(hfUrl, data.slug);
-        return { imageUrl: finalUrl, caption: qa?.caption_mejorado || caption, qaResult: qa, source: 'flux_local', attempts, errors };
+        return { imageUrl: finalUrl, caption: qa?.caption_mejorado || caption, qaResult: qa, source: 'hf_api', attempts, errors };
       }
       if (error) errors.push(`HF API: ${error}`);
     } else {

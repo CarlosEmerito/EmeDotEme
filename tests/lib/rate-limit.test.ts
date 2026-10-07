@@ -3,18 +3,26 @@ import assert from "node:assert";
 import { rateLimit, getClientIp } from "../../lib/rate-limit.js";
 
 describe("rateLimit", () => {
-  it("allows first 5 requests", () => {
+  it("allows first 5 requests", async () => {
     for (let i = 0; i < 5; i++) {
-      const { allowed, remaining } = rateLimit("test-key");
+      const { allowed, remaining } = await rateLimit("test-key");
       assert.strictEqual(allowed, true);
       assert.strictEqual(remaining, 4 - i);
     }
   });
 
-  it("blocks 6th request", () => {
-    for (let i = 0; i < 5; i++) rateLimit("test-key-2");
-    const { allowed } = rateLimit("test-key-2");
+  it("blocks 6th request", async () => {
+    for (let i = 0; i < 5; i++) await rateLimit("test-key-2");
+    const { allowed } = await rateLimit("test-key-2");
     assert.strictEqual(allowed, false);
+  });
+
+  it("respeta max y windowMs personalizados", async () => {
+    const first = await rateLimit("custom-key", { max: 1, windowMs: 60_000 });
+    assert.strictEqual(first.allowed, true);
+    const second = await rateLimit("custom-key", { max: 1, windowMs: 60_000 });
+    assert.strictEqual(second.allowed, false);
+    assert.strictEqual(second.remaining, 0);
   });
 });
 

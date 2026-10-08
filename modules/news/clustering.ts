@@ -1,4 +1,5 @@
 import { NewsItem } from './news-sources.service';
+import { REVIEW_STATUS } from '../../lib/review-token';
 
 /**
  * ClusteringEngine: Lógica pura para deduplicación y agrupación de noticias.
@@ -76,7 +77,28 @@ export function deduplicateNews(items: NewsItem[], reliabilityMap: Record<string
 }
 
 /**
- * Filtra noticias que ya se cubrieron (comparando con títulos recientes de la BD).
+ * ¿Bloquea este artículo la cobertura de su tema?
+ *
+ * Bloquean los artículos **publicados** y los que están **esperando decisión**
+ * (borrador pendiente o en diagnóstico): un tema no debe salir en dos borradores
+ * seguidos, porque quien aprueba puede aceptar dos veces la misma noticia sin
+ * darse cuenta. Los **descartados NO bloquean**: un tema rechazado puede
+ * volver a intentarse más adelante.
+ */
+export function bloqueaLaCobertura(articulo: {
+  published: boolean;
+  reviewStatus?: string | null;
+}): boolean {
+  if (articulo.published) return true;
+  // Solo lo descartado deja el tema libre: todo lo demás (pendiente, en
+  // diagnóstico o cualquier estado inesperado) bloquea.
+  return articulo.reviewStatus !== REVIEW_STATUS.rejected;
+}
+
+/**
+ * Filtra noticias que ya se cubrieron (comparando títulos y URLs de la BD).
+ * Quien alimenta esas listas decide qué cuenta como «ya cubierto»: ver
+ * `bloqueaLaCobertura`.
  */
 export function filterAlreadyCovered(
   news: NewsItem[],

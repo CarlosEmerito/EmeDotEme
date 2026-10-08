@@ -28,7 +28,7 @@
 Para poner en marcha el proyecto localmente:
 
 1.  **Instalar dependencias:** `npm install` y `pip install -r scripts/python/requirements.txt`.
-2.  **Configurar entorno:** Copia `.env.example` a `.env` y rellena las claves mínimas (DATABASE_URL, GEMINI_API_KEY, HF_TOKEN).
+2.  **Configurar entorno:** Copia `.env.example` a `.env` y rellena las claves mínimas (DATABASE_URL, GEMINI_API_KEY). Para las imágenes, añade CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN y PIXABAY_API_KEY (opcionales, pero sin ellas se pierden los dos últimos escalones de la cascada).
 3.  **Base de datos:** `npx prisma migrate dev`.
 4.  **Ejecutar dev:** `npm run dev`.
 5.  **Probar pipeline:** `npx tsx scripts/publish_test.ts`.

@@ -25,25 +25,27 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 
 ## 🖼️ Problemas con las Imágenes
 
-### 1. Hugging Face (stable-diffusion-3-medium-diffusers) falla
+### 1. Ninguna fuente de imagen supera el control de calidad
+
 > [!WARNING]
-> **Síntoma**: El script indica que no se pudo generar la imagen mediante Hugging Face y se cancela la creación del artículo (no hay fallback de stock ni local: si la imagen del RSS es rechazada por QA y Hugging Face también falla, el pipeline lanza una excepción).
+> **Síntoma**: en los logs aparecen rechazos consecutivos (`[QA og:image]`, `[QA RSS]`, `[QA Pixabay N]`, `[QA Cloudflare]`) y el artículo termina publicándose con la imagen de reserva.
 
 > [!TIP]
 > **Solución**:
-> - Asegúrate de que la variable `HF_TOKEN` en tu `.env` sea válida y no haya sido revocada.
-> - **Créditos agotados (HTTP 402)**: `{"error":"You have depleted your monthly included credits..."}` — significa que se agotó la cuota mensual gratuita de Hugging Face Inference Providers, no un problema del código. Compra créditos prepago o suscríbete a PRO en [huggingface.co/settings/billing](https://huggingface.co/settings/billing), o espera al reset mensual.
-> - Verifica si has alcanzado los límites de uso gratuito de la API de Hugging Face Serverless Inference.
-> - Revisa si el modelo `stabilityai/stable-diffusion-3-medium-diffusers` sigue disponible en el proveedor `hf-inference` (consulta `GET https://huggingface.co/api/models?pipeline_tag=text-to-image&inference_provider=hf-inference`); Hugging Face cambia con frecuencia qué modelos sirve cada proveedor.
+> - No es un fallo: la cascada está diseñada para **no perder nunca el artículo**. Si ves `Pipeline de imagen resuelto con la reserva`, el artículo se publicó con una imagen genérica de la categoría.
+> - Revisa las variables de entorno. Si falta `CLOUDFLARE_ACCOUNT_ID`/`CLOUDFLARE_API_TOKEN` o `PIXABAY_API_KEY`, esos dos escalones se saltan sin más.
+> - **Cloudflare: asignación diaria agotada** — el error incluye `4006: you have used up your daily free allocation of 10,000 neurons`. Se reinicia a las 00:00 UTC. Con ~2 artículos al día es muy improbable llegar al límite (~170 imágenes).
+> - **Pixabay sin resultados** — la consulta se construye con la categoría y las palabras más significativas del titular. Si una categoría concreta falla siempre, revisa `buildStockQuery` en `modules/images/stock-image.service.ts`.
+> - Si Gemini Vision falla de forma definitiva (cuota agotada en las tres claves), **todas** las candidatas serán rechazadas y se usará la reserva. Ese es el síntoma típico de un problema de cuotas de Gemini, no de imágenes.
 
 ### 2. La imagen del RSS es rechazada con "HTTP 403 al descargar imagen"
 > [!WARNING]
-> **Síntoma**: En el paso `[QA RSS]` los logs muestran `Error descargando imagen para análisis: Error: HTTP 403 al descargar imagen`, y el pipeline pasa a intentar Hugging Face (con el riesgo de fallar también si no hay créditos, ver punto 1).
+> **Síntoma**: En el paso `[QA RSS]` los logs muestran `Error descargando imagen para análisis: Error: HTTP 403 al descargar imagen`, y el pipeline pasa al siguiente candidato de la cascada (og:image ya se intentó antes; ahora seguiría con Pixabay y Cloudflare).
 
 > [!TIP]
 > **Causa**: muchos CDNs de medios (CNBC, Investing.com, etc.) aplican *hotlink-protection*: rechazan las descargas de imagen que no incluyan un `Referer` del propio sitio o que usen un `User-Agent` que no parezca un navegador.
 > **Solución ya aplicada**: `analyzeImageWithGemini` (`modules/ai/gemini-vision.service.ts`) envía un `User-Agent` de navegador real y un header `Referer` derivado de la URL del artículo de origen (`NewsItem.link`, propagado desde `publisher.service.ts` y `publish_test.ts`). Esto resuelve la protección "naive" basada en esos headers.
-> - Si el 403 persiste para una fuente concreta después de este cambio, probablemente el sitio usa un WAF/bot-management más avanzado (Cloudflare, Akamai) que bloquea por reputación de IP (p. ej. rangos de datacenter de GitHub Actions), no por headers — en ese caso no hay solución a nivel de headers; toca aceptar que esa fuente caerá siempre a Hugging Face.
+> - Si el 403 persiste para una fuente concreta después de este cambio, probablemente el sitio usa un WAF/bot-management más avanzado (Cloudflare, Akamai) que bloquea por reputación de IP (p. ej. rangos de datacenter de GitHub Actions), no por headers — en ese caso no hay solución a nivel de headers; esa fuente caerá siempre a los escalones siguientes (Pixabay y generación).
 
 ### 3. Imágenes no se cargan en la web
 > [!WARNING]

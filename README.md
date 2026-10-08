@@ -24,7 +24,7 @@ Para una comprensión profunda del sistema, consulta nuestra documentación téc
 
 -   **Pipeline de IA Multicanal**: Generación de texto bilingüe (ES/EN) con Gemini (Google).
 -   **Curación Inteligente**: Obtención y filtrado automático de noticias desde fuentes RSS de alta fiabilidad.
--   **Generación de Imágenes**: Imagen original del RSS o generación vía Hugging Face Inference API (FLUX.1-schnell), con fallback a imágenes de stock de Unsplash.
+-   **Imágenes en cascada**: imagen real del artículo original (`og:image`), imagen del RSS, fotografía de archivo con licencia (Pixabay) o generación con IA (Cloudflare Workers AI + FLUX.1-schnell), siempre con control de calidad previo y sin descartar nunca el artículo.
 -   **Publicación Unificada**: Distribución automática en Binance Square, Telegram, Bluesky y Web.
 -   **Automatización Total**: Pipeline automatizado vía GitHub Actions cada 4 horas.
 -   **Newsletter Semanal**: Generación y envío automático de boletines informativos a suscriptores.

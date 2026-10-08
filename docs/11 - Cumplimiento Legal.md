@@ -33,7 +33,7 @@ en almacenamiento propio.
 | La cascada ya no incluye `og:image` ni la imagen del RSS | `modules/images/image.service.ts` |
 | `source-image.service.ts` eliminado del repositorio | — |
 | No se copia ninguna imagen de fuente no autorizada | `isAllowedToStore()` en `modules/storage/supabase.service.ts` |
-| La fuente original se enlaza, no se copia | `SourceAttribution` en `components/articles/AiDisclosure.tsx` |
+| La fuente original se enlaza, no se copia | `SourceAttribution` en `components/articles/SourceAttribution.tsx` |
 | Pruebas que fijan el comportamiento | `tests/images.test.ts` |
 
 **Por qué enlazar y no copiar.** El artículo 129 bis.6 excluye expresamente el
@@ -41,8 +41,7 @@ hiperenlace del derecho del editor de prensa. Enlazar es gratis, legal y además
 mejor para el lector: quien quiera la noticia completa va al medio que la hizo.
 
 **La cascada actual:** Pixabay (licencia comercial) → Cloudflare FLUX
-(generada, con pie de foto que lo dice) → reserva del proyecto. Ninguna requiere
-autorización de terceros.
+(generada) → reserva del proyecto. Ninguna requiere autorización de terceros.
 
 ---
 
@@ -65,22 +64,25 @@ criterio está en el prompt de `modules/ai/constants.ts` y se etiqueta como
 
 **La obligación.** Exigible desde el 2 de agosto de 2026. Quien despliega un
 sistema de IA que genera texto publicado para informar al público sobre asuntos
-de interés público debe **divulgar que el contenido ha sido generado por IA**. La
-excepción es que exista revisión humana y una persona responsable identificada.
+de interés público debe **divulgar que el contenido ha sido generado por IA**. El
+apartado 50.4 exime de esa divulgación cuando el contenido ha pasado una revisión
+humana y existe una persona con responsabilidad editorial sobre la publicación.
 
-**Cómo se cumple.**
+**Cómo se cumple.** El medio se acoge a la excepción del apartado 50.4:
 
 | Punto | Dónde |
 |---|---|
-| Aviso visible en cada artículo, en ES y EN | `AiDisclosure` en `components/articles/AiDisclosure.tsx` |
-| Metadatos legibles por máquina | `metadata.other` en `app/articulo/[slug]/page.tsx` y `app/en/article/[slug]/page.tsx` |
-| Autoría como `Organization`, no como persona física | JSON-LD de ambos artículos |
-| Responsable editorial identificado | `app/politica-editorial/page.tsx` |
-| El aviso cambia si hubo revisión humana | prop `reviewed` de `AiDisclosure` |
+| El pipeline no publica: genera un borrador | `modules/publisher/publisher.service.ts` |
+| Una persona revisa y aprueba artículo por artículo por Telegram | `modules/articles/review.service.ts`, `app/api/telegram/webhook/route.ts` |
+| Cada revisión y su resultado quedan registrados | campos `reviewStatus`, `reviewedAt`, `reviewNote` de `Article` |
+| Responsable editorial identificado y proceso explicado | `app/politica-editorial/page.tsx` y `app/en/editorial-policy/page.tsx` |
 
-**Por qué la autoría es `Organization`.** El texto lo produce un sistema
-automático. Atribuirlo a una persona física sería una atribución falsa y, además,
-trasladaría a esa persona una responsabilidad que no le corresponde.
+**Por qué no hay aviso individual en el artículo.** Con la revisión humana previa
+y un responsable editorial identificado, aplica la excepción del 50.4, así que
+los artículos no llevan aviso de contenido generado con IA ni metadatos
+`ai-generated`. El texto público (política editorial y aviso legal) describe el
+proceso: borrador, revisión y aprobación por el responsable editorial. Si el
+flujo de aprobación desapareciera, habría que reintroducir ese aviso.
 
 ---
 
@@ -145,15 +147,18 @@ licencia).
 
 1. **Nunca añadas una fuente de imagen de terceros a la cascada.** Si necesitas
    una imagen que no puedes obtener con licencia o generar, la respuesta es
-   generar una ilustración y decirlo, no copiar la de otro.
+   generar una ilustración, no copiar la de otro.
 2. **Nunca muevas un script de terceros fuera de su gate.** Si un proveedor
    instala cookies, va detrás del consentimiento, sin excepciones.
 3. **Si añades un encargado del tratamiento, actualiza la política de privacidad
    en el mismo pull request.**
-4. **El aviso de IA no es opcional ni decorativo.** Va en el artículo, en los
-   metadatos y en la política editorial.
-5. **Los pies de foto de imágenes generadas deben decirlo.** Un lector tiene
-   derecho a saber que lo que ve no es una fotografía.
+4. **La revisión humana es lo que sostiene la excepción del art. 50.4.** Si el
+   pipeline dejase de pasar por la aprobación por Telegram, habría que
+   reintroducir un aviso de contenido generado con IA en el artículo y en los
+   metadatos.
+5. **El pie de foto describe la imagen, no su procedencia.** El origen (archivo
+   con licencia, generada, reserva) se informa a quien aprueba el borrador, en el
+   mensaje de Telegram, no en la web.
 
 ---
 

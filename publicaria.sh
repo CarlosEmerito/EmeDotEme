@@ -1,7 +1,11 @@
 #!/bin/bash
 #
-# Script de publicación específica para IA en EMEDOTEME
+# Pipeline especializado en temas de IA de EMEDOTEME
 #
+# Igual que publicar.sh, pero limitando las fuentes RSS al ámbito de la IA
+# (scripts/publish-ia.ts). No publica nada por su cuenta: dos tareas, en orden:
+#   1. Anunciar en redes el artículo aprobado que esté pendiente de anuncio.
+#   2. Generar el borrador de IA y pedir la aprobación por Telegram.
 
 set -euo pipefail
 
@@ -24,33 +28,46 @@ exec > >(tee -a "$LOGFILE") 2>&1
 
 echo -e "\n================== 🤖 PUBLICARIA.sh ($TIMESTAMP) =================="
 
-echo "[1️⃣] Generando artículo de IA con scripts/publish-ia.ts..."
-if npx tsx scripts/publish-ia.ts 2>&1; then
-  
-  echo "[✅] Paso 1 completado exitosamente."
+# === Paso 1: anunciar el artículo aprobado pendiente (si lo hay) ===
+echo "[1️⃣] Buscando artículos aprobados pendientes de anunciar..."
+rm -f "$JSON_PATH"
+npx tsx scripts/announce_approved.ts
 
-  if [ ! -f "$JSON_PATH" ]; then
-    echo "❌ Error: No se encontró $JSON_PATH tras la generación."
-    exit 1
-  fi
-
-  echo "[📦] Metadata detectada en $JSON_PATH. Iniciando publicación en redes..."
+if [ -f "$JSON_PATH" ]; then
+  echo "[📦] Metadata detectada en $JSON_PATH. Publicando en redes..."
 
   echo -e "\n[2️⃣] Enviando a Binance Square (scripts/python/publish_direct.py)..."
-  python3 scripts/python/publish_direct.py "$JSON_PATH" 2>&1
-  echo "[✅] Fin del proceso de Binance Square."
+  if python3 scripts/python/publish_direct.py "$JSON_PATH" 2>&1; then
+    echo "[✅] Publicado en Binance Square."
+  else
+    echo "[⚠️] Falló la publicación en Binance Square."
+  fi
 
   echo -e "\n[3️⃣] Enviando a Telegram (scripts/python/publish_telegram.py)..."
-  python3 scripts/python/publish_telegram.py "$JSON_PATH" 2>&1
-  echo "[✅] Fin del proceso de Telegram."
+  if python3 scripts/python/publish_telegram.py "$JSON_PATH" 2>&1; then
+    echo "[✅] Publicado en Telegram."
+  else
+    echo "[⚠️] Falló la publicación en Telegram."
+  fi
 
   echo -e "\n[4️⃣] Enviando a Bluesky (scripts/python/publish_bluesky.py)..."
-  python3 scripts/python/publish_bluesky.py "$JSON_PATH" 2>&1
-  echo "[✅] Fin del proceso de Bluesky."
+  if python3 scripts/python/publish_bluesky.py "$JSON_PATH" 2>&1; then
+    echo "[✅] Publicado en Bluesky."
+  else
+    echo "[⚠️] Falló la publicación en Bluesky."
+  fi
 else
-  echo "❌ Error al generar el artículo de IA. Abortando publicación en redes."
+  echo "[ℹ️] No hay ningún artículo aprobado pendiente de anunciar."
+fi
+
+# === Paso 2: generar el borrador de IA y pedir la aprobación ===
+echo -e "\n[5️⃣] Generando el borrador de IA (scripts/publish-ia.ts)..."
+if npx tsx scripts/publish-ia.ts 2>&1; then
+  echo "[✅] Borrador de IA generado. La petición de aprobación ya está en Telegram."
+else
+  echo "❌ Error al generar el borrador de IA. Este ciclo no deja nada que aprobar."
   exit 1
 fi
 
-echo -e "\n✅ Proceso de IA completado. ($TIMESTAMP)\n"
+echo -e "\n✅ Proceso de IA completado. Revisa Telegram para aprobar el borrador. ($TIMESTAMP)\n"
 echo "==============================================================="

@@ -35,6 +35,24 @@ async function contar() {
   console.log(String(n));
 }
 
+/**
+ * Salida del monitor: los identificadores pendientes, ordenados, uno por línea
+ * (nada si no hay ninguno).
+ *
+ * Es mejor que contar: si en la misma ventana se diagnostica uno y entra otro,
+ * el número no cambia (1 → 1) y el agente no se despertaría. Con los
+ * identificadores, cualquier cambio en el conjunto sí lo despierta. La salida
+ * es determinista, que es lo que exige el monitor.
+ */
+async function vigilar() {
+  const pendientes = await prisma.article.findMany({
+    where: { reviewStatus: REVIEW_STATUS.hermesReview },
+    select: { id: true },
+    orderBy: { id: 'asc' },
+  });
+  if (pendientes.length > 0) console.log(pendientes.map((a) => a.id).join('\n'));
+}
+
 async function listar() {
   const pendientes = await prisma.article.findMany({
     where: { reviewStatus: REVIEW_STATUS.hermesReview },
@@ -144,6 +162,7 @@ async function main() {
 
   if (modo === 'list') return listar();
   if (modo === 'count') return contar();
+  if (modo === 'watch') return vigilar();
   if (modo === 'send') {
     if (!id) {
       console.error('Uso: hermes_review.ts send <id>  (diagnóstico por stdin)');

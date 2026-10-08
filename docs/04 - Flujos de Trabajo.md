@@ -49,6 +49,15 @@ npx tsx scripts/publish.ts
 
 ---
 
+### Qué temas no se repiten
+
+El pipeline evita escribir dos veces sobre el mismo tema comparando títulos y URLs de origen con los artículos recientes (`filterAlreadyCovered`). Cuenta como **ya cubierto** todo lo que no se ha descartado (`bloqueaLaCobertura`):
+
+- los artículos **publicados**, y
+- los **borradores que esperan decisión** (pendientes o en diagnóstico).
+
+Así un mismo tema no sale en dos borradores seguidos —dos mensajes casi idénticos en Telegram invitan a aprobar la misma noticia dos veces— y, en cambio, un tema que se **descarta** queda libre para reintentarse en una ejecución posterior.
+
 ## Flujo de imágenes
 
 ### Pipeline de imagen detallado

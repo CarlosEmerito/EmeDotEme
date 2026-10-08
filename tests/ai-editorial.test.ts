@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert';
 import { clampSummary, sanitizeGlossary, sanitizeTags, sanitizeTickers } from '../modules/ai/ai.service.ts';
 import { cadenaDeModelos } from '../modules/ai/constants.ts';
+import { bloqueaLaCobertura } from '../modules/news/clustering.ts';
 import { htmlToPlainText } from '../modules/news/news-sources.service.ts';
 
 // Las cadenas de modelos no deben depender del entorno de quien ejecute los tests.
@@ -107,7 +108,27 @@ test('sanitizeGlossary - sin glosario devuelve lista vacía', () => {
   assert.deepStrictEqual(sanitizeGlossary(undefined, 'texto cualquiera'), []);
 });
 
-// ─── Cadenas de modelos: calidad para redactar, ligeros para el volumen ──────
+// ─── Cobertura: un tema no se repite si espera decisión ──────────────────────
+
+test('bloqueaLaCobertura - lo publicado siempre bloquea', () => {
+  assert.strictEqual(bloqueaLaCobertura({ published: true, reviewStatus: 'approved' }), true);
+  // Aunque estuviera descartado (no debería ocurrir), publicado manda.
+  assert.strictEqual(bloqueaLaCobertura({ published: true, reviewStatus: 'rejected' }), true);
+});
+
+test('bloqueaLaCobertura - un borrador esperando decisión bloquea su tema', () => {
+  assert.strictEqual(bloqueaLaCobertura({ published: false, reviewStatus: 'pending' }), true);
+  assert.strictEqual(bloqueaLaCobertura({ published: false, reviewStatus: 'hermes_review' }), true);
+});
+
+test('bloqueaLaCobertura - solo lo descartado deja el tema libre para reintentarlo', () => {
+  assert.strictEqual(bloqueaLaCobertura({ published: false, reviewStatus: 'rejected' }), false);
+});
+
+test('bloqueaLaCobertura - un estado inesperado bloquea (no se reescribe a ciegas)', () => {
+  assert.strictEqual(bloqueaLaCobertura({ published: false, reviewStatus: undefined }), true);
+  assert.strictEqual(bloqueaLaCobertura({ published: false, reviewStatus: 'aprobado' }), true);
+});
 
 test('cadenaDeModelos - la tarea de calidad empieza por el modelo bueno y tiene respaldo', () => {
   const cadena = cadenaDeModelos('quality');

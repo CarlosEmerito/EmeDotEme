@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { generateBilingualContent } from "../ai/ai.service";
 import { fetchLatestNews } from "../news/news-sources.service";
+import { bloqueaLaCobertura } from "../news/clustering";
 import { generateArticleImageAndAnalyzeQA, IMAGE_SOURCE_LABEL, type ImageSource, type RecentImage } from "../images/image.service";
 import { generateSlug, ensureUniqueSlug, formatTitle } from "../../lib/utils";
 import { sendCriticalErrorNotification, sendApprovalRequest } from "../notifications/telegram.service";
@@ -102,22 +103,25 @@ export class PublisherService {
 
   private async getRecentContext() {
     const recentArticles = await this.prisma.article.findMany({
-      select: { title: true, titleEn: true, sourceUrl: true, imageUrl: true, published: true },
+      select: { title: true, titleEn: true, sourceUrl: true, imageUrl: true, published: true, reviewStatus: true },
       orderBy: { createdAt: 'desc' },
       take: 25,
     });
 
-    // Títulos y URLs de origen: solo de lo publicado (una noticia descartada
-    // sigue siendo noticia y podrá cubrirse más adelante).
-    const published = recentArticles.filter((a) => a.published);
+    // Títulos y URLs de origen que bloquean volver a cubrir el tema: lo publicado
+    // y lo que está esperando decisión (`bloqueaLaCobertura`). Así un tema no sale
+    // en dos borradores seguidos —dos mensajes casi idénticos en Telegram invitan
+    // a aprobar el mismo artículo dos veces— pero un tema descartado sí puede
+    // reintentarse más adelante.
+    const bloqueados = recentArticles.filter(bloqueaLaCobertura);
 
-    const recentTitles = published.flatMap(a => {
+    const recentTitles = bloqueados.flatMap(a => {
       const titles = [a.title];
       if (a.titleEn) titles.push(a.titleEn);
       return titles;
     });
 
-    const recentSourceUrls = published
+    const recentSourceUrls = bloqueados
       .map(a => a.sourceUrl)
       .filter((url): url is string => Boolean(url));
 

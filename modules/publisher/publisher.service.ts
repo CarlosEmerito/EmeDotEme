@@ -272,9 +272,11 @@ export class PublisherService {
     });
 
     if (sent) {
-      console.log(`🔒 Enlace privado del borrador: ${previewUrl}`);
+      // Nunca se imprime el enlace completo: los logs de Actions de un
+      // repositorio público son públicos, y ese enlace da acceso al borrador.
+      console.log(`🔒 Petición de aprobación enviada (token ${String(article.reviewToken).slice(0, 6)}…)`);
     } else {
-      console.warn(`⚠️ No se pudo enviar la petición de aprobación. El borrador queda pendiente en la web: ${previewUrl}`);
+      console.warn('⚠️ No se pudo enviar la petición de aprobación. El borrador queda pendiente en la web.');
     }
     return previewUrl;
   }

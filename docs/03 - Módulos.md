@@ -17,10 +17,11 @@
 
 **Ubicación**: `modules/publisher/`
 
-Es el orquestador central del sistema. Encapsula el flujo de negocio de publicación diaria que antes residía en un script monolítico.
+Es el orquestador central del sistema. Encapsula el flujo de generación diaria que antes residía en un script monolítico. **No publica**: guarda el artículo como borrador (`published = false`) y pide la aprobación por Telegram (ver [[12 - Aprobación Editorial]]).
 
 ### Archivos clave
-- `publisher.service.ts`: Clase `PublisherService` que coordina el proceso desde la obtención de noticias hasta el guardado final.
+- `publisher.service.ts`: Clase `PublisherService` que coordina el proceso desde la obtención de noticias hasta el guardado del borrador y la petición de aprobación.
+- `announce.service.ts`: `announceNextApprovedArticle()`. Busca el siguiente artículo aprobado con `announcedAt = null` y escribe `tmp/latest_article.json` para los scripts de redes sociales.
 
 ---
 
@@ -96,7 +97,8 @@ Es el orquestador central del sistema. Encapsula el flujo de negocio de publicac
 ### Archivos clave
 - `article.service.ts`: Consultas, búsqueda, filtrado y paginación de artículos.
 - `category.service.ts`: Gestión de categorías.
-- `types.ts`: Tipos compartidos del módulo.
+- `review.service.ts`: `applyReviewDecision()`. Lógica de la decisión editorial (aprobar / descartar / revisión de EmeDotHermes), separada del transporte HTTP y probada en `tests/review-decision.test.ts`.
+- `index.ts`: Reexportaciones del módulo.
 
 ---
 
@@ -135,6 +137,7 @@ await publisher.publishDailyArticle();
 ```
 
 ### Otros scripts
+- `announce_approved.ts`: Prepara el anuncio del siguiente artículo aprobado pendiente (escribe `tmp/latest_article.json`). Lo llama `publicar.sh`.
 - `publish_test.ts`: Generación completa sin persistencia en DB (Modo Prueba).
 - `publish-ia.ts`: Pipeline especializado en temas de Inteligencia Artificial.
 - `force-generate.ts`: Fuerza generación omitiendo verificación de duplicados.

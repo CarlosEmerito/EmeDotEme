@@ -32,9 +32,9 @@
 | `CLOUDFLARE_API_TOKEN`   | Token con permiso **Workers AI: Read**                              | Recomendado | [Cloudflare API Tokens](https://dash.cloudflare.com/profile/api-tokens) |
 | `PIXABAY_API_KEY`        | Clave de la API de Pixabay (fotografía de archivo con licencia)     | Recomendado | [Pixabay API](https://pixabay.com/api/docs/) |
 
-> Ninguna de estas variables es obligatoria para que el pipeline funcione: si falta alguna, se salta ese paso de la cascada y se usan los anteriores. El artículo se publica igualmente.
+> Ninguna de estas variables es obligatoria para que el pipeline funcione: si falta alguna, se salta ese escalón de la cascada. El artículo se guarda igualmente como borrador.
 >
-> `HF_TOKEN` ya no se usa. La capa gratuita de Hugging Face dejó de cubrir el proyecto (HTTP 402) y se ha sustituido por Cloudflare Workers AI.
+> `HF_TOKEN` ya no se usa.
 
 ### Imágenes - Supabase Storage (StorageService)
 
@@ -44,13 +44,20 @@
 | `NEXT_PUBLIC_SUPABASE_URL` | URL pública (para `next.config.js`)  | Recomendado | Misma que `SUPABASE_URL` |
 | `SUPABASE_SERVICE_ROLE_KEY`| Clave de servicio (admin)            | ✅           | |
 
-### Telegram (Notificaciones y Canal)
+### Telegram (Notificaciones, Canal y Aprobación)
 
-| Variable              | Descripción                                                        | Requerido |
-|-----------------------|--------------------------------------------------------------------|-----------|
-| `TELEGRAM_TOKEN`      | Token del bot de Telegram                                          | ✅         |
-| `TELEGRAM_CHAT_ID`    | Chat ID de pruebas o notificaciones de error                       | ✅         |
-| `TELEGRAM_CHANNEL_ID` | Chat ID del canal público donde se publican las noticias           | ✅         |
+| Variable                  | Descripción                                                        | Requerido |
+|---------------------------|--------------------------------------------------------------------|-----------|
+| `TELEGRAM_TOKEN`          | Token del bot de Telegram                                          | ✅         |
+| `TELEGRAM_CHAT_ID`        | Chat ID del dueño: recibe las peticiones de aprobación y es el único chat autorizado a aprobar borradores | ✅ |
+| `TELEGRAM_CHANNEL_ID`     | Chat ID del canal público donde se anuncian las noticias           | ✅         |
+| `TELEGRAM_WEBHOOK_SECRET` | Opcional. `secret_token` del webhook; si se define, se exige la cabecera `X-Telegram-Bot-Api-Secret-Token` | Opcional |
+
+### Revisión editorial
+
+| Variable    | Descripción                                                       | Requerido |
+|-------------|-------------------------------------------------------------------|-----------|
+| `SITE_URL`  | URL base para construir el enlace privado del borrador (`/preview/<token>`). Por defecto `https://www.emedoteme.es` | Opcional |
 
 ### Bluesky (Publicación)
 
@@ -84,7 +91,36 @@ Si no se configura, el rate limit usa memoria local (no válido en serverless).
 
 ---
 
-## Archivo .env.example (Actualizado)
+## Dónde vive cada variable
+
+El pipeline y la web son dos entornos distintos:
+
+- **GitHub Actions** (secrets del repositorio): ejecuta `publicar.sh`. Necesita `DATABASE_URL`, `DIRECT_URL`, las claves de Gemini, las de imagen, `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY`, `TELEGRAM_TOKEN`/`TELEGRAM_CHAT_ID`/`TELEGRAM_CHANNEL_ID`, Bluesky, Binance Square y `RESEND_API_KEY`. El workflow las inyecta como variables de entorno (`generate-news.yml`).
+- **Vercel** (variables de entorno del proyecto): sirve la web y las rutas API. El webhook y la página de revisión viven aquí, así que hacen falta `TELEGRAM_TOKEN` y `TELEGRAM_CHAT_ID` (y, si se usa, `TELEGRAM_WEBHOOK_SECRET`). `SITE_URL` es opcional.
+
+---
+
+## Secretos de imagen en GitHub Actions
+
+> [!WARNING]
+> **Problema conocido y comprobado.** En los secretos de GitHub del repositorio **no están definidos `PIXABAY_API_KEY` ni `CLOUDFLARE_ACCOUNT_ID`/`CLOUDFLARE_API_TOKEN`**. El workflow los referencia, pero al no existir el secreto el valor queda vacío, así que en cada ejecución de GitHub Actions los dos primeros escalones de la cascada se saltan y el artículo termina siempre con la imagen de reserva. Los logs muestran `Falta PIXABAY_API_KEY` y `Faltan CLOUDFLARE_ACCOUNT_ID o CLOUDFLARE_API_TOKEN`.
+
+**Solución.** Crear las claves y añadirlas como secretos:
+
+1. **Pixabay**: crear una cuenta gratuita en [pixabay.com](https://pixabay.com/api/docs/); la clave aparece al instante en la página de la API.
+2. **Cloudflare**: obtener `CLOUDFLARE_ACCOUNT_ID` del panel (Workers AI) y crear un token con el permiso **Workers AI: Read** en [API Tokens](https://dash.cloudflare.com/profile/api-tokens).
+
+```bash
+gh secret set PIXABAY_API_KEY
+gh secret set CLOUDFLARE_ACCOUNT_ID
+gh secret set CLOUDFLARE_API_TOKEN
+```
+
+Sin `PIXABAY_API_KEY` la cascada no busca fotografía de archivo; sin las dos de Cloudflare no genera imágenes. Con ellas, la cascada funciona como se describe en [[04 - Flujos de Trabajo]].
+
+---
+
+## Archivo .env.example
 
 ```env
 # === CORE APP ENVIRONMENT ===
@@ -94,8 +130,8 @@ CRON_SECRET=""
 ADMIN_PASSWORD=""
 SESSION_SECRET=""
 SUPABASE_URL=""
-NEXT_PUBLIC_SUPABASE_URL=""
 SUPABASE_SERVICE_ROLE_KEY=""
+NEXT_PUBLIC_SUPABASE_URL=""
 RESEND_API_KEY=""
 
 # === RATE LIMITING DISTRIBUIDO (opcional) ===
@@ -106,12 +142,20 @@ UPSTASH_REDIS_REST_TOKEN=""
 GEMINI_API_KEY=""
 GEMINI_API_KEY_2=""
 GEMINI_API_KEY_3=""
-HF_TOKEN=""
+
+# === IMÁGENES ===
+CLOUDFLARE_ACCOUNT_ID=""
+CLOUDFLARE_API_TOKEN=""
+PIXABAY_API_KEY=""
 
 # === TELEGRAM ===
 TELEGRAM_TOKEN=""
 TELEGRAM_CHAT_ID=""
 TELEGRAM_CHANNEL_ID=""
+TELEGRAM_WEBHOOK_SECRET=""
+
+# === REVISIÓN EDITORIAL ===
+SITE_URL="https://www.emedoteme.es"
 
 # === BLUESKY ===
 BLUESKY_HANDLE=""
@@ -132,9 +176,13 @@ Ubicados en `config/prompts.ts`, centralizan la personalidad del periodista y la
 ### NEWS_SOURCES
 Fuentes RSS configuradas en `modules/news/news-sources.service.ts`.
 
+### FALLBACK_IMAGES
+Pool de imágenes de reserva por categoría en `config/constants.ts`.
+
 ---
 
 ## Referencias
 
 - [[02 - Stack Tecnológico]]
 - [[03 - Módulos]]
+- [[12 - Aprobación Editorial]]

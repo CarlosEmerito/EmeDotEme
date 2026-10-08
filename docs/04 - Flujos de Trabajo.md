@@ -2,18 +2,18 @@
 
 ## Índice
 
-- Pipeline de publicación (Publisher Service)
+- Pipeline de generación de borradores (Publisher Service)
 - Flujo de imágenes
 - Flujo de IA
 - Cron jobs
 
 ---
 
-## Pipeline de publicación
+## Pipeline de generación de borradores
 
 ### Descripción general
 
-El pipeline de publicación es el flujo principal que genera y publica automáticamente un artículo cada día. Ha sido refactorizado en un **Publisher Service** para mejorar la modularidad y resiliencia.
+Es el flujo principal. Cada ejecución genera un artículo a partir de fuentes RSS y lo guarda como **borrador** (`published = false`). El pipeline **no publica**: manda la petición de aprobación a Telegram y espera la decisión humana (ver [[12 - Aprobación Editorial]]). Está implementado como **Publisher Service** para separar la orquestación de los scripts.
 
 ### Diagrama del Pipeline
 
@@ -24,26 +24,26 @@ graph TD
     classDef alert fill:#fef3c7,stroke:#f59e0b,stroke-width:2px;
 
     Start((Inicio)):::init --> Step1
-    
+
     Step1["<b>1. INICIALIZACIÓN</b><br/><i>(ensureCategories)</i><br/>- Asegurar categorías base<br/>- Obtener contexto reciente"]:::step --> Step2
-    
+
     Step2["<b>2. FETCH NOTICIAS</b><br/><i>(NewsSources Service)</i><br/>- Fetch RSS<br/>- Agrupamiento en temas"]:::step --> Step3
-    
+
     Step3["<b>3. GENERACIÓN IA</b><br/><i>(AI Service)</i><br/>- Generación bilingüe (ES->EN)<br/>- Post-procesado ortográfico"]:::step --> Step4
-    
+
     Step4["<b>4. PROCESO DE IMAGEN</b><br/><i>(Image Service)</i><br/>- Pixabay -> Cloudflare FLUX -> reserva<br/>- QA Gemini Vision en cada paso"]:::step --> Step5
-    
-    Step5["<b>5. PERSISTENCIA</b><br/><i>(Base de Datos)</i><br/>- Guardar artículo y etiquetas"]:::step --> Step6
-    
-    Step6["<b>6. NOTIFICACIONES</b><br/><i>(Metadatos)</i><br/>- JSON para Binance Square<br/>- Notificación vía Telegram"]:::step
-    
-    Step6 --> End((Fin)):::init
+
+    Step5["<b>5. GUARDAR BORRADOR</b><br/><i>(Base de Datos)</i><br/>- published = false<br/>- reviewToken aleatorio"]:::step --> Step6
+
+    Step6["<b>6. PEDIR APROBACIÓN</b><br/><i>(Telegram)</i><br/>- Mensaje con enlace privado<br/>- Botones Sí / No / EmeDotHermes"]:::alert
+
+    Step6 --> End((Espera decisión)):::init
 ```
 
 ### Código de ejecución
 
 ```bash
-# El script principal ahora es un simple wrapper del PublisherService
+# El script principal es un wrapper del PublisherService
 npx tsx scripts/publish.ts
 ```
 
@@ -72,9 +72,7 @@ Toda imagen aceptada o generada se sube automáticamente a Supabase Storage para
 
 ### Nunca se descarta el artículo
 
-`generateArticleImageAndAnalyzeQA` (`modules/images/image.service.ts`) recorre la cascada y **no lanza ninguna excepción**: si ninguna candidata supera el control de calidad, devuelve la imagen de reserva de la categoría (`config/constants.ts`) y el artículo se publica igualmente.
-
-Antes esta función terminaba en un `throw`. Un fallo en la generación de imágenes tiraba a la basura el artículo entero: texto ya generado, traducido y pagado. Esa fue la causa real de las pérdidas de artículos durante semanas.
+`generateArticleImageAndAnalyzeQA` (`modules/images/image.service.ts`) recorre la cascada y **no lanza ninguna excepción**: si ninguna candidata supera el control de calidad, devuelve la imagen de reserva de la categoría (`config/constants.ts`) y el artículo se guarda igualmente como borrador.
 
 ### Control de calidad
 
@@ -82,11 +80,15 @@ Cada candidata pasa por Gemini Vision antes de aceptarse (`isImageValid`). Ese f
 
 El orden de la cascada va de mejor a peor calidad editorial: una foto real del suceso siempre será preferible a una imagen inventada por IA.
 
+### Pie de foto y origen
+
+El pie de foto lo redacta el control de calidad a partir de lo que muestra la imagen y **no menciona su procedencia**. El origen (Pixabay / generada / reserva) se informa a quien aprueba, en el mensaje de Telegram. `pickFallbackImage` rota por el pool de la categoría para no repetir la misma imagen en artículos consecutivos.
+
 ---
 
 ## Flujo de IA
 
-El flujo de IA ahora utiliza **AI_PROMPTS** centralizados en `config/prompts.ts`.
+El flujo de IA utiliza **AI_PROMPTS** centralizados en `config/prompts.ts`.
 
 ### Postprocesado
 
@@ -100,6 +102,8 @@ La ejecución automática se orquesta mediante **GitHub Actions** en contenedore
 
 | Proceso | Frecuencia | Orquestador | Comando Ejecutado |
 |---------|------------|-------------|-------------------|
-| **Publicación automática** | Cada 4 horas (`0 */4 * * *`) | GitHub Actions | `./publicar.sh` |
+| **Generación de borrador + anuncio de lo aprobado** | Cada 4 horas (`0 */4 * * *`) | GitHub Actions | `./publicar.sh` |
 | **Envío de Newsletter** | Semanal | GitHub Actions (workflow_dispatch) | `./enviar_newsletter.sh` |
 | **Ejecución de Prueba** | Manual | GitHub Actions (`workflow_dispatch`) | `./publicarprueba.sh` |
+
+`publicar.sh` hace dos cosas en orden: primero anuncia en redes el artículo aprobado pendiente (si lo hay) y después genera el borrador del día. El detalle está en [[06 - Scripts]] y [[12 - Aprobación Editorial]].

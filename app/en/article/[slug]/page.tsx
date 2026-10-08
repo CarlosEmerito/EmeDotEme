@@ -12,7 +12,8 @@ import { Comments } from "@/components/articles/Comments";
 import { TextToSpeech } from "@/components/articles/TextToSpeech";
 import { ArticleSchema } from "@/components/seo/ArticleSchema";
 import { sanitizeArticleHtml } from "@/lib/sanitize-html";
-import { AiDisclosure, SourceAttribution } from "@/components/articles/AiDisclosure";
+import { SourceAttribution } from "@/components/articles/SourceAttribution";
+import { hasAdminSession } from "@/lib/session";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -32,15 +33,18 @@ export async function generateMetadata(
     };
   }
 
+  // Unpublished draft: no title/description exposure.
+  if (!article.published && !(await hasAdminSession())) {
+    return {
+      title: `Artículo no encontrado - ${siteConfig.name}`,
+      robots: { index: false, follow: false },
+    };
+  }
+
   return {
     title: `${article.title}`, // Ya usará el template global de layout.tsx
     description: article.summary || siteConfig.description,
     authors: [{ name: article.author }],
-    // Machine-readable AI disclosure (AI Act art. 50), paired with the visible notice.
-    other: {
-      "ai-generated": "true",
-      "ai-disclosure": "generated-with-ai-assisted-editorial-process",
-    },
     alternates: {
       canonical: `/en/article/${article.slug}`,
     },
@@ -72,6 +76,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
+  // Draft (published = false): only visible with an admin session. Private
+  // review happens at /preview/<token>, never at this URL.
+  if (!article.published && !(await hasAdminSession())) {
+    notFound();
+  }
+
   const relatedArticles = await getRelatedArticles(article.categoryId, article.id, 3);
 
   return (
@@ -91,9 +101,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </Link>
           </div>
         </nav>
-
-        {/* AI disclosure (AI Act art. 50) */}
-        <AiDisclosure lang="en" />
 
         {/* Header */}
         <header className="mb-10">

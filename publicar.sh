@@ -3,11 +3,17 @@
 # Script centralizado de publicación EMEDOTEME
 # Ejecuta todos los pasos y deja logs detallados bajo logs/emedoteme.log
 #
-# Para adaptar/añadir redes, edita aquí. Requiere un .env completo.
+# Dos tareas independientes, en este orden:
+#   1. Anunciar en redes el artículo aprobado que esté pendiente de anuncio.
+#   2. Generar el borrador del día y pedir la aprobación por Telegram.
+#
+# Nada llega a la web ni a las redes sin el «Sí» de Emérito en Telegram: el
+# pipeline solo crea borradores con `published = false`. El anuncio en Binance
+# Square, Telegram y Bluesky lo dispara la siguiente ejecución (o este mismo
+# guion, si el «Sí» llegó antes).
 
 set -euo pipefail
 
-# [Propuesta 1] Cambiar a ruta relativa para mayor portabilidad
 cd "$(dirname "$0")"
 
 # Asegurar que el directorio de logs existe
@@ -30,21 +36,14 @@ exec > >(tee -a "$LOGFILE") 2>&1
 # === Logging de inicio ===
 echo -e "\n================== 📰 PUBLICAR.sh ($TIMESTAMP) =================="
 
-# === Paso 1: Generar artículo principal ===
-echo "[1️⃣] Generando artículo principal con scripts/publish.ts..."
-if npx tsx scripts/publish.ts 2>&1; then
-  
-  echo "[✅] Paso 1 completado exitosamente."
+# === Paso 1: anunciar en redes el artículo aprobado pendiente (si lo hay) ===
+echo "[1️⃣] Buscando artículos aprobados pendientes de anunciar..."
+rm -f "$JSON_PATH"
+npx tsx scripts/announce_approved.ts
 
-  # [Propuesta 3] Verificar si el JSON generado existe antes de publicar en redes
-  if [ ! -f "$JSON_PATH" ]; then
-    echo "❌ Error: No se encontró $JSON_PATH tras la generación."
-    exit 1
-  fi
+if [ -f "$JSON_PATH" ]; then
+  echo "[📦] Metadata detectada en $JSON_PATH. Publicando en redes..."
 
-  echo "[📦] Metadata detectada en $JSON_PATH. Iniciando publicación en redes..."
-
-  # [Propuesta 4] Ejecución de scripts con python3
   echo -e "\n[2️⃣] Enviando a Binance Square (scripts/python/publish_direct.py)..."
   if python3 scripts/python/publish_direct.py "$JSON_PATH" 2>&1; then
     echo "[✅] Publicado en Binance Square."
@@ -66,9 +65,17 @@ if npx tsx scripts/publish.ts 2>&1; then
     echo "[⚠️] Falló la publicación en Bluesky."
   fi
 else
-  echo "❌ Error al generar el artículo. Abortando publicación en redes."
+  echo "[ℹ️] No hay ningún artículo aprobado pendiente de anunciar."
+fi
+
+# === Paso 2: generar el borrador del día y pedir la aprobación ===
+echo -e "\n[5️⃣] Generando el borrador del día (scripts/publish.ts)..."
+if npx tsx scripts/publish.ts 2>&1; then
+  echo "[✅] Borrador generado. La petición de aprobación ya está en Telegram."
+else
+  echo "❌ Error al generar el borrador. Este ciclo no deja nada que aprobar."
   exit 1
 fi
 
-echo -e "\n✅ Proceso completado. Revisa tus redes sociales. ($TIMESTAMP)\n"
+echo -e "\n✅ Proceso completado. Revisa Telegram para aprobar el borrador. ($TIMESTAMP)\n"
 echo "==============================================================="

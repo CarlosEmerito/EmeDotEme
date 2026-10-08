@@ -12,7 +12,8 @@ import { Comments } from "@/components/articles/Comments";
 import { TextToSpeech } from "@/components/articles/TextToSpeech";
 import { ArticleSchema } from "@/components/seo/ArticleSchema";
 import { sanitizeArticleHtml } from "@/lib/sanitize-html";
-import { AiDisclosure, SourceAttribution } from "@/components/articles/AiDisclosure";
+import { SourceAttribution } from "@/components/articles/SourceAttribution";
+import { hasAdminSession } from "@/lib/session";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -32,16 +33,18 @@ export async function generateMetadata(
     };
   }
 
+  // Un borrador no publicado no expone ni su título en los metadatos.
+  if (!article.published && !(await hasAdminSession())) {
+    return {
+      title: `Artículo no encontrado - ${siteConfig.name}`,
+      robots: { index: false, follow: false },
+    };
+  }
+
   return {
     title: `${article.title}`, // Ya usará el template global de layout.tsx
     description: article.summary || siteConfig.description,
     authors: [{ name: article.author }],
-    // Divulgación legible por máquina del uso de IA (art. 50 del Reglamento de IA).
-    // Va junto al aviso visible del artículo.
-    other: {
-      "ai-generated": "true",
-      "ai-disclosure": "generated-with-ai-assisted-editorial-process",
-    },
     alternates: {
       canonical: `/articulo/${article.slug}`,
     },
@@ -73,6 +76,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
+  // Un borrador (published = false) solo se ve con sesión de admin. La revisión
+  // privada se hace por /preview/<token>, nunca por esta URL.
+  if (!article.published && !(await hasAdminSession())) {
+    notFound();
+  }
+
   const relatedArticles = await getRelatedArticles(article.categoryId, article.id, 3);
 
   return (
@@ -94,9 +103,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             )}
           </div>
         </nav>
-
-        {/* Aviso de IA (art. 50 del Reglamento de IA) */}
-        <AiDisclosure lang="es" />
 
         {/* Header */}
         <header className="mb-10">

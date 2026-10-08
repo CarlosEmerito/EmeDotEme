@@ -6,14 +6,18 @@ import { revalidatePath } from "next/cache";
 
 export async function togglePublishStatus(id: string, newStatus: boolean) {
   try {
-    const article = await prisma.article.findUnique({ where: { id }, select: { publishedAt: true } });
+    const article = await prisma.article.findUnique({ where: { id }, select: { publishedAt: true, announcedAt: true } });
     
     await prisma.article.update({
       where: { id },
       data: { 
         published: newStatus,
         // Si se publica por primera vez, guardar la fecha
-        publishedAt: newStatus && !article?.publishedAt ? new Date() : undefined
+        publishedAt: newStatus && !article?.publishedAt ? new Date() : undefined,
+        // Publicar desde el panel no dispara el anuncio en redes sociales: eso
+        // es exclusivo de los borradores aprobados por Telegram. Se marca como
+        // anunciado para que el publicador no lo recoja en su próxima vuelta.
+        announcedAt: newStatus && !article?.announcedAt ? new Date() : undefined
       }
     });
     
@@ -155,6 +159,10 @@ export async function createArticle(data: {
         isPinned: data.isPinned || false,
         priority: data.priority || 0,
         publishedAt: data.published ? new Date() : null,
+        // El artículo del panel no pasa por el flujo de aprobación de Telegram,
+        // así que se marca como ya anunciado: el publicador solo anuncia los
+        // borradores aprobados desde Telegram, no lo que se crea a mano aquí.
+        announcedAt: data.published ? new Date() : null,
         articleTags: {
           connectOrCreate: tagsArray.map(tag => ({
             where: { name: tag },

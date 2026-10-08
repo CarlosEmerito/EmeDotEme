@@ -99,6 +99,9 @@ export async function GET(req: Request) {
         author: siteConfig.author,
         published: true,
         publishedAt: new Date(),
+        // Se generó a mano desde la web (no por el pipeline), así que no entra
+        // en la cola de anuncios de redes sociales.
+        announcedAt: new Date(),
         isOriginal: !hasRealSources, // false si se basa en fuentes externas
         articleTags: {
           connectOrCreate: tagsArray.map((tag: string) => ({

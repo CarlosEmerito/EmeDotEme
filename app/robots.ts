@@ -6,7 +6,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin/', '/api/'],
+      // /preview/ es el enlace privado de revisión: nunca debe indexarse.
+      disallow: ['/admin/', '/api/', '/preview/'],
     },
     sitemap: `${siteConfig.url}/sitemap.xml`,
   };

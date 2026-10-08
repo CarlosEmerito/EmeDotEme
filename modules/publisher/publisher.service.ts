@@ -1,13 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as fs from "fs";
-import path from "path";
 import { generateBilingualContent } from "../ai/ai.service";
 import { fetchLatestNews } from "../news/news-sources.service";
 import { generateArticleImageAndAnalyzeQA } from "../images/image.service";
 import { generateSlug, ensureUniqueSlug, formatTitle } from "../../lib/utils";
-import { sendCriticalErrorNotification } from "../notifications/telegram.service";
+import { sendCriticalErrorNotification, sendApprovalRequest } from "../notifications/telegram.service";
 import { BASE_CATEGORIES } from "../../config/constants";
+import { buildPreviewUrl, generateReviewToken, REVIEW_STATUS } from "../../lib/review-token";
 
 /**
  * PublisherService: Orquestador central del pipeline de publicación.
@@ -66,17 +65,16 @@ export class PublisherService {
       const imageUrls = await this.processImage(aiResponse, allCategories, slug);
       console.log(`🖼️ Imagen lista: ${imageUrls.url}`);
 
-      // 6. Guardar en Base de Datos
-      console.log("💾 [6/7] Guardando artículo en base de datos...");
+      // 6. Guardar en Base de Datos (como borrador: NO se publica todavía)
+      console.log("💾 [6/7] Guardando borrador en base de datos...");
       const newArticle = await this.saveToDatabase(aiResponse, imageUrls, newsContext.newsItems.length > 0, slug);
-      console.log(`✅ Artículo guardado con ID: ${newArticle.id} y slug: ${newArticle.slug}`);
+      console.log(`✅ Borrador guardado con ID: ${newArticle.id} y slug: ${newArticle.slug}`);
 
-      // 7. Post-procesado (Binance Square, etc.)
-      console.log("📝 [7/7] Guardando metadata local para scripts externos...");
-      await this.saveLocalMetadata(newArticle);
+      // 7. Pedir la aprobación editorial por Telegram, con el enlace privado
+      console.log("📨 [7/7] Pidiendo aprobación por Telegram...");
+      await this.requestApproval(newArticle);
 
-
-      console.log("\n✅ PROCESO COMPLETADO CON ÉXITO");
+      console.log("\n✅ BORRADOR LISTO. Nada se ha publicado: espera tu sí/no en Telegram.");
       return newArticle;
 
     } catch (error: any) {
@@ -205,8 +203,13 @@ export class PublisherService {
         isOriginal: !hasNews,
         categoryId: selectedCategory.id,
         author: 'Carlos "Emérito" López Lovera',
-        published: true,
-        publishedAt: new Date(),
+        // El artículo nace como borrador privado: `published: false` lo deja
+        // fuera de la web y `reviewToken` es la única puerta al enlace privado
+        // y a los botones de Telegram. Se publica cuando Emérito pulsa «Sí».
+        published: false,
+        publishedAt: null,
+        reviewStatus: REVIEW_STATUS.pending,
+        reviewToken: generateReviewToken(),
       },
       include: {
         category: true,
@@ -215,18 +218,31 @@ export class PublisherService {
     });
   }
 
-  private async saveLocalMetadata(article: any) {
-    const tmpDir = path.join(process.cwd(), 'tmp');
-    if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
-    
-    const articleData = {
+  /**
+   * Manda al Telegram de Emérito el borrador con su enlace privado y los tres
+   * botones (sí / no / EmeDotHermes). Deja el enlace también en el log para que
+   * el flujo no dependa de que el mensaje llegue.
+   */
+  private async requestApproval(article: any) {
+    const baseUrl = process.env.SITE_URL || 'https://www.emedoteme.es';
+    const previewUrl = buildPreviewUrl(baseUrl, article.reviewToken);
+
+    const sent = await sendApprovalRequest({
       title: article.title,
-      link: `https://www.emedoteme.es/articulo/${article.slug}`,
-      description: article.content || article.summary,
+      summary: article.summary,
       imageUrl: article.imageUrl,
-      tags: article.articleTags ? article.articleTags.map((t: any) => t.name) : []
-    };
-    
-    fs.writeFileSync(path.join(tmpDir, 'latest_article.json'), JSON.stringify(articleData, null, 2));
+      category: article.category?.name,
+      previewUrl,
+      token: article.reviewToken,
+      wordCount: String(article.content || '').split(/\s+/).length,
+      tags: article.articleTags ? article.articleTags.map((t: any) => t.name) : [],
+    });
+
+    if (sent) {
+      console.log(`🔒 Enlace privado del borrador: ${previewUrl}`);
+    } else {
+      console.warn(`⚠️ No se pudo enviar la petición de aprobación. El borrador queda pendiente en la web: ${previewUrl}`);
+    }
+    return previewUrl;
   }
 }

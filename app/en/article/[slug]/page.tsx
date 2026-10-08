@@ -11,6 +11,7 @@ import { ShareButtons } from "@/components/articles/ShareButtons";
 import { Comments } from "@/components/articles/Comments";
 import { TextToSpeech } from "@/components/articles/TextToSpeech";
 import { sanitizeArticleHtml, safeJsonLdString } from "@/lib/sanitize-html";
+import { AiDisclosure, SourceAttribution } from "@/components/articles/AiDisclosure";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -34,6 +35,11 @@ export async function generateMetadata(
     title: `${article.title}`, // Ya usará el template global de layout.tsx
     description: article.summary || siteConfig.description,
     authors: [{ name: article.author }],
+    // Machine-readable AI disclosure (AI Act art. 50), paired with the visible notice.
+    other: {
+      "ai-generated": "true",
+      "ai-disclosure": "generated-with-ai-assisted-editorial-process",
+    },
     alternates: {
       canonical: `/en/article/${article.slug}`,
     },
@@ -75,10 +81,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     "datePublished": article.createdAt.toISOString(),
     "dateModified": article.updatedAt.toISOString(),
     "author": [{
-        "@type": "Person",
+        // Organization, not Person: the text is produced by an automated system,
+        // and attributing it to a natural person would be a false attribution.
+        "@type": "Organization",
         "name": article.author,
-        "url": `${siteConfig.url}/sobre-mi`
+        "url": `${siteConfig.url}/en/editorial-policy`
       }],
+    "isAccessibleForFree": true,
     "publisher": {
       "@type": "Organization",
       "name": siteConfig.name,
@@ -111,6 +120,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </Link>
           </div>
         </nav>
+
+        {/* AI disclosure (AI Act art. 50) */}
+        <AiDisclosure lang="en" />
 
         {/* Header */}
         <header className="mb-10">
@@ -214,6 +226,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <article className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
           <div dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(article.contentEn || article.content) }} />
         </article>
+
+        {/* Attribution to the original source (TRLPI art. 129 bis.6: hyperlinking
+            is excluded from the press publishers' right) */}
+        <SourceAttribution sourceUrl={article.sourceUrl} lang="en" />
 
         {/* Glossary Section */}
         {article.glossaryEn && Array.isArray(article.glossaryEn) && article.glossaryEn.length > 0 && (

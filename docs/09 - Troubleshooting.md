@@ -28,7 +28,7 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 ### 1. Ninguna fuente de imagen supera el control de calidad
 
 > [!WARNING]
-> **Síntoma**: en los logs aparecen rechazos consecutivos (`[QA og:image]`, `[QA RSS]`, `[QA Pixabay N]`, `[QA Cloudflare]`) y el artículo termina publicándose con la imagen de reserva.
+> **Síntoma**: en los logs aparecen rechazos consecutivos (`[QA Pixabay N]`, `[QA Cloudflare]`, `[QA reserva]`) y el artículo termina publicándose con la imagen de reserva.
 
 > [!TIP]
 > **Solución**:
@@ -38,9 +38,9 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 > - **Pixabay sin resultados** — la consulta se construye con la categoría y las palabras más significativas del titular. Si una categoría concreta falla siempre, revisa `buildStockQuery` en `modules/images/stock-image.service.ts`.
 > - Si Gemini Vision falla de forma definitiva (cuota agotada en las tres claves), **todas** las candidatas serán rechazadas y se usará la reserva. Ese es el síntoma típico de un problema de cuotas de Gemini, no de imágenes.
 
-### 2. La imagen del RSS es rechazada con "HTTP 403 al descargar imagen"
+### 2. Una candidata de imagen falla con "HTTP 403 al descargar imagen"
 > [!WARNING]
-> **Síntoma**: En el paso `[QA RSS]` los logs muestran `Error descargando imagen para análisis: Error: HTTP 403 al descargar imagen`, y el pipeline pasa al siguiente candidato de la cascada (og:image ya se intentó antes; ahora seguiría con Pixabay y Cloudflare).
+> **Síntoma**: los logs muestran `Error descargando imagen para análisis: Error: HTTP 403 al descargar imagen`, y el pipeline pasa al siguiente candidato de la cascada (Pixabay → Cloudflare → reserva).
 
 > [!TIP]
 > **Causa**: muchos CDNs de medios (CNBC, Investing.com, etc.) aplican *hotlink-protection*: rechazan las descargas de imagen que no incluyan un `Referer` del propio sitio o que usen un `User-Agent` que no parezca un navegador.

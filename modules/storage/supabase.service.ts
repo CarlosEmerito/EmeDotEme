@@ -6,18 +6,68 @@ import 'dotenv/config';
  */
 
 /**
- * Sube una imagen externa a Supabase Storage y retorna la URL pública permanente.
+ * Fuentes cuya imagen el proyecto **puede** descargar y volver a alojar, porque
+ * su licencia lo permite: fotografía de archivo con licencia comercial (Pixabay,
+ * Pexels, Unsplash), el propio almacén y el propio dominio.
+ */
+const ALLOWED_TO_STORE = [
+  'pixabay.com',
+  'pexels.com',
+  'images.unsplash.com',
+  'supabase.co',
+  'supabase.com',
+  'emedoteme.es',
+];
+
+/**
+ * ¿Se puede descargar y volver a alojar esta imagen?
+ *
+ * - Los Data URI vienen de la generación con IA: son nuestros.
+ * - Las fuentes de la lista blanca tienen licencia de uso comercial.
+ * - Todo lo demás (imágenes de prensa, agencias, redes sociales) **no**.
+ *
+ * Exportada para poder probarla sin red.
+ */
+export function isAllowedToStore(url: string): boolean {
+  if (url.startsWith('data:')) return true;
+  try {
+    const hostname = new URL(url).hostname;
+    return ALLOWED_TO_STORE.some((d) => hostname === d || hostname.endsWith('.' + d));
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Sube una imagen a Supabase Storage y retorna la URL pública permanente.
+ *
+ * **No se copia ninguna imagen de terceros.** El art. 129 bis.2 del TRLPI sujeta
+ * a autorización la puesta a disposición del público de cualquier imagen de una
+ * publicación de prensa; descargarla y volver a alojarla añade una reproducción
+ * a esa puesta a disposición. Si llega una URL de una fuente que no está en la
+ * lista blanca, se devuelve tal cual —sin copiarla— y se avisa en los registros,
+ * porque significa que algo se ha colado en la cascada de imágenes.
+ *
  * Si falla o no hay credenciales, retorna la URL original.
  */
 export async function saveImageToSupabase(url: string, slug: string): Promise<string> {
-  // Skip si ya es una URL permanente o local
-  const permanentDomains = ['images.unsplash.com', 'supabase.co', 'supabase.com', 'emedoteme.es'];
-  try {
-    const urlObj = new URL(url);
-    if (permanentDomains.some(d => urlObj.hostname.includes(d))) return url;
-  } catch { /* no es una URL válida o no está en la lista blanca */ }
-
+  // Si ya es una URL permanente nuestra, no hay nada que copiar.
   if (url.includes('supabase.co/storage/v1/object/public/')) return url;
+
+  if (!isAllowedToStore(url)) {
+    let hostname = '(no parseable)';
+    try {
+      hostname = new URL(url).hostname;
+    } catch {
+      /* se queda el marcador */
+    }
+    console.error(
+      `[Storage] ⚠️ Imagen de una fuente no autorizada (${hostname}): NO se copia. ` +
+        `Solo se re-alojan imágenes propias o con licencia (${ALLOWED_TO_STORE.join(', ')}). ` +
+        `Comprueba la cascada de modules/images/image.service.ts.`
+    );
+    return url;
+  }
 
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

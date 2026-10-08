@@ -28,6 +28,13 @@ IMPORTANTE sobre calidad:
 - RECHAZA SOLAMENTE basuras visuales claras: capturas de pantalla mal recortadas o imágenes extremadamente diminutas e ilegibles.
 - Presta ESPECIAL ATENCIÓN a cualquier marca de agua o logo SUPERPUESTO de un medio de noticias distinto a EmeDotEme (p.ej. el logo de otro portal incrustado en una esquina de la foto). Si detectas un logo o marca de agua pegado encima de la imagen perteneciente a otro medio, recházala (calidad_aceptable: false) y descríbelo en "problemas_detectados". No rechaces por texto que forme parte natural de la escena fotografiada (carteles, pantallas, etc.).
 
+IMPORTANTE sobre derechos de imagen (derecho a la propia imagen, LO 1/1982):
+- RECHAZA cualquier imagen en la que aparezca un MENOR identificable, aunque esté en un lugar público o provenga de una imagen de archivo.
+- RECHAZA las imágenes que muestren a una persona identificable en un contexto negativo (detención, delito, enfermedad, situación comprometida), salvo que sea una figura pública en un acto público.
+- Una imagen accesible en internet NO está autorizada para reutilizarse: la STC 27/2020 exige consentimiento expreso para usar la imagen de un particular, aunque su foto sea pública.
+- SÍ son aceptables: figuras públicas en actos públicos (un directivo en una conferencia, un portavoz en una rueda de prensa); personas que aparecen de forma meramente accesoria o no identificable (multitudes lejanas, siluetas, planos de espaldas sin rasgos); y cualquier escena sin personas.
+- Si rechazas por este motivo, indícalo en "problemas_detectados" empezando por la etiqueta "derechos de imagen".
+
 Debes responder ÚNICAMENTE con un objeto JSON con esta estructura exacta:
 {
   "coherente": true/false,

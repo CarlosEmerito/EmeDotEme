@@ -52,15 +52,13 @@ async function main() {
     const slug = generateSlug(aiResponse.title, true);
 
     // Procesar imagen con el pipeline unificado
-    const rssImageUrl = newsContext.newsItems[0]?.imageUrl || aiResponse.sourceImageUrl;
-    
     const imageResult = await generateArticleImageAndAnalyzeQA({
       title: aiResponse.title,
       slug: slug,
       topic: randomCategory.name,
       originalPrompt: aiResponse.imagePrompt,
       summary: aiResponse.summary
-    }, rssImageUrl, newsContext.newsItems[0]?.link);
+    });
 
     console.log(`📊 RESUMEN IMAGEN: ${imageResult.imageUrl}`);
     console.log(`📊 FUENTE IMAGEN: ${imageResult.source}`);

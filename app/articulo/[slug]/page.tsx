@@ -12,6 +12,7 @@ import { Comments } from "@/components/articles/Comments";
 import { TextToSpeech } from "@/components/articles/TextToSpeech";
 import { ArticleSchema } from "@/components/seo/ArticleSchema";
 import { sanitizeArticleHtml, safeJsonLdString } from "@/lib/sanitize-html";
+import { AiDisclosure, SourceAttribution } from "@/components/articles/AiDisclosure";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -35,6 +36,12 @@ export async function generateMetadata(
     title: `${article.title}`, // Ya usará el template global de layout.tsx
     description: article.summary || siteConfig.description,
     authors: [{ name: article.author }],
+    // Divulgación legible por máquina del uso de IA (art. 50 del Reglamento de IA).
+    // Va junto al aviso visible del artículo.
+    other: {
+      "ai-generated": "true",
+      "ai-disclosure": "generated-with-ai-assisted-editorial-process",
+    },
     alternates: {
       canonical: `/articulo/${article.slug}`,
     },
@@ -76,10 +83,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     "datePublished": article.createdAt.toISOString(),
     "dateModified": article.updatedAt.toISOString(),
     "author": [{
-        "@type": "Person",
+        // Organización, no Persona: el texto lo produce un sistema automático y
+        // atribuirselo a una persona física sería una autoría que no se
+        // corresponde con los hechos.
+        "@type": "Organization",
         "name": article.author,
-        "url": `${siteConfig.url}/sobre-mi`
+        "url": `${siteConfig.url}/politica-editorial`
       }],
+    "isAccessibleForFree": true,
     "publisher": {
       "@type": "Organization",
       "name": siteConfig.name,
@@ -114,6 +125,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             )}
           </div>
         </nav>
+
+        {/* Aviso de IA (art. 50 del Reglamento de IA) */}
+        <AiDisclosure lang="es" />
 
         {/* Header */}
         <header className="mb-10">
@@ -218,6 +232,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <article className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
           <div dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(article.content) }} />
         </article>
+
+        {/* Atribución a la fuente original (art. 129 bis.6 TRLPI: el hiperenlace
+            está excluido del derecho de los editores y es la práctica correcta) */}
+        <SourceAttribution sourceUrl={article.sourceUrl} lang="es" />
 
         {/* Glossary Section */}
         {article.glossary && Array.isArray(article.glossary) && article.glossary.length > 0 && (

@@ -108,6 +108,12 @@ export interface ApprovalRequest {
   wordCount?: number;
   tags?: string[];
   chatId?: string;
+  /** Cómo se ha obtenido la imagen (archivo con licencia, generada, reserva). */
+  imageNote?: string;
+  /** Pie de foto que llevará el artículo. */
+  imageCaption?: string;
+  /** Aviso cuando no ha habido forma de evitar repetir una imagen reciente. */
+  imageWarning?: string;
 }
 
 /**
@@ -128,11 +134,16 @@ export async function sendApprovalRequest(request: ApprovalRequest): Promise<boo
     return false;
   }
 
+  const resumen = (request.summary || '').trim();
   const caption = [
     '🗞️ <b>Artículo listo para revisar</b>',
     '',
     `<b>${escapeHtml(request.title)}</b>`,
-    escapeHtml(request.summary || ''),
+    escapeHtml(resumen.length > 400 ? `${resumen.slice(0, 400)}…` : resumen),
+    '',
+    request.imageNote ? escapeHtml(request.imageNote) : undefined,
+    request.imageCaption ? `Pie de foto: <i>${escapeHtml(request.imageCaption)}</i>` : undefined,
+    request.imageWarning ? `<b>${escapeHtml(request.imageWarning)}</b>` : undefined,
     '',
     `🔒 Enlace privado: ${request.previewUrl}`,
     '',

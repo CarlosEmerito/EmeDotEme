@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { generateBilingualContent } from "../ai/ai.service";
 import { fetchLatestNews } from "../news/news-sources.service";
-import { generateArticleImageAndAnalyzeQA } from "../images/image.service";
+import { generateArticleImageAndAnalyzeQA, IMAGE_SOURCE_LABEL, type ImageSource, type RecentImage } from "../images/image.service";
 import { generateSlug, ensureUniqueSlug, formatTitle } from "../../lib/utils";
 import { sendCriticalErrorNotification, sendApprovalRequest } from "../notifications/telegram.service";
 import { BASE_CATEGORIES } from "../../config/constants";
@@ -31,7 +31,7 @@ export class PublisherService {
 
       // 2. Obtener contexto de artículos recientes para evitar duplicados
       console.log("🔍 [2/7] Obteniendo contexto de artículos recientes...");
-      const { recentTitles, recentSourceUrls } = await this.getRecentContext();
+      const { recentTitles, recentSourceUrls, recentImages } = await this.getRecentContext();
       
       // 3. Obtener noticias de fuentes RSS
       console.log("📡 [3/7] Buscando noticias en fuentes RSS...");
@@ -62,17 +62,17 @@ export class PublisherService {
 
       // 5. Generación de Imagen
       console.log("🎨 [5/7] Iniciando pipeline de imagen...");
-      const imageUrls = await this.processImage(aiResponse, allCategories, slug);
-      console.log(`🖼️ Imagen lista: ${imageUrls.url}`);
+      const imageInfo = await this.processImage(aiResponse, allCategories, slug, recentImages);
+      console.log(`🖼️ Imagen lista (${imageInfo.source}): ${imageInfo.url}`);
 
       // 6. Guardar en Base de Datos (como borrador: NO se publica todavía)
       console.log("💾 [6/7] Guardando borrador en base de datos...");
-      const newArticle = await this.saveToDatabase(aiResponse, imageUrls, newsContext.newsItems.length > 0, slug);
+      const newArticle = await this.saveToDatabase(aiResponse, imageInfo, newsContext.newsItems.length > 0, slug);
       console.log(`✅ Borrador guardado con ID: ${newArticle.id} y slug: ${newArticle.slug}`);
 
       // 7. Pedir la aprobación editorial por Telegram, con el enlace privado
       console.log("📨 [7/7] Pidiendo aprobación por Telegram...");
-      await this.requestApproval(newArticle);
+      await this.requestApproval(newArticle, imageInfo);
 
       console.log("\n✅ BORRADOR LISTO. Nada se ha publicado: espera tu sí/no en Telegram.");
       return newArticle;
@@ -100,23 +100,32 @@ export class PublisherService {
 
   private async getRecentContext() {
     const recentArticles = await this.prisma.article.findMany({
-      select: { title: true, titleEn: true, sourceUrl: true },
-      where: { published: true },
+      select: { title: true, titleEn: true, sourceUrl: true, imageUrl: true, published: true },
       orderBy: { createdAt: 'desc' },
       take: 25,
     });
-    
-    const recentTitles = recentArticles.flatMap(a => {
+
+    // Títulos y URLs de origen: solo de lo publicado (una noticia descartada
+    // sigue siendo noticia y podrá cubrirse más adelante).
+    const published = recentArticles.filter((a) => a.published);
+
+    const recentTitles = published.flatMap(a => {
       const titles = [a.title];
       if (a.titleEn) titles.push(a.titleEn);
       return titles;
     });
 
-    const recentSourceUrls = recentArticles
+    const recentSourceUrls = published
       .map(a => a.sourceUrl)
       .filter((url): url is string => Boolean(url));
 
-    return { recentTitles, recentSourceUrls };
+    // Imágenes recientes: de todos los artículos, publicados o no. Un borrador
+    // descartado también dejó su foto puesta, y no queremos repetirla.
+    const recentImages: RecentImage[] = recentArticles
+      .map((a) => ({ url: a.imageUrl, title: a.title }))
+      .filter((item): item is RecentImage => Boolean(item.url));
+
+    return { recentTitles, recentSourceUrls, recentImages };
   }
 
   private async generateContentWithClusters(topicClusters: any[][], recentTitles: string[]) {
@@ -141,7 +150,12 @@ export class PublisherService {
     throw new Error('No se pudo generar contenido con ningún cluster de noticias.');
   }
 
-  private async processImage(aiResponse: any, allCategories: any[], slug: string) {
+  private async processImage(
+    aiResponse: any,
+    allCategories: any[],
+    slug: string,
+    recentlyUsedImages: RecentImage[]
+  ) {
     const categoryName = aiResponse.category || allCategories[0].name;
 
     const imageResult = await generateArticleImageAndAnalyzeQA({
@@ -149,12 +163,16 @@ export class PublisherService {
       slug,
       topic: categoryName,
       originalPrompt: aiResponse.imagePrompt,
-      summary: aiResponse.summary
+      summary: aiResponse.summary,
+      recentlyUsedImages,
     });
 
     return {
       url: imageResult.imageUrl,
-      caption: imageResult.caption || aiResponse.imageCaption || `Ilustración sobre ${categoryName}`
+      caption: imageResult.caption || aiResponse.imageCaption || `Ilustración sobre ${categoryName}`,
+      source: imageResult.source,
+      errors: imageResult.errors,
+      duplicateOf: imageResult.duplicateOf,
     };
   }
 
@@ -223,9 +241,19 @@ export class PublisherService {
    * botones (sí / no / EmeDotHermes). Deja el enlace también en el log para que
    * el flujo no dependa de que el mensaje llegue.
    */
-  private async requestApproval(article: any) {
+  private async requestApproval(
+    article: any,
+    imageInfo: { url: string; caption: string; source: ImageSource; errors: string[]; duplicateOf: string | null }
+  ) {
     const baseUrl = process.env.SITE_URL || 'https://www.emedoteme.es';
     const previewUrl = buildPreviewUrl(baseUrl, article.reviewToken);
+
+    // Cómo se ha obtenido la imagen y qué dice el pie de foto. Se le enseña a
+    // quien aprueba, no al lector: en la web el pie solo describe la imagen.
+    const detalles = imageInfo.errors.slice(0, 2).join('; ');
+    const imageNote = `🖼️ Imagen: ${IMAGE_SOURCE_LABEL[imageInfo.source]}${
+      imageInfo.source === 'fallback_static' && detalles ? ` (${detalles})` : ''
+    }`;
 
     const sent = await sendApprovalRequest({
       title: article.title,
@@ -236,6 +264,11 @@ export class PublisherService {
       token: article.reviewToken,
       wordCount: String(article.content || '').split(/\s+/).length,
       tags: article.articleTags ? article.articleTags.map((t: any) => t.name) : [],
+      imageNote,
+      imageCaption: imageInfo.caption,
+      imageWarning: imageInfo.duplicateOf
+        ? `⚠️ Ya se usó en «${imageInfo.duplicateOf}» y no había otra disponible.`
+        : undefined,
     });
 
     if (sent) {

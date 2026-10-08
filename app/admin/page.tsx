@@ -60,7 +60,7 @@ export default async function AdminPage({
             Dashboard Admin
           </h1>
           <p className="text-zinc-500 mt-2">
-            Gestiona los artículos generados automáticamente por la Inteligencia Artificial.
+            Revisa los borradores pendientes de aprobación, edita y publica los artículos del medio.
           </p>
         </div>
         

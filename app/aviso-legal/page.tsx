@@ -43,7 +43,7 @@ export default function LegalNoticePage() {
             imágenes que ilustran los artículos proceden exclusivamente de:
           </p>
           <ul>
-            <li><strong>Generación con inteligencia artificial</strong>, cuando no hay una fotografía con licencia adecuada. En ese caso el pie de foto lo indica expresamente.</li>
+            <li><strong>Generación con inteligencia artificial</strong>, cuando no hay una fotografía con licencia adecuada.</li>
             <li><strong>Bancos de imágenes con licencia de uso comercial</strong> (por ejemplo, Pixabay), que autorizan su uso sin necesidad de autorización adicional.</li>
             <li><strong>Material propio</strong> del Sitio Web.</li>
           </ul>
@@ -55,15 +55,18 @@ export default function LegalNoticePage() {
 
           <h2>4. Uso de inteligencia artificial</h2>
           <p>
-            Los artículos de este Sitio Web se redactan mediante <strong>sistemas de inteligencia
-            artificial</strong> a partir de las fuentes citadas. Cada artículo incorpora un aviso
-            visible en ese sentido, junto con metadatos legibles por máquina, en cumplimiento del
-            <strong> artículo 50 del Reglamento (UE) 2024/1689</strong> (Reglamento de IA).
+            Los artículos de este Sitio Web se redactan con el apoyo de <strong>sistemas de
+            inteligencia artificial</strong>, a partir de las fuentes citadas. El borrador resultante
+            <strong> no se publica sin revisión</strong>: pasa por el control y la aprobación del
+            responsable editorial, que decide artículo por artículo qué se publica y qué no. Por eso
+            los artículos no llevan un aviso individual de contenido generado con inteligencia
+            artificial (excepción del artículo 50.4 del Reglamento (UE) 2024/1689, que exige revisión
+            humana y responsabilidad editorial, y es el caso).
           </p>
           <p>
-            El control de calidad editorial que se aplique en cada momento se describe en la{" "}
-            <Link href="/politica-editorial">Política Editorial</Link>, que también identifica al
-            responsable de la publicación.
+            La autoría y la responsabilidad corresponden al responsable editorial identificado en el
+            apartado 1. El proceso de elaboración y el detalle de este extremo se describen en la{" "}
+            <Link href="/politica-editorial">Política Editorial</Link>.
           </p>
 
           <h2>5. Propiedad Intelectual e Industrial</h2>

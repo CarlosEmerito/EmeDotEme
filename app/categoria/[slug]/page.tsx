@@ -59,7 +59,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             Noticias de <span className="text-[color:var(--color-brand)]">{category.name}</span>
           </h1>
           <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-3xl">
-            Explora las noticias, análisis y actualizaciones más recientes sobre <strong>{category.name}</strong>. Nuestro equipo de IA recopila los movimientos del mercado para que no te pierdas ningún detalle clave.
+            Explora las noticias, análisis y actualizaciones más recientes sobre <strong>{category.name}</strong>, revisadas antes de publicarse para que no te pierdas ningún detalle clave.
           </p>
         </header>
 

@@ -125,6 +125,15 @@ Comprueba las credenciales de Supabase y la presencia de `DATABASE_URL`.
 npx tsx scripts/test-env.ts
 ```
 
+### auditoria_texto.ts
+Mide la calidad del texto generado: palabras y subtítulos por artículo, si la entradilla repite el titular, atribuciones («según…»), cifras con unidad, incertidumbre («podría») y cierres con «en resumen». Sirve para comprobar que un cambio de prompt mejora de verdad lo que se publica.
+
+```bash
+npx tsx scripts/auditoria_texto.ts          # últimos 15 publicados
+npx tsx scripts/auditoria_texto.ts --draft  # el último borrador, con su control de texto
+npx tsx scripts/auditoria_texto.ts --n 30   # otra cantidad
+```
+
 ---
 
 ## Scripts de mantenimiento

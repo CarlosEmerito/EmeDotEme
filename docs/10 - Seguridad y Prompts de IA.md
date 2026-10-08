@@ -124,9 +124,11 @@ Se quitaron de git (`git rm --cached`, los ficheros siguen en disco):
 
 ---
 
-## 9. Corrección menor: truncado de descripciones
+## 9. Fuentes completas en vez de entradillas truncadas
 
-`modules/news/news-sources.service.ts` → `formatNewsForPrompt()`: antes añadía siempre `"..."` al final del resumen de cada noticia, aunque el texto original midiera menos de 300 caracteres (daba la falsa impresión de contenido cortado). Ahora solo se añade si realmente se truncó.
+`modules/news/news-sources.service.ts` → `formatNewsForPrompt()`. Antes cada noticia se enviaba al modelo recortada a 300 caracteres (la entradilla del feed): con ese material, un «análisis detallado» solo se podía escribir inventando. Ahora, antes de redactar, `enrichWithFullText()` **descarga el artículo original** de las dos primeras fuentes del clúster (hasta 12.000 caracteres, con límite de tiempo de 12 s). Si la descarga falla (bloqueo, error de red), se cae a la entradilla y se avisa explícitamente al modelo de que solo tiene el titular y no puede afirmar más.
+
+Detalle anterior que se conserva: el `"..."` solo se añade cuando el texto se ha truncado de verdad.
 
 ---
 
@@ -164,6 +166,22 @@ Antes la baja se hacía con un `GET /api/unsubscribe?email=...` sin firma: cualq
 **Archivo**: `lib/slug.ts` (`ensureUniqueSlug`).
 
 Antes los artículos añadían `Date.now()` al slug para garantizar unicidad (`mi-titulo-1760000000000`), lo que ensuciaba las URLs y era inconsistente entre el pipeline y `/api/generate`. Ahora `ensureUniqueSlug()` parte del slug limpio y solo añade un sufijo incremental (`-2`, `-3`, …) cuando ya existe en la base de datos. Se usa en `modules/publisher/publisher.service.ts` y en `app/api/generate/route.ts`.
+
+---
+
+## 13. Control de calidad del texto (auditoría contra las fuentes)
+
+**Archivos**: `modules/ai/text-qa.service.ts`, `config/prompts.ts` (`TEXT_QA`, `TEXT_FIX`), `modules/ai/schemas.ts` (`textQaResponseSchema`).
+
+El pipeline no publica nada sin revisión humana, pero hasta ahora el texto no pasaba ningún filtro automático: la imagen tiene el suyo (`imageAnalysisResponseSchema`) y el texto no tenía ninguno. Ahora, después de redactar y **antes** de traducir al inglés, una pasada de auditoría compara el borrador con sus fuentes y busca:
+
+- afirmaciones específicas (cifras, fechas, cargos, procedimientos judiciales) que no constan en las fuentes;
+- previsiones o hipótesis sin atribuir;
+- incumplimientos de estilo: relleno, incertidumbre encadenada, entradilla que repite el titular.
+
+Si hay algo que corregir, se reescribe **una sola vez** (`TEXT_FIX`) y se vuelve a auditar para dejar constancia de qué queda. El resultado se guarda en `Article.textQa` y viaja al mensaje de aprobación de Telegram, así que quien aprueba ve qué se detectó y qué se corrigió. Todo el proceso queda como registro de la revisión editorial.
+
+Si la auditoría no se puede ejecutar (cuota agotada, API caída), el borrador sigue su curso con un aviso explícito («sin verificar contra las fuentes»): la revisión humana sigue estando detrás y no se bloquea la publicación por un fallo del control.
 
 ---
 

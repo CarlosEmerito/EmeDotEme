@@ -51,8 +51,6 @@ export const articleResponseSchema: Schema = {
     tags: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
     imagePrompt: { type: SchemaType.STRING },
     category: { type: SchemaType.STRING, format: 'enum', enum: [...CATEGORY_VALUES] },
-    sourceUrl: { type: SchemaType.STRING },
-    sources: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
   },
   required: ['title', 'summary', 'keyPoints', 'content', 'tags', 'imagePrompt', 'category'],
 };
@@ -95,6 +93,37 @@ export const imageAnalysisResponseSchema: Schema = {
   required: ['coherente', 'razon_coherencia', 'descripcion', 'calidad_aceptable'],
 };
 
+/** Esquema Gemini para el control de calidad del texto (auditoría contra fuentes). */
+export const textQaResponseSchema: Schema = {
+  type: SchemaType.OBJECT,
+  properties: {
+    veredicto: { type: SchemaType.STRING, format: 'enum', enum: ['ok', 'corregir', 'rehacer'] },
+    afirmaciones_sin_respaldo: {
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          cita: { type: SchemaType.STRING },
+          motivo: { type: SchemaType.STRING },
+        },
+        required: ['cita', 'motivo'],
+      },
+    },
+    reglas_incumplidas: {
+      type: SchemaType.ARRAY,
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          regla: { type: SchemaType.STRING },
+          cita: { type: SchemaType.STRING },
+        },
+        required: ['regla', 'cita'],
+      },
+    },
+  },
+  required: ['veredicto', 'afirmaciones_sin_respaldo', 'reglas_incumplidas'],
+};
+
 // --- Validación zod tras el parseo (defensa en profundidad: aunque forcemos
 // el schema en la API, seguimos validando por si el modelo se desvía). ---
 
@@ -112,8 +141,6 @@ export const articleZodSchema = z.object({
   tags: z.array(z.string()).default([]),
   imagePrompt: z.string().default('technology, digital art'),
   category: z.enum(CATEGORY_VALUES).catch('Tecnología'),
-  sourceUrl: z.string().optional(),
-  sources: z.array(z.string()).optional(),
 });
 
 export const englishArticleZodSchema = z.object({
@@ -128,4 +155,14 @@ export const englishArticleZodSchema = z.object({
 export const newsletterZodSchema = z.object({
   subject: z.string().min(1),
   htmlContent: z.string().min(1),
+});
+
+export const textQaZodSchema = z.object({
+  veredicto: z.enum(['ok', 'corregir', 'rehacer']).catch('corregir' as const),
+  afirmaciones_sin_respaldo: z
+    .array(z.object({ cita: z.string(), motivo: z.string() }))
+    .default([]),
+  reglas_incumplidas: z
+    .array(z.object({ regla: z.string(), cita: z.string() }))
+    .default([]),
 });

@@ -1,10 +1,13 @@
-import { AI_PROMPTS } from '../../config/prompts';
+import { AI_PROMPTS, type ArticlePromptContext } from '../../config/prompts';
 import { generateTextWithGemini } from './gemini-text.service';
 import type { NewsItem } from '../news/news-sources.service';
-import { formatNewsForPrompt } from '../news/news-sources.service';
+import { formatNewsForPrompt, enrichWithFullText } from '../news/news-sources.service';
 import { sanitizeJsonString } from '../../lib/json-sanitizer';
 import { logWithTime } from '../../lib/logger';
+import { ALLOWED_TICKERS, MAX_TAGS, MAX_TICKERS } from '../../config/editorial';
+import { auditAndFixArticle } from './text-qa.service';
 import {
+  CATEGORY_VALUES,
   articleResponseSchema,
   articleZodSchema,
   englishArticleResponseSchema,
@@ -17,8 +20,6 @@ export interface GeneratedArticle {
   title: string;
   summary: string;
   keyPoints: string[];
-  impactLevel?: string;
-  complexity?: string;
   tickers?: string[];
   glossary?: { term: string; definition: string }[];
   faqs?: { question: string; answer: string }[];
@@ -26,10 +27,27 @@ export interface GeneratedArticle {
   imagePrompt: string;
   tags: string[];
   sourceUrl?: string;
-  sources?: string[];
   sourceImageUrl?: string;
   imageCaption?: string;
   category?: string;
+  /**
+   * Registro del control de calidad del texto (auditoría contra las fuentes).
+   * Se guarda con el artículo como prueba de la revisión y se enseña al
+   * aprobar el borrador.
+   */
+  textQa?: string;
+}
+
+/** Contexto opcional de generación. */
+export interface GenerationOptions {
+  /**
+   * Etiquetas que ya existen en el medio: se le enseñan al modelo para que
+   * reutilice las que encajen en vez de inventar sinónimos que fragmentan las
+   * páginas de etiqueta.
+   */
+  existingTags?: string[];
+  /** Fecha que se le da al modelo como «hoy». Por defecto, la del sistema. */
+  today?: Date;
 }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -63,27 +81,39 @@ export async function generateWeeklyNewsletter(articles: any[]) {
 
 export async function generateArticleContent(
   recentTitles: string[] = [],
-  newsContext: NewsItem[] = []
+  newsContext: NewsItem[] = [],
+  options: GenerationOptions = {}
 ): Promise<GeneratedArticle> {
   if (newsContext.length === 0) {
     throw new Error('ERROR CRÍTICO: No se encontraron noticias de fuentes fiables. No se generará contenido sin fuentes reales. La publicación ha sido cancelada.');
   }
 
+  // La deduplicación de temas se hace en la capa de noticias (clustering); aquí
+  // solo se deja constancia de cuántos títulos ya cubiertos se han tenido en cuenta.
+  logWithTime(`🧷 Contexto: ${recentTitles.length} títulos ya cubiertos por el medio.`);
+
   const systemPrompt = AI_PROMPTS.SPANISH.SYSTEM;
 
-  let avoidanceClause = '';
-  if (recentTitles.length > 0) {
-    const recentList = recentTitles.slice(0, 3).map(title => `- "${title}"`).join('\n');
-    avoidanceClause = `\n\nEvita temas similares a:\n${recentList}`;
-  }
+  // Se descarga el artículo original de las primeras fuentes del clúster. Sin
+  // este paso el modelo solo recibe la entradilla del feed (300 caracteres) y
+  // cualquier «análisis detallado» que escriba lo tiene que inventar.
+  const fuentes = await enrichWithFullText(newsContext.slice(0, 3));
 
-  const userPrompt = AI_PROMPTS.SPANISH.USER_WITH_NEWS(formatNewsForPrompt(newsContext.slice(0, 3)), avoidanceClause);
+  const ctx: ArticlePromptContext = {
+    today: formatFechaLarga(options.today ?? new Date()),
+    allowedTickers: ALLOWED_TICKERS,
+    existingTags: options.existingTags ?? [],
+  };
+
+  const userPrompt = AI_PROMPTS.SPANISH.USER_WITH_NEWS(formatNewsForPrompt(fuentes), ctx);
 
   const result = await generateTextWithGemini({
     systemPrompt,
     userPrompt,
     maxTokens: 6000,
-    temperature: 0.7,
+    // Temperatura baja: es texto factual. Con 0.7 el modelo adornaba y se iba
+    // del dato, que es lo que luego cazaban los diagnósticos editoriales.
+    temperature: 0.5,
     responseSchema: articleResponseSchema,
   });
 
@@ -91,14 +121,23 @@ export async function generateArticleContent(
     throw new Error('Falló la generación de texto en Gemini (Límite de API o error). Abortando para evitar bucle local.');
   }
 
-  if (!result) throw new Error('Fallaron todos los modelos de generación.');
+  const articulo = parseAndRecoverJson(result, newsContext);
 
-  return parseAndRecoverJson(result, newsContext);
+  // Control de calidad del texto: se audita contra las fuentes y, si hay algo
+  // que corregir, se reescribe una vez. Se hace aquí, antes de traducir al
+  // inglés, para que la versión inglesa traduzca el texto ya corregido.
+  const { articulo: revisado, informe } = await auditAndFixArticle(
+    formatNewsForPrompt(fuentes),
+    normalizar(articulo, newsContext)
+  );
+
+  return { ...normalizar(revisado, newsContext), textQa: informe.resumen };
 }
 
 export async function generateBilingualContent(
   recentTitles: string[] = [],
-  newsContext: NewsItem[] = []
+  newsContext: NewsItem[] = [],
+  options: GenerationOptions = {}
 ): Promise<GeneratedArticle & {
   titleEn: string;
   summaryEn: string;
@@ -108,13 +147,88 @@ export async function generateBilingualContent(
   faqsEn?: { question: string; answer: string }[];
 }> {
   logWithTime('Iniciando generación en español...');
-  const esArticle = await generateArticleContent(recentTitles, newsContext);
+  const esArticle = await generateArticleContent(recentTitles, newsContext, options);
 
   logWithTime('Iniciando traducción/generación en inglés...');
   const enArticle = await generateEnglishContent(esArticle);
 
   logWithTime('Contenido bilingüe listo.');
   return { ...esArticle, ...enArticle };
+}
+
+/** Aplica lo que no puede depender del modelo: listas cerradas, longitudes y la URL real de la fuente. */
+function normalizar(articulo: GeneratedArticle, newsContext: NewsItem[]): GeneratedArticle {
+  const contenido = articulo.content || '';
+  return {
+    ...articulo,
+    summary: clampSummary(articulo.summary),
+    tickers: sanitizeTickers(articulo.tickers),
+    tags: sanitizeTags(articulo.tags),
+    // El glosario solo vale si el término aparece de verdad en el texto.
+    glossary: sanitizeGlossary(articulo.glossary, `${contenido} ${articulo.summary || ''}`),
+    // La URL de la fuente la pone el sistema, no el modelo: es la atribución
+    // del artículo publicado y no puede depender de lo que invente.
+    sourceUrl: newsContext[0]?.link ?? '',
+  };
+}
+
+/** Máximo del resumen: es la descripción que usa el buscador y la tarjeta social. */
+const MAX_SUMMARY_CHARS = 240;
+
+/**
+ * Recorta el resumen por frase si se pasa. El prompt pide 150-220 caracteres y
+ * a veces el modelo se estira: aquí se corta en el último punto que quepa, sin
+ * dejar la frase a medias.
+ */
+export function clampSummary(summary: string): string {
+  const limpio = String(summary || '').trim();
+  if (limpio.length <= MAX_SUMMARY_CHARS) return limpio;
+
+  const recorte = limpio.slice(0, MAX_SUMMARY_CHARS);
+  const ultimoPunto = Math.max(recorte.lastIndexOf('. '), recorte.lastIndexOf('! '), recorte.lastIndexOf('? '));
+  if (ultimoPunto > 100) return recorte.slice(0, ultimoPunto + 1).trim();
+
+  const ultimoEspacio = recorte.lastIndexOf(' ');
+  return `${(ultimoEspacio > 100 ? recorte.slice(0, ultimoEspacio) : recorte).trim()}…`;
+}
+
+/**
+ * Deja solo los términos del glosario que aparecen en el artículo: el modelo
+ * tiende a colar términos que ha visto en enlaces relacionados y no en el texto.
+ */
+export function sanitizeGlossary(
+  glossary: { term: string; definition: string }[] = [],
+  textoDelArticulo: string
+): { term: string; definition: string }[] {
+  const heno = textoDelArticulo.toLowerCase();
+  return glossary.filter((entrada) => {
+    const termino = String(entrada?.term || '').trim().toLowerCase();
+    return termino.length > 2 && heno.includes(termino);
+  });
+}
+
+/** Deja solo símbolos admitidos, en mayúsculas, sin repetir y máximo MAX_TICKERS. */
+export function sanitizeTickers(tickers: string[] = []): string[] {
+  const admitidos = new Set<string>(ALLOWED_TICKERS);
+  return tickers
+    .map((ticker) => String(ticker).trim().toUpperCase().replace(/[^A-Z]/g, ''))
+    .filter((ticker) => admitidos.has(ticker))
+    .filter((ticker, i, todos) => todos.indexOf(ticker) === i)
+    .slice(0, MAX_TICKERS);
+}
+
+/** Normaliza etiquetas (minúsculas, sin repetir) y recorta a MAX_TAGS. */
+export function sanitizeTags(tags: string[] = []): string[] {
+  return tags
+    .map((tag) => String(tag).trim().toLowerCase())
+    .filter((tag) => tag.length > 1)
+    .filter((tag, i, todos) => todos.indexOf(tag) === i)
+    .slice(0, MAX_TAGS);
+}
+
+/** «8 de octubre de 2026»: la fecha que se le da al modelo como referencia. */
+function formatFechaLarga(fecha: Date): string {
+  return fecha.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
 async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{
@@ -126,14 +240,15 @@ async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{
   faqsEn?: { question: string; answer: string }[];
 }> {
   const systemPrompt = AI_PROMPTS.ENGLISH.SYSTEM;
-  const userPrompt = AI_PROMPTS.ENGLISH.USER_TRANSLATE(esArticle, "");
+  const userPrompt = AI_PROMPTS.ENGLISH.USER_TRANSLATE(esArticle);
 
   logWithTime('Solicitando traducción a Gemini...');
   const result = await generateTextWithGemini({
     systemPrompt,
     userPrompt,
     maxTokens: 6000,
-    temperature: 0.7,
+    // Traducir no es redactar: aquí no queremos ninguna libertad creativa.
+    temperature: 0.2,
     responseSchema: englishArticleResponseSchema,
   });
   if (!result || result.length < 200) {
@@ -165,13 +280,28 @@ function extractJson(text: string): string {
   return cleaned.substring(start, end + 1);
 }
 
+/**
+ * El esquema zod corrige una categoría inválida a «Tecnología» para no romper
+ * la generación, pero antes era una corrección silenciosa: aquí se avisa.
+ */
+function avisarCategoriaFueraDeLista(categoria: unknown): void {
+  if (typeof categoria !== 'string') return;
+  if (!(CATEGORY_VALUES as readonly string[]).includes(categoria)) {
+    logWithTime(
+      `⚠️ El modelo propuso la categoría «${categoria}», que no está en la lista: se guarda como «Tecnología».`
+    );
+  }
+}
+
 function parseAndRecoverJson(result: string, newsContext: NewsItem[]): GeneratedArticle {
   try {
     const jsonStr = sanitizeJsonString(extractJson(result));
+    const bruto = JSON.parse(jsonStr);
+    avisarCategoriaFueraDeLista(bruto?.category);
     // Con responseSchema forzando la forma del JSON en la propia API de Gemini,
     // este parseo+validación debería ser el camino habitual. El bloque de abajo
     // (regex) queda solo como red de seguridad ante fallos totalmente inesperados.
-    return articleZodSchema.parse(JSON.parse(jsonStr));
+    return articleZodSchema.parse(bruto);
   } catch {
     logWithTime('Recuperación por Regex...');
     const titleMatch = result.match(/(?:"title"\s*:\s*"|Título\s*:\s*|#\s*)([^"}\n\n]+)/i);
@@ -182,13 +312,11 @@ function parseAndRecoverJson(result: string, newsContext: NewsItem[]): Generated
       title: titleMatch?.[1].trim() || "Artículo sin título",
       summary: summaryMatch?.[1].trim() || "",
       keyPoints: [],
-      impactLevel: "Informativo",
-      complexity: "Principiante",
       tickers: [],
       glossary: [],
       faqs: [],
       content: contentMatch?.[1].trim().replace(/\\n/g, '\n').replace(/\\"/g, '"') || "",
-      imagePrompt: "technology, digital art",
+      imagePrompt: "A journalist working at a desk with a laptop and a notebook, natural office lighting, realistic press photography",
       tags: [],
       sourceUrl: newsContext[0]?.link || ""
     };

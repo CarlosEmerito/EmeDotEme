@@ -52,7 +52,9 @@ Es el orquestador central del sistema. Encapsula el flujo de negocio de publicac
 - `ai.service.ts`: Generación de texto bilingüe y post-procesado.
 - `gemini-text.service.ts`: Integración con Gemini API (rotación de claves, reintentos, `systemInstruction` + `responseSchema`).
 - `gemini-vision.service.ts`: QA de imágenes mediante Gemini Vision.
-- `hf-image.service.ts`: Cliente para Hugging Face Inference API.
+- `cloudflare-image.service.ts`: Cliente para Workers AI (FLUX.1-schnell).
+- `source-image.service.ts`: Extracción de la imagen principal (`og:image`, `twitter:image`, JSON-LD) del artículo original.
+- `stock-image.service.ts`: Búsqueda de fotografía de archivo con licencia en Pixabay.
 - `constants.ts`: System prompts para generación de texto.
 - `gemini-keys.ts`: Gestión de rotación de claves API de Gemini.
 - `schemas.ts`: Fuente única de verdad de la forma del JSON esperado de la IA — esquemas Gemini (`responseSchema`) y esquemas `zod` (validación post-parseo) para artículo ES/EN, newsletter y análisis de imagen.

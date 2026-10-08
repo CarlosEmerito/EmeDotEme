@@ -31,7 +31,7 @@ graph TD
     
     Step3["<b>3. GENERACIÓN IA</b><br/><i>(AI Service)</i><br/>- Generación bilingüe (ES->EN)<br/>- Post-procesado ortográfico"]:::step --> Step4
     
-    Step4["<b>4. PROCESO DE IMAGEN</b><br/><i>(Image Service)</i><br/>- RSS -> Hugging Face (con QA Gemini Vision)"]:::step --> Step5
+    Step4["<b>4. PROCESO DE IMAGEN</b><br/><i>(Image Service)</i><br/>- og:image -> RSS -> Pixabay -> Cloudflare<br/>- QA Gemini Vision en cada paso"]:::step --> Step5
     
     Step5["<b>5. PERSISTENCIA</b><br/><i>(Base de Datos)</i><br/>- Guardar artículo y etiquetas"]:::step --> Step6
     
@@ -55,24 +55,35 @@ npx tsx scripts/publish.ts
 
 ```mermaid
 graph TD
-    A[Inicio: Datos del Artículo] --> B{¿Hay Imagen RSS?}
-    B -- Sí --> E[QA Gemini Vision]
-    B -- No --> D[Hugging Face API]
-    E -- Aprobada --> F[Subir a Supabase]
-    E -- Rechazada --> D
-    D --> I[Generar con Hugging Face - stable-diffusion-3-medium-diffusers]
-    I -- Éxito --> G[QA Gemini Vision]
+    A[Inicio: Datos del Artículo] --> B[1. og:image del artículo original]
+    B -- Sin imagen o rechazada --> C{2. ¿Trae imagen el RSS?}
+    B -- Aprobada --> F[Subir a Supabase]
+    C -- Sí --> E[QA Gemini Vision]
+    C -- No --> G[3. Buscar en Pixabay]
+    E -- Aprobada --> F
+    E -- Rechazada --> G
     G -- Aprobada --> F
-    G -- Rechazada --> J[Excepción: pipeline fallido]
-    I -- Fallo --> J
+    G -- Rechazada o sin resultados --> H[4. Generar con Cloudflare + FLUX.1-schnell]
+    H -- Aprobada --> F
+    H -- Rechazada o sin cuota --> I[5. Imagen de reserva de la categoría]
+    I --> F
     F --> L[URL Permanente en Supabase]
 ```
 
 ### Gestión de Supabase (StorageService)
 Toda imagen aceptada o generada se sube automáticamente a Supabase Storage para evitar enlaces rotos de fuentes externas.
 
-### Sin fallback de stock
-Si ni la imagen del RSS ni la generación con Hugging Face producen una imagen válida (aprobada por QA), `generateArticleImageAndAnalyzeQA` (`modules/images/image.service.ts`) lanza una excepción y el artículo no se guarda ni se publica. No existe fallback a imágenes de stock (Unsplash u otro servicio).
+### Nunca se descarta el artículo
+
+`generateArticleImageAndAnalyzeQA` (`modules/images/image.service.ts`) recorre la cascada y **no lanza ninguna excepción**: si ninguna candidata supera el control de calidad, devuelve la imagen de reserva de la categoría (`config/constants.ts`) y el artículo se publica igualmente.
+
+Antes esta función terminaba en un `throw`. Un fallo en la generación de imágenes tiraba a la basura el artículo entero: texto ya generado, traducido y pagado. Esa fue la causa real de las pérdidas de artículos durante semanas.
+
+### Control de calidad
+
+Cada candidata pasa por Gemini Vision antes de aceptarse (`isImageValid`). Ese filtro es el suelo de calidad real del proyecto y es **independiente del origen de la imagen**: una foto de archivo mediocre se rechaza exactamente igual que una generación mediocre.
+
+El orden de la cascada va de mejor a peor calidad editorial: una foto real del suceso siempre será preferible a una imagen inventada por IA.
 
 ---
 

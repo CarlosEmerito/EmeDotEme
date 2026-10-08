@@ -24,11 +24,17 @@
 | `GEMINI_API_KEY_2` | Clave secundaria (fallback)                 | Recomendado  | |
 | `GEMINI_API_KEY_3` | Clave terciaria (fallback)                  | Recomendado  | |
 
-### IA - Hugging Face (Imágenes)
+### IA - Imágenes (generación y archivo)
 
-| Variable   | Descripción                                            | Requerido | Obtención |
-|------------|--------------------------------------------------------|-----------|-----------|
-| `HF_TOKEN` | Token de Hugging Face para consumir FLUX.1-schnell | ✅         | [Hugging Face Settings](https://huggingface.co/settings/tokens) |
+| Variable                 | Descripción                                                        | Requerido | Obtención |
+|--------------------------|--------------------------------------------------------------------|-----------|-----------|
+| `CLOUDFLARE_ACCOUNT_ID`  | ID de la cuenta de Cloudflare para Workers AI                       | Recomendado | Panel de Cloudflare → Workers AI |
+| `CLOUDFLARE_API_TOKEN`   | Token con permiso **Workers AI: Read**                              | Recomendado | [Cloudflare API Tokens](https://dash.cloudflare.com/profile/api-tokens) |
+| `PIXABAY_API_KEY`        | Clave de la API de Pixabay (fotografía de archivo con licencia)     | Recomendado | [Pixabay API](https://pixabay.com/api/docs/) |
+
+> Ninguna de estas variables es obligatoria para que el pipeline funcione: si falta alguna, se salta ese paso de la cascada y se usan los anteriores. El artículo se publica igualmente.
+>
+> `HF_TOKEN` ya no se usa. La capa gratuita de Hugging Face dejó de cubrir el proyecto (HTTP 402) y se ha sustituido por Cloudflare Workers AI.
 
 ### Imágenes - Supabase Storage (StorageService)
 

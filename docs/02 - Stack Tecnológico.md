@@ -17,13 +17,20 @@
 | Servicio         | Uso                        | API/Local                | Notas |
 |------------------|---------------------------|--------------------------|-------|
 | Gemini (Google)  | Generación de texto       | API externa              | gemini-2.5-flash (con reintentos de alta demanda 30s/60s/120s y rotación de 3 claves) |
-| Hugging Face     | Generación de imágenes    | API externa              | stable-diffusion-3-medium-diffusers (proveedor `hf-inference`) |
+| Cloudflare       | Generación de imágenes    | API externa              | Workers AI, `@cf/black-forest-labs/flux-1-schnell` (plan gratuito: 10.000 neurons/día) |
+| Pixabay          | Fotografía de archivo     | API externa              | Fotos con licencia comercial, sin atribución |
 | Gemini Vision    | QA de imágenes            | API externa              | gemini-2.5-flash |
 
 ## Imágenes y almacenamiento
 
-- **Hugging Face**: Generador principal de imágenes (modelo `stable-diffusion-3-medium-diffusers` mediante el proveedor `hf-inference`; es el único modelo text-to-image que sirve actualmente ese proveedor — `FLUX.1-schnell` fue deprecado por Hugging Face con HTTP 410).
-- **Supabase Storage**: Almacenamiento permanente de imágenes analizadas y aprobadas.
+El pipeline de imagen prueba varias fuentes **en cascada** y se queda con la primera que supere el control de calidad (ver [[04 - Flujos de Trabajo]]):
+
+- **og:image del artículo original**: la foto real del suceso. Es la mejor opción editorial y cubre ~85% de los casos medidos sobre las fuentes del proyecto. Se extrae de `og:image`, `twitter:image` o JSON-LD (`modules/images/source-image.service.ts`).
+- **Imagen del feed RSS**: cuando el propio feed la incluye (`media:content`, `media:thumbnail`, `enclosure`).
+- **Pixabay**: fotografía de archivo con licencia comercial, sin atribución y apta para servirse desde almacenamiento propio.
+- **Cloudflare Workers AI**: generación con FLUX.1-schnell. Sustituye a Hugging Face, cuya capa gratuita dejó de cubrir el proyecto (HTTP 402, créditos agotados). La asignación gratuita de Cloudflare es permanente: 10.000 neurons/día, ~170 imágenes.
+- **Imagen de reserva** (`config/constants.ts`): última red para no perder el artículo.
+- **Supabase Storage**: almacenamiento permanente de las imágenes aprobadas.
 
 ## RSS y Feeds
 

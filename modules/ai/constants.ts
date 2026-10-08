@@ -12,8 +12,19 @@
  * clave. La rotación de claves cubre, además, otros proyectos.
  */
 export const GEMINI_MODEL_CHAINS = {
-  /** Redactar, corregir y auditar el texto: aquí se juega la calidad. */
-  quality: ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.1-flash-lite'],
+  /**
+   * Redactar, corregir y auditar el texto: aquí se juega la calidad. Cada
+   * modelo Flash de la cadena estrena su propia cuota diaria (20 por proyecto),
+   * así que cuantos más haya antes de caer a un lite, más artículos salen
+   * escritos con el modelo bueno cuando uno está saturado o agotado.
+   */
+  quality: [
+    'gemini-3.8-flash',
+    'gemini-3.7-flash',
+    'gemini-3.6-flash',
+    'gemini-3.5-flash',
+    'gemini-3.1-flash-lite',
+  ],
   /** Traducción y análisis de imágenes: trabajo mecánico y de más volumen. */
   lite: ['gemini-3.1-flash-lite', 'gemini-3.5-flash-lite', 'gemini-2.5-flash-lite'],
 } as const;

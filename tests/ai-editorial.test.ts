@@ -112,7 +112,10 @@ test('sanitizeGlossary - sin glosario devuelve lista vacía', () => {
 test('cadenaDeModelos - la tarea de calidad empieza por el modelo bueno y tiene respaldo', () => {
   const cadena = cadenaDeModelos('quality');
   assert.strictEqual(cadena[0], 'gemini-3.8-flash');
-  assert.ok(cadena.length >= 2, 'debe haber más de un modelo para cuando se agote la cuota');
+  assert.ok(cadena.length >= 4, 'debe haber varios Flash antes de caer a un lite');
+  // El último recurso siempre es un modelo ligero: mejor un texto con un modelo
+  // pequeño que quedarse sin borrador porque los grandes estén saturados.
+  assert.ok(cadena[cadena.length - 1].includes('lite'));
 });
 
 test('cadenaDeModelos - la tarea de volumen usa solo modelos ligeros', () => {

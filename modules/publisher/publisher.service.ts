@@ -6,6 +6,7 @@ import { generateArticleImageAndAnalyzeQA, IMAGE_SOURCE_LABEL, type ImageSource,
 import { generateSlug, ensureUniqueSlug, formatTitle } from "../../lib/utils";
 import { sendCriticalErrorNotification, sendApprovalRequest } from "../notifications/telegram.service";
 import { BASE_CATEGORIES } from "../../config/constants";
+import { EXISTING_TAGS_IN_PROMPT } from "../../config/editorial";
 import { buildPreviewUrl, generateReviewToken, REVIEW_STATUS } from "../../lib/review-token";
 
 /**
@@ -31,7 +32,7 @@ export class PublisherService {
 
       // 2. Obtener contexto de artículos recientes para evitar duplicados
       console.log("🔍 [2/7] Obteniendo contexto de artículos recientes...");
-      const { recentTitles, recentSourceUrls, recentImages } = await this.getRecentContext();
+      const { recentTitles, recentSourceUrls, recentImages, existingTags } = await this.getRecentContext();
       
       // 3. Obtener noticias de fuentes RSS
       console.log("📡 [3/7] Buscando noticias en fuentes RSS...");
@@ -49,7 +50,8 @@ export class PublisherService {
       console.log("🧠 [4/7] Generando contenido con IA...");
       const { aiResponse } = await this.generateContentWithClusters(
         newsContext.topicClusters,
-        recentTitles
+        recentTitles,
+        existingTags
       );
       console.log("✨ Contenido generado exitosamente.");
 
@@ -125,10 +127,25 @@ export class PublisherService {
       .map((a) => ({ url: a.imageUrl, title: a.title }))
       .filter((item): item is RecentImage => Boolean(item.url));
 
-    return { recentTitles, recentSourceUrls, recentImages };
+    // Etiquetas que ya existen en el medio (las más usadas): se le pasan al
+    // modelo para que reutilice en vez de inventar sinónimos que fragmentan
+    // las páginas de etiqueta.
+    const existingTags = (
+      await this.prisma.tag.findMany({
+        orderBy: { articles: { _count: 'desc' } },
+        take: EXISTING_TAGS_IN_PROMPT,
+        select: { name: true },
+      })
+    ).map((tag) => tag.name);
+
+    return { recentTitles, recentSourceUrls, recentImages, existingTags };
   }
 
-  private async generateContentWithClusters(topicClusters: any[][], recentTitles: string[]) {
+  private async generateContentWithClusters(
+    topicClusters: any[][],
+    recentTitles: string[],
+    existingTags: string[] = []
+  ) {
     // Ordenar clusters por relevancia
     const sortedClusters = topicClusters.sort((a, b) => {
       if (b.length !== a.length) return b.length - a.length;
@@ -139,7 +156,7 @@ export class PublisherService {
       const cluster = sortedClusters[i];
       try {
         console.log(`\n🎯 Intentando con Cluster ${i + 1}/${sortedClusters.length}...`);
-        const aiResponse = await generateBilingualContent(recentTitles, cluster);
+        const aiResponse = await generateBilingualContent(recentTitles, cluster, { existingTags });
         if (aiResponse) {
           return { aiResponse, successfulCluster: cluster };
         }
@@ -193,8 +210,6 @@ export class PublisherService {
         summaryEn: aiResponse.summaryEn,
         keyPoints: aiResponse.keyPoints || [],
         keyPointsEn: aiResponse.keyPointsEn || [],
-        impactLevel: aiResponse.impactLevel,
-        complexity: aiResponse.complexity,
         tickers: aiResponse.tickers || [],
         glossary: aiResponse.glossary || [],
         glossaryEn: aiResponse.glossaryEn || [],
@@ -218,6 +233,7 @@ export class PublisherService {
         imageUrl: imageData.url,
         imageCaption: imageData.caption,
         sourceUrl: aiResponse.sourceUrl || null,
+        textQa: aiResponse.textQa || null,
         isOriginal: !hasNews,
         categoryId: selectedCategory.id,
         author: 'Carlos "Emérito" López Lovera',
@@ -266,6 +282,9 @@ export class PublisherService {
       tags: article.articleTags ? article.articleTags.map((t: any) => t.name) : [],
       imageNote,
       imageCaption: imageInfo.caption,
+      // Qué ha dicho el control de calidad del texto: si detectó afirmaciones
+      // sin respaldo y si se han corregido. Quien aprueba debe saberlo.
+      textQaNote: article.textQa || undefined,
       imageWarning: imageInfo.duplicateOf
         ? `⚠️ Ya se usó en «${imageInfo.duplicateOf}» y no había otra disponible.`
         : undefined,

@@ -83,8 +83,6 @@ export async function GET(req: Request) {
         summaryEn: aiResponse.summaryEn,
         keyPoints: aiResponse.keyPoints || [],
         keyPointsEn: aiResponse.keyPointsEn || [],
-        impactLevel: aiResponse.impactLevel,
-        complexity: aiResponse.complexity,
         tickers: aiResponse.tickers || [],
         glossary: aiResponse.glossary || [],
         glossaryEn: aiResponse.glossaryEn || [],

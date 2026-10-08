@@ -22,6 +22,7 @@
 *   [[10 - Seguridad y Prompts de IA]] - Sanitización de HTML, defensas anti prompt-injection, `responseSchema`/`zod`, autenticación del panel admin.
 *   [[11 - Cumplimiento Legal]] - Obligaciones legales (imágenes, IA, cookies, privacidad) y qué parte del código implementa cada una.
 *   [[12 - Aprobación Editorial]] - Flujo de aprobación por Telegram: borradores, enlace privado, botones y webhook.
+*   [[13 - Auditoría de los prompts de generación]] - Revisión de los prompts de texto, medición de la calidad de lo publicado y plan de mejora por fases.
 
 ---
 

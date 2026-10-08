@@ -56,6 +56,10 @@ model Article {
   reviewStatus String   @default("approved")
   reviewedAt   DateTime?
   reviewNote   String?
+  // Registro del control de calidad del texto: afirmaciones sin respaldo
+  // detectadas contra las fuentes y correcciones aplicadas. Es la prueba de
+  // que el borrador pasó una revisión automática antes de la humana.
+  textQa       String?
   // Token aleatorio del borrador: viaja en el enlace privado y en los botones
   // de Telegram, y es lo único que permite abrir un artículo no publicado.
   reviewToken  String?  @unique

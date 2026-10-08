@@ -114,6 +114,8 @@ export interface ApprovalRequest {
   imageCaption?: string;
   /** Aviso cuando no ha habido forma de evitar repetir una imagen reciente. */
   imageWarning?: string;
+  /** Resultado del control de calidad del texto (afirmaciones sin respaldo…). */
+  textQaNote?: string;
 }
 
 /**
@@ -144,6 +146,7 @@ export async function sendApprovalRequest(request: ApprovalRequest): Promise<boo
     request.imageNote ? escapeHtml(request.imageNote) : undefined,
     request.imageCaption ? `Pie de foto: <i>${escapeHtml(request.imageCaption)}</i>` : undefined,
     request.imageWarning ? `<b>${escapeHtml(request.imageWarning)}</b>` : undefined,
+    request.textQaNote ? escapeHtml(request.textQaNote) : undefined,
     '',
     `🔒 Enlace privado: ${request.previewUrl}`,
     '',

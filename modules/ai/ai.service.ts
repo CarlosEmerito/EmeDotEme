@@ -115,6 +115,8 @@ export async function generateArticleContent(
     // del dato, que es lo que luego cazaban los diagnósticos editoriales.
     temperature: 0.5,
     responseSchema: articleResponseSchema,
+    // Redactar es la tarea donde se juega la calidad: modelo grande.
+    task: 'quality',
   });
 
   if (!result || result.includes('Lo siento') || result.length < 200) {
@@ -250,6 +252,8 @@ async function generateEnglishContent(esArticle: GeneratedArticle): Promise<{
     // Traducir no es redactar: aquí no queremos ninguna libertad creativa.
     temperature: 0.2,
     responseSchema: englishArticleResponseSchema,
+    // Traducción: trabajo mecánico y de más volumen → modelos ligeros.
+    task: 'lite',
   });
   if (!result || result.length < 200) {
     throw new Error('Falló la generación en inglés en Gemini. Abortando.');

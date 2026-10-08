@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { GoogleGenerativeAI, type Schema } from '@google/generative-ai';
 import { getGeminiApiKeys, getKeyName } from './gemini-keys';
-import { GEMINI_MODEL_NAME } from './constants';
+import { cadenaDeModelos, type GeminiTaskKind } from './constants';
 import { logWithTime } from '../../lib/logger';
 
 interface GenerationOptions {
@@ -11,17 +11,34 @@ interface GenerationOptions {
     temperature?: number;
     /** Fuerza la forma exacta del JSON de salida (evita tener que "recuperar" respuestas mal formadas). */
     responseSchema?: Schema;
+    /** Tarea: elige la cadena de modelos (calidad para redactar, lite para volumen). */
+    task?: GeminiTaskKind;
 }
 
 export async function generateTextWithGemini(
     options: GenerationOptions
 ): Promise<string | null> {
-    const { systemPrompt, userPrompt, maxTokens = 6000, temperature = 0.7, responseSchema } = options;
+    const {
+        systemPrompt,
+        userPrompt,
+        maxTokens = 6000,
+        temperature = 0.7,
+        responseSchema,
+        task = 'quality',
+    } = options;
     const apiKeys = getGeminiApiKeys();
     if (apiKeys.length === 0) {
         logWithTime('⚠️ Ninguna API key de Gemini configurada');
         return null;
     }
+
+    const modelos = cadenaDeModelos(task);
+
+    // Orden de los intentos: todas las claves con el mejor modelo y, si ninguna
+    // tiene cuota, el siguiente modelo de la cadena. Merece la pena porque el
+    // límite diario del plan gratuito es por modelo Y por proyecto: cambiar de
+    // modelo estrena cuota aunque la clave sea la misma.
+    for (const modelo of modelos) {
     for (let i = 0; i < apiKeys.length; i++) {
         const apiKey = apiKeys[i];
         const keyName = getKeyName(i);
@@ -31,7 +48,7 @@ export async function generateTextWithGemini(
 
         while (true) {
             try {
-                logWithTime(`🔄 Generando con Gemini (${keyName}, modelo: ${GEMINI_MODEL_NAME})${attempt > 0 ? ` (reintento ${attempt}/3)` : ''}...`);
+                logWithTime(`🔄 Generando con Gemini (${keyName}, modelo: ${modelo})${attempt > 0 ? ` (reintento ${attempt}/3)` : ''}...`);
                 const genAI = new GoogleGenerativeAI(apiKey);
                 // systemInstruction separa las INSTRUCCIONES (rol del periodista, reglas de
                 // estilo) de los DATOS del usuario (noticias externas no confiables). Antes
@@ -39,7 +56,7 @@ export async function generateTextWithGemini(
                 // que texto malicioso embebido en una fuente RSS se confundiera con una
                 // instrucción real (prompt injection).
                 const model = genAI.getGenerativeModel({
-                    model: GEMINI_MODEL_NAME,
+                    model: modelo,
                     systemInstruction: systemPrompt,
                 });
                 const generationConfig = {
@@ -56,10 +73,10 @@ export async function generateTextWithGemini(
                 const response = result.response;
                 const text = response.text();
                 if (!text || text.trim().length === 0) {
-                    logWithTime('❌ Gemini devolvió respuesta vacía');
+                    logWithTime(`❌ Gemini devolvió respuesta vacía (${keyName}, ${modelo})`);
                     break;
                 }
-                logWithTime(`✅ Texto generado con Gemini: ${text.substring(0, 100)}...`);
+                logWithTime(`✅ Texto generado con Gemini (${modelo}): ${text.substring(0, 100)}...`);
                 return text;
             } catch (error) {
                 const errorMsg = error instanceof Error ? error.message : String(error);
@@ -79,17 +96,20 @@ export async function generateTextWithGemini(
                 }
 
                 if (errorMsg.includes('429') || errorMsg.includes('quota') || errorMsg.includes('Quota')) {
-                    logWithTime(`⚠️ Cuota de Gemini ${keyName.toLowerCase()} excedida, intentando siguiente...`);
-                    break; // Pasa a la siguiente clave API
+                    logWithTime(`⚠️ Cuota agotada en ${keyName.toLowerCase()} (${modelo}), probando otra combinación...`);
+                    break; // Siguiente clave y, si se agotan, siguiente modelo
                 } else if (errorMsg.includes('400') && errorMsg.includes(' SAFETY')) {
                     logWithTime('❌ Contenido bloqueado por safety filters');
                     return null;
                 } else {
-                    logWithTime(`❌ Error con Gemini ${keyName.toLowerCase()}: ${errorMsg}`);
+                    logWithTime(`❌ Error con Gemini ${keyName.toLowerCase()} (${modelo}): ${errorMsg}`);
                     break; // Pasa a la siguiente clave API
                 }
             }
         }
     }
+    }
+
+    logWithTime(`❌ Sin respuesta ni cuota en ninguna combinación (${modelos.join(', ')} × ${apiKeys.length} claves)`);
     return null;
 }

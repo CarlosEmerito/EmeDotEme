@@ -16,10 +16,10 @@
 
 | Servicio         | Uso                        | API/Local                | Notas |
 |------------------|---------------------------|--------------------------|-------|
-| Gemini (Google)  | Generación de texto       | API externa              | gemini-2.5-flash (con reintentos de alta demanda 30s/60s/120s y rotación de 3 claves) |
+| Gemini (Google)  | Generación de texto       | API externa              | Cadena `gemini-3.8-flash` → `gemini-3.7-flash` → lite (calidad), con rotación de 3 claves y reintentos de alta demanda 30s/60s/120s |
 | Cloudflare       | Generación de imágenes    | API externa              | Workers AI, `@cf/black-forest-labs/flux-1-schnell` (plan gratuito: 10.000 neurons/día) |
 | Pixabay          | Fotografía de archivo     | API externa              | Fotos con licencia comercial, sin atribución |
-| Gemini Vision    | QA de imágenes            | API externa              | gemini-2.5-flash |
+| Gemini Vision    | QA de imágenes            | API externa              | Cadena ligera: `gemini-3.1-flash-lite` → `gemini-3.5-flash-lite` → `gemini-2.5-flash-lite` |
 
 ## Imágenes y almacenamiento
 

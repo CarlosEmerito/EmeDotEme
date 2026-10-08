@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getGeminiApiKeys, getKeyName } from './gemini-keys';
-import { GEMINI_MODEL_NAME, IMAGE_ANALYSIS_SYSTEM_PROMPT } from './constants';
+import { cadenaDeModelos, IMAGE_ANALYSIS_SYSTEM_PROMPT } from './constants';
 import { imageAnalysisResponseSchema } from './schemas';
 import { logWithTime } from '../../lib/logger';
 
@@ -16,8 +16,8 @@ export interface ImageAnalysisResult {
 
 /**
  * Analiza una imagen con Gemini Vision para determinar coherencia, calidad y watermarks.
- * Usa las 3 API keys con fallback entre ellas.
- * Si todas las keys fallan, lanza error (NO retorna placeholder).
+ * Usa las 3 API keys y una cadena de modelos ligeros con fallback entre ellos.
+ * Si todas las combinaciones fallan, lanza error (NO retorna placeholder).
  */
 export async function analyzeImageWithGemini(
   imageUrl: string,
@@ -84,6 +84,11 @@ Devuelve SOLO el JSON de análisis, nada más.`;
     throw new Error(`No se pudo descargar la imagen: ${downloadErr}`);
   }
 
+  // El análisis de imagen es clasificar (coherencia, calidad, marcas de agua),
+  // no redactar: va con los modelos ligeros, que tienen mucha más cuota diaria.
+  const modelos = cadenaDeModelos('lite');
+
+  for (const modelo of modelos) {
   for (let i = 0; i < apiKeys.length; i++) {
     const apiKey = apiKeys[i];
     const keyName = getKeyName(i);
@@ -93,14 +98,14 @@ Devuelve SOLO el JSON de análisis, nada más.`;
 
     while (true) {
       try {
-        logWithTime(`🔍 Analizando imagen con Gemini Vision (${keyName})${attempt > 0 ? ` (reintento ${attempt}/3)` : ''}...`);
+        logWithTime(`🔍 Analizando imagen con Gemini Vision (${keyName}, ${modelo})${attempt > 0 ? ` (reintento ${attempt}/3)` : ''}...`);
 
         const genAI = new GoogleGenerativeAI(apiKey);
         // systemInstruction separa las reglas de análisis de los datos variables
         // (título/resumen del artículo, que en última instancia también proceden
         // de una fuente externa vía el pipeline de generación de texto).
         const model = genAI.getGenerativeModel({
-          model: GEMINI_MODEL_NAME,
+          model: modelo,
           systemInstruction: IMAGE_ANALYSIS_SYSTEM_PROMPT,
         });
 
@@ -139,7 +144,7 @@ Devuelve SOLO el JSON de análisis, nada más.`;
           break; // Pasa a la siguiente clave API en vez de devolver datos inventados
         }
 
-        logWithTime(`✅ Gemini (${GEMINI_MODEL_NAME}): ${JSON.stringify(parsed)}`);
+        logWithTime(`✅ Gemini (${modelo}): ${JSON.stringify(parsed)}`);
 
         return parsed;
 
@@ -161,7 +166,7 @@ Devuelve SOLO el JSON de análisis, nada más.`;
         }
 
         if (errorMsg.includes('429') || errorMsg.includes('quota') || errorMsg.includes('Quota')) {
-          logWithTime(`⚠️ Cuota Gemini Vision ${keyName} excedida, intentando siguiente...`);
+          logWithTime(`⚠️ Cuota Gemini Vision agotada en ${keyName.toLowerCase()} (${modelo}), probando otra combinación...`);
           break;
         } else if (errorMsg.includes('SAFETY')) {
           logWithTime(`❌ Contenido bloqueado por safety filters`);
@@ -174,15 +179,13 @@ Devuelve SOLO el JSON de análisis, nada más.`;
             problemas_detectados: ['Bloqueada por filtros de seguridad'],
           };
         } else {
-          logWithTime(`❌ Error Gemini Vision ${keyName}: ${errorMsg}`);
-          if (i === apiKeys.length - 1) {
-            throw new Error(`Todas las keys de Gemini Vision fallaron: ${errorMsg}`);
-          }
-          break;
+          logWithTime(`❌ Error Gemini Vision (${keyName}, ${modelo}): ${errorMsg}`);
+          break; // Siguiente clave y, si se agotan, siguiente modelo
         }
       }
     }
   }
+  }
 
-  throw new Error('Todas las API keys de Gemini Vision fueron agotadas');
+  throw new Error(`Gemini Vision sin cuota ni respuesta en ninguna combinación (${modelos.join(', ')} × ${apiKeys.length} claves)`);
 }

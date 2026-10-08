@@ -2,8 +2,35 @@
  * Constantes compartidas del módulo AI.
  */
 
-/** Modelo de Gemini utilizado para generación de texto y análisis visual */
-export const GEMINI_MODEL_NAME = "gemini-2.5-flash";
+/**
+ * Modelos de Gemini del pipeline.
+ *
+ * En el plan gratuito Google da **20 peticiones al día por modelo y por
+ * proyecto** (las lite no publican su número, pero son cientos). Por eso cada
+ * tarea no usa «un modelo» sino una **cadena**: si el primero agota cuota
+ * (429), se pasa al siguiente, que estrena su propia cuota aunque sea la misma
+ * clave. La rotación de claves cubre, además, otros proyectos.
+ */
+export const GEMINI_MODEL_CHAINS = {
+  /** Redactar, corregir y auditar el texto: aquí se juega la calidad. */
+  quality: ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.1-flash-lite'],
+  /** Traducción y análisis de imágenes: trabajo mecánico y de más volumen. */
+  lite: ['gemini-3.1-flash-lite', 'gemini-3.5-flash-lite', 'gemini-2.5-flash-lite'],
+} as const;
+
+export type GeminiTaskKind = keyof typeof GEMINI_MODEL_CHAINS;
+
+/**
+ * Cadena de modelos de una tarea. Se puede fijar el primero por entorno
+ * (`GEMINI_MODEL_QUALITY`, `GEMINI_MODEL_LITE`) sin tocar el código; el resto
+ * de la cadena queda detrás como respaldo.
+ */
+export function cadenaDeModelos(tarea: GeminiTaskKind): string[] {
+  const preferido =
+    tarea === 'quality' ? process.env.GEMINI_MODEL_QUALITY : process.env.GEMINI_MODEL_LITE;
+  const cadena = GEMINI_MODEL_CHAINS[tarea];
+  return preferido ? [preferido, ...cadena] : [...cadena];
+}
 
 /**
  * Prompt del sistema para análisis de imágenes.

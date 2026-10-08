@@ -152,8 +152,20 @@ export class PublisherService {
       return b[0].pubDate.getTime() - a[0].pubDate.getTime();
     });
 
+    // Plazo para toda la fase de generación: si Gemini está saturado, probar
+    // clúster tras clúster multiplicaba el tiempo de ejecución (cada intento
+    // puede tardar minutos). Pasado el plazo se aborta con aviso, en vez de
+    // seguir encadenando intentos hasta que el workflow parezca colgado.
+    const inicioGeneracion = Date.now();
+    const plazoGeneracionMs = Number(process.env.GENERACION_PLAZO_MS ?? 600000); // 10 min
+
     for (let i = 0; i < sortedClusters.length; i++) {
       const cluster = sortedClusters[i];
+      if (Date.now() - inicioGeneracion > plazoGeneracionMs) {
+        throw new Error(
+          `Plazo de generación agotado (${Math.round(plazoGeneracionMs / 1000)}s) tras ${i} clúster(es). Gemini no está disponible ahora mismo; no se genera borrador.`
+        );
+      }
       try {
         console.log(`\n🎯 Intentando con Cluster ${i + 1}/${sortedClusters.length}...`);
         const aiResponse = await generateBilingualContent(recentTitles, cluster, { existingTags });

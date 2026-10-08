@@ -99,6 +99,8 @@ export async function saveImageToSupabase(url: string, slug: string): Promise<st
     } else {
       const fetch = (await import('node-fetch')).default;
       const response = await fetch(url, {
+        // Límite de tiempo: una descarga colgada no debe bloquear el pipeline.
+        signal: AbortSignal.timeout(20000),
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
           'Accept': 'image/*',

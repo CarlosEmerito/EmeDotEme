@@ -75,7 +75,7 @@ graph TB
 
 ### Pipeline de contenido
 - **Servicio de fuentes de noticias**: fetch y normalización de 23 fuentes RSS (`modules/news/news-sources.service.ts`).
-- **Servicio de IA**: generación bilingüe con Gemini, con rotación de hasta 3 claves API y una cadena de modelos por tarea (`gemini-3.8-flash` para redactar y auditar; `gemini-3.1-flash-lite` para traducir y analizar imágenes).
+- **Servicio de IA**: generación bilingüe con Gemini, con rotación de hasta 3 claves API y una cadena de modelos por tarea (`gemini-3.8-flash`, `3.7`, `3.6` y `3.5` Flash para redactar y auditar; los ligeros para traducir y analizar imágenes).
 - **Servicio de imágenes**: cascada en tres pasos — **Pixabay** (fotografía con licencia comercial) → **Cloudflare Workers AI / FLUX.1-schnell** (generación con IA) → **imagen de reserva del proyecto**. Cada candidata pasa por un control de calidad con Gemini Vision. El pipeline **no lanza nunca**: si todo falla, se publica con la reserva, porque perder el artículo es peor que publicarlo con una foto genérica. **No se usan imágenes de prensa**: el art. 129 bis.2 del TRLPI exige autorización para poner a disposición imágenes de publicaciones de prensa, así que a la fuente original se la **enlaza**, no se la copia.
 
 ### Flujo de aprobación editorial

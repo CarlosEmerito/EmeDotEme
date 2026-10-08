@@ -7,7 +7,7 @@
 
 ### 1. Fundamentos
 *   [[01 - Arquitectura]] - Visión general del sistema, diagrama de flujo de datos y arquitectura de componentes.
-*   [[02 - Stack Tecnológico]] - Tecnologías core, frameworks (Next.js), modelos de IA (Gemini, Hugging Face) y servicios externos.
+*   [[02 - Stack Tecnológico]] - Tecnologías core, frameworks (Next.js), modelos de IA (Gemini, Cloudflare Workers AI) y servicios externos.
 
 ### 2. Referencia del Sistema
 *   [[03 - Módulos]] - Detalle técnico y responsabilidades de los módulos de negocio principales (`ai`, `images`, `news`, etc).
@@ -20,6 +20,7 @@
 *   [[08 - API]] - Documentación de los endpoints internos para automatizaciones y el frontend, incluyendo ejemplos cURL.
 *   [[09 - Troubleshooting]] - Solución a problemas comunes, manejo de errores de cuota y depuración.
 *   [[10 - Seguridad y Prompts de IA]] - Sanitización de HTML, defensas anti prompt-injection, `responseSchema`/`zod`, autenticación del panel admin.
+*   [[11 - Cumplimiento Legal]] - Obligaciones legales (imágenes, IA, cookies, privacidad) y qué parte del código implementa cada una.
 
 ---
 

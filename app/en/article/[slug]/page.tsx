@@ -10,7 +10,9 @@ import { isLikelyCrypto } from "@/lib/market-utils";
 import { ShareButtons } from "@/components/articles/ShareButtons";
 import { Comments } from "@/components/articles/Comments";
 import { TextToSpeech } from "@/components/articles/TextToSpeech";
-import { sanitizeArticleHtml, safeJsonLdString } from "@/lib/sanitize-html";
+import { ArticleSchema } from "@/components/seo/ArticleSchema";
+import { sanitizeArticleHtml } from "@/lib/sanitize-html";
+import { AiDisclosure, SourceAttribution } from "@/components/articles/AiDisclosure";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -34,6 +36,11 @@ export async function generateMetadata(
     title: `${article.title}`, // Ya usará el template global de layout.tsx
     description: article.summary || siteConfig.description,
     authors: [{ name: article.author }],
+    // Machine-readable AI disclosure (AI Act art. 50), paired with the visible notice.
+    other: {
+      "ai-generated": "true",
+      "ai-disclosure": "generated-with-ai-assisted-editorial-process",
+    },
     alternates: {
       canonical: `/en/article/${article.slug}`,
     },
@@ -67,35 +74,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   const relatedArticles = await getRelatedArticles(article.categoryId, article.id, 3);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "NewsArticle",
-    "headline": article.title,
-    "image": [article.imageUrl],
-    "datePublished": article.createdAt.toISOString(),
-    "dateModified": article.updatedAt.toISOString(),
-    "author": [{
-        "@type": "Person",
-        "name": article.author,
-        "url": `${siteConfig.url}/sobre-mi`
-      }],
-    "publisher": {
-      "@type": "Organization",
-      "name": siteConfig.name,
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${siteConfig.url}/logo.png`
-      }
-    },
-    "description": article.summary
-  };
-
   return (
     <div className="flex flex-col flex-1 bg-white dark:bg-zinc-950 font-sans">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: safeJsonLdString(jsonLd) }}
-      />
       <main className="flex flex-col max-w-4xl mx-auto w-full px-4 py-12">
         {/* Breadcrumb */}
         <nav className="flex items-center justify-between text-sm text-zinc-500 mb-8">
@@ -111,6 +91,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </Link>
           </div>
         </nav>
+
+        {/* AI disclosure (AI Act art. 50) */}
+        <AiDisclosure lang="en" />
 
         {/* Header */}
         <header className="mb-10">
@@ -215,6 +198,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <div dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(article.contentEn || article.content) }} />
         </article>
 
+        {/* Attribution to the original source (TRLPI art. 129 bis.6: hyperlinking
+            is excluded from the press publishers' right) */}
+        <SourceAttribution sourceUrl={article.sourceUrl} lang="en" />
+
         {/* Glossary Section */}
         {article.glossaryEn && Array.isArray(article.glossaryEn) && article.glossaryEn.length > 0 && (
           <section className="mt-12 p-8 bg-zinc-50 dark:bg-zinc-900/30 border border-zinc-200 dark:border-zinc-800 rounded-3xl">
@@ -303,6 +290,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             Disclaimer: This content is not financial advice. Do your own research before investing.
           </p>
         </div>
+
+        {/* Schema.org JSON-LD */}
+        <ArticleSchema article={article} siteUrl={siteConfig.url} lang="en" />
 
         {/* Related Articles */}
         {relatedArticles.length > 0 && (

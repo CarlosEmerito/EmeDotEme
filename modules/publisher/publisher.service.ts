@@ -48,7 +48,7 @@ export class PublisherService {
 
       // 4. Generación por IA con lógica de clusters
       console.log("🧠 [4/7] Generando contenido con IA...");
-      const { aiResponse, successfulCluster } = await this.generateContentWithClusters(
+      const { aiResponse } = await this.generateContentWithClusters(
         newsContext.topicClusters,
         recentTitles
       );
@@ -63,7 +63,7 @@ export class PublisherService {
 
       // 5. Generación de Imagen
       console.log("🎨 [5/7] Iniciando pipeline de imagen...");
-      const imageUrls = await this.processImage(aiResponse, successfulCluster, allCategories, slug);
+      const imageUrls = await this.processImage(aiResponse, allCategories, slug);
       console.log(`🖼️ Imagen lista: ${imageUrls.url}`);
 
       // 6. Guardar en Base de Datos
@@ -143,8 +143,7 @@ export class PublisherService {
     throw new Error('No se pudo generar contenido con ningún cluster de noticias.');
   }
 
-  private async processImage(aiResponse: any, cluster: any[], allCategories: any[], slug: string) {
-    const rssImageUrl = cluster[0]?.imageUrl || aiResponse.sourceImageUrl;
+  private async processImage(aiResponse: any, allCategories: any[], slug: string) {
     const categoryName = aiResponse.category || allCategories[0].name;
 
     const imageResult = await generateArticleImageAndAnalyzeQA({
@@ -153,7 +152,7 @@ export class PublisherService {
       topic: categoryName,
       originalPrompt: aiResponse.imagePrompt,
       summary: aiResponse.summary
-    }, rssImageUrl, cluster[0]?.link);
+    });
 
     return {
       url: imageResult.imageUrl,

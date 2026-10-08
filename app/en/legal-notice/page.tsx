@@ -1,47 +1,116 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: `Legal Notice | ${siteConfig.name}`,
-  description: `Legal information about the website ${siteConfig.name}.`,
+  description: `Legal information about ${siteConfig.name}.`,
+  robots: { index: false, follow: true },
 };
 
-export default function LegalNoticePageEn() {
+export default function LegalNoticePage() {
   return (
     <div className="flex flex-col flex-1 bg-white dark:bg-zinc-950 font-sans">
       <main className="flex flex-col max-w-3xl mx-auto w-full px-4 py-12">
         <h1 className="text-4xl font-bold font-serif text-black dark:text-white mb-8">Legal Notice</h1>
-        
-        <div className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
-          <p>Last updated: {new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
 
-          <p>This Legal Notice regulates the use of the website <strong>{siteConfig.url}</strong> (hereinafter, the Website), owned by <strong>{siteConfig.author}</strong>.</p>
-          
-          <h2>1. Identification Data</h2>
-          <p>In compliance with the duty of information contained in relevant legislation, the following identification data are detailed:</p>
+        <div className="prose prose-zinc dark:prose-invert prose-lg max-w-none">
+          <p>Last updated: 8 October 2026</p>
+
+          <p>This Legal Notice governs the use of the website <strong>{siteConfig.url}</strong> (the &quot;Website&quot;), owned by <strong>{siteConfig.author}</strong>.</p>
+
+          <h2>1. Identifying details</h2>
+          <p>In compliance with the information duty set out in article 10 of Spanish Law 34/2002 on Information Society Services and Electronic Commerce:</p>
           <ul>
             <li><strong>Owner:</strong> {siteConfig.author}</li>
             <li><strong>Contact email:</strong> carlosemerito13@gmail.com</li>
             <li><strong>Website:</strong> {siteConfig.url}</li>
           </ul>
 
-          <h2>2. Users and Use of the Website</h2>
-          <p>Accessing and/or using this portal attributes the status of USER, who accepts, from said access and/or use, the General Conditions of Use reflected here. The Website provides access to a multitude of information, services, programs, or data (hereinafter, &quot;the contents&quot;) on the Internet belonging to <strong>{siteConfig.name}</strong> or its licensors.</p>
-          <p>The USER assumes responsibility for the use of the portal. This responsibility extends to the registration that may be necessary to access certain services or contents.</p>
+          <h2>2. Users</h2>
+          <p>Accessing or using this Website grants you the status of USER and implies acceptance of these terms. The USER is responsible for their use of the Website.</p>
 
-          <h2>3. Intellectual and Industrial Property</h2>
-          <p><strong>{siteConfig.name}</strong>, by itself or as an assignee, is the owner of all intellectual and industrial property rights of its website, as well as the elements contained therein (by way of example, images, sound, audio, video, software, or texts; trademarks or logos, color combinations, structure and design, selection of materials used, computer programs necessary for its operation, access, and use, etc.).</p>
-          <p>The reproduction, distribution, and public communication, including its modality of making available, of all or part of the contents of this website, for commercial purposes, in any support and by any technical means, without the authorization of <strong>{siteConfig.name}</strong>, are expressly prohibited.</p>
+          <h2>3. Content, sources and images</h2>
+          <p>
+            This publication reports on information drawn from <strong>news articles published by
+            third parties</strong>. Every article credits and links to the original source at the
+            end, so readers can read the full coverage at the outlet that produced it. That link is
+            the way this Website refers to other people&apos;s work.
+          </p>
+          <p>
+            <strong>This Website does not reproduce or reuse images from other media outlets.</strong>{" "}
+            Images illustrating articles come only from:
+          </p>
+          <ul>
+            <li><strong>AI generation</strong>, when no suitable licensed photograph is available. In that case the caption says so explicitly.</li>
+            <li><strong>Stock libraries with a commercial licence</strong> (for example Pixabay), which authorise use without further permission.</li>
+            <li><strong>Our own material.</strong></li>
+          </ul>
+          <p>
+            If you hold rights over any content and believe its use is not appropriate, write to{" "}
+            <strong>carlosemerito13@gmail.com</strong> and we will review it and, where appropriate,
+            remove it.
+          </p>
 
-          <h2>4. Exclusion of Warranties and Liability</h2>
-          <p><strong>{siteConfig.name}</strong> is not responsible, in any case, for damages of any nature that may cause, by way of example: errors or omissions in the contents, lack of availability of the portal, or the transmission of viruses or malicious or harmful programs in the contents, despite having adopted all necessary technological measures to avoid it.</p>
-          <p>The contents of this website are for informational and educational purposes. They do not constitute financial, legal, or professional advice of any kind.</p>
+          <h2>4. Use of artificial intelligence</h2>
+          <p>
+            Articles on this Website are written using <strong>artificial intelligence systems</strong>{" "}
+            based on the sources cited. Every article carries a visible notice to that effect,
+            together with machine-readable metadata, in compliance with{" "}
+            <strong>article 50 of Regulation (EU) 2024/1689</strong> (the AI Act).
+          </p>
+          <p>
+            The editorial quality control applied is described in our{" "}
+            <Link href="/en/editorial-policy">Editorial Policy</Link>, which also identifies the
+            person responsible for publication.
+          </p>
 
-          <h2>5. Modifications</h2>
-          <p><strong>{siteConfig.name}</strong> reserves the right to make the modifications it deems appropriate in its portal without prior notice, being able to change, delete, or add both the contents and services provided through it and the way they are presented or located in its portal.</p>
+          <h2>5. Intellectual property</h2>
+          <p>
+            <strong>{siteConfig.name}</strong> owns the intellectual property rights over the
+            elements it has created for this Website: its code, design, structure, texts, brands and
+            logos.
+          </p>
+          <p>
+            <strong>That ownership does not extend to third-party content.</strong> Trademarks,
+            logos and trade names of companies mentioned in our reporting belong to their respective
+            owners and are used for information purposes only. Photographs from licensed stock
+            libraries are used under the terms of those licences.
+          </p>
+          <p>
+            Reproduction, distribution or public communication of this Website&apos;s own content for
+            commercial purposes is prohibited without authorisation from{" "}
+            <strong>{siteConfig.name}</strong>. Linking to this Website and quoting excerpts with
+            attribution are free.
+          </p>
 
-          <h2>6. Third-Party Links</h2>
-          <p>In the event that the Website provides links or hyperlinks to other Internet sites, <strong>{siteConfig.name}</strong> shall not exercise any type of control over said sites and contents. In no case shall it assume any responsibility for the contents of any link belonging to a third-party website.</p>
+          <h2>6. Disclaimer</h2>
+          <p>
+            <strong>{siteConfig.name}</strong> accepts no liability for damages of any kind arising
+            from errors or omissions in the content, unavailability of the site, or the transmission
+            of malicious code, despite having adopted the necessary technical measures to prevent it.
+          </p>
+          <p>
+            Content on this Website is informational. <strong>It is not financial, legal or
+            professional advice.</strong> Investment decisions are the reader&apos;s sole
+            responsibility.
+          </p>
+          <p>
+            This Website includes affiliate links and advertising. Their presence does not influence
+            editorial content and they are identified as such on the page.
+          </p>
+
+          <h2>7. Changes</h2>
+          <p><strong>{siteConfig.name}</strong> may modify, remove or add content and services without prior notice.</p>
+
+          <h2>8. Third-party links</h2>
+          <p><strong>{siteConfig.name}</strong> exercises no control over third-party sites linked from this Website and accepts no liability for their content.</p>
+
+          <p>
+            See also: <Link href="/en/editorial-policy">Editorial Policy</Link>,{" "}
+            <Link href="/en/privacy-policy">Privacy Policy</Link> and{" "}
+            <Link href="/en/cookies">Cookie Policy</Link>.
+          </p>
         </div>
       </main>
     </div>

@@ -29,7 +29,7 @@ graph TB
 
     subgraph "Intelligence (AI & ML)"
         Gemini[Gemini API]:::ai
-        HF[Hugging Face API]:::ai
+        CF[Cloudflare Workers AI]:::ai
     end
 
     subgraph "External Services"
@@ -47,7 +47,7 @@ graph TB
     RSS -- "1. Fetch & Cluster" --> Pipeline
     Pipeline -- "2. Texto/Traducción" --> Gemini
     Pipeline -- "3. QA Imagen" --> Gemini
-    Pipeline -- "4. Generar Imagen" --> HF
+    Pipeline -- "4. Generar Imagen" --> CF
     Pipeline -- "5. Guardar Imagen" --> Supa
     Pipeline -- "6. Guardar Post" --> DB
     Pipeline -- "7. Publicar" --> Social
@@ -69,7 +69,7 @@ graph TB
 ### Pipeline de contenido
 - **Servicio de fuentes de noticias**: Fetch y normalización de fuentes RSS (CoinDesk, Decrypt, etc.).
 - **Servicio de IA**: Generación bilingüe con Gemini (gemini-2.5-flash), con rotación de hasta 3 claves API.
-- **Servicio de imágenes**: Pipeline jerárquico (RSS -> Hugging Face), con QA vía Gemini Vision en cada paso. Si ningún método produce una imagen válida, el pipeline lanza una excepción y el artículo no se publica (no hay fallback de stock).
+- **Servicio de imágenes**: Cascada en tres pasos — **Pixabay** (fotografía con licencia comercial) → **Cloudflare Workers AI / FLUX.1-schnell** (generación con IA) → **imagen de reserva del proyecto**. Cada candidata pasa por un control de calidad con Gemini Vision. El pipeline **no lanza nunca**: si todo falla, se publica con la reserva, porque perder el artículo es peor que publicarlo con una foto genérica. **No se usan imágenes de prensa**: el art. 129 bis.2 del TRLPI exige autorización para poner a disposición imágenes de publicaciones de prensa, así que a la fuente original se la **enlaza**, no se la copia.
 
 ## Referencias
 

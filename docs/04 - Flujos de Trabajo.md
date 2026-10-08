@@ -31,7 +31,7 @@ graph TD
     
     Step3["<b>3. GENERACIÓN IA</b><br/><i>(AI Service)</i><br/>- Generación bilingüe (ES->EN)<br/>- Post-procesado ortográfico"]:::step --> Step4
     
-    Step4["<b>4. PROCESO DE IMAGEN</b><br/><i>(Image Service)</i><br/>- og:image -> RSS -> Pixabay -> Cloudflare<br/>- QA Gemini Vision en cada paso"]:::step --> Step5
+    Step4["<b>4. PROCESO DE IMAGEN</b><br/><i>(Image Service)</i><br/>- Pixabay -> Cloudflare FLUX -> reserva<br/>- QA Gemini Vision en cada paso"]:::step --> Step5
     
     Step5["<b>5. PERSISTENCIA</b><br/><i>(Base de Datos)</i><br/>- Guardar artículo y etiquetas"]:::step --> Step6
     
@@ -55,23 +55,20 @@ npx tsx scripts/publish.ts
 
 ```mermaid
 graph TD
-    A[Inicio: Datos del Artículo] --> B[1. og:image del artículo original]
-    B -- Sin imagen o rechazada --> C{2. ¿Trae imagen el RSS?}
-    B -- Aprobada --> F[Subir a Supabase]
-    C -- Sí --> E[QA Gemini Vision]
-    C -- No --> G[3. Buscar en Pixabay]
-    E -- Aprobada --> F
-    E -- Rechazada --> G
-    G -- Aprobada --> F
-    G -- Rechazada o sin resultados --> H[4. Generar con Cloudflare + FLUX.1-schnell]
+    A[Inicio: Datos del Artículo] --> G[1. Buscar en Pixabay]
+    G -- Aprobada --> F[Subir a Supabase]
+    G -- Rechazada o sin resultados --> H[2. Generar con Cloudflare + FLUX.1-schnell]
     H -- Aprobada --> F
-    H -- Rechazada o sin cuota --> I[5. Imagen de reserva de la categoría]
+    H -- Rechazada o sin cuota --> I[3. Imagen de reserva de la categoría]
     I --> F
     F --> L[URL Permanente en Supabase]
 ```
 
+> [!IMPORTANT]
+> **No se usan imágenes de prensa.** Los dos primeros pasos de las versiones anteriores (`og:image` del artículo original e imagen del feed RSS) se han eliminado: el art. 129 bis.2 del TRLPI exige autorización para poner a disposición del público imágenes de publicaciones de prensa. La referencia a la fuente original se hace **enlazándola** (`SourceAttribution`), no copiándola.
+
 ### Gestión de Supabase (StorageService)
-Toda imagen aceptada o generada se sube automáticamente a Supabase Storage para evitar enlaces rotos de fuentes externas.
+Toda imagen aceptada o generada se sube automáticamente a Supabase Storage para evitar enlaces rotos. **Solo se re-alojan imágenes propias o con licencia**: `isAllowedToStore()` (`modules/storage/supabase.service.ts`) deja pasar los Data URI de la generación con IA, las fuentes con licencia comercial (Pixabay, Pexels, Unsplash) y el propio almacén; cualquier otro origen se devuelve sin copiar y se avisa en los logs.
 
 ### Nunca se descarta el artículo
 

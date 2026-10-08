@@ -53,7 +53,6 @@ Es el orquestador central del sistema. Encapsula el flujo de negocio de publicac
 - `gemini-text.service.ts`: Integración con Gemini API (rotación de claves, reintentos, `systemInstruction` + `responseSchema`).
 - `gemini-vision.service.ts`: QA de imágenes mediante Gemini Vision.
 - `cloudflare-image.service.ts`: Cliente para Workers AI (FLUX.1-schnell).
-- `source-image.service.ts`: Extracción de la imagen principal (`og:image`, `twitter:image`, JSON-LD) del artículo original.
 - `stock-image.service.ts`: Búsqueda de fotografía de archivo con licencia en Pixabay.
 - `constants.ts`: System prompts para generación de texto.
 - `gemini-keys.ts`: Gestión de rotación de claves API de Gemini.
@@ -66,10 +65,10 @@ Es el orquestador central del sistema. Encapsula el flujo de negocio de publicac
 **Ubicación**: `modules/images/`
 
 ### Funcionalidad
-- Pipeline jerárquico de imágenes: RSS -> Hugging Face -> Unsplash.
+- Cascada de imagen: Pixabay -> Cloudflare FLUX -> imagen de reserva.
 
 ### Archivos clave
-- `image.service.ts`: Lógica del pipeline de imagen (RSS → Hugging Face → Unsplash).
+- `image.service.ts`: Cascada de imagen (Pixabay → Cloudflare FLUX → reserva), con control de calidad en cada paso. No usa imágenes de prensa.
 
 ---
 

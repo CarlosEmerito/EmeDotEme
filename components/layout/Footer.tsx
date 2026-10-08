@@ -4,6 +4,7 @@ import { siteConfig } from "@/config/site";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { CookieSettingsLink } from "./consent";
 
 export function Footer() {
   const [email, setEmail] = useState("");
@@ -130,6 +131,8 @@ export function Footer() {
                <li><Link href={lang === "es" ? "/politica-privacidad" : "/en/privacy-policy"} className="hover:text-[color:var(--color-brand)] transition-colors">{lang === "es" ? "Privacidad" : "Privacy Policy"}</Link></li>
                <li><Link href={lang === "es" ? "/aviso-legal" : "/en/legal-notice"} className="hover:text-[color:var(--color-brand)] transition-colors">{lang === "es" ? "Aviso Legal" : "Legal Notice"}</Link></li>
                <li><Link href={lang === "es" ? "/cookies" : "/en/cookies"} className="hover:text-[color:var(--color-brand)] transition-colors">{lang === "es" ? "Cookies" : "Cookies Policy"}</Link></li>
+               <li><Link href={lang === "es" ? "/politica-editorial" : "/en/editorial-policy"} className="hover:text-[color:var(--color-brand)] transition-colors">{lang === "es" ? "Política Editorial" : "Editorial Policy"}</Link></li>
+               <li><CookieSettingsLink label={lang === "es" ? "Configurar cookies" : "Cookie settings"} className="hover:text-[color:var(--color-brand)] transition-colors" /></li>
             </ul>
           </div>
 

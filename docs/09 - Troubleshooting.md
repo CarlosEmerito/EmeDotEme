@@ -58,6 +58,23 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 
 ---
 
+### 4. En GitHub Actions la imagen cae siempre a la reserva
+
+> [!WARNING]
+> **Síntoma**: en cada ejecución de GitHub Actions el log muestra `Falta PIXABAY_API_KEY` y/o `Faltan CLOUDFLARE_ACCOUNT_ID o CLOUDFLARE_API_TOKEN`, y el borrador termina siempre con la imagen de reserva.
+
+> [!TIP]
+> **Causa**: los secretos `PIXABAY_API_KEY`, `CLOUDFLARE_ACCOUNT_ID` y `CLOUDFLARE_API_TOKEN` **no están definidos** en el repositorio de GitHub. El workflow los referencia, pero al no existir el secreto el valor queda vacío y los dos primeros escalones de la cascada se saltan.
+> **Solución**: crearlos y añadirlos (ver [[05 - Configuración]]):
+> ```bash
+> gh secret set PIXABAY_API_KEY
+> gh secret set CLOUDFLARE_ACCOUNT_ID
+> gh secret set CLOUDFLARE_API_TOKEN
+> ```
+> Pixabay da la clave al instante con una cuenta gratuita; el token de Cloudflare necesita el permiso «Workers AI: Read».
+
+---
+
 ## 💾 Base de Datos
 
 ### 1. Errores de conexión (Prisma)
@@ -82,6 +99,25 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 > - Verifica que has configurado correctamente la variable `RESEND_API_KEY` en el `.env`.
 > - Verifica en el panel de **Resend** si los emails han sido rechazados o están en cola.
 > - Asegúrate de que el dominio `emedoteme.es` esté verificado en Resend.
+
+---
+
+## 📨 Aprobación editorial (Telegram)
+
+### 1. El borrador no llega a Telegram
+> [!WARNING]
+> **Síntoma**: el pipeline termina pero no aparece el mensaje de aprobación.
+
+> [!TIP]
+> **Solución**:
+> - Revisa `TELEGRAM_TOKEN` y `TELEGRAM_CHAT_ID`. Sin uno de los dos, `sendApprovalRequest` no envía nada y el enlace privado queda solo en el log.
+> - Si `DRY_RUN=true`, la petición no se envía (se registra el enlace en el log).
+
+### 2. Pulsar un botón no hace nada
+> [!TIP]
+> - Los botones solo funcionan desde el chat de `TELEGRAM_CHAT_ID`; desde otro chat responden «Este botón no es para ti».
+> - El webhook debe estar registrado apuntando a `https://www.emedoteme.es/api/telegram/webhook` (ver [[12 - Aprobación Editorial]]).
+> - Si `TELEGRAM_WEBHOOK_SECRET` está definido, el webhook registrado debe llevar el mismo `secret_token`; si no, el webhook responde 401.
 
 ---
 

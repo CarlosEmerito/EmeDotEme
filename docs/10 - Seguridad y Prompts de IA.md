@@ -55,13 +55,12 @@ Esto no hace el sistema "inmune" a prompt injection (ningún prompt lo es al 100
 
 ## 3. `systemInstruction` real de la API en vez de concatenar strings
 
-**Archivos**: `modules/ai/gemini-text.service.ts`, `modules/ai/gemini-vision.service.ts`, `modules/ai/ollama-vision.service.ts`, `modules/ai/ai.service.ts` (Ollama texto).
+**Archivos**: `modules/ai/gemini-text.service.ts`, `modules/ai/gemini-vision.service.ts`, `modules/ai/ai.service.ts`.
 
 Antes: `const fullPrompt = \`${systemPrompt}\n\n${userPrompt}\`` — instrucciones y datos viajaban como un único bloque de rol `user`.
 
 Ahora:
 - Gemini: `genAI.getGenerativeModel({ model, systemInstruction: systemPrompt })`, y `contents` solo lleva el `userPrompt`.
-- Ollama (`/api/generate`): el payload usa el campo nativo `system`, separado de `prompt`.
 
 Esto refuerza la frontera entre "instrucción de confianza" y "dato no confiable" a nivel de API, no solo de texto — es un mecanismo más difícil de eludir para un modelo que un simple `\n\n` en el string.
 
@@ -121,7 +120,7 @@ Se quitaron de git (`git rm --cached`, los ficheros siguen en disco):
 
 ## 8. Logging consistente en el módulo `ai`
 
-`modules/ai/ollama-vision.service.ts` reimplementaba su propio `getTime()`/`logWithTime()` en vez de usar `lib/logger.ts`, que ya existía. Se eliminó la duplicación. Además, `gemini-text.service.ts` y `gemini-vision.service.ts` mezclaban `console.log/error` directo con el logger centralizado — ahora todo el módulo `ai` usa `logWithTime` de forma consistente (mensajes con timestamp, un único punto si se quiere cambiar el formato o el destino de los logs en el futuro).
+`gemini-text.service.ts` y `gemini-vision.service.ts` mezclaban `console.log/error` directo con el logger centralizado — ahora todo el módulo `ai` usa `logWithTime` de forma consistente (mensajes con timestamp, un único punto si se quiere cambiar el formato o el destino de los logs en el futuro).
 
 ---
 

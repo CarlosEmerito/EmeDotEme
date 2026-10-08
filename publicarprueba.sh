@@ -2,10 +2,13 @@
 #
 # Script de prueba centralizado EMEDOTEME
 # Simula todo el workflow y deja logs bajo logs/emedoteme.log.
-# Nada se sube a producción; todo es MODO PRUEBA.
+# Nada se sube a producción; todo es MODO PRUEBA (DRY_RUN).
+#
+# Ojo: este script no pasa por el flujo de aprobación de Telegram. Sirve para ver
+# qué se generaría y cómo se anunciaría en cada red, no para publicar.
 
 set -euo pipefail
-cd /home/emerito/emedoteme || exit 1
+cd "$(dirname "$0")" || exit 1
 
 # === Cargar .env de forma robusta ===
 if [ -f .env ]; then

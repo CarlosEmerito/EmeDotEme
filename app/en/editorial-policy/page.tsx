@@ -48,21 +48,23 @@ export default function EditorialPolicyPage() {
             the outlet that produced it.
           </p>
 
-          <h2>3. Use of AI and labelling</h2>
+          <h2>3. Use of artificial intelligence</h2>
           <p>
-            Every article carries a <strong>visible notice that it was generated with artificial
-            intelligence</strong>, together with machine-readable metadata, under article 50 of
-            Regulation (EU) 2024/1689.
+            Articles are written with the support of <strong>artificial intelligence systems</strong>:
+            a language model prepares the draft from the cited sources. That draft is{" "}
+            <strong>never published as it stands</strong>: it goes through the review and approval of
+            the editor responsible named in section 1, who decides article by article whether it is
+            published, discarded or rewritten.
           </p>
           <p>
-            <strong>The AI is not the author.</strong> Authorship is attributed to{" "}
-            <em>{siteConfig.name} AI</em> as a system, not to a natural person, and editorial
-            responsibility rests with the person named in section 1.
+            That is why articles do not carry an individual AI-generated notice: the exception in
+            article 50.4 of Regulation (EU) 2024/1689 applies where the content has undergone human
+            review and a person holds editorial responsibility for the publication, which is the case
+            here. Every review and its outcome are recorded.
           </p>
           <p>
-            Where content has undergone <strong>human review before publication</strong>, the
-            article notice says so explicitly. Unless it does, the article was published through the
-            automated process without prior review.
+            <strong>Authorship and responsibility rest with the editor named in section 1.</strong>{" "}
+            Artificial intelligence is a drafting tool, not the author of the information.
           </p>
 
           <h2>4. Images</h2>
@@ -71,7 +73,7 @@ export default function EditorialPolicyPage() {
             of three sources:
           </p>
           <ul>
-            <li><strong>AI generation.</strong> The caption says so explicitly.</li>
+            <li><strong>AI generation</strong>, when no suitable licensed photograph is available.</li>
             <li><strong>Stock libraries with a commercial licence</strong> authorising use without further permission.</li>
             <li><strong>Our own material.</strong></li>
           </ul>
@@ -108,7 +110,7 @@ export default function EditorialPolicyPage() {
           <ul>
             <li>Not publish information we cannot attribute to an identifiable source.</li>
             <li>Always link to the outlet that published the original reporting.</li>
-            <li>Clearly identify the use of artificial intelligence.</li>
+            <li>Publish only content reviewed and approved by the editor responsible.</li>
             <li>Not use third-party images or text without permission or a licence.</li>
             <li>Keep advertising separate from editorial content.</li>
             <li>Correct errors when they are pointed out to us.</li>

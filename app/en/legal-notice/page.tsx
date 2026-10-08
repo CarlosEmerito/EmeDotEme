@@ -42,7 +42,7 @@ export default function LegalNoticePage() {
             Images illustrating articles come only from:
           </p>
           <ul>
-            <li><strong>AI generation</strong>, when no suitable licensed photograph is available. In that case the caption says so explicitly.</li>
+            <li><strong>AI generation</strong>, when no suitable licensed photograph is available.</li>
             <li><strong>Stock libraries with a commercial licence</strong> (for example Pixabay), which authorise use without further permission.</li>
             <li><strong>Our own material.</strong></li>
           </ul>
@@ -54,15 +54,18 @@ export default function LegalNoticePage() {
 
           <h2>4. Use of artificial intelligence</h2>
           <p>
-            Articles on this Website are written using <strong>artificial intelligence systems</strong>{" "}
-            based on the sources cited. Every article carries a visible notice to that effect,
-            together with machine-readable metadata, in compliance with{" "}
-            <strong>article 50 of Regulation (EU) 2024/1689</strong> (the AI Act).
+            Articles on this Website are written with the support of{" "}
+            <strong>artificial intelligence systems</strong>, based on the cited sources. The
+            resulting draft is <strong>never published without review</strong>: it goes through the
+            control and approval of the editor responsible, who decides article by article what is
+            published and what is not. That is why articles do not carry an individual AI-generated
+            notice (the exception in article 50.4 of Regulation (EU) 2024/1689, which requires human
+            review and editorial responsibility — the case here).
           </p>
           <p>
-            The editorial quality control applied is described in our{" "}
-            <Link href="/en/editorial-policy">Editorial Policy</Link>, which also identifies the
-            person responsible for publication.
+            Authorship and responsibility rest with the editor responsible identified in section 1.
+            The production process and the detail of this point are described in our{" "}
+            <Link href="/en/editorial-policy">Editorial Policy</Link>.
           </p>
 
           <h2>5. Intellectual property</h2>

@@ -50,21 +50,24 @@ export default function EditorialPolicyPage() {
             puede consultar el trabajo del medio que la realizó.
           </p>
 
-          <h2>3. Uso de inteligencia artificial y etiquetado</h2>
+          <h2>3. Uso de inteligencia artificial</h2>
           <p>
-            Todos los artículos se marcan con un <strong>aviso visible de que han sido generados con
-            inteligencia artificial</strong>, junto con metadatos legibles por máquina, conforme al
-            artículo 50 del Reglamento (UE) 2024/1689.
+            La redacción de los artículos se apoya en <strong>sistemas de inteligencia artificial</strong>:
+            un modelo de lenguaje prepara el borrador a partir de las fuentes citadas. Ese borrador
+            <strong>no se publica sin más</strong>: pasa por la revisión y la aprobación del responsable
+            editorial del apartado 1, que decide artículo por artículo si se publica, si se descarta o
+            si se vuelve a redactar.
           </p>
           <p>
-            <strong>La inteligencia artificial no es la autora.</strong> La autoría se atribuye a{" "}
-            <em>{siteConfig.name} AI</em> como sistema, no a una persona física, y la responsabilidad
-            editorial corresponde a quien figura en el apartado 1.
+            Por eso los artículos no llevan un aviso individual de contenido generado con inteligencia
+            artificial: la excepción del artículo 50.4 del Reglamento (UE) 2024/1689 se aplica cuando el
+            contenido ha pasado una revisión humana y existe una persona con responsabilidad editorial
+            sobre la publicación, que es este caso. Cada revisión y su resultado quedan registrados.
           </p>
           <p>
-            Cuando un contenido haya pasado <strong>revisión humana previa a su publicación</strong>,
-            el aviso del artículo lo indicará expresamente. Mientras no lo indique, debe entenderse
-            que se ha publicado mediante el proceso automatizado, sin revisión previa.
+            <strong>La autoría y la responsabilidad son del responsable editorial</strong> indicado en el
+            apartado 1. La inteligencia artificial es una herramienta de redacción, no la autora de la
+            información.
           </p>
 
           <h2>4. Imágenes</h2>
@@ -73,7 +76,7 @@ export default function EditorialPolicyPage() {
             las imágenes que ilustran los artículos proceden de una de estas tres fuentes:
           </p>
           <ul>
-            <li><strong>Generación con inteligencia artificial.</strong> El pie de foto lo indica expresamente en cada caso.</li>
+            <li><strong>Generación con inteligencia artificial</strong>, cuando no hay una fotografía con licencia adecuada.</li>
             <li><strong>Bancos de imágenes con licencia de uso comercial</strong> que autorizan su utilización sin autorización adicional.</li>
             <li><strong>Material propio</strong> de este medio.</li>
           </ul>
@@ -111,7 +114,7 @@ export default function EditorialPolicyPage() {
           <ul>
             <li>No publicar información que no podamos atribuir a una fuente identificable.</li>
             <li>Enlazar siempre al medio que publicó la información original.</li>
-            <li>Identificar de forma clara el uso de inteligencia artificial.</li>
+            <li>Publicar solo contenido revisado y aprobado por el responsable editorial.</li>
             <li>No usar imágenes ni textos de terceros sin autorización o licencia.</li>
             <li>Separar la publicidad del contenido editorial.</li>
             <li>Corregir los errores cuando se nos señalen.</li>

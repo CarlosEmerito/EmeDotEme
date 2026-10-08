@@ -26,7 +26,7 @@
 El pipeline de imagen prueba varias fuentes **en cascada** y se queda con la primera que supere el control de calidad (ver [[04 - Flujos de Trabajo]]):
 
 - **Pixabay**: fotografía de archivo con licencia comercial, sin atribución y apta para servirse desde almacenamiento propio. Es el primer paso porque una foto real con licencia es mejor que cualquier imagen generada.
-- **Cloudflare Workers AI**: generación con FLUX.1-schnell. Sustituye a Hugging Face, cuya capa gratuita dejó de cubrir el proyecto (HTTP 402, créditos agotados). La asignación gratuita de Cloudflare es permanente: 10.000 neurons/día, ~170 imágenes. Cuando la imagen es generada, el pie de foto lo dice expresamente.
+- **Cloudflare Workers AI**: generación con FLUX.1-schnell. La asignación gratuita es de 10.000 neurons/día (~170 imágenes). El origen de la imagen no se declara en la web: el pie de foto describe la imagen y el origen se informa a quien la aprueba en el mensaje de Telegram.
 - **Imagen de reserva** (`config/constants.ts`): última red para no perder el artículo.
 - **Supabase Storage**: almacenamiento permanente de las imágenes aprobadas. **Solo se re-alojan imágenes propias o con licencia**; `isAllowedToStore()` (`modules/storage/supabase.service.ts`) rechaza cualquier otro origen.
 
@@ -39,8 +39,8 @@ El pipeline de imagen prueba varias fuentes **en cascada** y se queda con la pri
 
 ## Despliegue
 
-- **Vercel**: Hosting principal.
-- **Cron**: Programación de tareas (cron-job.org).
+- **Vercel**: Hosting del frontend y de las rutas API (incluido el webhook de Telegram).
+- **GitHub Actions**: Orquestación del pipeline programado (`generate-news.yml`, cada 4 horas).
 
 ## Variables de entorno
 

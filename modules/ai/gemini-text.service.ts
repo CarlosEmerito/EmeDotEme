@@ -34,6 +34,12 @@ export async function generateTextWithGemini(
 
     const modelos = cadenaDeModelos(task);
 
+    // Plazo máximo para toda la llamada (sumando claves, modelos y reintentos):
+    // los modelos con razonamiento pueden tardar minutos y, con 3 claves × 3
+    // modelos, sin este tope un mal día convertiría una llamada en media hora.
+    const inicio = Date.now();
+    const plazoMs = Number(process.env.GEMINI_PLAZO_MS ?? 300000);
+
     // Orden de los intentos: todas las claves con el mejor modelo y, si ninguna
     // tiene cuota, el siguiente modelo de la cadena. Merece la pena porque el
     // límite diario del plan gratuito es por modelo Y por proyecto: cambiar de
@@ -43,10 +49,16 @@ export async function generateTextWithGemini(
         const apiKey = apiKeys[i];
         const keyName = getKeyName(i);
 
-        const retries = [30000, 60000, 120000]; // 30s, 60s, 120s
+        // Un solo reintento por sobrecarga: si Gemini está saturado, las otras
+        // claves y modelos son una vía mejor que esperar tres minutos.
+        const retries = [30000]; // 30s
         let attempt = 0;
 
         while (true) {
+            if (Date.now() - inicio > plazoMs) {
+                logWithTime(`⏱️ Plazo de ${Math.round(plazoMs / 1000)}s agotado esperando a Gemini (${modelo}): se abandona la llamada.`);
+                return null;
+            }
             try {
                 logWithTime(`🔄 Generando con Gemini (${keyName}, modelo: ${modelo})${attempt > 0 ? ` (reintento ${attempt}/3)` : ''}...`);
                 const genAI = new GoogleGenerativeAI(apiKey);

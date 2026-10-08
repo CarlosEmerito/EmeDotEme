@@ -6,7 +6,6 @@ import { applyReviewDecision } from '@/modules/articles/review.service';
 import {
   answerCallbackQuery,
   editReviewMessage,
-  escapeHtml,
   sendTelegramNotification,
 } from '@/modules/notifications/telegram.service';
 
@@ -97,16 +96,13 @@ export async function POST(req: Request) {
   }
   await answerCallbackQuery(callback.id, outcome.ok ? 'Hecho' : 'No encontrado');
 
-  if (outcome.ok && outcome.published) {
-    // El anuncio en Binance Square, Telegram y Bluesky lo hace la siguiente
-    // ejecución del publicador (lee los aprobados sin anunciar).
-    try {
-      await sendTelegramNotification(
-        `📣 Aprobado desde Telegram: <b>${escapeHtml(outcome.slug)}</b>\nEl anuncio en redes sale en la próxima ejecución del publicador.`
-      );
-    } catch {
-      // Un fallo del aviso no debe romper la respuesta a Telegram.
-    }
+  // Aviso aparte. Editar un mensaje NO genera notificación en Telegram, así que
+  // si solo se reescribiera el original, quien pulsa el botón no vería llegar
+  // nada. Un mensaje nuevo sí avisa.
+  try {
+    await sendTelegramNotification(outcome.message);
+  } catch {
+    // Un fallo del aviso no debe romper la respuesta a Telegram.
   }
 
   return NextResponse.json({ ok: true, action: parsed.action, applied: outcome.ok });

@@ -92,7 +92,7 @@ El flujo de IA utiliza **AI_PROMPTS** centralizados en `config/prompts.ts`.
 
 ### Postprocesado
 
-Toda la generación y postprocesado ortográfico depende exclusivamente del modelo `gemini-2.5-flash`, para habilitar la ejecución serverless en la nube sin dependencias locales.
+Toda la generación y el postprocesado ortográfico se hace con Gemini, con cadenas de modelos por tarea (los grandes para redactar y auditar, los ligeros para traducir y analizar imágenes), para habilitar la ejecución serverless en la nube sin dependencias locales.
 
 ---
 

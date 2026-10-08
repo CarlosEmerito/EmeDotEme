@@ -1,7 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
 import { clampSummary, sanitizeGlossary, sanitizeTags, sanitizeTickers } from '../modules/ai/ai.service.ts';
+import { cadenaDeModelos } from '../modules/ai/constants.ts';
 import { htmlToPlainText } from '../modules/news/news-sources.service.ts';
+
+// Las cadenas de modelos no deben depender del entorno de quien ejecute los tests.
+delete process.env.GEMINI_MODEL_QUALITY;
+delete process.env.GEMINI_MODEL_LITE;
 
 /**
  * Reglas editoriales que aplica el código (no el modelo): son deterministas y
@@ -100,4 +105,25 @@ test('sanitizeGlossary - descarta términos que solo salían en enlaces relacion
 
 test('sanitizeGlossary - sin glosario devuelve lista vacía', () => {
   assert.deepStrictEqual(sanitizeGlossary(undefined, 'texto cualquiera'), []);
+});
+
+// ─── Cadenas de modelos: calidad para redactar, ligeros para el volumen ──────
+
+test('cadenaDeModelos - la tarea de calidad empieza por el modelo bueno y tiene respaldo', () => {
+  const cadena = cadenaDeModelos('quality');
+  assert.strictEqual(cadena[0], 'gemini-3.8-flash');
+  assert.ok(cadena.length >= 2, 'debe haber más de un modelo para cuando se agote la cuota');
+});
+
+test('cadenaDeModelos - la tarea de volumen usa solo modelos ligeros', () => {
+  const cadena = cadenaDeModelos('lite');
+  assert.strictEqual(cadena[0], 'gemini-3.1-flash-lite');
+  assert.ok(cadena.every((modelo) => modelo.includes('lite')));
+});
+
+test('cadenaDeModelos - ninguna cadena repite modelos', () => {
+  for (const tarea of ['quality', 'lite'] as const) {
+    const cadena = cadenaDeModelos(tarea);
+    assert.strictEqual(new Set(cadena).size, cadena.length);
+  }
 });

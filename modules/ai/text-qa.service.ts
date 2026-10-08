@@ -43,6 +43,7 @@ export async function auditArticleText(
     // Auditoría: no queremos creatividad, queremos criterio estable.
     temperature: 0.2,
     responseSchema: textQaResponseSchema,
+    task: 'quality',
   });
 
   if (!result) {
@@ -101,6 +102,7 @@ export async function fixArticleText(
     maxTokens: 6000,
     temperature: 0.3,
     responseSchema: articleResponseSchema,
+    task: 'quality',
   });
 
   if (!result) return null;

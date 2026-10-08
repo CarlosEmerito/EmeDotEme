@@ -19,7 +19,7 @@ Guía para identificar y solucionar problemas comunes en el sistema.
 
 > [!TIP]
 > **Depuración**:
-> - La robustez de Gemini 2.5 suele ser alta, pero si un JSON viene incompleto el sistema cuenta con rutinas automáticas de reparación (`lib/json-sanitizer.ts`) para recuperar la información básica estructurada.
+> - La robustez de Gemini suele ser alta, pero si un JSON viene incompleto el sistema cuenta con rutinas automáticas de reparación (`lib/json-sanitizer.ts`) para recuperar la información básica estructurada.
 
 ---
 

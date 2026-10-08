@@ -32,7 +32,8 @@ export interface TextQaReport {
  */
 export async function auditArticleText(
   sourcesText: string,
-  article: GeneratedArticle
+  article: GeneratedArticle,
+  task: 'quality' | 'lite' = 'quality'
 ): Promise<TextQaReport | null> {
   logWithTime('🔎 Control de calidad del texto: auditando contra las fuentes...');
 
@@ -43,7 +44,7 @@ export async function auditArticleText(
     // Auditoría: no queremos creatividad, queremos criterio estable.
     temperature: 0.2,
     responseSchema: textQaResponseSchema,
-    task: 'quality',
+    task,
   });
 
   if (!result) {
@@ -150,8 +151,9 @@ export async function auditAndFixArticle(
   }
 
   // Segunda auditoría: solo para dejar constancia de qué queda después de la
-  // corrección. No se vuelve a corregir (coste acotado: una corrección).
-  const posterior = await auditArticleText(sourcesText, corregido);
+  // corrección. No se vuelve a corregir (coste acotado: una corrección) y va
+  // con un modelo ligero porque no decide nada, solo documenta.
+  const posterior = await auditArticleText(sourcesText, corregido, 'lite');
   const incidenciasRestantes = posterior
     ? posterior.afirmacionesSinRespaldo.length
     : 0;

@@ -17,7 +17,7 @@ import {
  * Tres controles antes de tocar nada:
  *  1. Quien pulsa tiene que ser el chat del dueño (`TELEGRAM_CHAT_ID`), no
  *     cualquiera que encuentre el mensaje reenviado.
- *  2. El `callback_data` tiene que traer la forma `aprv.<acción>.<token>` con un
+ *  2. El `callback_data` tiene que traer la forma `apr.<acción>.<token>` con un
  *     token de 32 hex.
  *  3. El token tiene que existir en la base de datos (si el borrador ya no está
  *     o se ha borrado, no se hace nada).

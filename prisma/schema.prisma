@@ -49,6 +49,19 @@ model Article {
   imageUrl    String?
   imageCaption String?
   sourceUrl   String?
+  // === Revisión editorial (flujo de aprobación por Telegram) ===
+  // reviewStatus: 'approved' (publicado o aprobado), 'pending' (borrador
+  // esperando el sí/no de Emérito), 'rejected' (descartado), 'hermes_review'
+  // (se ha pedido un diagnóstico a EmeDotHermes antes de decidir).
+  reviewStatus String   @default("approved")
+  reviewedAt   DateTime?
+  reviewNote   String?
+  // Token aleatorio del borrador: viaja en el enlace privado y en los botones
+  // de Telegram, y es lo único que permite abrir un artículo no publicado.
+  reviewToken  String?  @unique
+  // Momento en que se anunció en las redes sociales (Binance, Telegram, Bluesky).
+  // Null = aprobado pero todavía sin anunciar.
+  announcedAt  DateTime?
   author      String   @default("EmeDotEme AI")
   published   Boolean  @default(false)
   isOriginal  Boolean  @default(false)
@@ -62,6 +75,7 @@ model Article {
   updatedAt   DateTime @updatedAt
 
   @@index([published, createdAt(sort: Desc)])
+  @@index([reviewStatus, announcedAt])
   @@index([categoryId])
   @@index([isOriginal])
   @@index([publishedAt(sort: Desc)])

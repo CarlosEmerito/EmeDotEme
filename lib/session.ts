@@ -99,3 +99,22 @@ export async function verifySession(token: string) {
     return false;
   }
 }
+
+/**
+ * ¿Quien hace la petición tiene sesión de admin abierta?
+ *
+ * Se usa para no servir por su URL pública artículos que todavía no se han
+ * publicado (borradores del flujo de aprobación): esos solo se ven con la
+ * sesión del panel o por el enlace privado `/preview/<token>`.
+ */
+export async function hasAdminSession(): Promise<boolean> {
+  try {
+    const { cookies } = await import('next/headers');
+    const store = await cookies();
+    const cookie = store.get('admin_session')?.value;
+    if (!cookie) return false;
+    return await verifySession(cookie);
+  } catch {
+    return false;
+  }
+}

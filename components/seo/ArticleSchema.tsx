@@ -9,11 +9,10 @@ import { safeJsonLdString } from "@/lib/sanitize-html";
  * seguía declarando la autoría como `Person` con enlace a «Sobre mí» después de
  * corregir el otro. Si necesitas tocar los datos estructurados, se tocan aquí.
  *
- * **La autoría es `Organization`, no `Person`.** El texto lo produce un sistema
- * automático. Atribuirlo a una persona física sería una atribución falsa y
- * trasladaría a esa persona una responsabilidad que no le corresponde. El
- * enlace apunta a la política editorial, donde está identificado el responsable
- * real de la publicación.
+ * **La autoría es la del responsable editorial.** El artículo se aprueba de
+ * forma individual antes de publicarse y la responsabilidad editorial es de
+ * quien figura en «Sobre mí» y en la política editorial, que es a donde apunta
+ * el enlace de autoría.
  *
  * @param lang Idioma de la página. Determina los campos que se emiten (ES/EN) y
  *   las URLs a las que se enlaza.
@@ -47,10 +46,9 @@ export function ArticleSchema({ article, siteUrl, lang = "es" }: ArticleSchemaPr
     "datePublished": article.createdAt,
     "dateModified": article.updatedAt,
     "author": [{
-      // Organización, no Persona: el texto lo produce un sistema automático.
-      "@type": "Organization",
+      "@type": "Person",
       "name": article.author,
-      "url": `${siteUrl}${es ? "/politica-editorial" : "/en/editorial-policy"}`,
+      "url": `${siteUrl}${es ? "/sobre-mi" : "/en/about-me"}`,
     }],
     "publisher": {
       "@type": "Organization",

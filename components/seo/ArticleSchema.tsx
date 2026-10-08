@@ -1,32 +1,57 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { safeJsonLdString } from "@/lib/sanitize-html";
 
+/**
+ * Datos estructurados (JSON-LD) del artículo.
+ *
+ * **Fuente única.** Antes había dos bloques `NewsArticle` en la misma página
+ * —uno escrito a mano en la página y otro generado aquí— y por eso uno de ellos
+ * seguía declarando la autoría como `Person` con enlace a «Sobre mí» después de
+ * corregir el otro. Si necesitas tocar los datos estructurados, se tocan aquí.
+ *
+ * **La autoría es `Organization`, no `Person`.** El texto lo produce un sistema
+ * automático. Atribuirlo a una persona física sería una atribución falsa y
+ * trasladaría a esa persona una responsabilidad que no le corresponde. El
+ * enlace apunta a la política editorial, donde está identificado el responsable
+ * real de la publicación.
+ *
+ * @param lang Idioma de la página. Determina los campos que se emiten (ES/EN) y
+ *   las URLs a las que se enlaza.
+ */
 interface ArticleSchemaProps {
   article: any; // Using any to avoid type complexity with includes
   siteUrl: string;
+  lang?: "es" | "en";
 }
 
-export function ArticleSchema({ article, siteUrl }: ArticleSchemaProps) {
-  const articleUrl = `${siteUrl}/articulo/${article.slug}`;
+export function ArticleSchema({ article, siteUrl, lang = "es" }: ArticleSchemaProps) {
+  const es = lang === "es";
+
+  const articleUrl = `${siteUrl}${es ? "/articulo" : "/en/article"}/${article.slug}`;
   const imageUrl = article.imageUrl || `${siteUrl}/og.jpg`;
 
-  const keywords = article.articleTags 
-    ? article.articleTags.map((t: any) => t.name).join(", ") 
+  const title = (es ? article.title : article.titleEn || article.title) || "";
+  const summary = (es ? article.summary : article.summaryEn || article.summary) || "";
+  const content = (es ? article.content : article.contentEn || article.content) || "";
+
+  const keywords = article.articleTags
+    ? article.articleTags.map((t: any) => t.name).join(", ")
     : "";
 
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
-    "headline": article.title,
-    "description": article.summary || article.content.substring(0, 200),
-    "image": imageUrl,
+    "headline": title,
+    "description": summary || content.substring(0, 200),
+    "image": imageUrl ? [imageUrl] : undefined,
     "datePublished": article.createdAt,
     "dateModified": article.updatedAt,
-    "author": {
-      "@type": "Person",
+    "author": [{
+      // Organización, no Persona: el texto lo produce un sistema automático.
+      "@type": "Organization",
       "name": article.author,
-      "url": `${siteUrl}/sobre-mi`,
-    },
+      "url": `${siteUrl}${es ? "/politica-editorial" : "/en/editorial-policy"}`,
+    }],
     "publisher": {
       "@type": "Organization",
       "name": "EmeDotEme",
@@ -42,10 +67,11 @@ export function ArticleSchema({ article, siteUrl }: ArticleSchemaProps) {
       "@type": "WebPage",
       "@id": articleUrl,
     },
-    "articleSection": article.category?.name || "Tecnología",
+    "articleSection": article.category?.name || (es ? "Tecnología" : "Technology"),
     "keywords": keywords,
-    "wordCount": article.content.split(/\s+/).length,
-    "inLanguage": "es-ES",
+    "wordCount": content.split(/\s+/).length,
+    "inLanguage": es ? "es-ES" : "en-US",
+    "isAccessibleForFree": true,
     "potentialAction": {
       "@type": "ReadAction",
       "target": [articleUrl]
@@ -55,11 +81,12 @@ export function ArticleSchema({ article, siteUrl }: ArticleSchemaProps) {
   const schemas: any[] = [articleSchema];
 
   // Add FAQ schema if present
-  if (article.faqs && Array.isArray(article.faqs) && article.faqs.length > 0) {
+  const faqs = es ? article.faqs : article.faqsEn || article.faqs;
+  if (faqs && Array.isArray(faqs) && faqs.length > 0) {
     schemas.push({
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": (article.faqs as any[]).map(faq => ({
+      "mainEntity": (faqs as any[]).map(faq => ({
         "@type": "Question",
         "name": faq.question,
         "acceptedAnswer": {

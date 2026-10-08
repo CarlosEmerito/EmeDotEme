@@ -10,7 +10,8 @@ import { isLikelyCrypto } from "@/lib/market-utils";
 import { ShareButtons } from "@/components/articles/ShareButtons";
 import { Comments } from "@/components/articles/Comments";
 import { TextToSpeech } from "@/components/articles/TextToSpeech";
-import { sanitizeArticleHtml, safeJsonLdString } from "@/lib/sanitize-html";
+import { ArticleSchema } from "@/components/seo/ArticleSchema";
+import { sanitizeArticleHtml } from "@/lib/sanitize-html";
 import { AiDisclosure, SourceAttribution } from "@/components/articles/AiDisclosure";
 
 interface ArticlePageProps {
@@ -73,38 +74,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   const relatedArticles = await getRelatedArticles(article.categoryId, article.id, 3);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "NewsArticle",
-    "headline": article.title,
-    "image": [article.imageUrl],
-    "datePublished": article.createdAt.toISOString(),
-    "dateModified": article.updatedAt.toISOString(),
-    "author": [{
-        // Organization, not Person: the text is produced by an automated system,
-        // and attributing it to a natural person would be a false attribution.
-        "@type": "Organization",
-        "name": article.author,
-        "url": `${siteConfig.url}/en/editorial-policy`
-      }],
-    "isAccessibleForFree": true,
-    "publisher": {
-      "@type": "Organization",
-      "name": siteConfig.name,
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${siteConfig.url}/logo.png`
-      }
-    },
-    "description": article.summary
-  };
-
   return (
     <div className="flex flex-col flex-1 bg-white dark:bg-zinc-950 font-sans">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: safeJsonLdString(jsonLd) }}
-      />
       <main className="flex flex-col max-w-4xl mx-auto w-full px-4 py-12">
         {/* Breadcrumb */}
         <nav className="flex items-center justify-between text-sm text-zinc-500 mb-8">
@@ -319,6 +290,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             Disclaimer: This content is not financial advice. Do your own research before investing.
           </p>
         </div>
+
+        {/* Schema.org JSON-LD */}
+        <ArticleSchema article={article} siteUrl={siteConfig.url} lang="en" />
 
         {/* Related Articles */}
         {relatedArticles.length > 0 && (

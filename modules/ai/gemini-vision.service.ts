@@ -60,6 +60,10 @@ Devuelve SOLO el JSON de análisis, nada más.`;
     }
 
     const response = await fetch(imageUrl, {
+      // Sin límite de tiempo, un CDN que se queda colgado bloqueaba el pipeline
+      // entero: la descarga de la imagen para el control de calidad se hacía
+      // esperar indefinidamente y el borrador no llegaba a guardarse.
+      signal: AbortSignal.timeout(20000),
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
         'Accept': 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',

@@ -21,6 +21,17 @@ Un solo mensaje por borrador, con la imagen, el título, el resumen, el **enlace
 | ❌ No | `apr.n.<token>` | `reviewStatus = 'rejected'`, sigue sin publicarse |
 | 🤖 EmeDotHermes | `apr.h.<token>` | `reviewStatus = 'hermes_review'`: se pide un diagnóstico antes de decidir |
 
+## Qué se ve al pulsar un botón
+
+Pulsar cualquiera de los tres botones **reescribe ese mismo mensaje** (le quita los botones y escribe el resultado: publicado, descartado o «lo está revisando») y responde con un aviso de una línea en la esquina («Hecho»). **No se manda ningún mensaje nuevo.**
+
+> [!NOTE]
+> Esto cambió el 13 de octubre de 2026. Antes, cada pulsación mandaba *además* un mensaje aparte con el mismo texto, porque Telegram no notifica las ediciones; el chat acababa lleno de ecos de cada decisión. Se quitó a petición de Emérito. Como efecto secundario, la decisión ya no produce notificación del móvil: se ve al mirar el mensaje, que es donde se pulsó el botón.
+>
+> La única excepción: si la edición falla (mensaje borrado, error de la API), sí se manda un mensaje suelto para que la decisión no quede sin constancia visible.
+
+**El diagnóstico de EmeDotHermes sí llega como mensaje nuevo**, y a propósito: es contenido nuevo que hay que leer, y una edición no avisaría a nadie. Ese mensaje trae otra vez los tres botones, y a partir de ahí vuelve a aplicarse la regla de arriba (pulsar solo reescribe).
+
 ## Estados de un artículo
 
 | `reviewStatus` | Significado | ¿Web? |

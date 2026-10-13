@@ -13,6 +13,13 @@ import {
  * Webhook de Telegram: recibe las pulsaciones de los tres botones del mensaje
  * de aprobación (sí / no / EmeDotHermes).
  *
+ * La respuesta a una pulsación es SIEMPRE reescribir el mensaje que se pulsó:
+ * no se manda ningún mensaje nuevo. Telegram no notifica las ediciones y por eso
+ * hubo una época en la que cada pulsación mandaba además un mensaje aparte; se
+ * quitó a petición de Emérito (13 de octubre de 2026), que veía el chat lleno de
+ * ecos de cada decisión. Solo si la edición falla se manda un mensaje, para no
+ * dejar una decisión aplicada sin constancia alguna.
+ *
  * Tres controles antes de tocar nada:
  *  1. Quien pulsa tiene que ser el chat del dueño (`TELEGRAM_CHAT_ID`), no
  *     cualquiera que encuentre el mensaje reenviado.
@@ -91,18 +98,24 @@ export async function POST(req: Request) {
     }
   }
 
+  let editado = false;
   if (chatId && messageId) {
-    await editReviewMessage({ chatId, messageId, text: outcome.message });
+    editado = await editReviewMessage({ chatId, messageId, text: outcome.message });
   }
   await answerCallbackQuery(callback.id, outcome.ok ? 'Hecho' : 'No encontrado');
 
-  // Aviso aparte. Editar un mensaje NO genera notificación en Telegram, así que
-  // si solo se reescribiera el original, quien pulsa el botón no vería llegar
-  // nada. Un mensaje nuevo sí avisa.
-  try {
-    await sendTelegramNotification(outcome.message);
-  } catch {
-    // Un fallo del aviso no debe romper la respuesta a Telegram.
+  // La decisión se deja constancia reescribiendo el mensaje pulsado y nada más:
+  // ni un mensaje nuevo por pulsación (el chat se llenaba de ecos). Como editar
+  // no genera notificación en Telegram, el único aviso es el propio cambio del
+  // mensaje y el aviso que sale en la esquina al pulsar («Hecho»). Solo si la
+  // edición no ha sido posible se manda un mensaje, para que una decisión
+  // aplicada no quede sin rastro visible.
+  if (!editado) {
+    try {
+      await sendTelegramNotification(outcome.message);
+    } catch {
+      // Un fallo del aviso no debe romper la respuesta a Telegram.
+    }
   }
 
   return NextResponse.json({ ok: true, action: parsed.action, applied: outcome.ok });

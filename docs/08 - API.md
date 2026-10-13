@@ -86,7 +86,7 @@ Recibe las pulsaciones de los tres botones del mensaje de aprobación (Sí / No 
     2. El chat que pulsa debe ser `TELEGRAM_CHAT_ID` (el dueño).
     3. El `callback_data` debe tener la forma `apr.<y|n|h>.<32 hex>`.
     4. El token debe existir en la base de datos.
--   **Efecto**: aplica la decisión (`modules/articles/review.service.ts`), revalida las páginas afectadas y reescribe el mensaje de Telegram. La lógica está separada del HTTP y se prueba en `tests/review-decision.test.ts`.
+-   **Efecto**: aplica la decisión (`modules/articles/review.service.ts`), revalida las páginas afectadas y **reescribe el mensaje pulsado** (sin mandar ningún mensaje nuevo; solo si la edición falla se manda uno suelto). La lógica está separada del HTTP y se prueba en `tests/review-decision.test.ts`.
 -   **Respuestas**: `200 OK` con `{ "ok": true }` (también para updates ignorados); `401` si la cabecera secreta no coincide.
 
 ---

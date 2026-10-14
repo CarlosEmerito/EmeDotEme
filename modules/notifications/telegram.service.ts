@@ -1,5 +1,8 @@
 import 'dotenv/config';
 import { buildCallbackData, type ReviewAction } from '../../lib/review-token';
+import { composeApprovalCaption, escapeHtml } from './approval-message';
+
+export { escapeHtml };
 
 export interface TelegramNotificationOptions {
   chatId?: string;
@@ -16,13 +19,6 @@ export interface TelegramNotificationOptions {
  * `telegramApi()` y nunca lanzan: un fallo de Telegram no puede tumbar el
  * pipeline ni devolver un 500 a Telegram.
  */
-
-export function escapeHtml(text: unknown): string {
-  return String(text ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
 
 interface TelegramResult {
   ok: boolean;
@@ -106,7 +102,6 @@ export interface ApprovalRequest {
   previewUrl: string;
   token: string;
   wordCount?: number;
-  tags?: string[];
   chatId?: string;
   /** Cómo se ha obtenido la imagen (archivo con licencia, generada, reserva). */
   imageNote?: string;
@@ -137,24 +132,21 @@ export async function sendApprovalRequest(request: ApprovalRequest): Promise<boo
   }
 
   const resumen = (request.summary || '').trim();
-  const caption = [
-    '🗞️ <b>Artículo listo para revisar</b>',
-    '',
-    `<b>${escapeHtml(request.title)}</b>`,
-    escapeHtml(resumen.length > 400 ? `${resumen.slice(0, 400)}…` : resumen),
-    '',
-    request.imageNote ? escapeHtml(request.imageNote) : undefined,
-    request.imageCaption ? `Pie de foto: <i>${escapeHtml(request.imageCaption)}</i>` : undefined,
-    request.imageWarning ? `<b>${escapeHtml(request.imageWarning)}</b>` : undefined,
-    request.textQaNote ? escapeHtml(request.textQaNote) : undefined,
-    '',
-    `🔒 Enlace privado: ${request.previewUrl}`,
-    '',
-    `<i>${escapeHtml(request.category || 'General')}${request.wordCount ? ` · ${request.wordCount} palabras` : ''}</i>`,
-  ]
-    .filter((line) => line !== undefined)
-    .join('\n')
-    .slice(0, 1024);
+  // El texto del mensaje lo monta `composeApprovalCaption`, que reparte el tope
+  // de 1024 caracteres de Telegram reservando primero el enlace privado: antes
+  // el aviso del control de texto lo empujaba fuera y el borrador no se podía
+  // abrir desde el móvil.
+  const caption = composeApprovalCaption({
+    title: request.title,
+    previewUrl: request.previewUrl,
+    summary: resumen,
+    imageNote: request.imageNote,
+    imageCaption: request.imageCaption,
+    imageWarning: request.imageWarning,
+    textQaNote: request.textQaNote,
+    category: request.category,
+    wordCount: request.wordCount,
+  });
 
   const keyboard = {
     inline_keyboard: [

@@ -21,6 +21,22 @@ Un solo mensaje por borrador, con la imagen, el título, el resumen, el **enlace
 | ❌ No | `apr.n.<token>` | `reviewStatus = 'rejected'`, sigue sin publicarse |
 | 🤖 EmeDotHermes | `apr.h.<token>` | `reviewStatus = 'hermes_review'`: se pide un diagnóstico antes de decidir |
 
+### Qué lleva el pie de foto y en qué orden
+
+El texto lo monta `composeApprovalCaption()` (`modules/notifications/approval-message.ts`), una función pura con sus pruebas (`tests/approval-message.test.ts`). Se envía como pie de foto (`sendPhoto` con la imagen del artículo); si no hay imagen, va como mensaje de texto con el aviso «(Sin imagen disponible)».
+
+1. Cabecera y **titular**.
+2. **Resumen** (hasta 400 caracteres).
+3. Procedencia de la imagen y **pie de foto** (pegados), más el aviso si se repitió una imagen reciente.
+4. **Control de texto**: veredicto y afirmaciones señaladas.
+5. **Enlace privado** `/preview/<token>`.
+6. Categoría y número de palabras.
+
+**Telegram corta el pie de foto a 1024 caracteres**, y el bloque del control de texto puede llegar a 900. Por eso el reparto del espacio va al revés de lo que parece natural: primero se reserva todo lo que no se puede perder —cabecera, titular, bloque de imagen, enlace y pie— y solo lo que sobra se reparte entre el resumen y el control de texto. El control de texto se recorta **por líneas** (veredicto primero; cada afirmación acotada a 140 caracteres; «…» cuando queda algo fuera).
+
+> [!IMPORTANT]
+> Con el primer diseño —resumen, imagen y control de texto antes del enlace, todo con un `slice(0, 1024)` final— **el enlace desaparecía en 9 de los 20 primeros mensajes** (10 salieron recortados desde el 8 de octubre): los avisos largos del control de texto empujaban fuera el final del mensaje y el borrador no se podía abrir desde el móvil, aunque los botones seguían funcionando porque el token viaja en el `callback_data`. Si se añade un bloque nuevo al mensaje, hay que meterlo en el reparto de `composeApprovalCaption` y no concatenarlo al final.
+
 ## Qué se ve al pulsar un botón
 
 Pulsar cualquiera de los tres botones **reescribe ese mismo mensaje** (le quita los botones y escribe el resultado: publicado, descartado o «lo está revisando») y responde con un aviso de una línea en la esquina («Hecho»). **No se manda ningún mensaje nuevo.**

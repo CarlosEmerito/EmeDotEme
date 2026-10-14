@@ -295,7 +295,6 @@ export class PublisherService {
       previewUrl,
       token: article.reviewToken,
       wordCount: String(article.content || '').split(/\s+/).length,
-      tags: article.articleTags ? article.articleTags.map((t: any) => t.name) : [],
       imageNote,
       imageCaption: imageInfo.caption,
       // Qué ha dicho el control de calidad del texto: si detectó afirmaciones
